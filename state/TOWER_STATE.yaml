@@ -1,23 +1,22 @@
 version: 0.1.0
-state_id: TOWER-STATE-003
-status: sprint_003_active
-active_sprint: SPRINT-003
-active_mission_id: MP-CAT-003
-active_bead_id: BEAD-CAT-003-004
+state_id: TOWER-STATE-004
+status: sprint_004_active
+active_sprint: SPRINT-004
+active_mission_id: MP-CAT-004
+active_bead_id: null
 go_mode: enabled
-last_updated: '2026-06-17'
+last_updated: '2026-06-17T21:54:42+00:00'
 operator: Human Owner
 control_planes:
   mission: active
   execution: state_transition_engine_available
   evidence: evidence_gate_available
-  learning: ci_failure_classification_building
-  governance: ci_governance_building
+  learning: v2_alignment_reviewing
+  governance: tower_guard_building
 current_constraints:
-- Do not promote work without passing CI.
-- Run self-heal in dry-run before apply mode.
-- Do not self-heal secrets, production paths, evidence, tests, architecture, or state
-  transitions.
-- Do not merge PRs that fail BEAD scope validation.
-next_command: python scripts/cat_ci.py --mode local --write-report
-sprint_goal: Make CAT enforceable through CI governance and bounded self-healing validation.
+- Treat chromatic-harness-v2 as read-only reference material.
+- Adopt compact CAT-native guard patterns; do not bulk-migrate v2 runtime sprawl.
+- Tower guard checks must report drift before any repair is considered.
+- Hygiene checks are dry-run only unless a later human gate approves mutation.
+next_command: python scripts/cat_resolve_go.py
+sprint_goal: Align CAT Tower with proven Harness v2 operating guards.

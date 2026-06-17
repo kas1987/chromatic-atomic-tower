@@ -1,6 +1,6 @@
 version: 0.1.0
-last_updated: '2026-06-17'
-active_mission_id: MP-CAT-003
+last_updated: '2026-06-17T21:54:42+00:00'
+active_mission_id: MP-CAT-004
 selection_policy:
   priority_order:
   - approved
@@ -79,3 +79,17 @@ missions:
   path: missions\active\MP-CAT-003_CI_GOVERNANCE_SELF_HEALING.yaml
   created: '2026-06-17'
   last_updated: '2026-06-17'
+- mission_id: MP-CAT-004
+  title: Align CAT Tower with Harness v2 Operating Guards
+  level: M3
+  status: learned
+  priority: 1
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 88
+  current_bead_id: null
+  path: missions\active\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-17T21:54:42+00:00'

@@ -1,0 +1,220 @@
+mission_id: MP-CAT-004
+title: Align CAT Tower with Harness v2 Operating Guards
+level: M3
+status: learned
+owner: Human Owner
+priority: 1
+risk_level: medium
+reversibility: high
+autonomy_level: L3
+confidence_minimum: 82
+created: '2026-06-17'
+last_updated: '2026-06-17T21:54:42+00:00'
+objective: 'Adapt the best proven governance patterns from chromatic-harness-v2 into
+  CAT: pre-session guard, Tower state freshness checks, branch/root hygiene, lane-aware
+  backlog classification, and budget/routing evidence, without bulk-migrating v2.'
+background: Sprint 003 made CAT enforceable through CI. Review of chromatic-harness-v2
+  shows mature operating guards around pre-session boot, decision records, branch
+  hygiene, root artifact hygiene, dual backlog lanes, and budget routing. Sprint 004
+  turns those practices into compact CAT-native Tower guards.
+scope:
+  in:
+  - read-only v2 harness reference review
+  - CAT/v2 alignment matrix
+  - Tower boot guard design
+  - state freshness validator
+  - branch and root hygiene checks
+  - lane-aware next-work classification
+  - budget/routing evidence stub
+  - operator docs and tests
+  out:
+  - modifying chromatic-harness-v2
+  - importing v2 runtime wholesale
+  - MCP/server changes
+  - production deployment
+  - automatic merge or branch deletion
+allowed_paths:
+- PDR_CAT_004_V2_ALIGNMENT_GUARDS.md
+- missions/active/MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+- beads/active/BEAD-CAT-004-*.yaml
+- docs/operations/V2_ALIGNMENT_GUARDS.md
+- docs/reference/V2_TO_CAT_ALIGNMENT_MATRIX.md
+- gates/tower/**
+- gates/hygiene/**
+- schemas/tower_guard_report.schema.json
+- scripts/cat_tower_guard.py
+- scripts/cat_branch_hygiene.py
+- scripts/cat_state_freshness.py
+- tests/test_tower_guard.py
+- tests/test_branch_hygiene.py
+- tests/test_state_freshness.py
+- evidence/reports/**
+- evidence/tower/**
+- state/**
+- learnings/**
+forbidden_paths:
+- C:/Users/kas41/chromatic-harness-v2/**
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies:
+- MP-CAT-003
+acceptance_criteria:
+- CAT has a local Tower guard command that checks state freshness, branch hygiene,
+  root drift, and GO readiness.
+- CAT detects stale Tower state when mission registry and tower state disagree.
+- CAT can emit a durable guard report under evidence/tower/.
+- CAT includes a v2-to-CAT alignment matrix documenting adopted, deferred, and rejected
+  practices.
+- Tests cover pass/fail behavior for state freshness and hygiene checks.
+success_metrics:
+- 100% of included tests pass.
+- 100% of YAML contracts validate.
+- Tower guard exits nonzero when active Tower state disagrees with registry.
+- Root hygiene check flags disposable root artifacts without mutating them.
+required_validation:
+- type: tower_guard
+  command: python scripts/cat_tower_guard.py --write-report
+  evidence_path: evidence/tower/tower_guard_report.md
+  required: true
+- type: schema
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/schema_validation_sprint_004.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_004_tower_guard_tests.txt
+  required: true
+rollback:
+  required: true
+  plan: Revert MP-CAT-004 mission, BEADs, Tower guard scripts, schemas, docs, tests,
+    and generated Sprint 004 evidence. Preserve reviewed evidence if already used
+    by a human gate.
+human_gate:
+  required: false
+  approver: Human Owner
+tool_budget:
+  search: 4
+  read: 14
+  write: 20
+  execute: 12
+  max_runtime_minutes: 90
+beads:
+- bead_id: BEAD-CAT-004-001
+  title: Create v2-to-CAT alignment matrix
+- bead_id: BEAD-CAT-004-002
+  title: Implement Tower state freshness guard
+- bead_id: BEAD-CAT-004-003
+  title: Add branch and root hygiene checks
+- bead_id: BEAD-CAT-004-004
+  title: Add unified Tower guard report and docs
+evidence_requirements:
+- alignment_matrix
+- tower_state_freshness_report
+- branch_hygiene_report
+- root_hygiene_report
+- tower_guard_report
+- schema_validation
+- test_results
+notes:
+- v2 is a read-only reference for this mission.
+- CAT should adopt compact patterns, not bulk-migrate v2 runtime sprawl.
+transition_history:
+- timestamp: '2026-06-17T21:54:36+00:00'
+  target_type: mission
+  target_id: MP-CAT-004
+  from_status: approved
+  to_status: dispatched
+  allowed: true
+  dry_run: false
+  reason: Mission closeout sequence start
+  evidence: evidence/tower/tower_guard_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+  guard: active_bead_present
+  guard_ok: true
+  guard_message: current_bead_id=BEAD-CAT-004-004 found on disk
+  snapshot: evidence\snapshots\snap_20260617T215436Z
+- timestamp: '2026-06-17T21:54:38+00:00'
+  target_type: mission
+  target_id: MP-CAT-004
+  from_status: dispatched
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Prepare mission validation closeout
+  evidence: evidence/tower/tower_guard_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260617T215438Z
+- timestamp: '2026-06-17T21:54:39+00:00'
+  target_type: mission
+  target_id: MP-CAT-004
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Required evidence assembled
+  evidence: evidence/reports/schema_validation_sprint_004.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215439Z
+- timestamp: '2026-06-17T21:54:40+00:00'
+  target_type: mission
+  target_id: MP-CAT-004
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Validation completed
+  evidence: evidence/reports/schema_validation_sprint_004.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215440Z
+- timestamp: '2026-06-17T21:54:41+00:00'
+  target_type: mission
+  target_id: MP-CAT-004
+  from_status: reviewed
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: Mission review approved
+  evidence: evidence/tower/tower_guard_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215441Z
+- timestamp: '2026-06-17T21:54:42+00:00'
+  target_type: mission
+  target_id: MP-CAT-004
+  from_status: closed
+  to_status: learned
+  allowed: true
+  dry_run: false
+  reason: Sprint 004 closeout completed
+  evidence: evidence/tower/tower_guard_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+  guard: closeout_complete
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215442Z
