@@ -7,26 +7,26 @@ If the two disagree, the YAML wins and this diagram must be regenerated.
 
 **Legend:** solid arc = forward lifecycle progress; arcs labelled `[rework]`,
 `[unblock]`, `[retry]`, or `[re-triage]` are reversible loop-backs. Guard names
-(e.g. `human_gate`, `review_gate`) are defined in the `guards` block of the YAML.
+(e.g. `human_gate_if_required`, `review_gate_pass`) are defined in the `guards` block of the YAML.
 
 ## Mission lifecycle
 
 States: `draft triaged approved dispatched in_progress validating reviewed closed
 blocked escalated rolled_back abandoned incident learned`.
-Terminal: `closed` (→ `learned` only), `abandoned`, `learned`.
+Terminal: `abandoned`, `learned` (`closed` is non-terminal; its only forward arc is `closed → learned`).
 
 ```mermaid
 stateDiagram-v2
     [*] --> draft
     draft --> triaged
     draft --> abandoned
-    triaged --> approved: human_gate?
+    triaged --> approved: human_gate_if_required
     triaged --> blocked
-    approved --> dispatched: active_bead
+    approved --> dispatched: active_bead_present
     approved --> blocked
     dispatched --> in_progress
     dispatched --> blocked
-    in_progress --> validating: evidence
+    in_progress --> validating: evidence_present
     in_progress --> blocked
     in_progress --> escalated
     in_progress --> incident
@@ -34,18 +34,18 @@ stateDiagram-v2
     validating --> in_progress: rework
     validating --> blocked
     validating --> incident
-    reviewed --> closed: review_gate
+    reviewed --> closed: review_gate_pass
     reviewed --> in_progress: rework
     reviewed --> blocked
     closed --> learned: closeout_complete
     blocked --> triaged: re-triage
-    blocked --> approved: unblock
+    blocked --> approved: human_gate_if_required
     blocked --> escalated
     blocked --> abandoned
-    escalated --> approved: ack
+    escalated --> approved: escalation_ack
     escalated --> blocked
-    escalated --> abandoned: ack
-    incident --> rolled_back: rollback_plan
+    escalated --> abandoned: escalation_ack
+    incident --> rolled_back: rollback_plan_present
     incident --> blocked
     incident --> abandoned
     rolled_back --> triaged
@@ -58,22 +58,22 @@ stateDiagram-v2
 ## BEAD lifecycle
 
 States: `queued active in_progress validating reviewed completed blocked failed
-changes_requested archived`. Terminal: `completed` (→ `archived` only), `archived`.
+changes_requested archived`. Terminal: `archived` (`completed` is non-terminal; its only forward arc is `completed → archived`).
 
 ```mermaid
 stateDiagram-v2
     [*] --> queued
-    queued --> active: dispatch
+    queued --> active
     queued --> blocked
     active --> in_progress
     active --> blocked
-    in_progress --> validating: evidence
+    in_progress --> validating: evidence_present
     in_progress --> failed
     in_progress --> blocked
     validating --> reviewed: validation_passed
     validating --> changes_requested
     validating --> failed
-    reviewed --> completed: review_gate
+    reviewed --> completed: review_gate_pass
     reviewed --> changes_requested
     changes_requested --> in_progress: rework
     changes_requested --> active: rework
