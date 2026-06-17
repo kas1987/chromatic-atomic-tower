@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/mission.schema.json",
+  "title": "CAT Mission",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "title",
+    "level",
+    "status",
+    "owner",
+    "priority",
+    "risk_level",
+    "reversibility",
+    "autonomy_level",
+    "confidence_minimum",
+    "objective",
+    "scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "acceptance_criteria",
+    "required_validation",
+    "rollback",
+    "human_gate",
+    "tool_budget",
+    "beads",
+    "evidence_requirements"
+  ],
+  "properties": {
+    "mission_id": {
+      "type": "string",
+      "pattern": "^MP-[A-Z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "triaged",
+        "approved",
+        "dispatched",
+        "in_progress",
+        "validating",
+        "reviewed",
+        "closed",
+        "blocked",
+        "escalated",
+        "rolled_back",
+        "abandoned",
+        "incident",
+        "learned"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "reversibility": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "none"
+      ]
+    },
+    "autonomy_level": {
+      "type": "string",
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ]
+    },
+    "confidence_minimum": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "created": {
+      "type": "string"
+    },
+    "last_updated": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 10
+    },
+    "background": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "in",
+        "out"
+      ],
+      "properties": {
+        "in": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "out": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "allowed_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbidden_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "success_metrics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_validation": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/validation"
+      }
+    },
+    "rollback": {
+      "$ref": "#/$defs/rollback"
+    },
+    "human_gate": {
+      "$ref": "#/$defs/human_gate"
+    },
+    "tool_budget": {
+      "$ref": "#/$defs/tool_budget"
+    },
+    "beads": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "evidence_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "validation": {
+      "type": "object",
+      "required": [
+        "type",
+        "command",
+        "evidence_path",
+        "required"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string"
+        },
+        "evidence_path": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "required": [
+        "required",
+        "plan"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "plan": {
+          "type": "string"
+        }
+      }
+    },
+    "human_gate": {
+      "type": "object",
+      "required": [
+        "required",
+        "approver"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "approver": {
+          "type": "string"
+        }
+      }
+    },
+    "tool_budget": {
+      "type": "object",
+      "required": [
+        "search",
+        "read",
+        "write",
+        "execute",
+        "max_runtime_minutes"
+      ],
+      "properties": {
+        "search": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "read": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "write": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "execute": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_runtime_minutes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

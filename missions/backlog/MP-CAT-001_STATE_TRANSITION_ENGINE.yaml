@@ -1,0 +1,58 @@
+mission_id: MP-CAT-001
+title: Implement CAT State Transition Engine
+level: M3
+status: draft
+owner: Human Owner
+priority: 2
+risk_level: medium
+reversibility: high
+autonomy_level: L3
+confidence_minimum: 75
+created: "2026-06-17"
+last_updated: "2026-06-17"
+objective: >-
+  Add strict state transition tooling for mission and BEAD lifecycle changes.
+background: >-
+  Sprint 000 creates files and basic validation. Sprint 001 should enforce
+  status transitions with explicit evidence and registry mutation.
+scope:
+  in:
+    - transition rules
+    - transition script
+    - state mutation tests
+  out:
+    - GitHub API integration
+allowed_paths:
+  - scripts/cat_transition.py
+  - gates/state/**
+  - tests/**
+  - docs/architecture/STATE_MACHINE.md
+forbidden_paths:
+  - .env
+  - infra/prod/**
+dependencies:
+  - MP-CAT-000
+acceptance_criteria:
+  - Valid transitions pass.
+  - Invalid transitions fail.
+  - Registry updates are deterministic.
+required_validation:
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/sprint_001_transition_tests.txt
+    required: true
+rollback:
+  required: true
+  plan: Revert transition script and rules.
+human_gate:
+  required: false
+  approver: Human Owner
+tool_budget:
+  search: 2
+  read: 8
+  write: 8
+  execute: 4
+  max_runtime_minutes: 45
+beads: []
+evidence_requirements:
+  - transition_test_output

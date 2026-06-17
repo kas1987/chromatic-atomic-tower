@@ -1,0 +1,54 @@
+bead_id: BEAD-CHANGE-ME
+mission_id: MP-CHANGE-ME
+title: Change me
+status: queued
+agent_role: Builder
+autonomy_level: L3
+objective: >-
+  State one atomic objective.
+allowed_paths:
+  - path/**
+forbidden_paths:
+  - .env
+  - secrets/**
+dependencies: []
+tool_budget:
+  search: 1
+  read: 4
+  write: 2
+  execute: 1
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 75
+  objective_clarity: 80
+  scope_clarity: 80
+  evidence_quality: 70
+  reversibility: 90
+  tool_fit: 80
+  risk_awareness: 75
+  testability: 75
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - Need to touch file outside allowed_paths.
+  - Need secret or credential.
+  - Confidence drops below minimum.
+  - Validation cannot be run.
+definition_of_done:
+  - Objective complete.
+  - Validation complete.
+  - Evidence recorded.
+validation:
+  - type: self_review
+    command: manual
+    evidence_path: evidence/reports/CHANGE_ME.md
+    required: true
+required_output:
+  - summary
+  - files_changed
+  - validation_result
+  - evidence_path
+handoff:
+  next_bead_id: null
+  notes: []

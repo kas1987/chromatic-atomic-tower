@@ -1,0 +1,32 @@
+version: 0.0.0
+last_updated: "2026-06-17"
+score_policy:
+  starting_score: 70
+  promote_threshold: 85
+  demote_threshold: 55
+  severe_incident_cap: 40
+agents:
+  - role: Orchestrator
+    score: 75
+    completed_beads: 0
+    failed_beads: 0
+    incidents: 0
+    current_trust: provisional
+  - role: Builder
+    score: 70
+    completed_beads: 0
+    failed_beads: 0
+    incidents: 0
+    current_trust: provisional
+  - role: Reviewer
+    score: 70
+    completed_beads: 0
+    failed_beads: 0
+    incidents: 0
+    current_trust: provisional
+  - role: Scribe
+    score: 70
+    completed_beads: 0
+    failed_beads: 0
+    incidents: 0
+    current_trust: provisional

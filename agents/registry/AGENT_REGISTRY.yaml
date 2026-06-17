@@ -1,0 +1,61 @@
+version: 0.0.0
+last_updated: "2026-06-17"
+agents:
+  - role: Orchestrator
+    autonomy_level: L4
+    can_dispatch: true
+    can_mutate: false
+    default_tools:
+      - read
+      - validate
+    role_file: agents/roles/ORCHESTRATOR.md
+  - role: Scout
+    autonomy_level: L1
+    can_dispatch: false
+    can_mutate: false
+    default_tools:
+      - read
+      - search
+    role_file: agents/roles/SCOUT.md
+  - role: Builder
+    autonomy_level: L3
+    can_dispatch: false
+    can_mutate: true
+    default_tools:
+      - read
+      - write
+      - execute
+    role_file: agents/roles/BUILDER.md
+  - role: Reviewer
+    autonomy_level: L2
+    can_dispatch: false
+    can_mutate: false
+    default_tools:
+      - read
+      - diff
+      - validate
+    role_file: agents/roles/REVIEWER.md
+  - role: Auditor
+    autonomy_level: L2
+    can_dispatch: false
+    can_mutate: false
+    default_tools:
+      - read
+      - validate
+    role_file: agents/roles/AUDITOR.md
+  - role: Scribe
+    autonomy_level: L2
+    can_dispatch: false
+    can_mutate: true
+    default_tools:
+      - read
+      - write_docs
+    role_file: agents/roles/SCRIBE.md
+  - role: Security
+    autonomy_level: L1
+    can_dispatch: false
+    can_mutate: false
+    default_tools:
+      - read
+      - audit
+    role_file: agents/roles/SECURITY.md

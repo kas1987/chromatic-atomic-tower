@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+.env
+.env.*
+!.env.example
+evidence/logs/*.log
+evidence/test-results/*.xml
+cat_dispatch.json
+cat_dispatch.md
+# Source distribution artifact (kept locally, not part of baseline)
+chromatic_atomic_tower_sprint_000.zip

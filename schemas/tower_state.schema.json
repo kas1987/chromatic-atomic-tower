@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Tower State",
+  "type": "object",
+  "required": [
+    "version",
+    "state_id",
+    "status",
+    "active_sprint",
+    "active_mission_id",
+    "active_bead_id",
+    "go_mode"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "state_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "active_sprint": {
+      "type": "string"
+    },
+    "active_mission_id": {
+      "type": "string"
+    },
+    "active_bead_id": {
+      "type": "string"
+    },
+    "go_mode": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

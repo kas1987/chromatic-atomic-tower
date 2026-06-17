@@ -1,0 +1,20 @@
+version: 0.0.0
+state_id: TOWER-STATE-000
+status: initialized
+active_sprint: SPRINT-000
+active_mission_id: MP-CAT-000
+active_bead_id: BEAD-CAT-000-001
+go_mode: enabled
+last_updated: "2026-06-17"
+operator: Human Owner
+control_planes:
+  mission: active
+  execution: active
+  evidence: initialized
+  learning: initialized
+current_constraints:
+  - Do not import Harness V2 wholesale.
+  - Do not run destructive commands.
+  - Do not touch secrets or production resources.
+  - Do not dispatch work without active BEAD.
+next_command: "python scripts/cat_resolve_go.py"

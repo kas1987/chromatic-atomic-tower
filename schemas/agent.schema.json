@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Agent Registry",
+  "type": "object",
+  "required": [
+    "version",
+    "agents"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "last_updated": {
+      "type": "string"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "autonomy_level",
+          "can_dispatch",
+          "can_mutate",
+          "role_file"
+        ]
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,51 @@
+bead_id: BEAD-CAT-EXAMPLE-001
+mission_id: MP-CAT-EXAMPLE-M2
+title: Add validation report flag
+status: queued
+agent_role: Builder
+autonomy_level: L3
+objective: >-
+  Add a --report flag to cat_validate.py that writes markdown validation evidence.
+allowed_paths:
+  - scripts/cat_validate.py
+  - tests/test_validate_examples.py
+  - evidence/reports/**
+forbidden_paths:
+  - .env
+  - secrets/**
+dependencies: []
+tool_budget:
+  search: 0
+  read: 4
+  write: 3
+  execute: 2
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 78
+  objective_clarity: 80
+  scope_clarity: 80
+  evidence_quality: 75
+  reversibility: 90
+  tool_fit: 80
+  risk_awareness: 75
+  testability: 75
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - Validation design needs schema changes.
+  - Tests cannot run.
+definition_of_done:
+  - --report writes markdown.
+  - pytest passes.
+validation:
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/example_bead_tests.txt
+    required: true
+required_output:
+  - summary
+  - validation_result
+handoff:
+  next_bead_id: null
+  notes: []

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Mission Registry",
+  "type": "object",
+  "required": [
+    "version",
+    "last_updated",
+    "active_mission_id",
+    "missions"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "last_updated": {
+      "type": "string"
+    },
+    "active_mission_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "selection_policy": {
+      "type": "object"
+    },
+    "missions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "mission_id",
+          "title",
+          "level",
+          "status",
+          "priority",
+          "risk_level",
+          "confidence",
+          "path"
+        ]
+      }
+    }
+  },
+  "additionalProperties": true
+}

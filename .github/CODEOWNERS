@@ -1,0 +1,8 @@
+# Default owner
+* @owner
+
+# Governance files
+/CAT_MANIFEST.md @owner
+/CHROMATIC_TREES.md @owner
+/gates/ @owner
+/schemas/ @owner

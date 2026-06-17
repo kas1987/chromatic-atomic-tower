@@ -1,0 +1,42 @@
+version: 0.0.0
+last_updated: "2026-06-17"
+active_mission_id: MP-CAT-000
+selection_policy:
+  priority_order:
+    - approved
+    - in_progress
+    - validating
+  tie_breakers:
+    - highest_priority
+    - highest_confidence
+    - lowest_risk
+    - oldest_created
+missions:
+  - mission_id: MP-CAT-000
+    title: Establish Chromatic Atomic Tower Core Foundation
+    level: M3
+    status: approved
+    priority: 1
+    owner: Human Owner
+    risk_level: high
+    reversibility: high
+    autonomy_level: L4
+    confidence: 88
+    current_bead_id: BEAD-CAT-000-001
+    path: missions/active/MP-CAT-000_ESTABLISH_CORE.yaml
+    created: "2026-06-17"
+    last_updated: "2026-06-17"
+  - mission_id: MP-CAT-001
+    title: Implement CAT State Transition Engine
+    level: M3
+    status: draft
+    priority: 2
+    owner: Human Owner
+    risk_level: medium
+    reversibility: high
+    autonomy_level: L3
+    confidence: 65
+    current_bead_id: null
+    path: missions/backlog/MP-CAT-001_STATE_TRANSITION_ENGINE.yaml
+    created: "2026-06-17"
+    last_updated: "2026-06-17"

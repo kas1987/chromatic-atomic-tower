@@ -1,0 +1,30 @@
+version: 0.0.0
+weights:
+  objective_clarity: 0.20
+  scope_clarity: 0.20
+  evidence_quality: 0.20
+  reversibility: 0.10
+  tool_fit: 0.10
+  risk_awareness: 0.10
+  testability: 0.10
+bands:
+  very_high:
+    min: 90
+    max: 100
+    permission: execute_scoped
+  high:
+    min: 75
+    max: 89
+    permission: execute_logged
+  medium:
+    min: 60
+    max: 74
+    permission: reversible_low_risk_only
+  low:
+    min: 40
+    max: 59
+    permission: plan_only
+  blocked:
+    min: 0
+    max: 39
+    permission: halt

@@ -1,0 +1,20 @@
+{
+  "version": "0.0.0",
+  "root": "chromatic-atomic-tower",
+  "directories": {
+    "missions": "Mission Plane",
+    "beads": "Execution Plane",
+    "agents": "Agent Plane",
+    "gates": "Gate Plane",
+    "evidence": "Evidence Plane",
+    "schemas": "Contract Plane",
+    "scripts": "Automation Plane",
+    "playbooks": "Governance Plane",
+    "docs": "Knowledge Plane",
+    "state": "State Plane",
+    "learnings": "Learning Plane",
+    "prompts": "Prompt Plane",
+    "checklists": "Review Plane",
+    "reference": "Reference Plane"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Mission Log",
+  "type": "object",
+  "required": [
+    "log_id",
+    "mission_id",
+    "bead_id",
+    "agent_role",
+    "confidence",
+    "tools_used",
+    "files_touched",
+    "validation",
+    "result",
+    "next_task"
+  ],
+  "properties": {
+    "log_id": {
+      "type": "string"
+    },
+    "mission_id": {
+      "type": "string"
+    },
+    "bead_id": {
+      "type": "string"
+    },
+    "agent_role": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "tools_used": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "files_touched": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "validation": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "result": {
+      "type": "string"
+    },
+    "next_task": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

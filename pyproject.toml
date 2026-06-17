@@ -1,0 +1,13 @@
+[project]
+name = "chromatic-atomic-tower"
+version = "0.0.0"
+description = "Mission-first, BEAD-first, evidence-first control tower for autonomous engineering."
+requires-python = ">=3.11"
+dependencies = [
+  "PyYAML>=6.0",
+  "jsonschema>=4.0"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

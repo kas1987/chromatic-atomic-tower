@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Evidence",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "mission_id",
+    "bead_id",
+    "type",
+    "summary",
+    "artifacts",
+    "validation_result",
+    "created_by",
+    "created_at"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string"
+    },
+    "mission_id": {
+      "type": "string"
+    },
+    "bead_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "validation_result": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed",
+        "skipped",
+        "blocked"
+      ]
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

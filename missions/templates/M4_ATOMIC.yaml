@@ -1,0 +1,52 @@
+mission_id: MP-CHANGE-ME
+title: Change me
+level: M4
+status: draft
+owner: Human Owner
+priority: 1
+risk_level: critical
+reversibility: low
+autonomy_level: L1
+confidence_minimum: 90
+created: "YYYY-MM-DD"
+last_updated: "YYYY-MM-DD"
+objective: >-
+  Describe the mission objective in one clear sentence.
+background: >-
+  Explain why this mission exists and what context matters.
+scope:
+  in:
+    - Change me
+  out:
+    - Change me
+allowed_paths:
+  - path/**
+forbidden_paths:
+  - .env
+  - secrets/**
+dependencies: []
+acceptance_criteria:
+  - Change me
+success_metrics:
+  - Change me
+required_validation:
+  - type: self_review
+    command: "manual"
+    evidence_path: evidence/reports/CHANGE_ME.md
+    required: true
+rollback:
+  required: true
+  plan: Change me
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 3
+  read: 15
+  write: 4
+  execute: 2
+  max_runtime_minutes: 90
+beads: []
+evidence_requirements:
+  - Change me
+notes: []

@@ -1,0 +1,54 @@
+mission_id: MP-CAT-EXAMPLE-M2
+title: Add structured validation report output
+level: M2
+status: draft
+owner: Human Owner
+priority: 3
+risk_level: medium
+reversibility: high
+autonomy_level: L3
+confidence_minimum: 75
+created: "2026-06-17"
+last_updated: "2026-06-17"
+objective: >-
+  Add an option to write schema validation output to a report file under evidence/reports.
+background: >-
+  CAT closeout needs evidence artifacts. A report output option improves traceability.
+scope:
+  in:
+    - update cat_validate.py with --report
+    - add test for report generation
+  out:
+    - dashboard UI
+allowed_paths:
+  - scripts/cat_validate.py
+  - tests/**
+  - evidence/reports/**
+forbidden_paths:
+  - .env
+  - infra/prod/**
+dependencies:
+  - MP-CAT-000
+acceptance_criteria:
+  - --report writes a markdown report.
+  - Validation still passes without --report.
+required_validation:
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/example_m2_tests.txt
+    required: true
+rollback:
+  required: true
+  plan: Revert script and test changes.
+human_gate:
+  required: false
+  approver: Human Owner
+tool_budget:
+  search: 1
+  read: 4
+  write: 3
+  execute: 2
+  max_runtime_minutes: 30
+beads: []
+evidence_requirements:
+  - test_output
