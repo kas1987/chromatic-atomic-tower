@@ -1,0 +1,35 @@
+harness:
+  name: budget-agent-harness
+  version: 0.1.0
+  mode: checkpoint-supervised
+
+paths:
+  project_state: .agent/project_state.md
+  queue: .agent/queue.json
+  runs: .agent/runs
+  prompts: .agent/prompts
+
+validation:
+  required_commands:
+    - git status --short
+    - git diff --stat
+  optional_commands:
+    - pytest
+    - npm test
+    - npm run lint
+    - npm run typecheck
+    - ruff check .
+    - mypy .
+
+safety:
+  block_destructive_actions: true
+  block_external_deploys: true
+  require_approval_for_dependency_changes: true
+  require_approval_for_secret_changes: true
+  require_approval_for_migrations: true
+
+review:
+  final_decisions:
+    - APPROVE
+    - REQUEST_REVISION
+    - REJECT
