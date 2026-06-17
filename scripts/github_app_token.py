@@ -49,7 +49,11 @@ def load_env() -> tuple[str, str]:
 def make_jwt(app_id: str, pem: str) -> str:
     now = int(time.time())
     payload = {"iat": now - 60, "exp": now + 540, "iss": app_id}
-    return pyjwt.encode(payload, pem, algorithm="RS256")
+    token = pyjwt.encode(payload, pem, algorithm="RS256")
+    # PyJWT 1.x returns bytes; 2.x returns str. Normalize to str.
+    if isinstance(token, bytes):
+        return token.decode("utf-8")
+    return token
 
 
 def gh_api(path: str, token: str, method: str = "GET", body: dict | None = None) -> dict:
@@ -66,10 +70,12 @@ def gh_api(path: str, token: str, method: str = "GET", body: dict | None = None)
         method=method,
     )
     try:
-        with urllib.request.urlopen(req) as r:
-            return json.loads(r.read())
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return json.loads(r.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
-        sys.exit(f"GitHub API error {e.code}: {e.read().decode()}")
+        sys.exit(f"GitHub API error {e.code}: {e.read().decode('utf-8', errors='ignore')}")
+    except urllib.error.URLError as e:
+        sys.exit(f"Network error: {e.reason}")
 
 
 def cmd_jwt(app_id: str, pem: str) -> None:
@@ -118,7 +124,11 @@ def main() -> None:
     elif cmd == "token":
         install_id = None
         if "--install-id" in args:
-            install_id = args[args.index("--install-id") + 1]
+            idx = args.index("--install-id")
+            if idx + 1 < len(args):
+                install_id = args[idx + 1]
+            else:
+                sys.exit("Error: --install-id requires a value")
         cmd_token(app_id, pem, install_id)
     else:
         print(__doc__)
