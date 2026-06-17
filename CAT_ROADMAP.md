@@ -1,63 +1,17 @@
 # CAT Roadmap
 
-## Sprint 000: Core Foundation
+## Completed
 
-Status: packaged baseline.
+- Sprint 000: Core repo foundation
+- Sprint 001: State transition engine
+- Sprint 002: Evidence gate and closeout engine
 
-Goal: establish the repo, mission registry, BEAD contracts, gates, schemas, validators, GO resolver MVP, prompts, docs, and checklists.
+## Current
 
-## Sprint 001: State Transition Engine
+- Sprint 003: CI Governance and Self-Healing Validation Engine
 
-Goal: enforce mission and BEAD transitions.
+## Next Candidates
 
-Deliverables:
-
-- `scripts/cat_transition.py`
-- transition rules YAML
-- status mutation tests
-- automatic registry updates
-- blocked/escalated/incident handling
-
-## Sprint 002: Evidence Index
-
-Goal: make proof queryable.
-
-Deliverables:
-
-- evidence manifest
-- evidence schema enforcement
-- closeout report generator
-- validation artifact lookup
-
-## Sprint 003: GitHub Bridge
-
-Goal: connect Mission -> BEAD -> Branch -> PR.
-
-Deliverables:
-
-- issue template enforcement
-- PR title checker
-- commit message checker
-- CODEOWNERS alignment
-
-## Sprint 004: Agent Scorecard Automation
-
-Goal: promote/demote agents based on measured behavior.
-
-Deliverables:
-
-- score mutation rules
-- incident penalty model
-- tool-budget tracking
-- model-routing adjustments
-
-## Sprint 005: CAT Portable Project Adapter
-
-Goal: let any repo adopt CAT with a `.cat/` adapter folder.
-
-Deliverables:
-
-- project adapter schema
-- bootstrap script
-- minimal project registry
-- sync rules
+- Sprint 004: Agent scorecards and trust promotion engine
+- Sprint 005: GO-mode queue automation and dispatcher hardening
+- Sprint 006: Release readiness and optional CD dry-run governance

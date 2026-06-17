@@ -6,13 +6,3 @@
 | 2026-06-17 | Use Harness V2 as donor only | Extract value without inheriting clutter | Human Owner |
 | 2026-06-17 | Use Mission -> BEAD -> Evidence -> Learning hierarchy | Enables traceable autonomous work | Human Owner |
 | 2026-06-17 | Use YAML/JSON for operational contracts | Enables validation and automation | Human Owner |
-| 2026-06-17 | Adopt Sprint 000 package as live repo at C:\.01_CAT root | Promote validated scaffold; remove staging nesting | Human Owner |
-| 2026-06-17 | Baseline accepted: repo check + 16-contract schema validation + GO resolver + 3 pytest all pass | Satisfies PDR-CAT-000 section 14 acceptance criteria | Human Owner |
-| 2026-06-17 | Govern the multi-model coding harness as CAT mission MP-CAT-002 (not a separate repo/.agent dir) | Keep model choice as routing inside mission authority; honor CHROMATIC_TREES (no ungoverned top-level files) | Human Owner |
-| 2026-06-17 | Verified Ollama Cloud worker tags: kimi-k2.7-code:cloud, minimax-m3:cloud | Implementation role for MP-CAT-002 workers | Human Owner |
-| 2026-06-17 | Adopt budget_agent_harness_pdr_pack as MP-CAT-002 implementation; harness home is .agent/ (pack-native, harness_settings paths) | Pack is self-consistent and design-complete; avoid refactoring its layout into separate planes | Human Owner |
-| 2026-06-17 | Promote MP-CAT-002 draft->approved and dispatch via implementer subagent | Human Owner directed "set up a plan and have a subagent implement" | Human Owner |
-| 2026-06-17 | Root cleanup: delete local clutter (sprint_000.zip, _pdr_pack/), relocate SPRINT_000_PLAN.md to docs/operations/, bless optional root files + tooling dirs in CAT_MANIFEST 3.1/3.2, commit GitHub App token scripts | Workers had dropped ungoverned files at root; make CAT_MANIFEST the single source of truth and reconcile reality to it (manifest 10) | Human Owner |
-| 2026-06-17 | Close Sprint 000 / MP-CAT-000 by manual operator action (BEADs->completed, mission->closed, registry active_mission_id=null, tower paused) | No state-transition engine exists yet; cat_closeout.py only writes a report. Human Owner directed full closeout via GO and provided the review gate | Human Owner |
-| 2026-06-17 | Re-land the Sprint 000 closeout cleanly on master rather than merge the stale sprint-000-closeout branch | Stale branch predated merged work (retros, CI pytest test, harness guardrail fix) and would have deleted ~646 lines of it | Human Owner |
-| 2026-06-17 | LEARNING: bootstrap sprint must be closed by hand because the sprint-closing mechanism is itself a later deliverable (MP-CAT-001) | Primary justification for prioritizing the MP-CAT-001 state-transition engine as Sprint 001 | Human Owner |

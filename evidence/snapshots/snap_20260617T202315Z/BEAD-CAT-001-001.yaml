@@ -1,0 +1,67 @@
+bead_id: BEAD-CAT-001-001
+mission_id: MP-CAT-001
+title: Define transition rules and state machine diagram
+status: completed
+agent_role: Architect
+autonomy_level: L3
+objective: Define the canonical set of valid mission and BEAD state transitions as
+  a structured YAML rules document under gates/state/, and produce a Mermaid state
+  machine diagram in docs/architecture/STATE_MACHINE.md showing every valid arc, guard
+  condition, and terminal state.
+allowed_paths:
+- gates/state/**
+- docs/architecture/STATE_MACHINE.md
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
+dependencies: []
+tool_budget:
+  search: 5
+  read: 10
+  write: 8
+  execute: 3
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 88
+  objective_clarity: 92
+  scope_clarity: 90
+  evidence_quality: 85
+  reversibility: 95
+  tool_fit: 88
+  risk_awareness: 85
+  testability: 82
+risk_level: low
+reversibility: high
+stop_conditions:
+- A required enum value is absent from both mission.schema.json and bead.schema.json
+  and cannot be resolved without a schema change.
+- The diagram would require a new directory outside allowed_paths.
+- An edge case transition has no clear resolution after 2 deliberation rounds.
+definition_of_done:
+- gates/state/transition_rules.yaml exists and enumerates every valid (from, to) pair
+  for both mission and BEAD states.
+- Each rule includes guard conditions (e.g. human_gate required) and whether the transition
+  is reversible.
+- docs/architecture/STATE_MACHINE.md contains a Mermaid diagram rendered from the
+  rules.
+- evidence/reports/bead_cat_001_001_transition_rules_review.md records the self-review.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/reports/bead_cat_001_001_transition_rules_review.md
+  required: true
+required_output:
+- summary
+- files_changed
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-001-002
+  notes:
+  - Transition rules gate BEAD-001-002; the CLI must import gates/state/transition_rules.yaml
+    as its rule source.
+last_updated: '2026-06-17T20:23:09.428533+00:00'

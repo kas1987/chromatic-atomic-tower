@@ -1,0 +1,20 @@
+evidence_id: EB-CAT-002-FAILED
+mission_id: MP-CAT-002
+bead_id: BEAD-CAT-002-CLOSEOUT-EXAMPLE
+target_type: bead
+type: closeout
+summary: This bundle intentionally marks validation failed for negative testing.
+validation_result: failed
+required_artifacts:
+  - path: gates/evidence/EVIDENCE_GATE_RULES.yaml
+    kind: rules
+    required: true
+    description: Authoritative evidence gate rules.
+    validation_result: failed
+supporting_artifacts: []
+metrics:
+  required_artifacts: 1
+created_by: Human Owner
+created_at: '2026-06-17T00:00:00Z'
+learning_note: Failed required validation must block completion.
+closeout_ready: false

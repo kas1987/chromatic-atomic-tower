@@ -1,0 +1,66 @@
+bead_id: BEAD-CAT-002-003
+mission_id: MP-CAT-002
+title: Run first local worker patch
+status: completed
+agent_role: Builder
+autonomy_level: L3
+objective: Dispatch a defined sample ticket to a local worker model (Kimi or MiniMax
+  via Ollama Cloud) using the worker prompt template, capture the generated patch,
+  and run tests against it. Do not merge the patch.
+allowed_paths:
+- scripts/harness_demo.py
+- tests/**
+- evidence/diffs/**
+- evidence/test-results/**
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+dependencies:
+- BEAD-CAT-002-002
+tool_budget:
+  search: 1
+  read: 6
+  write: 4
+  execute: 6
+  max_runtime_minutes: 30
+confidence:
+  minimum: 75
+  current: 80
+  objective_clarity: 85
+  scope_clarity: 82
+  evidence_quality: 82
+  reversibility: 90
+  tool_fit: 80
+  risk_awareness: 82
+  testability: 88
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Worker patch would touch a path not listed in the ticket.
+- Worker fails the task after 2 retries.
+- Patch requests a merge or destructive action.
+- Ollama Cloud model is unreachable.
+definition_of_done:
+- A worker patch for scripts/harness_demo.py is generated and saved under evidence/diffs/.
+- The test suite is executed against the patched code and output saved under evidence/test-results/.
+- The patch is NOT merged; merge awaits Human Owner approval.
+validation:
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/mp_cat_002_demo_tests.txt
+  required: true
+required_output:
+- summary
+- worker_model_used
+- patch_path
+- test_result
+- retries_used
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-002-004
+  notes:
+  - After a patch and test run exist, define the final review packet format for Opus.
+last_updated: '2026-06-17T20:34:02.226945+00:00'

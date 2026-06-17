@@ -1,0 +1,46 @@
+name: CAT CI Governance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  cat-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Repo structure check
+        run: python scripts/cat_check_repo.py
+
+      - name: Schema validation
+        run: python scripts/cat_validate.py --all
+
+      - name: Tower status
+        run: python scripts/cat_status.py
+
+      - name: CAT CI local report
+        run: python scripts/cat_ci.py --mode github --write-report
+
+      - name: Tests
+        run: pytest -q
+
+      - name: Upload CAT CI evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cat-ci-evidence
+          path: |
+            evidence/ci/reports/
+            evidence/ci/summaries/
+            evidence/test-results/

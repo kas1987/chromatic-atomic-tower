@@ -31,12 +31,13 @@ scripts/harness_demo.py
 
 | Artifact | Path |
 |---|---|
-| Review packet | `.agent/runs/DEMO-001/review_packet.md` |
-| Worker response | `.agent/runs/DEMO-001/worker_response.md` |
-| Cheap review | `.agent/runs/DEMO-001/cheap_review.md` |
-| Test output | `.agent/runs/DEMO-001/test_output.txt` |
-| Git diff (full) | `.agent/runs/DEMO-001/git_diff_full.txt` |
+| Review packet | `evidence/runs/DEMO-001/review_packet.md` |
+| Worker response | `evidence/runs/DEMO-001/worker_response.md` |
+| Cheap review | `evidence/runs/DEMO-001/cheap_review.md` |
+| Test output | `evidence/runs/DEMO-001/test_output.txt` |
+| Git diff (full) | `evidence/runs/DEMO-001/git_diff_full.txt` |
 | Evidence report | `evidence/reports/BEAD-CAT-002-003_harness_run.md` |
+| Scratch (transient) | `.agent/runs/DEMO-001/` |
 
 ## Validation
 

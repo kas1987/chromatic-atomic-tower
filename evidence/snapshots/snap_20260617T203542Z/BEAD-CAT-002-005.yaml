@@ -1,0 +1,73 @@
+bead_id: BEAD-CAT-002-005
+mission_id: MP-CAT-002
+title: Relocate durable harness evidence into the evidence plane
+status: queued
+agent_role: Builder
+autonomy_level: L3
+objective: >-
+  Make harness run evidence durable and governed: relocate the artifacts the human
+  gate depends on (review packet, worker response, cheap review, test output, full
+  diff) from .agent/runs/{ticket}/ into evidence/runs/{ticket}/, update
+  scripts/harness_bridge.py to write and reference the new location, repoint existing
+  evidence reports, and only then gitignore the transient .agent/runs scratch.
+background: >-
+  PR #10 attempted to gitignore and delete .agent/runs/* to reduce churn, but a P1
+  review (PR #10, comment 3430705082) found those artifacts are human-gate evidence
+  referenced by committed reports (evidence/reports/BEAD-CAT-002-003_harness_run.md,
+  mp_cat_002_t003_run.md) and emitted by harness_bridge.py. Untracking them broke the
+  evidence chain, so PR #10 was closed. This BEAD relands the cleanup correctly.
+allowed_paths:
+  - scripts/harness_bridge.py
+  - evidence/**
+  - .gitignore
+  - docs/operations/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - infra/prod/**
+  - secrets/**
+  - credentials/**
+dependencies:
+  - BEAD-CAT-002-003
+tool_budget:
+  search: 5
+  read: 12
+  write: 10
+  execute: 4
+  max_runtime_minutes: 40
+confidence:
+  minimum: 75
+  current: 82
+  objective_clarity: 88
+  scope_clarity: 85
+  evidence_quality: 85
+  reversibility: 90
+  tool_fit: 85
+  risk_awareness: 85
+  testability: 80
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Relocating evidence would orphan a path referenced by an unmigrated report.
+  - The bridge change would require touching a path outside this BEAD's allowed_paths.
+  - A run artifact contains a secret or credential that must not be committed.
+definition_of_done:
+  - Durable artifacts live under evidence/runs/{ticket}/ and are tracked.
+  - scripts/harness_bridge.py writes durable artifacts to evidence/runs/ and references them in reports.
+  - Existing evidence reports (BEAD-CAT-002-003_harness_run.md, mp_cat_002_t003_run.md) point at the new paths; no report references a missing file.
+  - .gitignore ignores only transient .agent/runs scratch, not the evidence plane.
+  - A fresh checkout has every evidence-report artifact link resolve.
+validation:
+  - type: link_check
+    command: manual
+    evidence_path: evidence/reports/bead_cat_002_005_evidence_relocation.md
+    required: true
+required_output:
+  - summary
+  - files_changed
+  - evidence_path
+  - migrated_artifacts
+handoff:
+  next_bead_id: null
+  notes:
+    - Resolves the PR #10 P1; only after this lands may .agent/runs scratch be ignored.

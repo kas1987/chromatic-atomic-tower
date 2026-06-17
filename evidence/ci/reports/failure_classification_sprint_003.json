@@ -1,0 +1,10 @@
+{
+  "failure_type": "schema_failure",
+  "severity": "medium",
+  "route_to": "Builder or Scribe",
+  "human_gate_required": false,
+  "self_heal_allowed": true,
+  "message": "schema validation failed",
+  "check": "schema",
+  "recommended_action": "Fix schema structure or required fields."
+}

@@ -1,0 +1,20 @@
+evidence_id: EB-CAT-002-MISSING
+mission_id: MP-CAT-002
+bead_id: BEAD-CAT-002-CLOSEOUT-EXAMPLE
+target_type: bead
+type: closeout
+summary: This bundle intentionally references a missing required artifact for negative testing.
+validation_result: passed
+required_artifacts:
+  - path: evidence/reports/this_file_should_not_exist.md
+    kind: report
+    required: true
+    description: Missing artifact used to prove the gate blocks closeout.
+    validation_result: passed
+supporting_artifacts: []
+metrics:
+  required_artifacts: 1
+created_by: Human Owner
+created_at: '2026-06-17T00:00:00Z'
+learning_note: Missing required artifacts must block closeout.
+closeout_ready: true

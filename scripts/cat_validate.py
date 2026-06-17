@@ -23,6 +23,11 @@ BEAD_PATTERNS = [
     'beads/examples/*.yaml',
 ]
 
+EVIDENCE_BUNDLE_PATTERNS = [
+    'evidence/bundles/examples/*.yaml',
+    'evidence/bundles/generated/*.yaml',
+]
+
 # Templates include placeholder IDs and should validate as structural samples.
 TEMPLATE_PATTERNS = [
     ('mission template', 'missions/templates/*.yaml', ROOT / 'schemas/mission.schema.json'),
@@ -50,6 +55,10 @@ def validate_all(include_templates: bool = True) -> int:
     for pattern in BEAD_PATTERNS:
         for file_path in sorted(ROOT.glob(pattern)):
             targets.append(('bead', file_path, ROOT / 'schemas/bead.schema.json'))
+
+    for pattern in EVIDENCE_BUNDLE_PATTERNS:
+        for file_path in sorted(ROOT.glob(pattern)):
+            targets.append(('evidence bundle', file_path, ROOT / 'schemas/evidence_bundle.schema.json'))
 
     if include_templates:
         for kind, pattern, schema in TEMPLATE_PATTERNS:
@@ -92,6 +101,9 @@ def main() -> int:
         elif 'missions' in file_path.parts:
             schema = ROOT / 'schemas/mission.schema.json'
             kind = 'mission'
+        elif 'evidence/bundles' in str(file_path):
+            schema = ROOT / 'schemas/evidence_bundle.schema.json'
+            kind = 'evidence bundle'
         elif file_path.name == 'TOWER_STATE.yaml':
             schema = ROOT / 'schemas/tower_state.schema.json'
             kind = 'tower state'

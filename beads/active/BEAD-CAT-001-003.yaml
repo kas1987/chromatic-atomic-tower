@@ -1,65 +1,70 @@
 bead_id: BEAD-CAT-001-003
 mission_id: MP-CAT-001
-title: Implement atomic registry mutation and snapshot/rollback logic
+title: Add transition tests and schema checks
 status: queued
-agent_role: Builder
+agent_role: Reviewer
 autonomy_level: L3
-objective: >-
-  Extend scripts/cat_transition.py with pre-transition snapshot creation
-  (timestamped copies of MISSION_REGISTRY.yaml and all files under state/**)
-  and a --rollback <snapshot_id> mode that restores the saved files, updates
-  last_updated timestamps, and emits a rollback evidence record to
-  evidence/rollbacks/. Mutation must remain atomic (temp-file + rename).
+objective: Add test coverage and schema validation for transition events, denied transitions,
+  terminal protections, and GO-mode continuity.
 allowed_paths:
-  - scripts/cat_transition.py
-  - missions/registry/MISSION_REGISTRY.yaml
-  - state/**
-  - evidence/**
+- tests/**
+- schemas/transition_event.schema.json
+- scripts/cat_validate.py
+- evidence/test-results/**
+- evidence/reports/**
 forbidden_paths:
-  - .env
-  - .env.*
-  - infra/prod/**
-  - secrets/**
-  - credentials/**
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
 dependencies:
-  - BEAD-CAT-001-002
+- BEAD-CAT-001-002
 tool_budget:
-  search: 3
-  read: 10
-  write: 10
-  execute: 5
-  max_runtime_minutes: 25
+  search: 1
+  read: 6
+  write: 5
+  execute: 3
+  max_runtime_minutes: 30
 confidence:
   minimum: 75
-  current: 83
-  objective_clarity: 86
-  scope_clarity: 85
+  current: 86
+  objective_clarity: 90
+  scope_clarity: 88
   evidence_quality: 82
-  reversibility: 88
-  tool_fit: 85
-  risk_awareness: 88
-  testability: 83
+  reversibility: 90
+  tool_fit: 86
+  risk_awareness: 84
+  testability: 88
 risk_level: medium
-reversibility: medium
+reversibility: high
 stop_conditions:
-  - Snapshot storage would require a directory outside allowed_paths.
-  - Rollback would overwrite a file that has been modified by a concurrent process and cannot safely merge.
-  - Atomic rename is not supported on the target filesystem.
+- Required evidence path is missing for a review/completion transition.
+- Requested transition is not listed in gates/state/STATE_TRANSITION_RULES.yaml.
+- Transition attempts to touch a forbidden path.
+- Registry and target contract disagree on mission or BEAD identity.
+- Tests fail for reasons inside Sprint 001 scope.
 definition_of_done:
-  - scripts/cat_transition.py --execute creates a timestamped snapshot before mutating any file.
-  - scripts/cat_transition.py --rollback <snapshot_id> restores all snapshotted files and writes a rollback evidence record to evidence/rollbacks/.
-  - All mutations (execute and rollback) remain atomic via temp-file + rename.
-  - Snapshot metadata is recorded in evidence/transitions/transition_log.jsonl.
+- Allowed transition test passes.
+- Denied transition test passes.
+- Terminal transition test passes.
+- Transition event schema validates.
+- Full CAT validation passes.
 validation:
-  - type: self_review
-    command: manual
-    evidence_path: evidence/reports/bead_cat_001_003_snapshot_rollback_review.md
-    required: true
+- type: schema
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/schema_validation_sprint_001.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_001_transition_tests.txt
+  required: true
 required_output:
-  - summary
-  - files_changed
-  - evidence_path
+- updated_files
+- evidence_note
+- next_recommended_transition
 handoff:
-  next_bead_id: BEAD-CAT-001-004
-  notes:
-    - BEAD-001-004 writes the pytest suite; ensure snapshot IDs are deterministic enough to assert in tests.
+  from: Orchestrator
+  to: Reviewer
+  reviewer: Auditor
+  notes: Keep scope atomic. Use transition rules as source of truth.

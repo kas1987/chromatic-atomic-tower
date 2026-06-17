@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT CI Report",
+  "type": "object",
+  "required": ["report_id", "status", "checks", "summary"],
+  "properties": {
+    "report_id": {"type": "string"},
+    "status": {"type": "string", "enum": ["passed", "failed"]},
+    "mode": {"type": "string"},
+    "created_at": {"type": "string"},
+    "checks": {"type": "array", "items": {"type": "object", "required": ["id", "status"], "properties": {"id": {"type": "string"}, "status": {"type": "string", "enum": ["passed", "failed", "skipped"]}, "command": {"type": "string"}, "details": {"type": "string"}}}},
+    "summary": {"type": "object", "required": ["passed", "failed", "skipped"], "properties": {"passed": {"type": "integer"}, "failed": {"type": "integer"}, "skipped": {"type": "integer"}}}
+  },
+  "additionalProperties": true
+}
