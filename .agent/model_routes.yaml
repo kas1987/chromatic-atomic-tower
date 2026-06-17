@@ -1,0 +1,69 @@
+models:
+  architect:
+    provider: openai
+    model: gpt-5.5
+    use_for:
+      - architecture
+      - tradeoff analysis
+      - system design
+    cost_class: high
+
+  spec_governor:
+    provider: anthropic
+    model: claude-opus-4.8
+    use_for:
+      - task decomposition
+      - guardrails
+      - acceptance criteria
+      - escalation review
+    cost_class: high
+
+  worker_primary:
+    provider: ollama
+    model: kimi-k2.7-code:cloud
+    endpoint: http://localhost:11434
+    use_for:
+      - implementation
+      - small refactors
+      - tests
+      - docs
+    cost_class: local
+
+  worker_secondary:
+    provider: ollama
+    model: minimax-m3:cloud
+    endpoint: http://localhost:11434
+    use_for:
+      - alternate implementation
+      - cheap review
+      - patch critique
+    cost_class: local
+
+  final_reviewer:
+    provider: anthropic
+    model: claude-opus-4.8
+    use_for:
+      - final review
+      - risk assessment
+      - merge recommendation
+    cost_class: high
+
+routing_rules:
+  default_worker: worker_primary
+  cheap_reviewer: worker_secondary
+  final_review_required_for:
+    - security
+    - auth
+    - secrets
+    - persistence
+    - migrations
+    - dependency_changes
+    - more_than_5_files_changed
+    - failed_tests
+    - final_merge
+
+budget_controls:
+  max_worker_retries_per_ticket: 2
+  max_files_changed_without_opus_review: 5
+  opus_review_mode: checkpoint_only
+  require_human_merge_approval: true

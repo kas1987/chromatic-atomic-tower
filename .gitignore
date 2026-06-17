@@ -6,9 +6,12 @@ __pycache__/
 .env
 .env.*
 !.env.example
+*.pem
+.github_app_token_cache
 evidence/logs/*.log
 evidence/test-results/*.xml
 cat_dispatch.json
 cat_dispatch.md
-# Source distribution artifact (kept locally, not part of baseline)
+# Source distribution artifacts (kept locally, not part of baseline)
 chromatic_atomic_tower_sprint_000.zip
+_pdr_pack/

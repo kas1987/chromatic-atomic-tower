@@ -1,0 +1,59 @@
+bead_id: BEAD-CAT-002-004
+mission_id: MP-CAT-002
+title: Create final review packet format
+status: queued
+agent_role: Reviewer
+autonomy_level: L3
+objective: >-
+  Create playbooks/REVIEW_PACKET_TEMPLATE.md defining the packet the harness assembles
+  for the Opus final-review step - ticket, diff, test output, cheap-review verdict, and
+  the decision the human gate must make.
+allowed_paths:
+  - playbooks/REVIEW_PACKET_TEMPLATE.md
+  - evidence/reports/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - infra/prod/**
+  - secrets/**
+dependencies:
+  - BEAD-CAT-002-002
+tool_budget:
+  search: 1
+  read: 5
+  write: 3
+  execute: 1
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 85
+  objective_clarity: 88
+  scope_clarity: 88
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 85
+  risk_awareness: 80
+  testability: 78
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Packet format requires data the harness cannot produce.
+  - Need owner decision on approve/reject semantics.
+  - Format would duplicate an existing canonical checklist.
+definition_of_done:
+  - playbooks/REVIEW_PACKET_TEMPLATE.md exists.
+  - It includes sections for ticket, diff, test output, cheap-review verdict, and human-gate decision.
+  - It states that approval is required before merge.
+validation:
+  - type: self_review
+    command: manual
+    evidence_path: evidence/reports/mp_cat_002_review_packet_review.md
+    required: true
+required_output:
+  - summary
+  - files_changed
+  - evidence_path
+handoff:
+  next_bead_id: null
+  notes:
+    - Completing this BEAD closes the MP-CAT-002 MVP loop definition.

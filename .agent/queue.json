@@ -1,0 +1,51 @@
+{
+  "project": "budget-agent-harness",
+  "updated": "2026-06-17",
+  "items": [
+    {
+      "id": "T001",
+      "bead_id": "BEAD-CAT-002-001",
+      "status": "pending",
+      "priority": "p1",
+      "task": "Create model route config",
+      "owner": "GPT/Opus",
+      "done_when": "model_routes.yaml exists and includes GPT, Opus, Kimi, MiniMax, and final reviewer routing"
+    },
+    {
+      "id": "T002",
+      "bead_id": "BEAD-CAT-002-002",
+      "status": "pending",
+      "priority": "p1",
+      "task": "Create worker prompt template",
+      "owner": "Opus",
+      "done_when": "Prompt includes objective, constraints, output schema, acceptance criteria, and stop conditions"
+    },
+    {
+      "id": "T003",
+      "bead_id": "BEAD-CAT-002-003",
+      "status": "pending",
+      "priority": "p1",
+      "task": "Run first local worker patch",
+      "owner": "Kimi/MiniMax",
+      "done_when": "Patch generated, diff captured, and validation commands run"
+    },
+    {
+      "id": "T004",
+      "bead_id": "BEAD-CAT-002-004",
+      "status": "pending",
+      "priority": "p1",
+      "task": "Create final review packet format",
+      "owner": "Opus",
+      "done_when": "Review packet template exists and is usable for final review"
+    },
+    {
+      "id": "DEMO-001",
+      "bead_id": "BEAD-CAT-002-003",
+      "status": "review",
+      "priority": "p1",
+      "task": "Implement harness_demo.py utility functions",
+      "owner": "kimi-k2.7-code:cloud",
+      "done_when": "tests/test_harness_demo.py passes: add, is_even, slugify all pass"
+    }
+  ]
+}
