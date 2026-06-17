@@ -284,6 +284,11 @@ def parse_test_command(ticket_text: str) -> str | None:
 # Guardrail checks
 # ---------------------------------------------------------------------------
 
+# Hard blocks: genuinely irreversible/destructive actions. A match discards the
+# worker patch. Dependency/network patterns are NOT here — per harness design they
+# are escalation concerns (require_approval_for_dependency_changes), and they appear
+# legitimately in reproduced file content (e.g. `pip install -r requirements.txt`
+# inside a CI workflow), so hard-blocking them produces false negatives.
 DESTRUCTIVE_PATTERNS = [
     r"\brm\s+-rf\b",
     r"\bgit\s+push\s+--force\b",
@@ -294,11 +299,11 @@ DESTRUCTIVE_PATTERNS = [
     r"\bdrop\s+table\b",
     r"\bdelete\s+from\b",
     r"subprocess.*rm\b",
-    r"import\s+requests\b",   # external HTTP calls
-    r"pip\s+install\b",       # dep changes
-    r"npm\s+install\b",
 ]
 
+# Escalation flags: surfaced in the review packet for human/Opus review, but do NOT
+# discard the patch. Dependency installs and external HTTP belong here, not in the
+# hard-block list.
 SENSITIVE_PATTERNS = [
     r"\bpassword\b",
     r"\bsecret\b",
@@ -306,6 +311,9 @@ SENSITIVE_PATTERNS = [
     r"\bauth\b",
     r"\bmigration\b",
     r"\.env\b",
+    r"import\s+requests\b",   # external HTTP calls — review, don't block
+    r"pip\s+install\b",       # dependency change — review, don't block
+    r"npm\s+install\b",
 ]
 
 
