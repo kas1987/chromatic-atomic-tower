@@ -60,4 +60,3 @@ ignored_entries:
   - .mypy_cache
   - .ruff_cache
   - .idea
-  - pytest-cache-files-*

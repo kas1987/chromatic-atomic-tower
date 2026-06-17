@@ -71,7 +71,11 @@ def ollama_generate(model: str, prompt: str, endpoint: str) -> str:
     Returns the 'response' field as a string.
     Raises RuntimeError on failure.
     """
-    url = f"{endpoint.rstrip('/')}/api/generate"
+    endpoint_norm = endpoint.rstrip("/")
+    if endpoint_norm.endswith("/api/generate"):
+        url = endpoint_norm
+    else:
+        url = f"{endpoint_norm}/api/generate"
     payload = json.dumps({
         "model": model,
         "prompt": prompt,
@@ -353,15 +357,25 @@ def run_ticket(ticket_id: str, worker_model: str, bead_id: str | None = None) ->
     routes = load_yaml(routes_path)
     settings = load_yaml(settings_path)  # noqa: F841 — available for future use
 
-    # Resolve endpoint from routes
-    worker_entry = routes.get("models", {}).get("worker_primary", {})
+    # Resolve worker/reviewer entries from routing defaults (router wiring).
+    models = routes.get("models", {})
+    routing_rules = routes.get("routing_rules", {})
+
+    default_worker_key = routing_rules.get("default_worker", "worker_primary")
+    default_reviewer_key = routing_rules.get("cheap_reviewer", "worker_secondary")
+
+    worker_entry = models.get(default_worker_key) or models.get("worker_primary", {})
+    reviewer_entry = models.get(default_reviewer_key) or models.get("worker_secondary", {})
+
+    route_worker_model = worker_entry.get("model", "kimi-k2.7-code:cloud")
     endpoint = worker_entry.get("endpoint", "http://localhost:11434")
-    reviewer_model = (
-        routes.get("models", {}).get("worker_secondary", {}).get("model", "minimax-m3:cloud")
-    )
-    reviewer_endpoint = (
-        routes.get("models", {}).get("worker_secondary", {}).get("endpoint", endpoint)
-    )
+
+    # If caller omitted --worker (or passed the parser default), honor the router.
+    if worker_model == "kimi-k2.7-code:cloud":
+        worker_model = route_worker_model
+
+    reviewer_model = reviewer_entry.get("model", "minimax-m3:cloud")
+    reviewer_endpoint = reviewer_entry.get("endpoint", endpoint)
 
     max_attempts = int(
         routes.get("budget_controls", {}).get("max_worker_retries_per_ticket", 2)

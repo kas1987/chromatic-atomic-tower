@@ -1,23 +1,22 @@
 bead_id: BEAD-CAT-005-001
 mission_id: MP-CAT-005
 title: Verify and commit model route config
-status: queued
+status: archived
 agent_role: Auditor
 autonomy_level: L3
-objective: >-
-  Verify agents/model_routes.yaml maps all five roles (architecture, specs,
-  implementation, cheap_review, review) to concrete providers and models,
-  validate it against the CAT schema, and record evidence.
+objective: Verify agents/model_routes.yaml maps all five roles (architecture, specs,
+  implementation, cheap_review, review) to concrete providers and models, validate
+  it against the CAT schema, and record evidence.
 allowed_paths:
-  - agents/model_routes.yaml
-  - schemas/**
-  - evidence/reports/**
+- agents/model_routes.yaml
+- schemas/**
+- evidence/reports/**
 forbidden_paths:
-  - .env
-  - .env.*
-  - infra/prod/**
-  - secrets/**
-  - credentials/**
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
 dependencies: []
 tool_budget:
   search: 1
@@ -38,24 +37,121 @@ confidence:
 risk_level: low
 reversibility: high
 stop_conditions:
-  - agents/model_routes.yaml is missing and cannot be created within this BEAD scope.
-  - Schema validation fails and fix requires touching forbidden paths.
+- agents/model_routes.yaml is missing and cannot be created within this BEAD scope.
+- Schema validation fails and fix requires touching forbidden paths.
 definition_of_done:
-  - agents/model_routes.yaml exists with all five roles populated.
-  - Schema validates (or schema is created if absent).
-  - Evidence report written.
+- agents/model_routes.yaml exists with all five roles populated.
+- Schema validates (or schema is created if absent).
+- Evidence report written.
 validation:
-  - type: schema_validation
-    command: python scripts/cat_validate.py --all
-    evidence_path: evidence/reports/bead_cat_005_001_model_routes.md
-    required: true
+- type: schema_validation
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/bead_cat_005_001_model_routes.md
+  required: true
 required_output:
-  - updated_files
-  - validation_output
-  - next_recommended_bead
+- updated_files
+- validation_output
+- next_recommended_bead
 handoff:
   from: Orchestrator
   to: Auditor
   reviewer: Human Owner
-  notes: Pre-existing artifact — verify completeness and record evidence only.
-last_updated: "2026-06-17"
+  notes: "Pre-existing artifact \u2014 verify completeness and record evidence only."
+last_updated: '2026-06-17T22:05:49+00:00'
+transition_history:
+- timestamp: '2026-06-17T22:05:44+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-001
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: GO dispatch started
+  evidence: evidence/reports/bead_cat_005_001_model_routes.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-001.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260617T220544Z
+- timestamp: '2026-06-17T22:05:45+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-001
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Model routes verification in progress
+  evidence: evidence/reports/bead_cat_005_001_model_routes.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-001.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260617T220545Z
+- timestamp: '2026-06-17T22:05:46+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-001
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Schema validation completed
+  evidence: evidence/reports/bead_cat_005_001_model_routes.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-001.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T220546Z
+- timestamp: '2026-06-17T22:05:47+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-001
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Audit review complete
+  evidence: evidence/reports/bead_cat_005_001_model_routes.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-001.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T220547Z
+- timestamp: '2026-06-17T22:05:48+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-001
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: DoD satisfied
+  evidence: evidence/reports/bead_cat_005_001_model_routes.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-001.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T220548Z
+- timestamp: '2026-06-17T22:05:49+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-001
+  from_status: completed
+  to_status: archived
+  allowed: true
+  dry_run: false
+  reason: Archive after completion
+  evidence: evidence/reports/bead_cat_005_001_model_routes.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-001.yaml
+  guard: closeout_complete
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T220549Z

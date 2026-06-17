@@ -228,6 +228,9 @@ def update_tower_state(target_type: str, target_id: str, to_status: str, data: d
         tower['active_bead_id'] = target_id
         if data.get('mission_id'):
             tower['active_mission_id'] = data.get('mission_id')
+    elif target_type == 'bead' and to_status in {'completed', 'failed', 'archived'}:
+        if tower.get('active_bead_id') == target_id:
+            tower['active_bead_id'] = None
     write_yaml(TOWER_STATE_PATH, tower)
 
 
@@ -398,6 +401,11 @@ def main() -> int:
                 dest = REGISTRY_PATH
             elif f.name == 'TOWER_STATE.yaml':
                 dest = TOWER_STATE_PATH
+            elif f.name.startswith('mission_') or f.name.startswith('bead_'):
+                entity_type = 'missions' if f.name.startswith('mission_') else 'beads'
+                contract_id = f.stem.split('_', 1)[1]
+                existing = list(ROOT.glob(f'{entity_type}/**/{contract_id}.yaml'))
+                dest = existing[0] if existing else ROOT / entity_type / 'active' / f'{contract_id}.yaml'
             else:
                 dest = None
             if dest:

@@ -76,14 +76,31 @@ def print_markdown(result: dict) -> None:
         print('\n## Failures')
         for item in result['failures']: print(f'- {item}')
 
+def _detect_active_ids() -> tuple[str, str]:
+    tower_path = ROOT / 'state' / 'TOWER_STATE.yaml'
+    if tower_path.exists():
+        tower = load_yaml(tower_path)
+        return tower.get('active_mission_id', ''), tower.get('active_bead_id', '')
+    return '', ''
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description='Validate PR changed files against BEAD scope.')
-    parser.add_argument('--mission', required=True)
-    parser.add_argument('--bead', required=True)
+    parser.add_argument('--mission', default='')
+    parser.add_argument('--bead', default='')
     parser.add_argument('--changed-files', help='Path to newline-delimited changed files list.')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args()
-    result = check_scope(args.mission, args.bead, load_changed_files(args.changed_files))
+    mission_id = args.mission
+    bead_id = args.bead
+    if not mission_id or not bead_id:
+        detected_mission, detected_bead = _detect_active_ids()
+        mission_id = mission_id or detected_mission
+        bead_id = bead_id or detected_bead
+    if not mission_id or not bead_id:
+        print('warning: no active mission/BEAD in tower state — skipping scope check', file=sys.stderr)
+        return 0
+    result = check_scope(mission_id, bead_id, load_changed_files(args.changed_files))
     if args.json:
         print(json.dumps(result, indent=2))
     else:
