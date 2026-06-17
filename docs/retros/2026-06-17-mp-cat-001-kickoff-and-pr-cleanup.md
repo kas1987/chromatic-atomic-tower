@@ -13,7 +13,7 @@
 - **BEAD-CAT-001-001 — transition rules & state machine** (PR #14): `gates/state/transition_rules.yaml` (32 mission arcs + 20 BEAD arcs, each with a named guard + reversibility flag, guard vocabulary, terminal-state lists); Mermaid `STATE_MACHINE.md` rendered from it; superseded the Sprint-0 placeholder; self-review evidence. All arcs validated against schema enums (14/14 mission, 10/10 BEAD states).
 - **Root guard reconciled for the new local beads DB** (PR #13): created a repo-local `bd` workspace (prefix `cat`, stealth) for cross-session learnings, then blessed `.beads/` in `IGNORED_ROOT_ENTRIES` + `CAT_MANIFEST` §3.2.
 - **BEAD-CAT-002-005 filed** (PR #15): "Relocate durable harness evidence into the evidence plane" — relands the closed PR #10 correctly.
-- **All open PRs merged** via a Sonnet subagent (#13 → #11 → #14 → #15), branches deleted, master independently re-verified green.
+- **All open PRs merged** via a Sonnet subagent in dependency order (#13 → #11 → #14 → #15; #11 was the prior-session retro carried over, #12 had merged earlier as the kickoff), branches deleted, master independently re-verified green.
 
 ## Learnings
 
@@ -40,7 +40,7 @@ A Sonnet subagent merged 4 PRs in dependency order from a fully self-contained b
 | PRs merged | 4 (#12, #13, #14, #15) |
 | PRs closed (wrong approach) | 1 (#10) |
 | Open PRs remaining | 0 |
-| Sprint 001 | kicked off; BEAD-001-001 deliverables merged |
+| Sprint 001 | kicked off; BEAD-CAT-001-001 deliverables merged |
 | State machine coverage | 14/14 mission + 10/10 BEAD states |
 | pytest on master | 37 passed |
 | Local bd memories captured | 10 total (6 prior + 4 this segment) |
