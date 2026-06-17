@@ -56,7 +56,7 @@ def make_jwt(app_id: str, pem: str) -> str:
     return token
 
 
-def gh_api(path: str, token: str, method: str = "GET", body: dict | None = None) -> dict:
+def gh_api(path: str, token: str, method: str = "GET", body: dict | None = None) -> dict | list:
     url = f"https://api.github.com{path}"
     data = json.dumps(body).encode() if body else None
     req = urllib.request.Request(

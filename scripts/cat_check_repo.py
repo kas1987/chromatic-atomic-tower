@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import fnmatch
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +17,8 @@ REQUIRED_FILES = [
     'QUICKSTART.md',
     'AGENTS.md',
     'CHROMATIC_TREES.md',
+    'requirements.txt',
+    'Makefile',
     'missions/registry/MISSION_REGISTRY.yaml',
     'missions/active/MP-CAT-000_ESTABLISH_CORE.yaml',
     'beads/active/BEAD-CAT-000-001.yaml',
@@ -57,14 +60,25 @@ IGNORED_ROOT_ENTRIES = {
     '.github_app_token_cache',
 }
 
+# Gitignored glob patterns for secrets/credentials at the root (keep in sync with
+# .gitignore: .env, .env.*, *.pem). Expected in local workflows and never stray.
+# Note: .env.example is tracked and lives in ALLOWED_ROOT_FILES, so it passes regardless.
+IGNORED_ROOT_PATTERNS = ('.env', '.env.*', '*.pem')
 
-def find_stray_root_entries() -> list[str]:
-    """Flag any root entry not blessed by the manifest allowlists."""
+
+def find_stray_root_entries(root: Path = ROOT) -> list[str]:
+    """Flag any root entry not blessed by the manifest allowlists.
+
+    Gitignored caches/secrets (IGNORED_ROOT_ENTRIES + IGNORED_ROOT_PATTERNS) are
+    never flagged. ``root`` is parameterized for testability.
+    """
     stray: list[str] = []
-    for entry in sorted(p.name for p in ROOT.iterdir()):
+    for entry in sorted(p.name for p in root.iterdir()):
         if entry in IGNORED_ROOT_ENTRIES:
             continue
-        target = ROOT / entry
+        if any(fnmatch.fnmatch(entry, pat) for pat in IGNORED_ROOT_PATTERNS):
+            continue
+        target = root / entry
         if target.is_dir():
             if entry not in ALLOWED_ROOT_DIRS:
                 stray.append(entry + '/')

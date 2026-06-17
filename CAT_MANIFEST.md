@@ -69,6 +69,19 @@ Beyond the canonical directories in §4, these tooling directories are permitted
 | `tests/` | Python test suite | yes |
 | `.claude/`, `.pytest_cache/`, `.venv/`, `__pycache__/` | Local tooling/cache | no (gitignored) |
 
+### 3.3 Gitignored root entries
+
+These transient/credential entries are expected at the root in local workflows.
+They are gitignored, never committed, and never flagged as stray by
+`scripts/cat_check_repo.py`. Keep this list in sync with `.gitignore` and the
+checker's `IGNORED_ROOT_ENTRIES` / `IGNORED_ROOT_PATTERNS`.
+
+| Entry | Purpose | Tracked? |
+|---|---|---|
+| `.env`, `.env.*` | Local secrets/config consumed by `scripts/gh_app_token.sh` (`.env.example` is the tracked template) | no (gitignored) |
+| `*.pem` | GitHub App private keys | no (gitignored) |
+| `.github_app_token_cache` | Cached GitHub App installation token written by `scripts/gh_app_token.sh` | no (gitignored) |
+
 ## 4. Canonical directories
 
 | Directory | Owner | Allowed content |

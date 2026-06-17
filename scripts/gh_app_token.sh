@@ -37,11 +37,15 @@ if [[ -z "$token" ]]; then
   exit 1
 fi
 
-# Cache with 1-hour expiry
-python3 -c "
+# Cache with 1-hour expiry. The cache holds a live credential — create it with
+# owner-only permissions (umask) and tighten existing files defensively.
+( umask 077
+  python3 -c "
 import json, sys, time
 with open(sys.argv[2], 'w') as f:
     json.dump({'token': sys.argv[1], 'expires_at': time.time() + 3600}, f)
 " "$token" "$CACHE"
+)
+chmod 600 "$CACHE" 2>/dev/null || true
 
 echo "$token"
