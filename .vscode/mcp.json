@@ -1,0 +1,35 @@
+{
+  "// notes": "MCP servers for the Budget Agent Harness. Priority per .agent/ + pack 06_MCP notes: filesystem (repo-scoped), ollama (local worker routing), github (read-only first). Start filesystem + ollama only; enable github/sqlite when the local loop is proven. Do NOT grant terminal/broad-write MCP without human approval.",
+  "servers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
+      "type": "stdio"
+    },
+    "ollama": {
+      "command": "npx",
+      "args": ["-y", "ollama-mcp"],
+      "type": "stdio",
+      "env": {
+        "OLLAMA_HOST": "http://localhost:11434"
+      }
+    },
+    "github": {
+      "// gated": "Read-only usage first. Provide a token via input; do not commit it. Enable after the local loop is proven.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "type": "stdio",
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:githubPat}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "githubPat",
+      "type": "promptString",
+      "description": "GitHub PAT for the github MCP server (read-only scope recommended)",
+      "password": true
+    }
+  ]
+}

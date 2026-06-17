@@ -1,0 +1,83 @@
+{
+  "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "ticketId",
+      "type": "promptString",
+      "description": "Ticket ID (matches .agent/tickets/<ID>.md and .agent/runs/<ID>/)",
+      "default": "DEMO-001"
+    },
+    {
+      "id": "workerModel",
+      "type": "promptString",
+      "description": "Ollama worker model tag",
+      "default": "kimi-k2.7-code:cloud"
+    },
+    {
+      "id": "beadId",
+      "type": "promptString",
+      "description": "CAT BEAD id to bridge a run into (e.g. BEAD-CAT-002-002)",
+      "default": "BEAD-CAT-002-002"
+    }
+  ],
+  "tasks": [
+    {
+      "label": "Harness: Run Ticket",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/harness_run.py", "--ticket", "${input:ticketId}", "--worker", "${input:workerModel}"],
+      "problemMatcher": [],
+      "detail": "Run one bounded ticket loop: worker -> guardrails -> tests -> cheap review -> review packet."
+    },
+    {
+      "label": "Harness: Run Tests",
+      "type": "shell",
+      "command": "python",
+      "args": ["-m", "pytest", "-q"],
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": [],
+      "detail": "Run the pytest suite."
+    },
+    {
+      "label": "Harness: Capture Git State",
+      "type": "shell",
+      "command": "bash",
+      "args": ["scripts/hooks/capture_git_state.sh", "${input:ticketId}"],
+      "problemMatcher": [],
+      "detail": "Observe-only: capture git status + branch into .agent/runs/<ticket>/."
+    },
+    {
+      "label": "Harness: Capture Diff",
+      "type": "shell",
+      "command": "bash",
+      "args": ["scripts/hooks/capture_diff.sh", "${input:ticketId}"],
+      "problemMatcher": [],
+      "detail": "Observe-only: capture git diff (stat/names/full) into .agent/runs/<ticket>/."
+    },
+    {
+      "label": "Harness: Build Review Packet",
+      "type": "shell",
+      "command": "bash",
+      "args": ["scripts/hooks/build_review_packet.sh", "${input:ticketId}"],
+      "problemMatcher": [],
+      "detail": "Assemble .agent/runs/<ticket>/review_packet.md from captured evidence."
+    },
+    {
+      "label": "CAT: Bridge Run -> Evidence",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/harness_bridge.py", "--bead", "${input:beadId}", "--ticket", "${input:ticketId}"],
+      "problemMatcher": [],
+      "detail": "Emit a harness run as CAT evidence and move the BEAD to validating (never done)."
+    },
+    {
+      "label": "CAT: Validate",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/cat_validate.py", "--all"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": [],
+      "detail": "Run CAT schema/governance validation across the repo."
+    }
+  ]
+}
