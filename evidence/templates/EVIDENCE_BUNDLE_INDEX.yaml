@@ -1,0 +1,32 @@
+mission_id: MP-CAT-A006-4C01
+bundle_id: EB-MP-CAT-A006-4C01-01
+status: draft
+created_by: scribe_agent
+contents:
+  mission_pack: missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml
+  bead_files:
+    - beads/active/BEAD-CAT-A006-4C01-01.yaml
+    - beads/active/BEAD-CAT-A006-4C01-02.yaml
+    - beads/active/BEAD-CAT-A006-4C01-03.yaml
+    - beads/active/BEAD-CAT-A006-4C01-04.yaml
+    - beads/active/BEAD-CAT-A006-4C01-05.yaml
+    - beads/active/BEAD-CAT-A006-4C01-06.yaml
+    - beads/active/BEAD-CAT-A006-4C01-07.yaml
+    - beads/active/BEAD-CAT-A006-4C01-08.yaml
+  gates:
+    - gates/assertion_gates.yaml
+    - gates/completeness_gate.yaml
+    - gates/substantive_validation_gate.yaml
+    - gates/control_validation_gate.yaml
+    - gates/promotion_gate.yaml
+    - gates/release_gate.yaml
+  validation_reports:
+    - evidence/reports/MP-CAT-A006-4C01_validation_report.json
+    - evidence/reports/MP-CAT-A006-4C01_confidence_score.json
+  exceptions:
+    - evidence/templates/EXCEPTION_LOG.yaml
+required_before_closeout:
+  - validation_reports
+  - confidence_score
+  - reviewer_approval_for_m4
+  - final_report

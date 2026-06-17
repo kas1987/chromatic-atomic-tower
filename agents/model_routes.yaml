@@ -135,3 +135,58 @@ fallback_chain:
   review:
     - anthropic.claude-opus-4.8
     - openai.gpt-5.5
+
+# ---------------------------------------------------------------------------
+# Complexity-aware routing (added by MP-CAT-A006-4C01, BEAD-CAT-A006-4C01-04)
+#
+# Maps mission rigor (M1-M4) x execution complexity (C1-C4) to a model class,
+# agent, review path, and retry budget. This block is ADDITIVE: the role-based
+# `models`, `routing_rules`, `budget_controls`, and `fallback_chain` keys above
+# remain the source of truth consumed by scripts/harness_run.py and are not
+# changed. Validated by scripts/cat_validate_harness_alignment.py and described
+# by schemas/model_routing_policy.schema.json.
+# ---------------------------------------------------------------------------
+complexity_routing:
+  policy_id: CAT-MODEL-ROUTING-001
+  version: 1
+  principle: Use the lowest sufficient model and escalate based on risk, ambiguity, and validation failure.
+  complexity_axes:
+    mission_rigor: [M1_BASIC, M2_INTERMEDIATE, M3_COMPLEX, M4_ATOMIC]
+    execution_complexity: [C1_REPETITIVE, C2_STRUCTURED, C3_REASONING, C4_NOVEL]
+  default_routes:
+    - match: {mission_rigor: M1_BASIC, execution_complexity: C1_REPETITIVE}
+      route: {model_class: local_fast, agent: builder, review: self_review, max_retries: 1}
+    - match: {mission_rigor: M2_INTERMEDIATE, execution_complexity: C2_STRUCTURED}
+      route: {model_class: local_coding, agent: builder, review: reviewer_recommended, max_retries: 2}
+    - match: {mission_rigor: M3_COMPLEX, execution_complexity: C3_REASONING}
+      route: {model_class: strong_coding_reasoning, agent: orchestrator_plus_builder, review: reviewer_and_auditor, max_retries: 2}
+    - match: {mission_rigor: M4_ATOMIC, execution_complexity: C4_NOVEL}
+      route: {model_class: frontier_reasoning, agent: orchestrator_plus_specialists, review: human_gate_reviewer_auditor_security_if_applicable, max_retries: 1}
+  fallback_rules:
+    - {trigger: repeated_validation_failure, action: escalate_model_class}
+    - {trigger: scope_ambiguity, action: require_human_clarification}
+    - {trigger: secret_or_credential_detected, action: stop_and_security_review}
+    - {trigger: cost_budget_exceeded, action: stop_and_replan}
+    - {trigger: confidence_below_70, action: create_remediation_bead}
+  model_classes:
+    local_fast:
+      provider: ollama
+      examples: [minimax-m3:cloud, llama3.2:3b]
+      use_for: [docs_update, small_refactor, simple_schema_check]
+    local_coding:
+      provider: ollama
+      examples: [kimi-k2.7-code:cloud]
+      use_for: [structured_code_change, tests, validators]
+    strong_coding_reasoning:
+      provider: anthropic
+      examples: [claude-sonnet-4-6]
+      use_for: [architecture_change, multi_file_change, complex_debugging]
+    frontier_reasoning:
+      provider: anthropic
+      examples: [claude-opus-4-8]
+      use_for: [M4_governance, novel_architecture, high_risk_decision]
+  non_negotiables:
+    - No model bypasses gates.
+    - No model writes outside allowed paths.
+    - No model closes without evidence.
+    - No model handles secrets without security gate.

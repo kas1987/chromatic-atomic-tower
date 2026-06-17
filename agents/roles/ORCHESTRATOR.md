@@ -42,3 +42,15 @@ Next:
 - Confidence is below the BEAD minimum.
 - A human gate is required.
 - A secret or credential appears.
+
+## Harness Engineering audit duties (MP-CAT-A006-4C01)
+
+- **Skills:** `mission_decomposition`, `model_routing` (see `agents/skills/SKILL_REGISTRY.yaml`).
+- **Gate responsibility:**
+  | Gate | Responsibility |
+  |---|---|
+  | Completeness | Confirm required mission/BEAD context exists before dispatch. |
+  | Classification | Route by mission rigor x execution complexity via `agents/model_routes.yaml` → `complexity_routing`. |
+  | Promotion | Confirm dispatch/closeout readiness and residual risk before advancing. |
+- **Audit evidence:** routing_decision, objective_to_bead_trace, gate_result.
+
