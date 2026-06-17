@@ -9,10 +9,12 @@ objective: >-
   rules from gates/state/transition_rules.yaml, validates a requested
   (entity, from_state, to_state) against those rules, and emits a predicted
   diff in dry-run mode or mutates MISSION_REGISTRY.yaml atomically in execute
-  mode. The script must emit structured evidence to evidence/reports/ on every
-  invocation.
+  mode. The script must append each transition to the canonical log
+  evidence/logs/transitions.jsonl (who, what, when, before/after) and write a
+  structured review record to evidence/reports/ on every invocation.
 allowed_paths:
   - scripts/cat_transition.py
+  - evidence/logs/**
   - evidence/reports/**
 forbidden_paths:
   - .env
