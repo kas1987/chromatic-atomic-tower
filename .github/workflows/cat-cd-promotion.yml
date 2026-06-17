@@ -1,0 +1,66 @@
+name: CAT CI/CD Promotion Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      mission_id:
+        description: Mission ID to score
+        required: true
+        default: MP-CAT-A006-4C01
+      minimum_confidence:
+        description: Minimum confidence score required for promotion
+        required: true
+        default: '90'
+
+permissions:
+  contents: read
+
+jobs:
+  promotion-gate:
+    name: Score evidence and gate promotion
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate before promotion
+        run: |
+          python scripts/cat_check_repo.py
+          python scripts/cat_validate.py --all
+          python scripts/cat_validate_harness_alignment.py --root .
+          python scripts/cat_validate_mermaid.py --root .
+          pytest -q
+
+      - name: Score confidence
+        run: |
+          python scripts/cat_score_confidence.py --root . --mission "${{ inputs.mission_id }}"
+
+      - name: Enforce minimum confidence
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          mission = '${{ inputs.mission_id }}'
+          minimum = float('${{ inputs.minimum_confidence }}')
+          path = Path('evidence/reports') / f'{mission}_confidence_score.json'
+          data = json.loads(path.read_text())
+          score = float(data['confidence_score'])
+          print(f'confidence_score={score} minimum={minimum}')
+          if score < minimum:
+              raise SystemExit(f'Confidence score below promotion threshold: {score} < {minimum}')
+
+      - name: Upload promotion evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: promotion-evidence-${{ inputs.mission_id }}
+          path: evidence/
