@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 import textwrap
 from pathlib import Path
 
@@ -24,7 +25,7 @@ import pytest
 ROOT = Path(__file__).parent.parent
 SCRIPTS_DIR = ROOT / "scripts"
 TRANSITION_SCRIPT = SCRIPTS_DIR / "cat_transition.py"
-REAL_RULES_PATH = ROOT / "gates" / "state" / "STATE_TRANSITION_RULES.yaml"
+REAL_RULES_PATH = ROOT / "gates" / "state" / "transition_rules.yaml"
 
 
 # ---------------------------------------------------------------------------
@@ -132,7 +133,7 @@ _BEAD_YAML_TMPL = textwrap.dedent("""\
 def cat_root(tmp_path):
     """Isolated CAT root with controlled fixture states, fresh per test."""
     if not REAL_RULES_PATH.exists():
-        pytest.skip("STATE_TRANSITION_RULES.yaml not found")
+        pytest.skip("transition_rules.yaml not found")
 
     for d in [
         "gates/state", "missions/registry", "missions/active",
@@ -141,7 +142,7 @@ def cat_root(tmp_path):
     ]:
         (tmp_path / d).mkdir(parents=True)
 
-    shutil.copy2(REAL_RULES_PATH, tmp_path / "gates" / "state" / "STATE_TRANSITION_RULES.yaml")
+    shutil.copy2(REAL_RULES_PATH, tmp_path / "gates" / "state" / "transition_rules.yaml")
 
     (tmp_path / "missions" / "registry" / "MISSION_REGISTRY.yaml").write_text(
         _REGISTRY_YAML, encoding="utf-8"
@@ -175,7 +176,7 @@ def cat_root(tmp_path):
 def run_transition(args: list[str], cat_root: Path) -> tuple[int, str, str]:
     env = {**os.environ, "CAT_ROOT": str(cat_root)}
     result = subprocess.run(
-        ["python", str(TRANSITION_SCRIPT)] + args,
+        [sys.executable, str(TRANSITION_SCRIPT)] + args,
         cwd=str(ROOT), capture_output=True, text=True, env=env,
     )
     return result.returncode, result.stdout, result.stderr

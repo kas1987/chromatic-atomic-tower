@@ -7,7 +7,7 @@ from typing import Any
 
 import yaml
 
-ROOT = Path(os.environ.get("CAT_ROOT", str(Path(__file__).resolve().parents[1])))
+ROOT = Path(os.environ.get("CAT_ROOT", str(Path(__file__).resolve().parents[1]))).resolve()
 
 
 def load_yaml(path: Path) -> Any:

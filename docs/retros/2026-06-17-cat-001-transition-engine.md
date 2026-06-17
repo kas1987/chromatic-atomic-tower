@@ -70,8 +70,8 @@ that touches `--execute` output or `evidence/snapshots/`.
 | Inline review comments addressed | 17 (15 on PR #14, 2 on PR #17) |
 | Bot reviewers satisfied | Gemini (clean pass), Copilot (clean pass after fixes) |
 | Script lines delivered | ~290 (transition engine) + ~160 (snapshot/rollback) |
-| Guards fully implemented | 3 of 8 |
-| Guards deferred | 5 (BEAD-CAT-001-004) |
+| Guards fully implemented | 3 of 9 |
+| Guards deferred | 6 (BEAD-CAT-001-004) |
 
 ## Follow-up
 

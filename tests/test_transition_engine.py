@@ -42,8 +42,9 @@ def test_terminal_transition_denied():
 
 def test_evidence_required_targets():
     rules = load_yaml(ROOT / 'gates/state/STATE_TRANSITION_RULES.yaml')
-    assert evidence_required(rules, 'bead', 'completed') is True
-    assert evidence_required(rules, 'bead', 'in_progress') is False
+    # Map-style rules use evidence_required_targets; from_status is ignored
+    assert evidence_required(rules, 'bead', None, 'completed') is True
+    assert evidence_required(rules, 'bead', None, 'in_progress') is False
 
 
 def test_transition_event_schema_accepts_sample():

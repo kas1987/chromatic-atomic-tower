@@ -3,16 +3,14 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from common import load_yaml, write_yaml
+from common import ROOT, load_yaml, write_yaml
 
-ROOT = Path(os.environ.get('CAT_ROOT', Path(__file__).resolve().parents[1]))
 RULES_PATHS = [
     ROOT / 'gates/state/transition_rules.yaml',
     ROOT / 'gates/state/STATE_TRANSITION_RULES.yaml',
@@ -98,10 +96,15 @@ def transition_allowed(rules: dict[str, Any], target_type: str, from_status: str
     return allowed, message
 
 
-def evidence_required(rules: dict[str, Any], target_type: str, to_status: str) -> bool:
+def evidence_required(rules: dict[str, Any], target_type: str, from_status: str | None, to_status: str) -> bool:
     section = rules.get(target_type)
     if isinstance(section, dict):
         return to_status in set(section.get('evidence_required_targets', []))
+    # Arc-list format: check if the matching arc has guard: evidence_present
+    key = f'{target_type}_transitions'
+    for rule in rules.get(key, []):
+        if rule.get('from') == from_status and rule.get('to') == to_status:
+            return rule.get('guard') == 'evidence_present'
     return False
 
 
@@ -110,20 +113,19 @@ def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any]) -> t
         return True, 'no precondition'
     if guard_name == 'active_bead_present' and target_type == 'mission':
         registry = load_yaml(REGISTRY_PATH) if REGISTRY_PATH.exists() else {}
-        for mission in registry.get('missions', []):
-            if mission.get('mission_id') == data.get('mission_id'):
-                if mission.get('current_bead_id'):
-                    return True, 'current_bead_id present in mission registry'
         mission_id = data.get('mission_id')
-        if mission_id:
-            # If current_bead_id was cleared after BEAD archive, allow dispatch as long
-            # as the mission has BEAD contracts on disk.
-            patterns = ['beads/active/*.yaml', 'beads/completed/*.yaml', 'beads/failed/*.yaml']
-            for pattern in patterns:
-                for path in sorted(ROOT.glob(pattern)):
-                    bead = load_yaml(path) or {}
-                    if bead.get('mission_id') == mission_id:
-                        return True, 'mission has bead contracts'
+        for mission in registry.get('missions', []):
+            if mission.get('mission_id') == mission_id:
+                bead_id = mission.get('current_bead_id')
+                if bead_id:
+                    # Verify the BEAD file actually exists, not just the registry entry
+                    for pattern in ['beads/active/*.yaml', 'beads/completed/*.yaml', 'beads/failed/*.yaml']:
+                        for path in ROOT.glob(pattern):
+                            d = load_yaml(path) or {}
+                            if d.get('bead_id') == bead_id:
+                                return True, f'current_bead_id={bead_id} found on disk'
+                    return False, f'current_bead_id={bead_id} not found on disk'
+                break
         return False, 'mission has no current_bead_id'
     if guard_name == 'human_gate_if_required' and target_type == 'mission':
         human_gate = data.get('human_gate', {})
@@ -141,6 +143,8 @@ def create_snapshot(target_type: str, target_id: str, contract_path: Path) -> Pa
     snap_dir.mkdir(parents=True, exist_ok=True)
     if REGISTRY_PATH.exists():
         shutil.copy2(REGISTRY_PATH, snap_dir / 'MISSION_REGISTRY.yaml')
+    if TOWER_STATE_PATH.exists():
+        shutil.copy2(TOWER_STATE_PATH, snap_dir / 'TOWER_STATE.yaml')
     if contract_path.exists():
         shutil.copy2(contract_path, snap_dir / f'{target_type}_{target_id}.yaml')
     return snap_dir
@@ -195,24 +199,29 @@ def update_registry_for_mission(mission_id: str, to_status: str, contract_path: 
 
 
 def update_registry_current_bead(mission_id: str, bead_id: str, to_status: str) -> None:
+    if not mission_id:
+        return
     registry = load_yaml(REGISTRY_PATH)
+    updated = False
     for mission in registry.get('missions', []):
         if mission.get('mission_id') == mission_id:
             if to_status in {'queued', 'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}:
                 mission['current_bead_id'] = bead_id
             elif mission.get('current_bead_id') == bead_id and to_status in {'completed', 'failed', 'archived'}:
                 mission['current_bead_id'] = None
-            mission['last_updated'] = datetime.now(timezone.utc).date().isoformat()
+            mission['last_updated'] = utc_now()
+            updated = True
             break
-    registry['last_updated'] = datetime.now(timezone.utc).date().isoformat()
-    write_yaml(REGISTRY_PATH, registry)
+    if updated:
+        registry['last_updated'] = utc_now()
+        write_yaml(REGISTRY_PATH, registry)
 
 
 def update_tower_state(target_type: str, target_id: str, to_status: str, data: dict[str, Any]) -> None:
     if not TOWER_STATE_PATH.exists():
         return
     tower = load_yaml(TOWER_STATE_PATH)
-    tower['last_updated'] = datetime.now(timezone.utc).date().isoformat()
+    tower['last_updated'] = utc_now()
     if target_type == 'mission' and to_status in {'approved', 'dispatched', 'in_progress', 'validating'}:
         tower['active_mission_id'] = target_id
     if target_type == 'bead' and to_status in {'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}:
@@ -301,7 +310,7 @@ def apply_transition(
 
     allowed, message, rule = _transition_allowed_with_rule(rules, target_type, from_status, to_status)
     guard = rule.get('guard', 'none')
-    if allowed and evidence_required(rules, target_type, to_status) and not evidence:
+    if allowed and evidence_required(rules, target_type, from_status, to_status) and not evidence:
         allowed = False
         message = f'evidence is required for {target_type} transition to {to_status}'
 
@@ -338,38 +347,68 @@ def apply_transition(
 
     snapshot_dir = create_snapshot(target_type, target_id, contract_path)
     data['status'] = to_status
-    data['last_updated'] = datetime.now(timezone.utc).date().isoformat()
-    data.setdefault('transition_history', []).append(event)
-    write_yaml(contract_path, data)
+    data['last_updated'] = utc_now()
 
     new_path = maybe_move_contract(contract_path, target_type, to_status) if move else contract_path
+    event['contract_path'] = rel(new_path)
+    event['snapshot'] = rel(snapshot_dir)
+
+    data.setdefault('transition_history', []).append(event)
+    write_yaml(new_path, data)
+
     if target_type == 'mission':
         update_registry_for_mission(target_id, to_status, new_path, data)
     else:
         update_registry_current_bead(data.get('mission_id'), target_id, to_status)
     update_tower_state(target_type, target_id, to_status, data)
-    event['contract_path'] = rel(new_path)
-    event['snapshot'] = rel(snapshot_dir)
     append_audit_event(event, rules)
     return 0, event
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description='Apply or dry-run CAT mission/BEAD state transitions.')
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--dry-run', action='store_true')
+    mode.add_argument('--execute', action='store_true')
+    mode.add_argument('--rollback', metavar='SNAPSHOT_ID', help='Restore files from a previous snapshot.')
     parser.add_argument('--type', choices=['mission', 'bead'], dest='target_type')
     parser.add_argument('--id', dest='target_id')
     parser.add_argument('--mission', dest='mission_id')
     parser.add_argument('--bead', dest='bead_id')
     parser.add_argument('--from', dest='from_status')
-    parser.add_argument('--to', required=True, dest='to_status')
+    parser.add_argument('--to', dest='to_status')
     parser.add_argument('--reason', default='no reason provided')
     parser.add_argument('--evidence', default='')
     parser.add_argument('--actor', default='Human Owner')
-    parser.add_argument('--dry-run', action='store_true')
-    parser.add_argument('--execute', action='store_true')
     parser.add_argument('--move', action='store_true', help='Move terminal contracts to completed/failed/archive folders when applicable.')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args()
+
+    if args.rollback:
+        snapshot_id = args.rollback
+        snap_dir = ROOT / 'evidence' / 'snapshots' / snapshot_id
+        if not snap_dir.is_dir():
+            print(f'error: snapshot {snapshot_id!r} not found at {rel(snap_dir)}', file=sys.stderr)
+            return 1
+        restored = []
+        for f in snap_dir.iterdir():
+            if f.name == 'metadata.json':
+                continue
+            if f.name == 'MISSION_REGISTRY.yaml':
+                dest = REGISTRY_PATH
+            elif f.name == 'TOWER_STATE.yaml':
+                dest = TOWER_STATE_PATH
+            else:
+                dest = None
+            if dest:
+                import shutil as _shutil
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                _shutil.copy2(f, dest)
+                restored.append(rel(dest))
+        print(f'rollback  : {snapshot_id}')
+        for r in restored:
+            print(f'  restored: {r}')
+        return 0
 
     if bool(args.mission_id) and bool(args.bead_id):
         parser.error('use only one of --mission or --bead')
@@ -387,10 +426,10 @@ def main() -> int:
     if not target_type or not target_id:
         parser.error('the following arguments are required: --type/--mission/--bead and --id/target id')
 
-    if not args.dry_run and not args.execute:
-        parser.error('either --dry-run or --execute must be specified')
+    if not args.to_status:
+        parser.error('--to is required for --dry-run and --execute')
 
-    dry_run = args.dry_run and not args.execute
+    dry_run = args.dry_run
 
     code, event = apply_transition(
         target_type,

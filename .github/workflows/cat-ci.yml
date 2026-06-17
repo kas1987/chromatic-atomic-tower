@@ -29,11 +29,16 @@ jobs:
       - name: Tower status
         run: python scripts/cat_status.py
 
-      - name: CAT CI local report
-        run: python scripts/cat_ci.py --mode github --write-report
+      - name: PR scope check
+        if: github.event_name == 'pull_request'
+        run: python scripts/cat_pr_check.py
 
       - name: Tests
         run: pytest -q
+
+      - name: CAT CI report
+        if: always()
+        run: python scripts/cat_ci.py --mode github --write-report
 
       - name: Upload CAT CI evidence
         uses: actions/upload-artifact@v4
