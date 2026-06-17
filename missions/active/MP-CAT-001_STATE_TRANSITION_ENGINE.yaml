@@ -79,7 +79,7 @@ success_metrics:
   - 100% of defined valid mission/BEAD transitions pass automated tests
   - 100% of defined invalid transitions are rejected with explicit error codes
   - Average transition dry-run latency under 500ms for the full registry
-  - All transitions capture evidence artifacts in evidence/transitions/
+  - All transitions capture evidence artifacts in evidence/logs/ — canonical log evidence/logs/transitions.jsonl
 required_validation:
   - type: tests
     command: pytest -q
@@ -124,7 +124,7 @@ beads:
     title: Write docs/architecture/STATE_MACHINE.md and finalize evidence templates
     status: queued
 evidence_requirements:
-  - evidence/transitions/transition_log.jsonl
+  - evidence/logs/transitions.jsonl
   - evidence/test-results/sprint_001_transition_tests.txt
   - evidence/reports/sprint_001_schema_validation.md
   - evidence/rollbacks/rollback_records.jsonl

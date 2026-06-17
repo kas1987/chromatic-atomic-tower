@@ -106,6 +106,16 @@ Agents may only write files listed in the active BEAD `allowed_paths` field.
 
 Agents must halt if they need to touch a forbidden path or a path not explicitly allowed.
 
+### 6.1 Operator-plane exemption
+
+Human-invoked meta-work that governs the lifecycle itself — sprint closeouts,
+retrospectives, sprint kickoffs, and repository hygiene/cleanup — is **operator-plane**
+work, not agent execution of a BEAD. It is authorized directly by the Human Owner
+(see §10), is recorded in `learnings/DECISION_LOG.md`, and is therefore **exempt from
+the `allowed_paths` restriction** in §6. It must still respect `forbidden_paths`
+(secrets, credentials, production). It must not be used for feature/mission deliverable
+work — if the change implements a mission deliverable, it requires a BEAD.
+
 ## 7. Documentation rule
 
 Markdown explains why and how.
