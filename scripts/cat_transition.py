@@ -1,600 +1,424 @@
 #!/usr/bin/env python3
-"""
-cat_transition.py — CAT state-machine transition engine (BEAD-CAT-001-002/003).
-
-Loads canonical rules from gates/state/transition_rules.yaml, validates the
-requested (from, to) arc, evaluates its guard, and in execute mode creates a
-pre-transition snapshot then atomically mutates the target YAML file.
-
-Usage:
-  cat_transition.py (--dry-run | --execute) \
-      (--mission <id> | --bead <id>) \
-      --from <state> --to <state> [--reason TEXT]
-
-  cat_transition.py --rollback <snapshot_id> [--reason TEXT]
-
-Exit codes:
-  0  success (dry-run validated, execute applied, or rollback restored)
-  1  transition rejected (invalid arc, guard failure, or snapshot not found)
-  2  usage / IO error
-"""
-
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import sys
-import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
-# ---------------------------------------------------------------------------
-# Bootstrap
-# ---------------------------------------------------------------------------
+from common import load_yaml, write_yaml
 
-SCRIPTS_DIR = Path(__file__).resolve().parent
-ROOT = SCRIPTS_DIR.parent
-sys.path.insert(0, str(SCRIPTS_DIR))
-from common import load_yaml, write_yaml, rel  # noqa: E402
-
-RULES_PATH = ROOT / "gates" / "state" / "transition_rules.yaml"
-REGISTRY_PATH = ROOT / "missions" / "registry" / "MISSION_REGISTRY.yaml"
-EVIDENCE_LOG = ROOT / "evidence" / "logs" / "transitions.jsonl"
-TRANSITION_LOG = ROOT / "evidence" / "transitions" / "transition_log.jsonl"
-SNAPSHOTS_DIR = ROOT / "evidence" / "snapshots"
-ROLLBACKS_DIR = ROOT / "evidence" / "rollbacks"
-
-# ---------------------------------------------------------------------------
-# Rule lookup
-# ---------------------------------------------------------------------------
+ROOT = Path(os.environ.get('CAT_ROOT', Path(__file__).resolve().parents[1]))
+RULES_PATHS = [
+    ROOT / 'gates/state/transition_rules.yaml',
+    ROOT / 'gates/state/STATE_TRANSITION_RULES.yaml',
+]
+REGISTRY_PATH = ROOT / 'missions/registry/MISSION_REGISTRY.yaml'
+TOWER_STATE_PATH = ROOT / 'state/TOWER_STATE.yaml'
 
 
-def load_rules() -> dict:
-    return load_yaml(RULES_PATH)
+def utc_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
-def find_rule(rules: dict, entity_type: str, from_state: str, to_state: str) -> dict | None:
-    key = "mission_transitions" if entity_type == "mission" else "bead_transitions"
+def rel(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def load_rules() -> dict[str, Any]:
+    for path in RULES_PATHS:
+        if path.exists():
+            return load_yaml(path)
+    raise FileNotFoundError('could not find transition rules file in gates/state/')
+
+
+def _status_list(rules: dict[str, Any], target_type: str) -> set[str]:
+    if target_type in rules and isinstance(rules[target_type], dict):
+        return set(rules[target_type].get('statuses', []))
+    key = f'{target_type}_transitions'
+    statuses: set[str] = set()
     for rule in rules.get(key, []):
-        if rule["from"] == from_state and rule["to"] == to_state:
-            return rule
-    return None
+        statuses.add(rule.get('from', ''))
+        statuses.add(rule.get('to', ''))
+    statuses.discard('')
+    return statuses
 
 
-# ---------------------------------------------------------------------------
-# Entity lookup
-# ---------------------------------------------------------------------------
+def _terminal_statuses(rules: dict[str, Any], target_type: str) -> set[str]:
+    if target_type in rules and isinstance(rules[target_type], dict):
+        return set(rules[target_type].get('terminal_statuses', []))
+    return set(rules.get(f'{target_type}_terminal_states', []))
 
 
-def _registry_mission(registry: dict, mission_id: str) -> dict | None:
-    for m in registry.get("missions", []):
-        if m.get("mission_id") == mission_id:
-            return m
-    return None
-
-
-def _find_bead_yaml(bead_id: str) -> Path | None:
-    for candidate in ROOT.glob(f"beads/**/{bead_id}.yaml"):
-        return candidate
-    return None
-
-
-def _find_mission_yaml(mission_id: str, registry: dict) -> Path | None:
-    entry = _registry_mission(registry, mission_id)
-    if not entry or not entry.get("path"):
+def _transition_rule(rules: dict[str, Any], target_type: str, from_status: str, to_status: str) -> dict[str, Any] | None:
+    # Legacy map-style rules
+    section = rules.get(target_type)
+    if isinstance(section, dict):
+        allowed = section.get('allowed_transitions', {}).get(from_status, [])
+        if to_status in allowed:
+            return {'guard': 'none', 'reversible': False}
         return None
-    p = ROOT / entry["path"]
-    return p if p.exists() else None
+
+    # Arc-list rules
+    key = f'{target_type}_transitions'
+    for rule in rules.get(key, []):
+        if rule.get('from') == from_status and rule.get('to') == to_status:
+            return {
+                'guard': rule.get('guard', 'none'),
+                'reversible': bool(rule.get('reversible', False)),
+            }
+    return None
 
 
-# ---------------------------------------------------------------------------
-# Guard evaluation
-# ---------------------------------------------------------------------------
+def _transition_allowed_with_rule(rules: dict[str, Any], target_type: str, from_status: str, to_status: str) -> tuple[bool, str, dict[str, Any]]:
+    if target_type not in {'mission', 'bead'}:
+        return False, f'unknown target type: {target_type}', {'guard': 'none', 'reversible': False}
+    statuses = _status_list(rules, target_type)
+    if from_status not in statuses:
+        return False, f'unknown current status for {target_type}: {from_status}', {'guard': 'none', 'reversible': False}
+    if to_status not in statuses:
+        return False, f'unknown target status for {target_type}: {to_status}', {'guard': 'none', 'reversible': False}
+    rule = _transition_rule(rules, target_type, from_status, to_status)
+    if not rule:
+        if from_status in _terminal_statuses(rules, target_type):
+            return False, f'{from_status} is terminal for {target_type}; target {to_status} is not allowed', {'guard': 'none', 'reversible': False}
+        return False, f'transition {from_status} -> {to_status} is not allowed for {target_type}', {'guard': 'none', 'reversible': False}
+    return True, 'transition allowed', rule
 
-# Guards not yet fully implemented skip with a warning rather than blocking.
-_DEFERRED_GUARDS = {
-    "evidence_present",
-    "validation_passed",
-    "review_gate_pass",
-    "escalation_ack",
-    "closeout_complete",
-    "rollback_plan_present",
-}
+
+def transition_allowed(rules: dict[str, Any], target_type: str, from_status: str, to_status: str) -> tuple[bool, str]:
+    allowed, message, _ = _transition_allowed_with_rule(rules, target_type, from_status, to_status)
+    return allowed, message
 
 
-def evaluate_guard(
-    guard_name: str,
-    entity_type: str,
-    entity_id: str,
-    registry: dict,
-) -> tuple[bool, str]:
-    """Return (passed, message)."""
+def evidence_required(rules: dict[str, Any], target_type: str, to_status: str) -> bool:
+    section = rules.get(target_type)
+    if isinstance(section, dict):
+        return to_status in set(section.get('evidence_required_targets', []))
+    return False
 
-    if guard_name == "none":
-        return True, "no precondition"
 
-    if guard_name == "active_bead_present":
-        entry = _registry_mission(registry, entity_id)
-        bead_id = entry.get("current_bead_id") if entry else None
-        if not bead_id:
-            return False, "mission has no current_bead_id"
-        bead_path = _find_bead_yaml(bead_id)
-        if not bead_path:
-            return False, f"current_bead_id={bead_id!r} not found on disk"
-        return True, f"current_bead_id={bead_id}"
-
-    if guard_name == "human_gate_if_required":
-        mission_id = entity_id if entity_type == "mission" else None
+def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any]) -> tuple[bool, str]:
+    if guard_name == 'none':
+        return True, 'no precondition'
+    if guard_name == 'active_bead_present' and target_type == 'mission':
+        registry = load_yaml(REGISTRY_PATH) if REGISTRY_PATH.exists() else {}
+        for mission in registry.get('missions', []):
+            if mission.get('mission_id') == data.get('mission_id'):
+                if mission.get('current_bead_id'):
+                    return True, 'current_bead_id present in mission registry'
+        mission_id = data.get('mission_id')
         if mission_id:
-            mission_yaml = _find_mission_yaml(mission_id, registry)
-            if mission_yaml:
-                try:
-                    mission = load_yaml(mission_yaml)
-                    hg = mission.get("human_gate", {})
-                    if not hg.get("required", False):
-                        return True, "human_gate.required=false"
-                    approver = hg.get("approver")
-                    if approver:
-                        return True, f"approver={approver!r}"
-                    return False, "human_gate.required=true but no approver recorded"
-                except Exception as exc:
-                    return True, f"skip (could not read mission YAML: {exc})"
-        return True, "skip (mission file unavailable)"
-
-    if guard_name in _DEFERRED_GUARDS:
-        return True, "skip (guard evaluation deferred to BEAD-CAT-001-004)"
-
-    return False, f"unknown guard {guard_name!r}"
+            # If current_bead_id was cleared after BEAD archive, allow dispatch as long
+            # as the mission has BEAD contracts on disk.
+            patterns = ['beads/active/*.yaml', 'beads/completed/*.yaml', 'beads/failed/*.yaml']
+            for pattern in patterns:
+                for path in sorted(ROOT.glob(pattern)):
+                    bead = load_yaml(path) or {}
+                    if bead.get('mission_id') == mission_id:
+                        return True, 'mission has bead contracts'
+        return False, 'mission has no current_bead_id'
+    if guard_name == 'human_gate_if_required' and target_type == 'mission':
+        human_gate = data.get('human_gate', {})
+        required = bool(human_gate.get('required', False))
+        if not required:
+            return True, 'human gate not required'
+        return False, 'human gate required but no approver decision recorded'
+    # Remaining guards are deferred in this harness phase.
+    return True, 'guard evaluation deferred'
 
 
-# ---------------------------------------------------------------------------
-# State reading
-# ---------------------------------------------------------------------------
-
-
-def read_current_state(entity_type: str, entity_id: str, registry: dict) -> str | None:
-    if entity_type == "mission":
-        entry = _registry_mission(registry, entity_id)
-        return entry.get("status") if entry else None
-    else:
-        bead_path = _find_bead_yaml(entity_id)
-        if not bead_path:
-            return None
-        try:
-            return load_yaml(bead_path).get("status")
-        except Exception:
-            return None
-
-
-# ---------------------------------------------------------------------------
-# Atomic write helper
-# ---------------------------------------------------------------------------
-
-
-def _write_atomic(path: Path, data: dict) -> None:
-    """Write data to a temp file in the same directory, then rename."""
-    with tempfile.NamedTemporaryFile(
-        mode="w", dir=path.parent, suffix=".tmp", delete=False
-    ) as tf:
-        tmp_path = Path(tf.name)
-    try:
-        write_yaml(tmp_path, data)
-        tmp_path.replace(path)
-    except Exception:
-        tmp_path.unlink(missing_ok=True)
-        raise
-
-
-# ---------------------------------------------------------------------------
-# Snapshot creation
-# ---------------------------------------------------------------------------
-
-
-def _snapshot_id(now: datetime) -> str:
-    """Return a filesystem-safe snapshot ID from a UTC datetime."""
-    return "snap_" + now.strftime("%Y%m%dT%H%M%SZ")
-
-
-def _files_to_snapshot(entity_type: str, entity_id: str) -> list[Path]:
-    """Return the list of files that must be captured before a transition."""
-    files = [REGISTRY_PATH]
-    if entity_type == "bead":
-        bead_path = _find_bead_yaml(entity_id)
-        if bead_path:
-            files.append(bead_path)
-    # Include any YAML files under a top-level state/ directory if it exists.
-    state_dir = ROOT / "state"
-    if state_dir.is_dir():
-        files.extend(state_dir.rglob("*.yaml"))
-    return [p for p in files if p.exists()]
-
-
-def create_snapshot(
-    entity_type: str,
-    entity_id: str,
-    from_state: str,
-    to_state: str,
-    now: datetime,
-) -> tuple[str, Path]:
-    """
-    Copy mutable state files into evidence/snapshots/<snapshot_id>/.
-    Write metadata.json inside the snapshot directory.
-    Append a record to evidence/transitions/transition_log.jsonl.
-    Returns (snapshot_id, snapshot_dir).
-    """
-    snap_id = _snapshot_id(now)
-    snap_dir = SNAPSHOTS_DIR / snap_id
+def create_snapshot(target_type: str, target_id: str, contract_path: Path) -> Path:
+    snap_id = f"snap_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
+    snap_dir = ROOT / 'evidence' / 'snapshots' / snap_id
     snap_dir.mkdir(parents=True, exist_ok=True)
-
-    source_files = _files_to_snapshot(entity_type, entity_id)
-    captured: list[dict] = []
-    for src in source_files:
-        dest_name = src.name
-        dest = snap_dir / dest_name
-        # Avoid name collision when multiple files share a basename.
-        if dest.exists():
-            dest = snap_dir / f"{src.parent.name}_{src.name}"
-        shutil.copy2(src, dest)
-        captured.append({"original": rel(src), "snapshot": dest.name})
-
-    metadata = {
-        "snapshot_id": snap_id,
-        "timestamp": now.isoformat(),
-        "entity_type": entity_type,
-        "entity_id": entity_id,
-        "from_state": from_state,
-        "to_state": to_state,
-        "files": captured,
-    }
-    (snap_dir / "metadata.json").write_text(
-        json.dumps(metadata, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
-
-    _append_transition_log({
-        "event": "snapshot_created",
-        "snapshot_id": snap_id,
-        "timestamp": now.isoformat(),
-        "entity_type": entity_type,
-        "entity_id": entity_id,
-        "from_state": from_state,
-        "to_state": to_state,
-    })
-
-    return snap_id, snap_dir
+    if REGISTRY_PATH.exists():
+        shutil.copy2(REGISTRY_PATH, snap_dir / 'MISSION_REGISTRY.yaml')
+    if contract_path.exists():
+        shutil.copy2(contract_path, snap_dir / f'{target_type}_{target_id}.yaml')
+    return snap_dir
 
 
-# ---------------------------------------------------------------------------
-# Rollback
-# ---------------------------------------------------------------------------
+def find_contract(target_type: str, target_id: str) -> Path:
+    if target_type == 'mission':
+        patterns = ['missions/active/*.yaml', 'missions/backlog/*.yaml', 'missions/archived/*.yaml', 'missions/examples/*.yaml']
+        key = 'mission_id'
+    else:
+        patterns = ['beads/active/*.yaml', 'beads/completed/*.yaml', 'beads/failed/*.yaml', 'beads/examples/*.yaml']
+        key = 'bead_id'
+    for pattern in patterns:
+        for path in sorted(ROOT.glob(pattern)):
+            data = load_yaml(path)
+            if data and data.get(key) == target_id:
+                return path
+    raise FileNotFoundError(f'could not find {target_type} contract for {target_id}')
 
 
-def _load_snapshot_metadata(snapshot_id: str) -> tuple[dict, Path]:
-    snap_dir = SNAPSHOTS_DIR / snapshot_id
-    meta_path = snap_dir / "metadata.json"
-    if not snap_dir.is_dir() or not meta_path.exists():
-        raise FileNotFoundError(f"snapshot {snapshot_id!r} not found at {rel(snap_dir)}")
-    try:
-        metadata = json.loads(meta_path.read_text(encoding="utf-8"))
-    except Exception as exc:
-        raise ValueError(f"could not parse snapshot metadata: {exc}") from exc
-    return metadata, snap_dir
-
-
-def restore_snapshot(snapshot_id: str, reason: str) -> list[str]:
-    """
-    Atomically restore every file listed in the snapshot's metadata.
-    Writes a rollback evidence record to evidence/rollbacks/.
-    Returns a list of restored file paths (relative).
-    """
-    metadata, snap_dir = _load_snapshot_metadata(snapshot_id)
-    now = datetime.now(timezone.utc)
-
-    restored: list[str] = []
-    errors: list[str] = []
-    for entry in metadata.get("files", []):
-        original_rel = entry["original"]
-        snapshot_file = snap_dir / entry["snapshot"]
-        original_abs = ROOT / original_rel
-
-        if not snapshot_file.exists():
-            errors.append(f"snapshot file missing: {entry['snapshot']}")
-            continue
-
-        try:
-            original_abs.parent.mkdir(parents=True, exist_ok=True)
-            # Copy snapshot content, then touch last_updated in YAML files.
-            data = load_yaml(snapshot_file)
-            if isinstance(data, dict):
-                data["last_updated"] = now.isoformat()
-            _write_atomic(original_abs, data)
-            restored.append(original_rel)
-        except Exception as exc:
-            errors.append(f"{original_rel}: {exc}")
-
-    if errors:
-        raise RuntimeError("rollback partially failed:\n  " + "\n  ".join(errors))
-
-    # Write rollback evidence record.
-    rollback_record = {
-        "snapshot_id": snapshot_id,
-        "timestamp": now.isoformat(),
-        "entity_type": metadata.get("entity_type"),
-        "entity_id": metadata.get("entity_id"),
-        "original_from": metadata.get("from_state"),
-        "original_to": metadata.get("to_state"),
-        "restored_files": restored,
-        "reason": reason,
-        "actor": "cat_transition.py",
-    }
-    ROLLBACKS_DIR.mkdir(parents=True, exist_ok=True)
-    rollback_path = ROLLBACKS_DIR / f"{snapshot_id}.jsonl"
-    with rollback_path.open("a", encoding="utf-8") as fh:
-        fh.write(json.dumps(rollback_record, ensure_ascii=False) + "\n")
-
-    _append_transition_log({
-        "event": "rollback_applied",
-        "snapshot_id": snapshot_id,
-        "timestamp": now.isoformat(),
-        "entity_type": metadata.get("entity_type"),
-        "entity_id": metadata.get("entity_id"),
-        "restored_files": restored,
-        "reason": reason,
-    })
-
-    return restored
-
-
-# ---------------------------------------------------------------------------
-# Transition helpers
-# ---------------------------------------------------------------------------
-
-
-def apply_mission_transition(
-    entity_id: str, from_state: str, to_state: str, registry: dict
-) -> dict:
-    """Return an updated registry dict (does not write)."""
-    now = datetime.now(timezone.utc).isoformat()
-    updated_missions = []
+def update_registry_for_mission(mission_id: str, to_status: str, contract_path: Path, data: dict[str, Any]) -> None:
+    registry = load_yaml(REGISTRY_PATH)
     found = False
-    for m in registry.get("missions", []):
-        if m.get("mission_id") == entity_id:
-            if m.get("status") != from_state:
-                raise ValueError(
-                    f"registry shows {entity_id} as {m['status']!r}, not {from_state!r}"
-                )
-            updated_missions.append({**m, "status": to_state, "last_updated": now})
+    for mission in registry.get('missions', []):
+        if mission.get('mission_id') == mission_id:
+            mission['status'] = to_status
+            mission['last_updated'] = data.get('last_updated')
+            mission['path'] = rel(contract_path)
+            if to_status in {'approved', 'dispatched', 'in_progress', 'validating'}:
+                registry['active_mission_id'] = mission_id
             found = True
-        else:
-            updated_missions.append(m)
+            break
     if not found:
-        raise ValueError(f"mission {entity_id!r} not found in registry")
-    return {**registry, "missions": updated_missions, "last_updated": now}
+        registry.setdefault('missions', []).append({
+            'mission_id': mission_id,
+            'title': data.get('title', mission_id),
+            'level': data.get('level', 'M1'),
+            'status': to_status,
+            'priority': data.get('priority', 5),
+            'owner': data.get('owner', 'Unknown'),
+            'risk_level': data.get('risk_level', 'medium'),
+            'reversibility': data.get('reversibility', 'medium'),
+            'autonomy_level': data.get('autonomy_level', 'L1'),
+            'confidence': data.get('confidence_minimum', 0),
+            'current_bead_id': None,
+            'path': rel(contract_path),
+            'created': data.get('created'),
+            'last_updated': data.get('last_updated'),
+        })
+    registry['last_updated'] = data.get('last_updated')
+    write_yaml(REGISTRY_PATH, registry)
 
 
-def apply_bead_transition(
-    entity_id: str, from_state: str, to_state: str
-) -> Path:
-    """Mutate the BEAD YAML file atomically. Returns the path written."""
-    bead_path = _find_bead_yaml(entity_id)
-    if not bead_path:
-        raise ValueError(f"BEAD file for {entity_id!r} not found")
-    bead = load_yaml(bead_path)
-    if bead.get("status") != from_state:
-        raise ValueError(
-            f"BEAD file shows {entity_id} as {bead['status']!r}, not {from_state!r}"
-        )
-    now = datetime.now(timezone.utc).isoformat()
-    updated = {**bead, "status": to_state, "last_updated": now}
-    _write_atomic(bead_path, updated)
-    return bead_path
+def update_registry_current_bead(mission_id: str, bead_id: str, to_status: str) -> None:
+    registry = load_yaml(REGISTRY_PATH)
+    for mission in registry.get('missions', []):
+        if mission.get('mission_id') == mission_id:
+            if to_status in {'queued', 'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}:
+                mission['current_bead_id'] = bead_id
+            elif mission.get('current_bead_id') == bead_id and to_status in {'completed', 'failed', 'archived'}:
+                mission['current_bead_id'] = None
+            mission['last_updated'] = datetime.now(timezone.utc).date().isoformat()
+            break
+    registry['last_updated'] = datetime.now(timezone.utc).date().isoformat()
+    write_yaml(REGISTRY_PATH, registry)
 
 
-# ---------------------------------------------------------------------------
-# Evidence logging
-# ---------------------------------------------------------------------------
+def update_tower_state(target_type: str, target_id: str, to_status: str, data: dict[str, Any]) -> None:
+    if not TOWER_STATE_PATH.exists():
+        return
+    tower = load_yaml(TOWER_STATE_PATH)
+    tower['last_updated'] = datetime.now(timezone.utc).date().isoformat()
+    if target_type == 'mission' and to_status in {'approved', 'dispatched', 'in_progress', 'validating'}:
+        tower['active_mission_id'] = target_id
+    if target_type == 'bead' and to_status in {'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}:
+        tower['active_bead_id'] = target_id
+        if data.get('mission_id'):
+            tower['active_mission_id'] = data.get('mission_id')
+    write_yaml(TOWER_STATE_PATH, tower)
 
 
-def _append_jsonl(path: Path, record: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as fh:
-        fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+def append_audit_event(event: dict[str, Any], rules: dict[str, Any]) -> None:
+    log_path = ROOT / rules.get('audit', {}).get('event_log', 'evidence/logs/transitions.jsonl')
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open('a', encoding='utf-8') as handle:
+        handle.write(json.dumps(event, sort_keys=True) + '\n')
 
 
-def log_evidence(record: dict) -> None:
-    _append_jsonl(EVIDENCE_LOG, record)
+def maybe_move_contract(path: Path, target_type: str, to_status: str) -> Path:
+    if target_type == 'mission' and to_status in {'closed', 'learned', 'rolled_back', 'abandoned'}:
+        dest = ROOT / 'missions/archived' / path.name
+    elif target_type == 'bead' and to_status == 'completed':
+        dest = ROOT / 'beads/completed' / path.name
+    elif target_type == 'bead' and to_status in {'failed', 'archived'}:
+        dest = ROOT / 'beads/failed' / path.name
+    else:
+        return path
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if path.resolve() != dest.resolve():
+        path.replace(dest)
+    return dest
 
 
-def _append_transition_log(record: dict) -> None:
-    _append_jsonl(TRANSITION_LOG, record)
+def apply_transition(
+    target_type: str,
+    target_id: str,
+    to_status: str,
+    reason: str,
+    evidence: str,
+    actor: str,
+    dry_run: bool,
+    move: bool,
+    from_status_expected: str | None = None,
+) -> tuple[int, dict[str, Any]]:
+    rules = load_rules()
+    try:
+        contract_path = find_contract(target_type, target_id)
+    except FileNotFoundError as exc:
+        event = {
+            'timestamp': utc_now(),
+            'target_type': target_type,
+            'target_id': target_id,
+            'from_status': from_status_expected or 'unknown',
+            'to_status': to_status,
+            'allowed': False,
+            'dry_run': dry_run,
+            'reason': reason,
+            'evidence': evidence,
+            'actor': actor,
+            'message': str(exc),
+            'contract_path': 'not found',
+            'guard': 'none',
+        }
+        append_audit_event(event, rules)
+        return 1, event
+    data = load_yaml(contract_path)
+    if target_type == 'mission':
+        data.setdefault('mission_id', target_id)
+    from_status = data.get('status')
+    if from_status_expected and from_status_expected != from_status:
+        event = {
+            'timestamp': utc_now(),
+            'target_type': target_type,
+            'target_id': target_id,
+            'from_status': from_status,
+            'to_status': to_status,
+            'allowed': False,
+            'dry_run': dry_run,
+            'reason': reason,
+            'evidence': evidence,
+            'actor': actor,
+            'message': f'current status is {from_status}, not {from_status_expected}',
+            'contract_path': rel(contract_path),
+            'guard': 'none',
+        }
+        append_audit_event(event, rules)
+        return 1, event
+
+    allowed, message, rule = _transition_allowed_with_rule(rules, target_type, from_status, to_status)
+    guard = rule.get('guard', 'none')
+    if allowed and evidence_required(rules, target_type, to_status) and not evidence:
+        allowed = False
+        message = f'evidence is required for {target_type} transition to {to_status}'
+
+    guard_ok, guard_msg = evaluate_guard(guard, target_type, data)
+    if allowed and not guard_ok:
+        allowed = False
+        message = f'guard {guard} failed: {guard_msg}'
+
+    event = {
+        'timestamp': utc_now(),
+        'target_type': target_type,
+        'target_id': target_id,
+        'from_status': from_status,
+        'to_status': to_status,
+        'allowed': allowed,
+        'dry_run': dry_run,
+        'reason': reason,
+        'evidence': evidence,
+        'actor': actor,
+        'message': message,
+        'contract_path': rel(contract_path),
+        'guard': guard,
+        'guard_ok': guard_ok,
+        'guard_message': guard_msg,
+    }
+
+    if not allowed:
+        append_audit_event(event, rules)
+        return 1, event
+
+    if dry_run:
+        append_audit_event(event, rules)
+        return 0, event
+
+    snapshot_dir = create_snapshot(target_type, target_id, contract_path)
+    data['status'] = to_status
+    data['last_updated'] = datetime.now(timezone.utc).date().isoformat()
+    data.setdefault('transition_history', []).append(event)
+    write_yaml(contract_path, data)
+
+    new_path = maybe_move_contract(contract_path, target_type, to_status) if move else contract_path
+    if target_type == 'mission':
+        update_registry_for_mission(target_id, to_status, new_path, data)
+    else:
+        update_registry_current_bead(data.get('mission_id'), target_id, to_status)
+    update_tower_state(target_type, target_id, to_status, data)
+    event['contract_path'] = rel(new_path)
+    event['snapshot'] = rel(snapshot_dir)
+    append_audit_event(event, rules)
+    return 0, event
 
 
-# ---------------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------------
-
-
-def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(
-        description="CAT state-machine transition engine",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__,
-    )
-    mode = p.add_mutually_exclusive_group(required=True)
-    mode.add_argument("--dry-run", action="store_true",
-                      help="validate transition without mutating any file")
-    mode.add_argument("--execute", action="store_true",
-                      help="validate, snapshot, and apply the transition atomically")
-    mode.add_argument("--rollback", metavar="SNAPSHOT_ID",
-                      help="restore files from a previous snapshot")
-
-    target = p.add_mutually_exclusive_group()
-    target.add_argument("--mission", metavar="ID", help="mission ID (MP-...)")
-    target.add_argument("--bead", metavar="ID", help="BEAD ID (BEAD-...)")
-
-    p.add_argument("--from", dest="from_state", metavar="STATE",
-                   help="expected current state (required for --dry-run / --execute)")
-    p.add_argument("--to", dest="to_state", metavar="STATE",
-                   help="target state (required for --dry-run / --execute)")
-    p.add_argument("--reason", default="", metavar="TEXT",
-                   help="human-readable reason recorded in the evidence log")
-    return p
-
-
-def main() -> None:
-    parser = build_parser()
+def main() -> int:
+    parser = argparse.ArgumentParser(description='Apply or dry-run CAT mission/BEAD state transitions.')
+    parser.add_argument('--type', choices=['mission', 'bead'], dest='target_type')
+    parser.add_argument('--id', dest='target_id')
+    parser.add_argument('--mission', dest='mission_id')
+    parser.add_argument('--bead', dest='bead_id')
+    parser.add_argument('--from', dest='from_status')
+    parser.add_argument('--to', required=True, dest='to_status')
+    parser.add_argument('--reason', default='no reason provided')
+    parser.add_argument('--evidence', default='')
+    parser.add_argument('--actor', default='Human Owner')
+    parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--execute', action='store_true')
+    parser.add_argument('--move', action='store_true', help='Move terminal contracts to completed/failed/archive folders when applicable.')
+    parser.add_argument('--json', action='store_true')
     args = parser.parse_args()
 
-    # ------------------------------------------------------------------
-    # Rollback path
-    # ------------------------------------------------------------------
-    if args.rollback:
-        snapshot_id = args.rollback
-        print(f"rollback  : {snapshot_id}")
-        try:
-            restored = restore_snapshot(snapshot_id, args.reason)
-        except FileNotFoundError as exc:
-            print(f"ERROR: {exc}", file=sys.stderr)
-            sys.exit(1)
-        except Exception as exc:
-            print(f"ERROR: rollback failed: {exc}", file=sys.stderr)
-            sys.exit(1)
-        for f in restored:
-            print(f"  restored: {f}")
-        print(f"  evidence: {rel(ROLLBACKS_DIR / (snapshot_id + '.jsonl'))}")
-        sys.exit(0)
+    if bool(args.mission_id) and bool(args.bead_id):
+        parser.error('use only one of --mission or --bead')
 
-    # ------------------------------------------------------------------
-    # Transition path — validate required args
-    # ------------------------------------------------------------------
-    if not args.mission and not args.bead:
-        parser.error("one of --mission / --bead is required for --dry-run / --execute")
-    if not args.from_state:
-        parser.error("--from is required for --dry-run / --execute")
-    if not args.to_state:
-        parser.error("--to is required for --dry-run / --execute")
+    if args.mission_id:
+        target_type = 'mission'
+        target_id = args.mission_id
+    elif args.bead_id:
+        target_type = 'bead'
+        target_id = args.bead_id
+    else:
+        target_type = args.target_type
+        target_id = args.target_id
 
-    entity_type = "mission" if args.mission else "bead"
-    entity_id = args.mission or args.bead
-    from_state = args.from_state
-    to_state = args.to_state
-    mode = "dry-run" if args.dry_run else "execute"
+    if not target_type or not target_id:
+        parser.error('the following arguments are required: --type/--mission/--bead and --id/target id')
 
-    # Load rules
-    try:
-        rules = load_rules()
-    except Exception as exc:
-        print(f"ERROR: could not load transition rules: {exc}", file=sys.stderr)
-        sys.exit(2)
+    if not args.dry_run and not args.execute:
+        parser.error('either --dry-run or --execute must be specified')
 
-    # Validate the arc exists
-    rule = find_rule(rules, entity_type, from_state, to_state)
-    if not rule:
-        print(
-            f"ERROR: {entity_type} transition {from_state!r} ->{to_state!r} is not "
-            "defined in transition_rules.yaml",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    dry_run = args.dry_run and not args.execute
 
-    # Load registry
-    try:
-        registry = load_yaml(REGISTRY_PATH)
-    except Exception as exc:
-        print(f"ERROR: could not load registry: {exc}", file=sys.stderr)
-        sys.exit(2)
-
-    # Verify current state
-    actual_state = read_current_state(entity_type, entity_id, registry)
-    if actual_state is None:
-        print(f"ERROR: {entity_type} {entity_id!r} not found", file=sys.stderr)
-        sys.exit(1)
-    if actual_state != from_state:
-        print(
-            f"ERROR: {entity_id} is currently {actual_state!r}, not {from_state!r}",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    # Evaluate guard
-    guard_name = rule["guard"]
-    guard_passed, guard_msg = evaluate_guard(guard_name, entity_type, entity_id, registry)
-
-    # Print summary
-    print(f"transition : {entity_type} {entity_id}  {from_state} ->{to_state}")
-    print(f"  rule     : reversible={rule['reversible']}")
-    print(f"  guard    : {guard_name}  -> {'PASS' if guard_passed else 'FAIL'} ({guard_msg})")
-
-    # Base evidence record
-    record: dict = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "mode": mode,
-        "entity_type": entity_type,
-        "entity_id": entity_id,
-        "from": from_state,
-        "to": to_state,
-        "guard": guard_name,
-        "guard_result": "pass" if guard_passed else "fail",
-        "guard_message": guard_msg,
-        "reversible": rule.get("reversible", False),
-        "reason": args.reason,
-        "actor": "cat_transition.py",
-    }
-
-    if not guard_passed:
-        print(f"\nERROR: guard {guard_name!r} failed -- {guard_msg}", file=sys.stderr)
-        record["outcome"] = "rejected"
-        log_evidence(record)
-        sys.exit(1)
-
-    if mode == "dry-run":
-        print(f"\n[dry-run] would set {entity_id}.status  {from_state!r} ->{to_state!r}")
-        if entity_type == "mission":
-            print(f"[dry-run] target file : {rel(REGISTRY_PATH)}")
-        else:
-            bead_path = _find_bead_yaml(entity_id)
-            print(f"[dry-run] target file : {rel(bead_path) if bead_path else '(not found)'}")
-        print(f"[dry-run] evidence log: {rel(EVIDENCE_LOG)}")
-        record["outcome"] = "dry-run"
-        log_evidence(record)
-        sys.exit(0)
-
-    # Execute mode: snapshot first, then mutate.
-    now = datetime.now(timezone.utc)
-    try:
-        snap_id, snap_dir = create_snapshot(entity_type, entity_id, from_state, to_state, now)
-        print(f"\n[execute] snapshot   : {snap_id}  ({rel(snap_dir)})")
-    except Exception as exc:
-        print(f"ERROR: could not create snapshot: {exc}", file=sys.stderr)
-        record["outcome"] = "error"
-        log_evidence(record)
-        sys.exit(1)
-
-    record["snapshot_id"] = snap_id
-
-    try:
-        if entity_type == "mission":
-            updated_registry = apply_mission_transition(
-                entity_id, from_state, to_state, registry
-            )
-            _write_atomic(REGISTRY_PATH, updated_registry)
-            print(f"[execute] {entity_id}.status = {to_state!r}  ({rel(REGISTRY_PATH)} updated)")
-        else:
-            bead_path = apply_bead_transition(entity_id, from_state, to_state)
-            print(f"[execute] {entity_id}.status = {to_state!r}  ({rel(bead_path)} updated)")
-    except Exception as exc:
-        print(f"ERROR: transition failed: {exc}", file=sys.stderr)
-        print(f"       snapshot preserved at {rel(snap_dir)} -- rollback with:", file=sys.stderr)
-        print(f"       cat_transition.py --rollback {snap_id}", file=sys.stderr)
-        record["outcome"] = "error"
-        log_evidence(record)
-        sys.exit(1)
-
-    record["outcome"] = "applied"
-    log_evidence(record)
-    print(f"[execute] evidence log: {rel(EVIDENCE_LOG)}")
-    print(f"[execute] rollback via: cat_transition.py --rollback {snap_id}")
+    code, event = apply_transition(
+        target_type,
+        target_id,
+        args.to_status,
+        args.reason,
+        args.evidence,
+        args.actor,
+        dry_run,
+        args.move,
+        from_status_expected=args.from_status,
+    )
+    if args.json:
+        print(json.dumps(event, indent=2, sort_keys=True))
+    else:
+        print(f"transition : {event['target_type']} {event['target_id']}  {event['from_status']} -> {event['to_status']}")
+        print(f"  guard    : {event.get('guard', 'none')} -> {'PASS' if event.get('guard_ok') else 'FAIL'} ({event.get('guard_message', 'n/a')})")
+        print(f"  allowed  : {event['allowed']}")
+        print(f"  mode     : {'dry-run' if event['dry_run'] else 'execute'}")
+        print(f"  message  : {event['message']}")
+        print(f"  evidence : {event['evidence'] or 'none'}")
+        print(f"  contract : {event['contract_path']}")
+        if event.get('snapshot'):
+            print(f"  snapshot : {event['snapshot']}")
+    if code != 0:
+        print(f"error: {event['message']}", file=sys.stderr)
+    return code
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    raise SystemExit(main())

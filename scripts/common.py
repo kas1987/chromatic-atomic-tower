@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
 import yaml
-from jsonschema import Draft202012Validator
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(os.environ.get("CAT_ROOT", str(Path(__file__).resolve().parents[1])))
 
 
 def load_yaml(path: Path) -> Any:
@@ -27,6 +27,8 @@ def write_yaml(path: Path, data: Any) -> None:
 
 
 def validate_with_schema(instance: Any, schema_path: Path) -> list[str]:
+    from jsonschema import Draft202012Validator
+
     schema = load_json(schema_path)
     validator = Draft202012Validator(schema)
     errors = sorted(validator.iter_errors(instance), key=lambda error: list(error.path))
