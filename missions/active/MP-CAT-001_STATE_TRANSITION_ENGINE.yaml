@@ -1,0 +1,136 @@
+mission_id: MP-CAT-001
+title: Implement CAT State Transition Engine
+level: M3
+status: approved
+owner: Human Owner
+priority: 2
+risk_level: medium
+reversibility: medium
+autonomy_level: L3
+confidence_minimum: 85
+created: "2026-06-17"
+last_updated: "2026-06-17"
+objective: Add strict, deterministic, evidence-backed state transition tooling for mission and BEAD lifecycle changes within the Chromatic Atomic Tower governance repository.
+background: >
+  The Chromatic Atomic Tower (CAT) governance model depends on a trustworthy registry
+  of missions and their constituent BEADs. Currently, status changes (e.g., draft →
+  queued → approved → in_progress → completed, or failure paths such as queued →
+  cancelled) are performed manually or by ad-hoc edits, risking inconsistent registry
+  state, lost evidence, and unapproved mutations in production paths. This mission
+  promotes MP-CAT-001 from draft to approved in order to formalize an executable State
+  Transition Engine. The engine will encode canonical transition rules, expose a CLI
+  script (scripts/cat_transition.py) that mutates registry files atomically, capture
+  evidence for every transition, and validate changes against the CAT JSON schema.
+  Because this engine mutates registry state, a human gate is required before any
+  state change is committed.
+scope:
+  in:
+    - Canonical transition rule definitions for mission and BEAD lifecycle states
+    - CLI transition script (scripts/cat_transition.py) with dry-run and execute modes
+    - Registry mutation logic for MISSION_REGISTRY.yaml and related state files
+    - Evidence capture for every transition (who, what, when, before/after snapshots)
+    - Deterministic rollback plan for failed or contested transitions
+    - Pytest test suite covering valid, invalid, and edge-case transitions
+    - Schema validation integration via scripts/cat_validate.py
+    - Documentation in docs/architecture/STATE_MACHINE.md
+  out:
+    - GitHub API integration or webhook automation
+    - Runtime infrastructure deployment
+    - Secrets or credential management
+    - Changes to infra/prod/**
+allowed_paths:
+  - scripts/cat_transition.py
+  - gates/state/**
+  - tests/**
+  - docs/architecture/STATE_MACHINE.md
+  - missions/registry/MISSION_REGISTRY.yaml
+  - state/**
+  - evidence/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - infra/prod/**
+  - secrets/**
+  - credentials/**
+dependencies:
+  - MP-CAT-000
+acceptance_criteria:
+  - >
+    Valid mission transitions (e.g., draft → approved, approved → in_progress,
+    in_progress → completed) execute successfully and update MISSION_REGISTRY.yaml
+    with correct status and last_updated timestamps.
+  - >
+    Invalid transitions (e.g., draft → completed, completed → draft) are rejected
+    with a descriptive error code and no registry mutation occurs.
+  - >
+    Valid BEAD transitions (e.g., queued → in_progress, in_progress → completed,
+    queued → blocked) execute within the parent mission and persist atomically.
+  - >
+    Every executed transition writes an evidence record containing actor, target
+    identifier, from-state, to-state, timestamp, reason, and a before/after diff.
+  - >
+    Registry mutation is deterministic: repeated dry-run invocations produce identical
+    predicted output; execute mode commits only when dry-run passes and the human
+    gate is satisfied.
+  - >
+    Rollback restores the registry and state files to the pre-transition snapshot
+    within one command and regenerates evidence noting the rollback action.
+success_metrics:
+  - 100% of defined valid mission/BEAD transitions pass automated tests
+  - 100% of defined invalid transitions are rejected with explicit error codes
+  - Average transition dry-run latency under 500ms for the full registry
+  - All transitions capture evidence artifacts in evidence/transitions/
+required_validation:
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/sprint_001_transition_tests.txt
+    required: true
+  - type: schema_validation
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/sprint_001_schema_validation.md
+    required: true
+rollback:
+  required: true
+  plan: >
+    Before any execute-mode transition, the engine creates a timestamped snapshot of
+    MISSION_REGISTRY.yaml and all files under state/**. If a transition fails
+    validation, is contested by the human approver, or is later deemed erroneous,
+    running scripts/cat_transition.py --rollback <snapshot_id> restores the saved
+    files, updates last_updated timestamps, and emits a rollback evidence record to
+    evidence/rollbacks/.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 20
+  read: 40
+  write: 25
+  execute: 15
+  max_runtime_minutes: 30
+beads:
+  - bead_id: BEAD-CAT-001-001
+    title: Define transition rules and state machine diagram
+    status: queued
+  - bead_id: BEAD-CAT-001-002
+    title: Implement scripts/cat_transition.py with dry-run and execute modes
+    status: queued
+  - bead_id: BEAD-CAT-001-003
+    title: Implement atomic registry mutation and snapshot/rollback logic
+    status: queued
+  - bead_id: BEAD-CAT-001-004
+    title: Add transition tests, schema validation, and evidence capture
+    status: queued
+  - bead_id: BEAD-CAT-001-005
+    title: Write docs/architecture/STATE_MACHINE.md and finalize evidence templates
+    status: queued
+evidence_requirements:
+  - evidence/transitions/transition_log.jsonl
+  - evidence/test-results/sprint_001_transition_tests.txt
+  - evidence/reports/sprint_001_schema_validation.md
+  - evidence/rollbacks/rollback_records.jsonl
+notes:
+  - Promoted from draft to approved on 2026-06-17 because the State Transition Engine is a prerequisite for trustworthy, automated CAT lifecycle management.
+  - Human gate is mandatory for execute-mode transitions; dry-run and read-only validations may run autonomously.
+  - All registry mutations must produce evidence before any commit is considered complete.
+  - Rollback snapshots must be retained until the mission is explicitly archived.
+  - Forbidden paths are excluded to prevent accidental exposure of secrets or production infrastructure.

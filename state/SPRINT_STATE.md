@@ -40,3 +40,45 @@ Tower is **paused** awaiting explicit human kickoff of Sprint 001 (MP-CAT-001).
 ## Known blockers
 
 None. Sprint 001 kickoff is a pending human decision, not a blocker.
+
+---
+
+# Sprint State: SPRINT-001 (ACTIVE)
+
+## Objective
+
+Implement the CAT State Transition Engine — deterministic, evidence-backed tooling for
+mission and BEAD lifecycle changes.
+
+## Mission
+
+`MP-CAT-001`: Implement CAT State Transition Engine — **approved and active 2026-06-17**.
+
+## BEADs
+
+- `BEAD-CAT-001-001` Define transition rules and state machine diagram — **active** (dispatched).
+- `BEAD-CAT-001-002` Implement scripts/cat_transition.py with dry-run and execute modes — queued.
+- `BEAD-CAT-001-003` Implement atomic registry mutation and snapshot/rollback logic — queued.
+- `BEAD-CAT-001-004` Add transition tests, schema validation, and evidence capture — queued.
+- `BEAD-CAT-001-005` Write docs/architecture/STATE_MACHINE.md and finalize evidence templates — queued.
+
+## Current status
+
+**Sprint 001 kicked off (2026-06-17).** MP-CAT-001 promoted from backlog/draft to
+active/approved. BEAD-CAT-001-001 dispatched to Architect agent. Tower go_mode: active.
+
+GO resolver: `python scripts/cat_resolve_go.py` → MP-CAT-001 / BEAD-CAT-001-001.
+
+## Definition of done
+
+- [ ] Transition rules defined (gates/state/transition_rules.yaml).
+- [ ] CLI script implemented (scripts/cat_transition.py).
+- [ ] Atomic snapshot/rollback logic in place.
+- [ ] Pytest suite passing.
+- [ ] Architecture doc written (docs/architecture/STATE_MACHINE.md).
+- [ ] Schema validation passes.
+- [ ] Evidence captured.
+
+## Known blockers
+
+None.
