@@ -100,6 +100,9 @@ beads:
   - bead_id: BEAD-CAT-002-004
     title: Create final review packet format
     status: queued
+  - bead_id: BEAD-CAT-002-005
+    title: Relocate durable harness evidence into the evidence plane
+    status: queued
 evidence_requirements:
   - model_routes_config
   - worker_prompt_template
