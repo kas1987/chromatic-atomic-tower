@@ -50,7 +50,6 @@ stateDiagram-v2
     incident --> abandoned
     rolled_back --> triaged
     rolled_back --> abandoned
-    closed --> [*]
     abandoned --> [*]
     learned --> [*]
 ```
@@ -83,7 +82,6 @@ stateDiagram-v2
     blocked --> active: unblock
     blocked --> queued: unblock
     blocked --> failed
-    completed --> [*]
     archived --> [*]
 ```
 
