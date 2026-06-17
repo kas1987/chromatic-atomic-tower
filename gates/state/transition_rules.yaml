@@ -30,7 +30,7 @@ guards:
 # Mission lifecycle — states from mission.schema.json:
 #   draft, triaged, approved, dispatched, in_progress, validating, reviewed,
 #   closed, blocked, escalated, rolled_back, abandoned, incident, learned
-# Terminal states: abandoned, learned (and closed, except the closed->learned arc).
+# Terminal states: abandoned, learned (closed is non-terminal; closed->learned is its only forward arc).
 # ---------------------------------------------------------------------------
 mission_terminal_states:
   - abandoned
@@ -57,7 +57,7 @@ mission_transitions:
   - {from: validating,   to: blocked,           guard: none,                   reversible: false}
   - {from: reviewed,     to: blocked,           guard: none,                   reversible: false}
   - {from: blocked,      to: triaged,           guard: none,                   reversible: true}
-  - {from: blocked,      to: approved,          guard: none,                   reversible: true}
+  - {from: blocked,      to: approved,          guard: human_gate_if_required, reversible: true}
   - {from: blocked,      to: escalated,         guard: none,                   reversible: false}
   - {from: blocked,      to: abandoned,         guard: none,                   reversible: false}
   # --- escalation ---
@@ -80,14 +80,14 @@ mission_transitions:
 # BEAD lifecycle — states from bead.schema.json:
 #   queued, active, in_progress, validating, reviewed, completed,
 #   blocked, failed, changes_requested, archived
-# Terminal states: archived (and completed, except the completed->archived arc).
+# Terminal states: archived (completed is non-terminal; completed->archived is its only forward arc).
 # ---------------------------------------------------------------------------
 bead_terminal_states:
   - archived
 
 bead_transitions:
   # --- happy path ---
-  - {from: queued,             to: active,            guard: active_bead_present, reversible: false}
+  - {from: queued,             to: active,            guard: none,                reversible: false}
   - {from: active,             to: in_progress,       guard: none,                reversible: false}
   - {from: in_progress,        to: validating,        guard: evidence_present,    reversible: false}
   - {from: validating,         to: reviewed,          guard: validation_passed,   reversible: false}
