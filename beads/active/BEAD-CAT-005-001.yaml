@@ -1,0 +1,61 @@
+bead_id: BEAD-CAT-005-001
+mission_id: MP-CAT-005
+title: Verify and commit model route config
+status: queued
+agent_role: Auditor
+autonomy_level: L3
+objective: >-
+  Verify agents/model_routes.yaml maps all five roles (architecture, specs,
+  implementation, cheap_review, review) to concrete providers and models,
+  validate it against the CAT schema, and record evidence.
+allowed_paths:
+  - agents/model_routes.yaml
+  - schemas/**
+  - evidence/reports/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - infra/prod/**
+  - secrets/**
+  - credentials/**
+dependencies: []
+tool_budget:
+  search: 1
+  read: 4
+  write: 4
+  execute: 2
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 80
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 75
+  reversibility: 95
+  tool_fit: 85
+  risk_awareness: 80
+  testability: 80
+risk_level: low
+reversibility: high
+stop_conditions:
+  - agents/model_routes.yaml is missing and cannot be created within this BEAD scope.
+  - Schema validation fails and fix requires touching forbidden paths.
+definition_of_done:
+  - agents/model_routes.yaml exists with all five roles populated.
+  - Schema validates (or schema is created if absent).
+  - Evidence report written.
+validation:
+  - type: schema_validation
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/bead_cat_005_001_model_routes.md
+    required: true
+required_output:
+  - updated_files
+  - validation_output
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Auditor
+  reviewer: Human Owner
+  notes: Pre-existing artifact — verify completeness and record evidence only.
+last_updated: "2026-06-17"
