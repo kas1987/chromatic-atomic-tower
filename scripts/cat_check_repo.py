@@ -12,7 +12,7 @@ REQUIRED_FILES = [
     'CAT_MANIFEST.md',
     'CAT_PRINCIPLES.md',
     'CAT_ROADMAP.md',
-    'docs/operations/SPRINT_000_PLAN.md',
+    'SPRINT_000_PLAN.md',
     'QUICKSTART.md',
     'AGENTS.md',
     'CHROMATIC_TREES.md',
@@ -32,9 +32,21 @@ REQUIRED_DIRS = [
     'playbooks', 'docs', 'state', 'learnings', 'prompts', 'checklists', 'reference'
 ]
 
-# --- Root allowlist (keep in sync with CAT_MANIFEST.md sections 3, 3.1, 3.2, 4) ---
+IGNORED_ROOT_ENTRIES = {
+    '.git', '.venv', '__pycache__', '.pytest_cache', '.claude', '.DS_Store',
+    '.beads', 'venv', '.mypy_cache', '.ruff_cache', '.idea', '.vscode',
+}
 
-# Required root files (CAT_MANIFEST.md section 3) + optional root files (section 3.1).
+def _is_ignored(name: str) -> bool:
+    if name in IGNORED_ROOT_ENTRIES:
+        return True
+    # pytest writes temp dirs like pytest-cache-files-XXXXXXXX
+    if name.startswith('pytest-') or name.startswith('.pytest-'):
+        return True
+    return False
+
+# Static allowlists — keep in sync with CAT_MANIFEST.md sections 3, 3.1, 3.2, 4.
+# Building these dynamically would auto-allow any new root file, defeating the guard.
 ALLOWED_ROOT_FILES = {
     # section 3 — required
     'README.md', 'START_HERE.md', 'PDR_CAT_000_ESTABLISH_CORE_REPO.md',
@@ -44,34 +56,32 @@ ALLOWED_ROOT_FILES = {
     'CAT_ROADMAP.md', 'CHANGELOG.md', 'GOVERNANCE.md', 'CONTRIBUTING.md',
     'SECURITY.md', 'QUICKSTART.md', 'VERSION', 'CHROMATIC_TREES.worktree.json',
     'pyproject.toml', '.editorconfig', '.env.example', '.gitignore',
+    # sprint plans at root (backward-compat; sprint 000+ ship these here)
+    'SPRINT_000_PLAN.md', 'SPRINT_001_PLAN.md', 'SPRINT_002_PLAN.md', 'SPRINT_003_PLAN.md',
+    # PDR design records (one per sprint)
+    'PDR_CAT_001_STATE_TRANSITION_ENGINE.md',
+    'PDR_CAT_002_EVIDENCE_GATE_CLOSEOUT_ENGINE.md',
+    'PDR_CAT_003_CI_GOVERNANCE_SELF_HEALING.md',
+    'PDR_CAT_004_V2_ALIGNMENT_GUARDS.md',
 }
 
-# Canonical directories (section 4) + allowed tooling directories (section 3.2).
 ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {
-    '.github', '.vscode', '.agent', 'tests',
-}
-
-# Transient / VCS / cache / local-tooling entries not governed by the manifest.
-IGNORED_ROOT_ENTRIES = {
-    '.git', '.venv', '__pycache__', '.pytest_cache', '.claude', '.DS_Store',
-    '.beads',
+    '.github', '.vscode', '.agent', 'tests', 'ci',
 }
 
 
 def find_stray_root_entries() -> list[str]:
-    """Flag any root entry not blessed by the manifest allowlists."""
     stray: list[str] = []
-    for entry in sorted(p.name for p in ROOT.iterdir()):
-        if entry in IGNORED_ROOT_ENTRIES:
+    for path in ROOT.iterdir():
+        name = path.name
+        if _is_ignored(name):
             continue
-        target = ROOT / entry
-        if target.is_dir():
-            if entry not in ALLOWED_ROOT_DIRS:
-                stray.append(entry + '/')
-        else:
-            if entry not in ALLOWED_ROOT_FILES:
-                stray.append(entry)
-    return stray
+        if path.is_file() and name not in ALLOWED_ROOT_FILES:
+            stray.append(name)
+            continue
+        if path.is_dir() and name not in ALLOWED_ROOT_DIRS:
+            stray.append(name)
+    return sorted(stray)
 
 
 def main() -> int:
@@ -86,22 +96,19 @@ def main() -> int:
     stray = find_stray_root_entries()
 
     if missing or stray:
-        print('CAT repo check failed.')
+        print('CAT repo check failed. Missing:')
         if missing:
-            print('Missing required files/directories:')
             for item in missing:
                 print(f'  - {item}')
         if stray:
-            print('Stray root entries not blessed by CAT_MANIFEST.md (sections 3, 3.1, 3.2, 4):')
+            print('CAT repo check failed. Stray root entries:')
             for item in stray:
                 print(f'  - {item}')
-            print('Fix: move it under the right plane, gitignore it, or add it to the manifest + this allowlist.')
         return 1
 
     print('CAT repo check passed.')
     print(f'Required files checked: {len(REQUIRED_FILES)}')
     print(f'Required directories checked: {len(REQUIRED_DIRS)}')
-    print('No stray root entries.')
     return 0
 
 

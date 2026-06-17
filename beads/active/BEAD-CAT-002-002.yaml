@@ -1,58 +1,62 @@
 bead_id: BEAD-CAT-002-002
 mission_id: MP-CAT-002
-title: Create worker prompt template
+title: Implement evidence bundle CLI
 status: queued
-agent_role: Scribe
+agent_role: Builder
 autonomy_level: L3
-objective: >-
-  Create prompts/WORKER_PROMPT_TEMPLATE.md defining the contract handed to a local
-  worker model: objective, constraints, allowed files, and a machine-readable output schema.
+objective: Implement cat_evidence.py so CAT can create and validate evidence bundles against schema and required artifact rules.
 allowed_paths:
-  - prompts/WORKER_PROMPT_TEMPLATE.md
-  - evidence/reports/**
+  - scripts/cat_evidence.py
+  - schemas/evidence_bundle.schema.json
+  - evidence/bundles/**
+  - tests/test_evidence_gate.py
 forbidden_paths:
   - .env
-  - .env.*
   - infra/prod/**
   - secrets/**
+  - production/**
+  - deploy/**
 dependencies:
   - BEAD-CAT-002-001
 tool_budget:
   search: 1
-  read: 5
-  write: 3
-  execute: 1
-  max_runtime_minutes: 20
+  read: 6
+  write: 6
+  execute: 4
+  max_runtime_minutes: 35
 confidence:
-  minimum: 75
-  current: 84
-  objective_clarity: 88
+  minimum: 78
+  current: 86
+  objective_clarity: 90
   scope_clarity: 88
-  evidence_quality: 80
-  reversibility: 95
-  tool_fit: 85
-  risk_awareness: 80
-  testability: 80
-risk_level: low
+  evidence_quality: 84
+  reversibility: 90
+  tool_fit: 86
+  risk_awareness: 84
+  testability: 88
+risk_level: medium
 reversibility: high
 stop_conditions:
-  - Output schema cannot be expressed without a new schema file outside scope.
-  - Constraints conflict with mission allowed_paths.
-  - Need owner decision on patch output format.
+  - CLI writes outside evidence/bundles without explicit operator input.
+  - Bundle validation ignores missing required artifacts.
+  - Schema validation and artifact validation disagree.
+  - Tests fail for Sprint 002 scope.
 definition_of_done:
-  - prompts/WORKER_PROMPT_TEMPLATE.md exists.
-  - It contains an objective section, a constraints section, and a machine-readable output schema (e.g. JSON/diff block).
-  - Constraints include - touch only ticket-listed files, explain any deviation, stop after 2 retries.
+  - CLI can create a bundle.
+  - CLI can validate a bundle.
+  - Missing required artifact returns nonzero.
+  - Failed required validation returns nonzero.
 validation:
-  - type: self_review
-    command: manual
-    evidence_path: evidence/reports/mp_cat_002_worker_prompt_review.md
+  - type: evidence_bundle
+    command: python scripts/cat_evidence.py validate --bundle evidence/bundles/examples/EB-CAT-002-EXAMPLE.yaml
+    evidence_path: evidence/reports/evidence_bundle_validation_sprint_002.md
     required: true
 required_output:
-  - summary
-  - files_changed
-  - evidence_path
+  - script_output
+  - validation_result
+  - next_recommended_bead
 handoff:
-  next_bead_id: BEAD-CAT-002-003
-  notes:
-    - With routes and prompt template ready, run the first worker patch.
+  from: Orchestrator
+  to: Builder
+  reviewer: Reviewer
+  notes: Do not mutate mission state from the evidence CLI.

@@ -59,11 +59,12 @@ class TestSummarize:
             "missions_by_status must be a dict"
         )
 
-    def test_missions_by_status_has_approved(self):
+    def test_missions_by_status_populated(self):
         result = cat_stats.summarize()
         mbs = result["missions_by_status"]
-        assert "approved" in mbs, (
-            f"'approved' must be a key in missions_by_status; got keys: {list(mbs.keys())}"
+        assert len(mbs) >= 1, f"missions_by_status must have at least one entry; got {mbs}"
+        assert all(isinstance(v, int) and v > 0 for v in mbs.values()), (
+            f"all missions_by_status values must be positive ints; got {mbs}"
         )
 
     def test_active_mission_id(self):

@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
 from common import ROOT, load_yaml, rel, validate_with_schema
+from cat_branch_hygiene import find_root_hygiene_issues, load_root_allowlist
 
 VALIDATION_TARGETS = [
     ('mission registry', ROOT / 'missions/registry/MISSION_REGISTRY.yaml', ROOT / 'schemas/mission_registry.schema.json'),
@@ -23,6 +25,11 @@ BEAD_PATTERNS = [
     'beads/examples/*.yaml',
 ]
 
+EVIDENCE_BUNDLE_PATTERNS = [
+    'evidence/bundles/examples/*.yaml',
+    'evidence/bundles/generated/*.yaml',
+]
+
 # Templates include placeholder IDs and should validate as structural samples.
 TEMPLATE_PATTERNS = [
     ('mission template', 'missions/templates/*.yaml', ROOT / 'schemas/mission.schema.json'),
@@ -39,9 +46,43 @@ def validate_file(kind: str, file_path: Path, schema_path: Path) -> tuple[bool, 
     return not errors, errors
 
 
-def validate_all(include_templates: bool = True) -> int:
+def validate_root_hygiene(root: Path = ROOT) -> tuple[bool, list[str]]:
+    allowlist_path = root / 'gates/hygiene/root_allowlist.yaml'
+    if not allowlist_path.exists():
+        return False, [f'root allowlist missing: {rel(allowlist_path)}']
+
+    allowlist = load_root_allowlist(allowlist_path)
+    issues = find_root_hygiene_issues(root, allowlist)
+    return not issues, issues
+
+
+def resolve_root_hygiene_mode(cli_mode: str | None = None) -> str:
+    mode = (cli_mode or os.environ.get('CAT_ROOT_HYGIENE_MODE') or 'enforce').strip().lower()
+    if mode not in {'enforce', 'warn', 'off'}:
+        return 'enforce'
+    return mode
+
+
+def validate_all(include_templates: bool = True, root_hygiene_mode: str = 'enforce') -> int:
     failures = 0
     targets: list[tuple[str, Path, Path]] = list(VALIDATION_TARGETS)
+    mode = resolve_root_hygiene_mode(root_hygiene_mode)
+
+    if mode == 'off':
+        print('SKIP root hygiene: enforcement disabled (mode=off)')
+    else:
+        root_ok, root_issues = validate_root_hygiene(ROOT)
+        if root_ok:
+            print('PASS root hygiene: root entries satisfy allowlist')
+        elif mode == 'warn':
+            print('WARN root hygiene: root contains non-allowlisted entries (non-blocking)')
+            for issue in root_issues:
+                print(f'  - {issue}')
+        else:
+            failures += 1
+            print('FAIL root hygiene: root contains non-allowlisted entries')
+            for issue in root_issues:
+                print(f'  - {issue}')
 
     for pattern in MISSION_PATTERNS:
         for file_path in sorted(ROOT.glob(pattern)):
@@ -50,6 +91,10 @@ def validate_all(include_templates: bool = True) -> int:
     for pattern in BEAD_PATTERNS:
         for file_path in sorted(ROOT.glob(pattern)):
             targets.append(('bead', file_path, ROOT / 'schemas/bead.schema.json'))
+
+    for pattern in EVIDENCE_BUNDLE_PATTERNS:
+        for file_path in sorted(ROOT.glob(pattern)):
+            targets.append(('evidence bundle', file_path, ROOT / 'schemas/evidence_bundle.schema.json'))
 
     if include_templates:
         for kind, pattern, schema in TEMPLATE_PATTERNS:
@@ -79,6 +124,12 @@ def main() -> int:
     parser.add_argument('--all', action='store_true', help='Validate all known CAT contract files.')
     parser.add_argument('--no-templates', action='store_true', help='Skip template validation.')
     parser.add_argument('--file', type=str, help='Validate one file. Schema inferred by path.')
+    parser.add_argument(
+        '--root-hygiene-mode',
+        choices=['enforce', 'warn', 'off'],
+        default=None,
+        help='Root hygiene enforcement mode (default from CAT_ROOT_HYGIENE_MODE or enforce).',
+    )
     args = parser.parse_args()
 
     if args.file:
@@ -92,6 +143,9 @@ def main() -> int:
         elif 'missions' in file_path.parts:
             schema = ROOT / 'schemas/mission.schema.json'
             kind = 'mission'
+        elif 'evidence/bundles' in str(file_path):
+            schema = ROOT / 'schemas/evidence_bundle.schema.json'
+            kind = 'evidence bundle'
         elif file_path.name == 'TOWER_STATE.yaml':
             schema = ROOT / 'schemas/tower_state.schema.json'
             kind = 'tower state'
@@ -108,7 +162,10 @@ def main() -> int:
         return 1
 
     if args.all:
-        return validate_all(include_templates=not args.no_templates)
+        return validate_all(
+            include_templates=not args.no_templates,
+            root_hygiene_mode=resolve_root_hygiene_mode(args.root_hygiene_mode),
+        )
 
     parser.print_help()
     return 2

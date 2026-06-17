@@ -1,7 +1,7 @@
 bead_id: BEAD-CAT-000-001
 mission_id: MP-CAT-000
 title: Establish repo skeleton and canonical manifest
-status: completed
+status: active
 agent_role: Scribe
 autonomy_level: L3
 objective: >-
@@ -13,7 +13,7 @@ allowed_paths:
   - CAT_MANIFEST.md
   - CAT_PRINCIPLES.md
   - CAT_ROADMAP.md
-  - docs/operations/SPRINT_000_PLAN.md
+  - SPRINT_000_PLAN.md
   - QUICKSTART.md
   - AGENTS.md
   - CHROMATIC_TREES.md

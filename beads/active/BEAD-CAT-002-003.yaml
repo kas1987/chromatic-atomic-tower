@@ -1,66 +1,64 @@
 bead_id: BEAD-CAT-002-003
 mission_id: MP-CAT-002
-title: Run first local worker patch
-status: validating
+title: Implement closeout engine integration
+status: queued
 agent_role: Builder
 autonomy_level: L3
-objective: >-
-  Dispatch a defined sample ticket to a local worker model (Kimi or MiniMax via Ollama
-  Cloud) using the worker prompt template, capture the generated patch, and run tests
-  against it. Do not merge the patch.
+objective: Upgrade cat_closeout.py so closeout validates evidence bundles, writes reports and audit logs, and delegates allowed lifecycle movement to the transition engine.
 allowed_paths:
-  - scripts/harness_demo.py
-  - tests/**
-  - evidence/diffs/**
-  - evidence/test-results/**
+  - scripts/cat_closeout.py
+  - scripts/cat_evidence.py
+  - evidence/logs/**
   - evidence/reports/**
+  - tests/test_closeout_engine.py
 forbidden_paths:
   - .env
-  - .env.*
   - infra/prod/**
   - secrets/**
+  - production/**
+  - deploy/**
 dependencies:
+  - BEAD-CAT-002-001
   - BEAD-CAT-002-002
 tool_budget:
   search: 1
-  read: 6
-  write: 4
-  execute: 6
-  max_runtime_minutes: 30
+  read: 7
+  write: 7
+  execute: 5
+  max_runtime_minutes: 45
 confidence:
-  minimum: 75
-  current: 80
-  objective_clarity: 85
-  scope_clarity: 82
-  evidence_quality: 82
+  minimum: 78
+  current: 84
+  objective_clarity: 88
+  scope_clarity: 86
+  evidence_quality: 84
   reversibility: 90
-  tool_fit: 80
-  risk_awareness: 82
-  testability: 88
+  tool_fit: 84
+  risk_awareness: 84
+  testability: 86
 risk_level: medium
 reversibility: high
 stop_conditions:
-  - Worker patch would touch a path not listed in the ticket.
-  - Worker fails the task after 2 retries.
-  - Patch requests a merge or destructive action.
-  - Ollama Cloud model is unreachable.
+  - Closeout attempts completion without validating the bundle.
+  - Closeout mutates state during dry-run.
+  - Transition engine rejects the target state.
+  - Closeout report is not written for a real attempt.
 definition_of_done:
-  - A worker patch for scripts/harness_demo.py is generated and saved under evidence/diffs/.
-  - The test suite is executed against the patched code and output saved under evidence/test-results/.
-  - The patch is NOT merged; merge awaits Human Owner approval.
+  - Dry-run closeout works.
+  - Apply closeout delegates to transition engine.
+  - Closeout audit log is written.
+  - Closeout report is generated.
 validation:
-  - type: tests
-    command: pytest -q
-    evidence_path: evidence/test-results/mp_cat_002_demo_tests.txt
+  - type: closeout_dry_run
+    command: python scripts/cat_closeout.py --type bead --id BEAD-CAT-002-001 --bundle evidence/bundles/examples/EB-CAT-002-EXAMPLE.yaml --to completed --reason "dry-run closeout validation" --dry-run
+    evidence_path: evidence/reports/closeout_dry_run_sprint_002.md
     required: true
 required_output:
-  - summary
-  - worker_model_used
-  - patch_path
-  - test_result
-  - retries_used
-  - evidence_path
+  - closeout_report
+  - audit_event
+  - next_recommended_bead
 handoff:
-  next_bead_id: BEAD-CAT-002-004
-  notes:
-    - After a patch and test run exist, define the final review packet format for Opus.
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Preserve dry-run behavior as default operator habit.

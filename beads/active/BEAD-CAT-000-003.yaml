@@ -1,7 +1,7 @@
 bead_id: BEAD-CAT-000-003
 mission_id: MP-CAT-000
 title: Prove GO resolver returns next action
-status: completed
+status: queued
 agent_role: Orchestrator
 autonomy_level: L4
 objective: >-

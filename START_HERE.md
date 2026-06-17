@@ -1,42 +1,40 @@
-# Start Here
+# Start Here - CAT Sprint 003
 
-Use this file when opening the repo for the first time.
+## 1. Install
 
-## Step 1: Read in this order
+```bash
+python -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+```
 
-1. `README.md`
-2. `PDR_CAT_000_ESTABLISH_CORE_REPO.md`
-3. `CAT_MANIFEST.md`
-4. `CHROMATIC_TREES.md`
-5. `state/SPRINT_STATE.md`
-6. `missions/registry/MISSION_REGISTRY.yaml`
-7. `beads/active/BEAD-CAT-000-001.yaml`
-8. `docs/operations/GO_MODE.md`
-9. `prompts/PRO_GPT_STARTER_PROMPT.md`
-
-## Step 2: Validate the foundation
+## 2. Validate the Package
 
 ```bash
 python scripts/cat_check_repo.py
 python scripts/cat_validate.py --all
+python scripts/cat_ci.py --mode local --write-report
+pytest -q
 ```
 
-## Step 3: Resolve the next action
+## 3. Resolve GO
 
 ```bash
 python scripts/cat_resolve_go.py
 ```
 
-## Step 4: Commit only after validation
-
-Use this commit pattern:
+Expected active work:
 
 ```text
-[MISSION_ID][BEAD_ID] Clear imperative summary
+Mission: MP-CAT-003
+BEAD: BEAD-CAT-003-001
 ```
 
-Example:
+## 4. Review Sprint 003
 
-```text
-[MP-CAT-000][BEAD-CAT-000-001] Establish CAT core repo skeleton
-```
+Read:
+
+- `PDR_CAT_003_CI_GOVERNANCE_SELF_HEALING.md`
+- `SPRINT_003_PLAN.md`
+- `docs/operations/SPRINT_003_OPERATOR_GUIDE.md`
+- `playbooks/CI_GOVERNANCE_PLAYBOOK.md`

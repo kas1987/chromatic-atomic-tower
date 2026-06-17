@@ -1,59 +1,70 @@
 bead_id: BEAD-CAT-002-004
 mission_id: MP-CAT-002
-title: Create final review packet format
+title: Add tests, operator docs, prompts, and closeout checklist
 status: queued
-agent_role: Reviewer
-autonomy_level: L3
-objective: >-
-  Create playbooks/REVIEW_PACKET_TEMPLATE.md defining the packet the harness assembles
-  for the Opus final-review step - ticket, diff, test output, cheap-review verdict, and
-  the decision the human gate must make.
+agent_role: Scribe
+autonomy_level: L2
+objective: Complete Sprint 002 documentation, tests, prompt handoffs, checklists, evidence reports, and operator guidance for the evidence gate and closeout engine.
 allowed_paths:
-  - playbooks/REVIEW_PACKET_TEMPLATE.md
+  - tests/test_evidence_gate.py
+  - tests/test_closeout_engine.py
+  - docs/operations/EVIDENCE_GATE.md
+  - docs/operations/CLOSEOUT_ENGINE.md
+  - docs/operations/SPRINT_002_OPERATOR_GUIDE.md
+  - playbooks/EVIDENCE_GATE_PLAYBOOK.md
+  - checklists/EVIDENCE_GATE_CHECKLIST.md
+  - prompts/PRO_GPT_SPRINT_002_PROMPT.md
   - evidence/reports/**
+  - evidence/test-results/**
 forbidden_paths:
   - .env
-  - .env.*
   - infra/prod/**
   - secrets/**
+  - production/**
+  - deploy/**
 dependencies:
+  - BEAD-CAT-002-001
   - BEAD-CAT-002-002
+  - BEAD-CAT-002-003
 tool_budget:
   search: 1
-  read: 5
-  write: 3
-  execute: 1
-  max_runtime_minutes: 20
+  read: 8
+  write: 8
+  execute: 5
+  max_runtime_minutes: 45
 confidence:
-  minimum: 75
-  current: 85
-  objective_clarity: 88
+  minimum: 78
+  current: 86
+  objective_clarity: 90
   scope_clarity: 88
-  evidence_quality: 80
-  reversibility: 95
-  tool_fit: 85
-  risk_awareness: 80
-  testability: 78
-risk_level: low
+  evidence_quality: 86
+  reversibility: 90
+  tool_fit: 84
+  risk_awareness: 84
+  testability: 88
+risk_level: medium
 reversibility: high
 stop_conditions:
-  - Packet format requires data the harness cannot produce.
-  - Need owner decision on approve/reject semantics.
-  - Format would duplicate an existing canonical checklist.
+  - Operator docs contradict evidence gate rules.
+  - Tests fail.
+  - Prompt allows closeout without evidence.
+  - Checklist omits audit or learning note.
 definition_of_done:
-  - playbooks/REVIEW_PACKET_TEMPLATE.md exists.
-  - It includes sections for ticket, diff, test output, cheap-review verdict, and human-gate decision.
-  - It states that approval is required before merge.
+  - Tests cover evidence and closeout behavior.
+  - Operator guide is complete.
+  - Evidence gate playbook is complete.
+  - Checklist covers artifacts, validation, audit, and learning.
 validation:
-  - type: self_review
-    command: manual
-    evidence_path: evidence/reports/mp_cat_002_review_packet_review.md
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/sprint_002_evidence_closeout_tests.txt
     required: true
 required_output:
-  - summary
-  - files_changed
-  - evidence_path
+  - docs_updated
+  - test_results
+  - sprint_closeout_recommendation
 handoff:
-  next_bead_id: null
-  notes:
-    - Completing this BEAD closes the MP-CAT-002 MVP loop definition.
+  from: Orchestrator
+  to: Scribe
+  reviewer: Auditor
+  notes: Documentation should be operational and concise.

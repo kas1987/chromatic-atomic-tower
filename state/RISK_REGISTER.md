@@ -1,9 +1,9 @@
-# Risk Register
+# CAT Risk Register — Sprint 001
 
-| ID | Risk | Level | Mitigation | Status |
-|---|---|---|---|---|
-| RISK-CAT-000-001 | V2 legacy sprawl migrates into CAT | High | Use donor extraction plan; require manifest updates | Open |
-| RISK-CAT-000-002 | Agents treat docs as permission | High | YAML/JSON execution contracts win | Open |
-| RISK-CAT-000-003 | GO-mode wanders | High | GO resolver can only select approved active BEADs | Open |
-| RISK-CAT-000-004 | Evidence skipped | Medium | Closeout checklist requires evidence path | Open |
-| RISK-CAT-000-005 | Tool overuse | Medium | Tool budget gate and stop conditions | Open |
+| Risk | Level | Mitigation | Owner |
+|---|---:|---|---|
+| Invalid transition mutates registry | High | Dry-run default available; tests cover denied transitions | Builder |
+| BEAD completed without evidence | Medium | Transition rules require evidence for review/completed states | Auditor |
+| Terminal status reopened casually | High | Terminal states deny outgoing transitions by default | Orchestrator |
+| Mission and tower state drift | Medium | `cat_transition.py` updates registry and tower state together | Builder |
+| Script touches wrong file | Medium | Search by mission_id / bead_id and path constraints | Reviewer |

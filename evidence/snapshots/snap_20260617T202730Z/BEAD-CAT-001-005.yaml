@@ -1,0 +1,69 @@
+bead_id: BEAD-CAT-001-005
+mission_id: MP-CAT-001
+title: Write docs/architecture/STATE_MACHINE.md and finalize evidence templates
+status: reviewed
+agent_role: Scribe
+autonomy_level: L3
+objective: 'Write docs/architecture/STATE_MACHINE.md as the authoritative human-readable
+  reference for the CAT State Transition Engine: include the Mermaid diagram from
+  BEAD-001-001, a table of valid transitions with guard conditions, CLI usage examples,
+  rollback procedure, and evidence trail expectations. Also finalize any evidence
+  template stubs under evidence/reports/ needed by future sprints.'
+allowed_paths:
+- docs/architecture/STATE_MACHINE.md
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
+dependencies:
+- BEAD-CAT-001-004
+tool_budget:
+  search: 3
+  read: 10
+  write: 8
+  execute: 2
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 88
+  objective_clarity: 90
+  scope_clarity: 90
+  evidence_quality: 88
+  reversibility: 96
+  tool_fit: 90
+  risk_awareness: 82
+  testability: 80
+risk_level: low
+reversibility: high
+stop_conditions:
+- The Mermaid diagram from BEAD-001-001 is absent and cannot be reconstructed from
+  available evidence.
+- Writing the doc would require referencing files outside allowed_paths.
+definition_of_done:
+- docs/architecture/STATE_MACHINE.md exists with a Mermaid diagram, transition table,
+  CLI usage, rollback procedure, and evidence trail section.
+- All evidence template stubs referenced in the mission evidence_requirements list
+  are present under evidence/reports/.
+- python scripts/cat_validate.py --all passes with no regressions.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/reports/bead_cat_001_005_doc_review.md
+  required: true
+- type: schema_validation
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/sprint_001_schema_validation.md
+  required: true
+required_output:
+- summary
+- files_changed
+- evidence_path
+handoff:
+  next_bead_id: null
+  notes:
+  - Sprint 001 complete. Human Owner should review the architecture doc and test evidence
+    before closing MP-CAT-001.
+last_updated: '2026-06-17T20:27:29.028919+00:00'

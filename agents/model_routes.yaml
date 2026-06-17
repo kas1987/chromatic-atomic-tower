@@ -1,0 +1,137 @@
+# Multi-Model Harness Route Configuration
+#
+# Maps harness operational roles to concrete model providers and endpoints.
+# Budget-aware ordering ensures cost optimization: local models for labor,
+# external models for judgment.
+#
+# Version: 0.1.0
+# Created: 2026-06-17 (BEAD-CAT-002-001)
+
+version: 0.1.0
+last_updated: "2026-06-17"
+
+roles:
+  # Architecture & design decisions — use expensive, capable model
+  architecture:
+    provider: openai
+    model: gpt-5.5
+    endpoint: https://api.openai.com/v1/chat/completions
+    use_for:
+      - system architecture
+      - design tradeoffs
+      - technical strategy
+      - scope definition
+    cost_class: high
+    max_tokens: 8000
+
+  # Specifications, guardrails, acceptance criteria — use strong reasoning
+  specs:
+    provider: anthropic
+    model: claude-opus-4.8
+    endpoint: https://api.anthropic.com/v1/messages
+    use_for:
+      - task decomposition
+      - acceptance criteria
+      - guardrails
+      - escalation review
+      - ticket validation
+    cost_class: high
+    max_tokens: 6000
+
+  # Implementation (labor) — use local cost-effective models
+  implementation:
+    primary:
+      provider: ollama
+      model: kimi-k2.7-code:cloud
+      endpoint: http://localhost:11434/api/generate
+      use_for:
+        - code generation
+        - patch creation
+        - small refactors
+        - tests
+        - documentation
+      cost_class: local
+      max_tokens: 4096
+
+    secondary:
+      provider: ollama
+      model: minimax-m3:cloud
+      endpoint: http://localhost:11434/api/generate
+      use_for:
+        - alternate implementation
+        - code critique
+        - patch review fallback
+      cost_class: local
+      max_tokens: 4096
+
+  # Cheap review — use local secondary model
+  cheap_review:
+    provider: ollama
+    model: minimax-m3:cloud
+    endpoint: http://localhost:11434/api/generate
+    use_for:
+      - patch critique
+      - lint feedback
+      - style review
+      - performance observation
+    cost_class: local
+    max_tokens: 3000
+
+  # Final review & risk assessment — use strong model
+  review:
+    provider: anthropic
+    model: claude-opus-4.8
+    endpoint: https://api.anthropic.com/v1/messages
+    use_for:
+      - final code review
+      - risk assessment
+      - merge recommendation
+      - compliance check
+      - security sign-off
+    cost_class: high
+    max_tokens: 5000
+
+# Routing policy for harness operations
+routing_policy:
+  ticket_loop: architecture -> specs -> implementation -> cheap_review -> review
+  worker_allocation:
+    default_worker: implementation.primary
+    fallback_worker: implementation.secondary
+  escalation_to: review
+  final_approval_by: review
+
+# Budget controls & guardrails
+budget_controls:
+  max_retries_per_ticket: 2
+  max_files_changed_without_final_review: 5
+  require_final_review_for:
+    - auth
+    - security
+    - secrets
+    - database_migrations
+    - dependency_changes
+    - breaking_changes
+    - more_than_5_files_changed
+    - test_failures
+  require_human_approval_for:
+    - merge_to_main
+    - production_deploy
+    - destructive_migrations
+
+# Model fallback order (if primary unavailable)
+fallback_chain:
+  architecture:
+    - openai.gpt-5.5
+    - anthropic.claude-opus-4.8
+  specs:
+    - anthropic.claude-opus-4.8
+    - openai.gpt-5.5
+  implementation:
+    - ollama.kimi-k2.7-code:cloud
+    - ollama.minimax-m3:cloud
+  cheap_review:
+    - ollama.minimax-m3:cloud
+    - ollama.kimi-k2.7-code:cloud
+  review:
+    - anthropic.claude-opus-4.8
+    - openai.gpt-5.5

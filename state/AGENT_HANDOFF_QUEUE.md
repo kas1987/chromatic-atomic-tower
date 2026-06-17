@@ -1,22 +1,29 @@
-# Agent Handoff Queue
+# Agent Handoff Queue — Sprint 001
 
-## Queue policy
+## Active
 
-Agents must work the first unblocked BEAD unless the Orchestrator selects a different approved BEAD with documented reason.
+### BEAD-CAT-001-001 — Define lifecycle transition matrix
 
-## Active queue
+- Suggested Agent: Builder
+- Reviewer: Auditor
+- Mission: MP-CAT-001
+- Objective: Finalize state rules for mission and BEAD lifecycle movement.
+- Allowed Files: `gates/state/**`, `docs/architecture/STATE_MACHINE.md`, `tests/**`
+- Definition of Done: transition rules are machine-readable and tests cover allowed/denied paths.
 
-_Empty — Sprint 000 closed 2026-06-17; tower paused awaiting Sprint 001 kickoff._
+## Next
 
-| Order | BEAD | Mission | Role | Status | Reason |
-|---:|---|---|---|---|---|
-| – | – | – | – | – | No active BEAD until MP-CAT-001 is kicked off |
+### BEAD-CAT-001-002 — Implement transition CLI
 
-## Completed (Sprint 000)
+- Suggested Agent: Builder
+- Objective: Add `scripts/cat_transition.py` with dry-run, apply, audit, registry, and tower-state updates.
 
-| BEAD | Mission | Role | Status | Result |
-|---|---|---|---|---|
-| BEAD-CAT-000-001 | MP-CAT-000 | Scribe/Orchestrator | completed | Repo skeleton established |
-| BEAD-CAT-000-002 | MP-CAT-000 | Builder/Reviewer | completed | Schemas validated |
-| BEAD-CAT-000-003 | MP-CAT-000 | Orchestrator/Auditor | completed | GO resolver proven |
-| BEAD-CAT-000-004 | MP-CAT-000 | Scribe/Auditor | completed | Sprint closed with evidence |
+### BEAD-CAT-001-003 — Add transition tests and schema checks
+
+- Suggested Agent: Reviewer / QA
+- Objective: Validate transition behavior and schema compliance.
+
+### BEAD-CAT-001-004 — Document operator workflow and closeout evidence
+
+- Suggested Agent: Scribe
+- Objective: Write operator guide, playbook, evidence report, and closeout checklist.

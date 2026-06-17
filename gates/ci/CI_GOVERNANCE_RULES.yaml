@@ -1,0 +1,52 @@
+version: 0.1.0
+gate_id: CI-GOVERNANCE-001
+last_updated: '2026-06-17'
+principle: No CI Pass = No Promotion
+required_checks:
+- id: repo_structure
+  command: python scripts/cat_check_repo.py
+  blocking: true
+- id: schema_validation
+  command: python scripts/cat_validate.py --all
+  blocking: true
+- id: tower_status
+  command: python scripts/cat_status.py
+  blocking: false
+- id: ci_local_report
+  command: python scripts/cat_ci.py --mode local --write-report
+  blocking: true
+- id: tests
+  command: pytest -q
+  blocking: true
+pr_checks:
+  require_mission_id: true
+  require_bead_id: true
+  require_changed_file_scope: true
+  block_forbidden_paths: true
+  mission_id_pattern: MP-CAT-[0-9]{3}
+  bead_id_pattern: BEAD-CAT-[0-9]{3}-[0-9]{3}
+self_healing:
+  default_mode: dry_run
+  apply_requires_review: true
+  allowed_repairs:
+  - create_missing_required_directory
+  - create_gitkeep_placeholder
+  - create_ci_output_directory
+  - regenerate_ci_summary_from_existing_outputs
+  forbidden_repairs:
+  - secret_repair
+  - production_config_repair
+  - deployment_repair
+  - evidence_fabrication
+  - test_result_fabrication
+  - state_transition_application
+  - mission_scope_change
+  - architecture_repair
+failure_routing:
+  schema_failure: Builder or Scribe
+  state_failure: Orchestrator
+  evidence_failure: Scribe or Auditor
+  test_failure: Builder
+  security_failure: Security and Human Gate
+  scope_failure: Auditor
+  unknown_failure: Human Gate

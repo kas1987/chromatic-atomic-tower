@@ -1,0 +1,63 @@
+version: 0.1.0
+last_updated: '2026-06-17'
+source_of_truth: gates/evidence/EVIDENCE_GATE_RULES.yaml
+principles:
+  - Evidence must be attached to Mission and BEAD IDs.
+  - Completion requires a valid evidence bundle.
+  - Required artifact paths must exist.
+  - Required validations must pass.
+  - Closeout attempts must be logged.
+  - Mission closeout requires a learning note.
+validation_results:
+  passing:
+    - passed
+    - skipped
+  blocking:
+    - failed
+    - blocked
+targets:
+  bead:
+    completion_states:
+      - completed
+      - failed
+    required_fields:
+      - evidence_id
+      - mission_id
+      - bead_id
+      - target_type
+      - validation_result
+      - required_artifacts
+      - summary
+      - learning_note
+    require_learning_note: true
+    require_required_artifacts_exist: true
+    require_validation_passed_for_completed: true
+  mission:
+    completion_states:
+      - closed
+      - learned
+      - rolled_back
+    required_fields:
+      - evidence_id
+      - mission_id
+      - target_type
+      - validation_result
+      - required_artifacts
+      - summary
+      - learning_note
+    require_learning_note: true
+    require_required_artifacts_exist: true
+    require_validation_passed_for_closed: true
+audit:
+  closeout_log: evidence/logs/closeouts.jsonl
+  report_dir: evidence/reports
+  bundle_dir: evidence/bundles
+  required_event_fields:
+    - timestamp
+    - target_type
+    - target_id
+    - bundle
+    - allowed
+    - dry_run
+    - reason
+    - message

@@ -1,0 +1,18 @@
+{
+  "snapshot_id": "snap_20260617T202555Z",
+  "timestamp": "2026-06-17T20:25:55.953838+00:00",
+  "entity_type": "mission",
+  "entity_id": "MP-CAT-001",
+  "from_state": "approved",
+  "to_state": "dispatched",
+  "files": [
+    {
+      "original": "missions\\registry\\MISSION_REGISTRY.yaml",
+      "snapshot": "MISSION_REGISTRY.yaml"
+    },
+    {
+      "original": "state\\TOWER_STATE.yaml",
+      "snapshot": "TOWER_STATE.yaml"
+    }
+  ]
+}

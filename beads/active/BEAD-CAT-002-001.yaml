@@ -1,59 +1,61 @@
 bead_id: BEAD-CAT-002-001
 mission_id: MP-CAT-002
-title: Create model route config
-status: queued
-agent_role: Architect
+title: Define evidence gate rules and bundle schema
+status: active
+agent_role: Builder
 autonomy_level: L3
-objective: >-
-  Create agents/model_routes.yaml mapping harness roles (architecture, specs, review,
-  cheap_review, implementation) to concrete models with a budget-aware ordering.
+objective: Create the authoritative evidence gate rules and evidence bundle schema that define what proof is required before BEAD or mission closeout.
 allowed_paths:
-  - agents/model_routes.yaml
-  - .agent/model_routes.yaml
-  - evidence/reports/**
+  - gates/evidence/**
+  - schemas/evidence_bundle.schema.json
+  - docs/operations/EVIDENCE_GATE.md
+  - tests/test_evidence_gate.py
 forbidden_paths:
   - .env
-  - .env.*
   - infra/prod/**
   - secrets/**
+  - production/**
+  - deploy/**
 dependencies: []
 tool_budget:
   search: 1
-  read: 4
-  write: 3
-  execute: 2
-  max_runtime_minutes: 20
+  read: 5
+  write: 5
+  execute: 3
+  max_runtime_minutes: 30
 confidence:
-  minimum: 75
-  current: 86
-  objective_clarity: 90
+  minimum: 78
+  current: 88
+  objective_clarity: 92
   scope_clarity: 90
-  evidence_quality: 80
-  reversibility: 95
-  tool_fit: 85
-  risk_awareness: 80
-  testability: 80
-risk_level: low
+  evidence_quality: 84
+  reversibility: 90
+  tool_fit: 86
+  risk_awareness: 86
+  testability: 88
+risk_level: medium
 reversibility: high
 stop_conditions:
-  - A required model tag is not registered in Ollama and cannot be verified.
-  - Routing would require a new top-level directory.
-  - Need a secret or API key to express a route.
+  - Evidence requirements conflict with existing mission or BEAD schemas.
+  - Evidence bundle cannot reference mission and BEAD IDs clearly.
+  - Required artifact path behavior is ambiguous.
+  - Tests fail for reasons inside Sprint 002 scope.
 definition_of_done:
-  - agents/model_routes.yaml exists.
-  - It maps architecture, specs, review, cheap_review, and implementation roles to concrete models.
-  - Implementation role lists kimi-k2.7-code:cloud and minimax-m3:cloud.
-  - File parses as valid YAML.
+  - Evidence gate rules exist.
+  - Evidence bundle schema exists.
+  - Passing and failing evidence examples are defined.
+  - Evidence rules explain required validation behavior.
 validation:
-  - type: schema_validation
+  - type: schema
     command: python scripts/cat_validate.py --all
-    evidence_path: evidence/reports/mp_cat_002_schema_validation.md
+    evidence_path: evidence/reports/schema_validation_sprint_002.md
     required: true
 required_output:
-  - summary
-  - files_changed
-  - evidence_path
+  - updated_files
+  - evidence_schema_note
+  - next_recommended_bead
 handoff:
-  next_bead_id: BEAD-CAT-002-002
-  notes:
-    - After routes exist, author the worker prompt template that references these roles.
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Keep evidence rules explicit and machine-readable.

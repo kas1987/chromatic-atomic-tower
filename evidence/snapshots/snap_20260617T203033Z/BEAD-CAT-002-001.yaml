@@ -1,0 +1,60 @@
+bead_id: BEAD-CAT-002-001
+mission_id: MP-CAT-002
+title: Create model route config
+status: reviewed
+agent_role: Architect
+autonomy_level: L3
+objective: Create agents/model_routes.yaml mapping harness roles (architecture, specs,
+  review, cheap_review, implementation) to concrete models with a budget-aware ordering.
+allowed_paths:
+- agents/model_routes.yaml
+- .agent/model_routes.yaml
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+dependencies: []
+tool_budget:
+  search: 1
+  read: 4
+  write: 3
+  execute: 2
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 86
+  objective_clarity: 90
+  scope_clarity: 90
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 85
+  risk_awareness: 80
+  testability: 80
+risk_level: low
+reversibility: high
+stop_conditions:
+- A required model tag is not registered in Ollama and cannot be verified.
+- Routing would require a new top-level directory.
+- Need a secret or API key to express a route.
+definition_of_done:
+- agents/model_routes.yaml exists.
+- It maps architecture, specs, review, cheap_review, and implementation roles to concrete
+  models.
+- Implementation role lists kimi-k2.7-code:cloud and minimax-m3:cloud.
+- File parses as valid YAML.
+validation:
+- type: schema_validation
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/mp_cat_002_schema_validation.md
+  required: true
+required_output:
+- summary
+- files_changed
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-002-002
+  notes:
+  - After routes exist, author the worker prompt template that references these roles.
+last_updated: '2026-06-17T20:30:31.624719+00:00'

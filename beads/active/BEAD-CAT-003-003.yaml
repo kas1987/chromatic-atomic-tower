@@ -1,0 +1,158 @@
+mission_id: MP-CAT-003
+status: archived
+agent_role: Builder
+autonomy_level: L3
+forbidden_paths:
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies: []
+tool_budget:
+  search: 1
+  read: 6
+  write: 6
+  execute: 4
+  max_runtime_minutes: 35
+confidence:
+  minimum: 80
+  current: 88
+  objective_clarity: 92
+  scope_clarity: 88
+  evidence_quality: 86
+  reversibility: 90
+  tool_fit: 88
+  risk_awareness: 88
+  testability: 90
+risk_level: medium
+reversibility: high
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Keep changes bounded to the assigned BEAD.
+bead_id: BEAD-CAT-003-003
+title: Implement bounded self-healing validator
+objective: Implement self-healing validation that can dry-run and apply only safe
+  structural repairs while refusing truth-bearing or high-risk repair classes.
+allowed_paths:
+- scripts/cat_self_heal.py
+- docs/operations/SELF_HEALING_VALIDATION.md
+- tests/test_self_heal.py
+- evidence/ci/self-heal/**
+stop_conditions:
+- CI behavior would mutate truth-bearing evidence.
+- Self-heal attempts to touch forbidden paths.
+- PR scope behavior conflicts with BEAD allowed paths.
+- Tests fail for reasons inside Sprint 003 scope.
+definition_of_done:
+- Self-heal dry-run lists proposed safe repairs.
+- Apply mode creates only approved structural placeholders.
+- Forbidden repair classes are documented and blocked.
+- Tests cover dry-run and blocked classes.
+validation:
+- type: ci_local
+  command: python scripts/cat_ci.py --mode local --write-report
+  evidence_path: evidence/ci/reports/cat_ci_report.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_003_ci_tests.txt
+  required: true
+last_updated: '2026-06-17'
+transition_history:
+- timestamp: '2026-06-17T20:55:12+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-003-003
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Activated by GO
+  evidence: evidence/ci/reports/cat_ci_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-003-003.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+- timestamp: '2026-06-17T20:55:13+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-003-003
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Execution started
+  evidence: evidence/ci/reports/cat_ci_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-003-003.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+- timestamp: '2026-06-17T20:55:13+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-003-003
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Self-heal dry-run complete
+  evidence: evidence/ci/self-heal/self_heal_dry_run_sprint_003.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-003-003.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+- timestamp: '2026-06-17T20:55:14+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-003-003
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Validation passed
+  evidence: evidence/reports/schema_validation_sprint_003.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-003-003.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+- timestamp: '2026-06-17T20:55:14+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-003-003
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: Review complete
+  evidence: evidence/test-results/sprint_003_ci_tests.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-003-003.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+- timestamp: '2026-06-17T20:55:15+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-003-003
+  from_status: completed
+  to_status: archived
+  allowed: true
+  dry_run: false
+  reason: Archived after completion
+  evidence: evidence/ci/reports/cat_ci_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-003-003.yaml
+  guard: closeout_complete
+  guard_ok: true
+  guard_message: guard evaluation deferred

@@ -1,22 +1,22 @@
 version: 0.1.0
-state_id: TOWER-STATE-001
-status: sprint_001_active
-active_sprint: SPRINT-001
-active_mission_id: MP-CAT-001
-active_bead_id: BEAD-CAT-001-001
-go_mode: active
-last_updated: '2026-06-17T20:15:24.415588+00:00'
+state_id: TOWER-STATE-005
+status: sprint_005_active
+active_sprint: SPRINT-005
+active_mission_id: MP-CAT-005
+active_bead_id: BEAD-CAT-005-002
+go_mode: enabled
+last_updated: '2026-06-17T22:05:51+00:00'
 operator: Human Owner
-closed_sprints:
-- SPRINT-000
 control_planes:
   mission: active
-  execution: active
-  evidence: active
-  learning: active
+  execution: state_transition_engine_available
+  evidence: evidence_gate_available
+  learning: multi_model_harness
+  governance: tower_guard_available
 current_constraints:
-- Do not import Harness V2 wholesale.
-- Do not run destructive commands.
-- Do not touch secrets or production resources.
-- Human gate required for execute-mode transitions (cat_transition.py --execute).
+- Workers touch only ticket-listed paths.
+- Max 2 retries per worker task.
+- No worker patch merged without Human Owner approval.
+- Opus invoked at most once per ticket (final review only).
 next_command: python scripts/cat_resolve_go.py
+sprint_goal: Prove one end-to-end budget-aware multi-model task loop.

@@ -1,0 +1,34 @@
+{
+  "report_id": "CAT-CI-20260617T204808Z",
+  "created_at": "2026-06-17T20:48:08.150116+00:00",
+  "mode": "local",
+  "status": "passed",
+  "checks": [
+    {
+      "id": "repo_structure",
+      "status": "passed",
+      "command": "python scripts/cat_check_repo.py",
+      "returncode": 0,
+      "details": "CAT repo check passed.\nRequired files checked: 19\nRequired directories checked: 14"
+    },
+    {
+      "id": "schema_validation",
+      "status": "passed",
+      "command": "python scripts/cat_validate.py --all",
+      "returncode": 0,
+      "details": "PASS mission registry: missions\\registry\\MISSION_REGISTRY.yaml\nPASS agent registry: agents\\registry\\AGENT_REGISTRY.yaml\nPASS tower state: state\\TOWER_STATE.yaml\nPASS mission: missions\\active\\MP-CAT-000_ESTABLISH_CORE.yaml\nPASS mission: missions\\active\\MP-CAT-001_STATE_TRANSITION_ENGINE.yaml\nPASS mission: missions\\active\\MP-CAT-002_EVIDENCE_GATE_CLOSEOUT_ENGINE.yaml\nPASS mission: missions\\active\\MP-CAT-003_CI_GOVERNANCE_SELF_HEALING.yaml\nPASS mission: missions\\backlog\\MP-CAT-002_MULTI_MODEL_HARNESS.yaml\nPASS mission: missions\\examples\\MP-CAT-EXAMPLE-M2.yaml\nPASS bead: beads\\active\\BEAD-CAT-000-001.yaml\nPASS bead: beads\\active\\BEAD-CAT-000-002.yaml\nPASS bead: beads\\active\\BEAD-CAT-000-003.yaml\nPASS bead: beads\\active\\BEAD-CAT-000-004.yaml\nPASS bead: beads\\active\\BEAD-CAT-001-001.yaml\nPASS bead: beads\\active\\BEAD-CAT-001-002.yaml\nPASS bead: beads\\active\\BEAD-CAT-001-003.yaml\nPASS bead: beads\\active\\BEAD-CAT-001-004.yaml\nPASS bead: beads\\active\\BEAD-CAT-001-005.yaml\nPASS bead: beads\\active\\BEAD-CAT-002-001.yaml\nPASS bead: beads\\active\\BEAD-CAT-002-002.yaml\nPASS bead: beads\\active\\BEAD-CAT-002-003.yaml\nPASS bead: beads\\active\\BEAD-CAT-002-004.yaml\nPASS bead: beads\\active\\BEAD-CAT-002-005.yaml\nPASS bead: beads\\active\\BEAD-CAT-003-001.yaml\nPASS bead: beads\\active\\BEAD-CAT-003-002.yaml\nPASS bead: beads\\active\\BEAD-CAT-003-003.yaml\nPASS bead: beads\\active\\BEAD-CAT-003-004.yaml\nPASS bead: beads\\examples\\BEAD-CAT-002-CLOSEOUT-EXAMPLE.yaml\nPASS bead: beads\\examples\\BEAD-CAT-EXAMPLE-001.yaml\nPASS evidence bundle: evidence\\bundles\\examples\\EB-CAT-002-EXAMPLE.yaml\nPASS evidence bundle: evidence\\bundles\\examples\\EB-CAT-002-FAILED.yaml\nPASS evidence bundle: evidence\\bundles\\examples\\EB-CAT-002-MISSING.yaml\nPASS mission template: missions\\templates\\M1_BASIC.yaml\nPASS mission template: missions\\templates\\M2_INTERMEDIATE.yaml\nPASS mission template: missions\\templates\\M3_COMPLEX.yaml\nPASS mission template: missions\\templates\\M4_ATOMIC.yaml\nPASS bead template: beads\\templates\\BEAD_TEMPLATE.yaml\nCAT validation passed."
+    },
+    {
+      "id": "tower_status",
+      "status": "passed",
+      "command": "python scripts/cat_status.py",
+      "returncode": 0,
+      "details": "{\n  \"active_bead_id\": \"BEAD-CAT-003-001\",\n  \"active_mission_id\": \"MP-CAT-003\",\n  \"active_sprint\": \"SPRINT-003\",\n  \"mission\": {\n    \"autonomy_level\": \"L3\",\n    \"confidence\": 88,\n    \"created\": \"2026-06-17\",\n    \"current_bead_id\": \"BEAD-CAT-003-001\",\n    \"last_updated\": \"2026-06-17\",\n    \"level\": \"M3\",\n    \"mission_id\": \"MP-CAT-003\",\n    \"owner\": \"Human Owner\",\n    \"path\": \"missions/active/MP-CAT-003_CI_GOVERNANCE_SELF_HEALING.yaml\",\n    \"priority\": 1,\n    \"reversibility\": \"high\",\n    \"risk_level\": \"medium\",\n    \"status\": \"approved\",\n    \"title\": \"Implement CAT CI Governance and Self-Healing Validation Engine\"\n  },\n  \"next_command\": \"python scripts/cat_ci.py --mode local --write-report\",\n  \"tower_status\": \"sprint_003_active\"\n}"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0
+  }
+}

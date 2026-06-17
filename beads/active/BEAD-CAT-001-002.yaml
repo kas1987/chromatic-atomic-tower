@@ -1,6 +1,6 @@
 bead_id: BEAD-CAT-001-002
 mission_id: MP-CAT-001
-title: Implement scripts/cat_transition.py with dry-run and execute modes
+title: Implement transition CLI
 status: queued
 agent_role: Builder
 autonomy_level: L3
@@ -13,55 +13,65 @@ objective: >-
   evidence/logs/transitions.jsonl (who, what, when, before/after) and write a
   structured review record to evidence/reports/ on every invocation.
 allowed_paths:
-  - scripts/cat_transition.py
-  - evidence/logs/**
-  - evidence/reports/**
+- scripts/cat_transition.py
+- scripts/common.py
+- evidence/logs/**
+- evidence/reports/**
+- tests/test_transitions.py
 forbidden_paths:
-  - .env
-  - .env.*
-  - infra/prod/**
-  - secrets/**
-  - credentials/**
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
 dependencies:
-  - BEAD-CAT-001-001
+- BEAD-CAT-001-001
 tool_budget:
-  search: 3
-  read: 10
-  write: 10
-  execute: 5
-  max_runtime_minutes: 25
+  search: 1
+  read: 6
+  write: 5
+  execute: 3
+  max_runtime_minutes: 30
 confidence:
   minimum: 75
-  current: 85
-  objective_clarity: 88
-  scope_clarity: 86
+  current: 86
+  objective_clarity: 90
+  scope_clarity: 88
   evidence_quality: 82
   reversibility: 90
-  tool_fit: 88
-  risk_awareness: 85
-  testability: 85
+  tool_fit: 86
+  risk_awareness: 84
+  testability: 88
 risk_level: medium
 reversibility: high
 stop_conditions:
-  - The transition rules file from BEAD-CAT-001-001 does not exist or fails to parse.
-  - Implementing atomic write requires a library not available in the Python 3.12 stdlib or already-installed packages.
-  - The CLI interface conflicts with an existing script in scripts/.
+- Required evidence path is missing for a review/completion transition.
+- Requested transition is not listed in gates/state/transition_rules.yaml.
+- Transition attempts to touch a forbidden path.
+- Registry and target contract disagree on mission or BEAD identity.
+- Tests fail for reasons inside Sprint 001 scope.
 definition_of_done:
-  - scripts/cat_transition.py exists and is importable.
-  - Running with --dry-run prints a predicted diff without mutating any file.
-  - Running with --execute validates the transition against rules and mutates MISSION_REGISTRY.yaml atomically (write-to-temp + rename).
-  - Invalid transitions exit non-zero with a descriptive error message.
-  - Every invocation writes a structured evidence record to evidence/reports/.
+- CLI supports mission and BEAD targets.
+- CLI supports dry-run and apply modes.
+- Transition events are written as JSONL to evidence/logs/transitions.jsonl.
+- Registry and tower state update when appropriate.
 validation:
-  - type: self_review
-    command: manual
-    evidence_path: evidence/reports/bead_cat_001_002_transition_script_review.md
-    required: true
+- type: transition_dry_run
+  command: python scripts/cat_transition.py --type bead --id BEAD-CAT-001-001 --to
+    in_progress --reason "dry-run validation" --evidence evidence/reports/sprint_001_transition_dry_run.md
+    --dry-run
+  evidence_path: evidence/reports/sprint_001_transition_dry_run.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_001_transition_tests.txt
+  required: true
 required_output:
-  - summary
-  - files_changed
-  - evidence_path
+- updated_files
+- evidence_note
+- next_recommended_transition
 handoff:
-  next_bead_id: BEAD-CAT-001-003
-  notes:
-    - BEAD-001-003 extends this script with snapshot/rollback logic; ensure the write path is factored to support pre/post hooks.
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Keep scope atomic. Use transition rules as source of truth.
