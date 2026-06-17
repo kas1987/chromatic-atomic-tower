@@ -1,7 +1,7 @@
 mission_id: MP-CAT-000
 title: Establish Chromatic Atomic Tower Core Foundation
 level: M3
-status: approved
+status: closed
 owner: Human Owner
 priority: 1
 risk_level: high
@@ -10,6 +10,8 @@ autonomy_level: L4
 confidence_minimum: 75
 created: "2026-06-17"
 last_updated: "2026-06-17"
+closed: "2026-06-17"
+closeout_report: evidence/reports/sprint_000_closeout.md
 objective: >-
   Establish a clean CAT repo foundation with mission contracts, BEAD contracts,
   gates, schemas, validation scripts, GO resolver, prompts, and operating docs.
@@ -36,7 +38,7 @@ allowed_paths:
   - CAT_MANIFEST.md
   - CAT_PRINCIPLES.md
   - CAT_ROADMAP.md
-  - docs/operations/SPRINT_000_PLAN.md
+  - SPRINT_000_PLAN.md
   - QUICKSTART.md
   - AGENTS.md
   - CHROMATIC_TREES.md
@@ -112,16 +114,16 @@ tool_budget:
 beads:
   - bead_id: BEAD-CAT-000-001
     title: Establish repo skeleton and canonical manifest
-    status: active
+    status: completed
   - bead_id: BEAD-CAT-000-002
     title: Validate mission and BEAD schemas
-    status: queued
+    status: completed
   - bead_id: BEAD-CAT-000-003
     title: Prove GO resolver returns next action
-    status: queued
+    status: completed
   - bead_id: BEAD-CAT-000-004
     title: Close sprint with evidence and learning log
-    status: queued
+    status: completed
 evidence_requirements:
   - repo_check_output
   - schema_validation_output
