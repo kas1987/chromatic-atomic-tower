@@ -6,7 +6,7 @@
 **Final `master`:** `410e6eb` — repo check ✓ · validate --all ✓ · GO ready ✓ · pytest 29/29 ✓
 
 ## What shipped
-- **CAT Sprint 000 adopted as a live repo** — package promoted to `C:\.01_CAT` root, all gates green, baseline committed (`d0d86b4`) and pushed to GitHub (`kas1987/chromatic-atomic-tower`).
+- **CAT Sprint 000 adopted as a live repo** — package promoted to the repo root (`<CAT_ROOT>`), all gates green, baseline committed (`d0d86b4`) and pushed to GitHub (`kas1987/chromatic-atomic-tower`).
 - **Model memory established** — Kimi (`kimi-k2.7-code:cloud`) and MiniMax (`minimax-m3:cloud`) verified via Ollama Cloud; captured to CAT learnings, `bd`, and Claude memory.
 - **MP-CAT-001 promotion** drafted by Kimi, schema-gated, staged for human approval (not promoted).
 - **MP-CAT-002 budget agent harness MVP** — `.agent/` control layer, `scripts/harness_run.py` (ticket → worker → scoped-diff validation → cheap review → review packet, 2-retry cap, never merges), `scripts/harness_bridge.py` (run → CAT evidence + non-terminal BEAD state).
@@ -50,5 +50,6 @@ The working tree's checked-out branch changed (`master` → feature → `harness
 ## Follow-up
 - **Add `pytest` to `.github/workflows/validate-cat.yml`** — close the CI gap from Learning #3 (route as a harness ticket).
 - **MP-CAT-001** still `draft` promotion staged — awaits human approval to dispatch the state-transition engine.
-- Untracked by design: `scripts/gh_app_token.*`, `.env.example` edit — human to handle (secret-adjacent).
+- Genuinely secret-adjacent, left untracked by design: `scripts/gh_app_token.*` (token tooling — human to review before tracking).
+- `.env.example` is a tracked template (not a secret) with a pending uncommitted edit — it should be committed separately so required config keys stay discoverable; only the real `.env` stays gitignored.
 - Pre-existing `bd` P1 items (mc-22w, mc-6a5, …) belong to harness-v2, not CAT — out of scope here.
