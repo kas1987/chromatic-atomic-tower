@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cat.local/schemas/telemetry_envelope.schema.json",
+  "title": "Telemetry Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "ts",
+    "signal_type",
+    "service",
+    "env",
+    "severity",
+    "message",
+    "commit_sha",
+    "deploy_id",
+    "attrs"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signal_type": {
+      "type": "string",
+      "enum": ["log", "metric", "trace", "event"]
+    },
+    "service": {
+      "type": "string",
+      "minLength": 1
+    },
+    "env": {
+      "type": "string",
+      "enum": ["dev", "staging", "prod"]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["debug", "info", "warn", "error", "fatal", "na"]
+    },
+    "message": {
+      "type": "string"
+    },
+    "trace_id": {
+      "type": "string"
+    },
+    "span_id": {
+      "type": "string"
+    },
+    "commit_sha": {
+      "type": "string",
+      "minLength": 7
+    },
+    "deploy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attrs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "host": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "team": {
+      "type": "string"
+    },
+    "runtime": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "user_impact_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cat.local/schemas/dependency_edge.schema.json",
+  "title": "Dependency Edge",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edge_id",
+    "source",
+    "target",
+    "edge_type",
+    "observed_at",
+    "confidence",
+    "allowed"
+  ],
+  "properties": {
+    "edge_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target": {
+      "type": "string",
+      "minLength": 1
+    },
+    "edge_type": {
+      "type": "string",
+      "enum": ["static", "runtime"]
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "allowed": {
+      "type": "boolean"
+    },
+    "rule_id": {
+      "type": "string"
+    }
+  }
+}

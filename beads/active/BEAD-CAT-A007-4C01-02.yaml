@@ -1,0 +1,67 @@
+bead_id: BEAD-CAT-A007-4C01-02
+mission_id: MP-CAT-A007-4C01
+title: Add telemetry intake configuration templates
+status: queued
+agent_role: Builder
+autonomy_level: L2
+objective: >-
+  Provide local-first telemetry intake configuration templates that enrich every signal
+  with the LOGHOUSE required attributes (service, env, signal_type, ts, commit_sha,
+  deploy_id). Deliver an OpenTelemetry Collector config and a Vector/Fluent Bit pipeline
+  config that normalize logs, metrics, and traces toward the telemetry_envelope schema.
+allowed_paths:
+  - reference/loghouse/otel-collector.yaml
+  - reference/loghouse/vector.yaml
+  - reference/loghouse/README.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies:
+  - BEAD-CAT-A007-4C01-01
+tool_budget:
+  search: 2
+  read: 10
+  write: 8
+  execute: 3
+  max_runtime_minutes: 40
+confidence:
+  minimum: 70
+  current: 78
+  objective_clarity: 85
+  scope_clarity: 84
+  evidence_quality: 72
+  reversibility: 95
+  tool_fit: 80
+  risk_awareness: 80
+  testability: 70
+risk_level: low
+reversibility: high
+stop_conditions:
+  - telemetry_envelope schema or required-attribute list unavailable.
+  - Requested path outside allowed_paths.
+  - Config would require live credentials or a real backend endpoint to validate.
+  - Need for secret, credential, destructive action, or production access.
+definition_of_done:
+  - otel-collector.yaml defines receivers, processors that enrich required attributes, and exporters (file/debug acceptable for MVP).
+  - vector.yaml defines sources, a transform mapping to telemetry_envelope fields, and a sink.
+  - reference/loghouse/README.md documents how the configs map raw signals to the telemetry_envelope contract.
+  - Configs reference only placeholder/local endpoints, no secrets.
+validation:
+  - type: config_lint
+    command: python -c "import yaml,glob; [yaml.safe_load(open(p)) for p in glob.glob('reference/loghouse/*.yaml')]; print('loghouse configs parse OK')"
+    evidence_path: evidence/reports/MP-CAT-A007-4C01_intake_configs.md
+    required: true
+required_output:
+  - updated_files
+  - validation_output
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+  notes: Intake templates only — no live backend stood up; evidence-first enrichment mapping required.

@@ -1,0 +1,71 @@
+bead_id: BEAD-CAT-A007-4C01-05
+mission_id: MP-CAT-A007-4C01
+title: Add dependency graph and architecture drift detection
+status: queued
+agent_role: Scout
+autonomy_level: L2
+objective: >-
+  Add dependency-graph ingestion and architecture-drift detection. Provide a
+  dependency-cruiser configuration template, an architecture_rule rule set expressing
+  allowed and forbidden edges, and a drift detector that compares observed dependency_edge
+  records against the rules, classifies drift as intentional, accidental, blocked, or
+  unknown, emits a drift_report, and raises forbidden-edge findings.
+allowed_paths:
+  - scripts/loghouse/drift.py
+  - scripts/loghouse/__init__.py
+  - reference/loghouse/dependency-cruiser.cjs
+  - reference/loghouse/architecture_rules.yaml
+  - tests/test_loghouse_drift.py
+  - tests/fixtures/loghouse/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies:
+  - BEAD-CAT-A007-4C01-04
+tool_budget:
+  search: 3
+  read: 14
+  write: 12
+  execute: 6
+  max_runtime_minutes: 60
+confidence:
+  minimum: 70
+  current: 78
+  objective_clarity: 84
+  scope_clarity: 82
+  evidence_quality: 76
+  reversibility: 92
+  tool_fit: 82
+  risk_awareness: 82
+  testability: 85
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - dependency_edge, architecture_rule, or drift_report schema unavailable.
+  - Requested path outside allowed_paths.
+  - Drift cannot be classified into one of the four categories without inventing intent.
+  - Need for secret, credential, destructive action, or production access.
+definition_of_done:
+  - architecture_rules.yaml expresses allowed/forbidden edges validated against architecture_rule.schema.json.
+  - drift.py classifies each observed edge as intentional, accidental, blocked, or unknown and emits a drift_report.schema.json-valid report.
+  - A forbidden edge in the fixtures produces a drift finding with evidence via the findings engine.
+  - tests/test_loghouse_drift.py covers each drift class and the forbidden-edge finding and passes.
+validation:
+  - type: tests
+    command: pytest -q tests/test_loghouse_drift.py
+    evidence_path: evidence/test-results/MP-CAT-A007-4C01_tests.txt
+    required: true
+required_output:
+  - updated_files
+  - validation_output
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Scout
+  reviewer: Human Owner
+  notes: Architecture intent comes from the rule set, not from the model; unknown is the safe default.

@@ -1,0 +1,182 @@
+mission_id: MP-CAT-A007-4C01
+title: LOGHOUSE Log Intelligence and Architecture Drift MVP
+level: M4
+status: draft
+owner: Human Owner
+priority: 2
+risk_level: high
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 70
+created: "2026-06-17"
+last_updated: "2026-06-17"
+id_convention:
+  scheme: "MP-<repo>-<tier><NNN>-<cx>C<oo>"
+  type: MP (Mission Pack)
+  repo: CAT (Chromatic Atomic Tower)
+  priority_tier: A
+  priority_tier_frozen_at_creation: true
+  global_mission_number: "007"
+  complexity: 4
+  relative_execution_order: "01"
+  note: >-
+    Priority tier is frozen at creation and never renamed; live priority is the
+    mutable `priority` field. Second mission to adopt the Type-Repo-Priority-Complexity
+    ID convention introduced with MP-CAT-A006-4C01.
+objective: >-
+  Build LOGHOUSE: a local-first, evidence-first log intelligence and architecture drift
+  MVP inside Chromatic Atomic Tower. LOGHOUSE consumes logs, metrics, traces, deploy
+  events, Git metadata, and dependency graphs, normalizes them into a canonical telemetry
+  envelope, correlates signals, and emits audit-ready findings with evidence, confidence,
+  suggested fixes, and agent-routable dispatch-queue items. It classifies architecture
+  drift (intentional vs accidental vs blocked vs unknown) and fails CI when critical
+  architecture rules are violated.
+background: >-
+  Sourced from the external log-intel-mission-pack (Log Intelligence & Architecture Drift)
+  and reconciled with the pre-existing LOGHOUSE Phase-1 slice already present in the repo
+  (docs/operations/LOGHOUSE_FOUNDATION.md plus the telemetry_envelope, finding,
+  dependency_edge, and deploy_event schemas with tests/test_loghouse_schemas.py). Rather
+  than duplicate those contracts, MP-CAT-A007-4C01 ADOPTS the LOGHOUSE schemas as the
+  Phase-1 baseline and extends them with the dispatch queue, architecture-rule, and drift
+  report contracts, a deterministic findings engine, dependency/drift detection, telemetry
+  intake configs, CI enforcement, agent/LLM observability, and operational docs. This is
+  the second mission under the Type-Repo-Priority-Complexity ID convention; shipped
+  missions MP-CAT-000..005 keep their legacy IDs.
+scope:
+  in:
+    - Canonical contracts (extend LOGHOUSE Phase-1 schemas) for telemetry, findings, deploys, dependency edges, dispatch queue items, architecture rules, and drift reports.
+    - Deterministic findings engine — event normalizer, correlation, rule set, JSON and Markdown finding generator, dispatch-queue writer.
+    - Dependency graph generation and architecture-drift detection with intentional/accidental/blocked/unknown classification.
+    - Telemetry intake configuration templates (OpenTelemetry Collector, Vector/Fluent Bit) with required-attribute enrichment.
+    - CI/CD workflow that validates schemas, runs the engine on fixtures, and gates the build on critical architecture-rule violations.
+    - Agent/LLM observability hooks and an agent-drift finding type.
+    - Validation script, pytest coverage, golden fixtures, Mermaid diagrams, runbooks, dispatch board, and learning closeout.
+  out:
+    - Standing up a production observability backend (OpenObserve/SigNoz) or any live deployment.
+    - Auto-remediation of production systems or auto-created PRs from findings.
+    - Secrets, credential, or token handling.
+    - Cross-repository mutation or scanning of external_repos.
+    - Replacing or rewriting the shipped Sprint 000-005 kernel.
+    - Renaming shipped MP-CAT-000..005 missions or their beads.
+    - Treating LLM-generated conclusions as truth without backing evidence.
+allowed_paths:
+  - missions/active/MP-CAT-A007-4C01_LOGHOUSE_INTELLIGENCE.yaml
+  - missions/registry/MISSION_REGISTRY.yaml
+  - beads/active/BEAD-CAT-A007-4C01-*.yaml
+  - schemas/telemetry_envelope.schema.json
+  - schemas/finding.schema.json
+  - schemas/dependency_edge.schema.json
+  - schemas/deploy_event.schema.json
+  - schemas/dispatch_queue_item.schema.json
+  - schemas/architecture_rule.schema.json
+  - schemas/drift_report.schema.json
+  - scripts/loghouse/**
+  - scripts/cat_loghouse.py
+  - scripts/cat_validate_loghouse.py
+  - reference/loghouse/**
+  - docs/architecture/LOGHOUSE_ARCHITECTURE.md
+  - docs/architecture/LOGHOUSE_DATA_FLOW.md
+  - docs/architecture/loghouse/**
+  - docs/operations/LOGHOUSE_FOUNDATION.md
+  - docs/operations/LOGHOUSE_DISPATCH_BOARD.md
+  - docs/runbooks/loghouse-incident-to-finding.md
+  - docs/runbooks/loghouse-drift-review.md
+  - tests/test_loghouse_schemas.py
+  - tests/test_loghouse_engine.py
+  - tests/test_loghouse_rules.py
+  - tests/test_loghouse_drift.py
+  - tests/fixtures/loghouse/**
+  - evidence/reports/MP-CAT-A007-4C01_*
+  - evidence/test-results/MP-CAT-A007-4C01_*
+  - learnings/MP-CAT-A007-4C01_LOGHOUSE.md
+  - .github/workflows/cat-loghouse-ci.yml
+  - Makefile
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies:
+  - MP-CAT-000
+acceptance_criteria:
+  - "completeness: every mission objective maps to one or more BEAD-CAT-A007-4C01 files."
+  - "contracts: all seven LOGHOUSE schemas validate sample instances and reject malformed instances."
+  - "correlation: at least one finding links evidence from telemetry + deploy/Git + dependency sources."
+  - "drift_classification: drift is classified as intentional, accidental, blocked, or unknown and a forbidden edge produces a finding."
+  - "control_validation: CI fails the build when a critical (P0/P1) architecture rule is violated."
+  - "dispatch: findings are converted into agent-routable dispatch-queue items with owner, evidence, acceptance criteria, and stop condition."
+  - "substantive_validation: validation script and pytest suites execute successfully."
+  - "presentation_and_disclosure: Mermaid diagrams and runbooks document the pipeline, findings lifecycle, and drift review flow."
+success_metrics:
+  - python scripts/cat_validate.py --all passes with the new schemas and eight MP-CAT-A007-4C01 BEADs present.
+  - python scripts/cat_validate_loghouse.py --root . passes.
+  - pytest -q passes including test_loghouse_schemas.py, test_loghouse_engine.py, test_loghouse_rules.py, and test_loghouse_drift.py.
+  - LOGHOUSE engine emits a golden finding and dispatch-queue item from fixtures that match the recorded goldens.
+  - Confidence score >= 90 for auto-proceed or >= 70 for human-approved proceed.
+required_validation:
+  - type: schema_validation
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/MP-CAT-A007-4C01_schema_validation.md
+    required: true
+  - type: loghouse_alignment
+    command: python scripts/cat_validate_loghouse.py --root .
+    evidence_path: evidence/reports/MP-CAT-A007-4C01_validation_report.json
+    required: true
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/MP-CAT-A007-4C01_tests.txt
+    required: true
+rollback:
+  required: true
+  plan: >-
+    Remove missions/active/MP-CAT-A007-4C01_LOGHOUSE_INTELLIGENCE.yaml, the eight
+    beads/active/BEAD-CAT-A007-4C01-*.yaml files, the three new schemas
+    (dispatch_queue_item, architecture_rule, drift_report), the scripts/loghouse/ package,
+    scripts/cat_loghouse.py, scripts/cat_validate_loghouse.py, reference/loghouse/, the new
+    docs and runbooks, the new test_loghouse_* suites and tests/fixtures/loghouse/, the
+    .github/workflows/cat-loghouse-ci.yml workflow, and revert the MISSION_REGISTRY.yaml
+    entry. The pre-existing LOGHOUSE Phase-1 schemas and foundation doc are retained.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 12
+  read: 80
+  write: 90
+  execute: 30
+  max_runtime_minutes: 240
+beads:
+  - bead_id: BEAD-CAT-A007-4C01-01
+    title: Lock LOGHOUSE contracts and architecture docs
+  - bead_id: BEAD-CAT-A007-4C01-02
+    title: Add telemetry intake configuration templates
+  - bead_id: BEAD-CAT-A007-4C01-03
+    title: Build event normalizer and correlation core
+  - bead_id: BEAD-CAT-A007-4C01-04
+    title: Build findings engine, rules, and dispatch writer
+  - bead_id: BEAD-CAT-A007-4C01-05
+    title: Add dependency graph and architecture drift detection
+  - bead_id: BEAD-CAT-A007-4C01-06
+    title: Add LOGHOUSE CI workflow and drift gate
+  - bead_id: BEAD-CAT-A007-4C01-07
+    title: Add LOGHOUSE validation script and pytest suites
+  - bead_id: BEAD-CAT-A007-4C01-08
+    title: Add agent observability, Mermaid docs, runbooks, and learning closeout
+evidence_requirements:
+  - loghouse_contracts_and_architecture
+  - telemetry_intake_configs
+  - normalizer_and_correlation_core
+  - findings_engine_rules_and_dispatch
+  - dependency_graph_and_drift_detection
+  - loghouse_ci_workflow_and_drift_gate
+  - validation_script_and_tests
+  - agent_observability_docs_and_learning_record
+notes:
+  - Adopts the pre-existing LOGHOUSE Phase-1 slice; does not duplicate its schemas or foundation doc.
+  - Second mission under the Type-Repo-Priority-Complexity ID convention; legacy IDs unchanged.
+  - All LOGHOUSE artifacts live inside root-hygiene-allowed directories (schemas, scripts, docs, tests, reference, evidence, learnings, .github).
+  - Findings are advisory unless evidence-backed; no auto-remediation or auto-PR from findings.
+  - M4 governance change — requires recorded Human Owner approval before merge.
