@@ -1,20 +1,23 @@
-version: 0.0.0
+version: 0.1.0
 state_id: TOWER-STATE-000
-status: initialized
-active_sprint: SPRINT-000
-active_mission_id: MP-CAT-000
-active_bead_id: BEAD-CAT-000-001
-go_mode: enabled
+status: sprint_000_closed
+active_sprint: NONE
+active_mission_id: NONE
+active_bead_id: NONE
+go_mode: paused
 last_updated: "2026-06-17"
 operator: Human Owner
+closed_sprints:
+  - SPRINT-000
 control_planes:
-  mission: active
-  execution: active
-  evidence: initialized
-  learning: initialized
+  mission: idle
+  execution: idle
+  evidence: active
+  learning: active
 current_constraints:
   - Do not import Harness V2 wholesale.
   - Do not run destructive commands.
   - Do not touch secrets or production resources.
   - Do not dispatch work without active BEAD.
-next_command: "python scripts/cat_resolve_go.py"
+  - Sprint 001 (MP-CAT-001) requires explicit human kickoff before dispatch resumes.
+next_command: "Human kickoff of Sprint 001 (promote MP-CAT-001 to approved), then: python scripts/cat_resolve_go.py"

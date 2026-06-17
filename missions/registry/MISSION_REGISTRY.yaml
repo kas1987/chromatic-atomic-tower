@@ -1,6 +1,6 @@
-version: 0.0.0
+version: 0.1.0
 last_updated: "2026-06-17"
-active_mission_id: MP-CAT-000
+active_mission_id: null
 selection_policy:
   priority_order:
     - approved
@@ -15,14 +15,14 @@ missions:
   - mission_id: MP-CAT-000
     title: Establish Chromatic Atomic Tower Core Foundation
     level: M3
-    status: approved
+    status: closed
     priority: 1
     owner: Human Owner
     risk_level: high
     reversibility: high
     autonomy_level: L4
     confidence: 88
-    current_bead_id: BEAD-CAT-000-001
+    current_bead_id: null
     path: missions/active/MP-CAT-000_ESTABLISH_CORE.yaml
     created: "2026-06-17"
     last_updated: "2026-06-17"
