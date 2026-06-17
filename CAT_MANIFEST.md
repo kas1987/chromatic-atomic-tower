@@ -67,6 +67,7 @@ Beyond the canonical directories in §4, these tooling directories are permitted
 | `.vscode/` | VS Code agent surface for the harness (MP-CAT-002) | yes |
 | `.agent/` | Multi-model harness home (MP-CAT-002) | yes |
 | `tests/` | Python test suite | yes |
+| `.beads/` | Local beads memory/issue tracker (prefix `cat`, stealth) | no (git-excluded) |
 | `.claude/`, `.pytest_cache/`, `.venv/`, `__pycache__/` | Local tooling/cache | no (gitignored) |
 
 ## 4. Canonical directories
