@@ -24,6 +24,7 @@ Do not read the whole repo unless a BEAD explicitly allows audit or migration wo
 - Do not invent new missions during implementation.
 - Do not close work without evidence.
 - Do not promote yourself.
+- Exception: human-invoked operator-plane meta-work (sprint closeouts, retrospectives, kickoffs, repo hygiene) is exempt from the `allowed_paths` rule per `CAT_MANIFEST.md` §6.1, must be logged in `learnings/DECISION_LOG.md`, and still must not touch `forbidden_paths`.
 - Stop if confidence drops below the BEAD threshold.
 
 ## Output format

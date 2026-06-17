@@ -49,8 +49,7 @@ RESULT: PASS
 2. **`reversible` marks deliberate loop-backs** (rework, unblock, retry, re-triage),
    not forward progress. Used later to decide which transitions are safe to auto-apply
    vs require confirmation.
-3. **Terminal states:** missions — `abandoned`, `learned` (and `closed` except
-   `closed→learned`); BEADs — `archived` (and `completed` except `completed→archived`).
+3. **Terminal states:** missions — `abandoned`, `learned` (`closed` is non-terminal; `closed→learned` is its only forward arc); BEADs — `archived` (`completed` is non-terminal; `completed→archived` is its only forward arc).
 4. **`reviewed→in_progress` (mission) and `changes_requested→in_progress/active`
    (BEAD)** added as rework arcs — not in the old placeholder, but required so review
    rejection has a path back to work without abandoning the unit.
