@@ -1,0 +1,112 @@
+# CAT State Transition Rules — canonical source of truth (BEAD-CAT-001-001).
+#
+# Supersedes the Sprint 000 placeholder gates/state/STATE_TRANSITION_RULES.yaml.
+# Consumed by scripts/cat_transition.py (BEAD-CAT-001-002) as its rule source.
+#
+# Each rule is a valid (from -> to) arc with:
+#   guard:      named precondition that must hold for the transition (see `guards`).
+#   reversible: true if the arc is a deliberate loop-back / undo (rework, unblock,
+#               retry, rollback); false for forward lifecycle progress.
+# Any (from, to) pair NOT listed here is INVALID and must be rejected.
+version: 0.1.0
+supersedes: gates/state/STATE_TRANSITION_RULES.yaml
+status_source: schemas/mission.schema.json (mission), schemas/bead.schema.json (bead)
+
+# ---------------------------------------------------------------------------
+# Guard vocabulary — referenced by the `guard` field on each transition.
+# ---------------------------------------------------------------------------
+guards:
+  none: No precondition; always permitted.
+  active_bead_present: Mission has a non-null current_bead_id whose BEAD exists.
+  evidence_present: Required evidence artifacts for the unit exist on disk.
+  validation_passed: All required validations for the unit returned success.
+  review_gate_pass: Review gate recorded an approve decision (see gates/review).
+  human_gate_if_required: If human_gate.required is true, an approver decision is recorded.
+  escalation_ack: A human owner has acknowledged the escalation.
+  closeout_complete: Closeout report + learning log recorded (see CLOSEOUT_CHECKLIST).
+  rollback_plan_present: Mission rollback.plan is defined and executable.
+
+# ---------------------------------------------------------------------------
+# Mission lifecycle — states from mission.schema.json:
+#   draft, triaged, approved, dispatched, in_progress, validating, reviewed,
+#   closed, blocked, escalated, rolled_back, abandoned, incident, learned
+# Terminal states: abandoned, learned (and closed, except the closed->learned arc).
+# ---------------------------------------------------------------------------
+mission_terminal_states:
+  - abandoned
+  - learned
+
+mission_transitions:
+  # --- happy path ---
+  - {from: draft,        to: triaged,           guard: none,                   reversible: false}
+  - {from: triaged,      to: approved,          guard: human_gate_if_required, reversible: false}
+  - {from: approved,     to: dispatched,        guard: active_bead_present,    reversible: false}
+  - {from: dispatched,   to: in_progress,       guard: none,                   reversible: false}
+  - {from: in_progress,  to: validating,        guard: evidence_present,       reversible: false}
+  - {from: validating,   to: reviewed,          guard: validation_passed,      reversible: false}
+  - {from: reviewed,     to: closed,            guard: review_gate_pass,       reversible: false}
+  - {from: closed,       to: learned,           guard: closeout_complete,      reversible: false}
+  # --- rework loop-backs ---
+  - {from: validating,   to: in_progress,       guard: none,                   reversible: true}
+  - {from: reviewed,     to: in_progress,       guard: none,                   reversible: true}
+  # --- blocking (allowed from any active working state) ---
+  - {from: triaged,      to: blocked,           guard: none,                   reversible: false}
+  - {from: approved,     to: blocked,           guard: none,                   reversible: false}
+  - {from: dispatched,   to: blocked,           guard: none,                   reversible: false}
+  - {from: in_progress,  to: blocked,           guard: none,                   reversible: false}
+  - {from: validating,   to: blocked,           guard: none,                   reversible: false}
+  - {from: reviewed,     to: blocked,           guard: none,                   reversible: false}
+  - {from: blocked,      to: triaged,           guard: none,                   reversible: true}
+  - {from: blocked,      to: approved,          guard: none,                   reversible: true}
+  - {from: blocked,      to: escalated,         guard: none,                   reversible: false}
+  - {from: blocked,      to: abandoned,         guard: none,                   reversible: false}
+  # --- escalation ---
+  - {from: in_progress,  to: escalated,         guard: none,                   reversible: false}
+  - {from: escalated,    to: approved,          guard: escalation_ack,         reversible: true}
+  - {from: escalated,    to: blocked,           guard: none,                   reversible: false}
+  - {from: escalated,    to: abandoned,         guard: escalation_ack,         reversible: false}
+  # --- incident / rollback ---
+  - {from: in_progress,  to: incident,          guard: none,                   reversible: false}
+  - {from: validating,   to: incident,          guard: none,                   reversible: false}
+  - {from: incident,     to: rolled_back,       guard: rollback_plan_present,  reversible: false}
+  - {from: incident,     to: blocked,           guard: none,                   reversible: false}
+  - {from: incident,     to: abandoned,         guard: none,                   reversible: false}
+  - {from: rolled_back,  to: triaged,           guard: none,                   reversible: true}
+  - {from: rolled_back,  to: abandoned,         guard: none,                   reversible: false}
+  # --- early abandonment ---
+  - {from: draft,        to: abandoned,         guard: none,                   reversible: false}
+
+# ---------------------------------------------------------------------------
+# BEAD lifecycle — states from bead.schema.json:
+#   queued, active, in_progress, validating, reviewed, completed,
+#   blocked, failed, changes_requested, archived
+# Terminal states: archived (and completed, except the completed->archived arc).
+# ---------------------------------------------------------------------------
+bead_terminal_states:
+  - archived
+
+bead_transitions:
+  # --- happy path ---
+  - {from: queued,             to: active,            guard: active_bead_present, reversible: false}
+  - {from: active,             to: in_progress,       guard: none,                reversible: false}
+  - {from: in_progress,        to: validating,        guard: evidence_present,    reversible: false}
+  - {from: validating,         to: reviewed,          guard: validation_passed,   reversible: false}
+  - {from: reviewed,           to: completed,         guard: review_gate_pass,    reversible: false}
+  - {from: completed,          to: archived,          guard: closeout_complete,   reversible: false}
+  # --- rework loop ---
+  - {from: validating,         to: changes_requested, guard: none,                reversible: false}
+  - {from: reviewed,           to: changes_requested, guard: none,                reversible: false}
+  - {from: changes_requested,  to: in_progress,       guard: none,                reversible: true}
+  - {from: changes_requested,  to: active,            guard: none,                reversible: true}
+  # --- failure / retry ---
+  - {from: in_progress,        to: failed,            guard: none,                reversible: false}
+  - {from: validating,         to: failed,            guard: none,                reversible: false}
+  - {from: failed,             to: queued,            guard: none,                reversible: true}
+  - {from: failed,             to: archived,          guard: none,                reversible: false}
+  # --- blocking ---
+  - {from: queued,             to: blocked,           guard: none,                reversible: false}
+  - {from: active,             to: blocked,           guard: none,                reversible: false}
+  - {from: in_progress,        to: blocked,           guard: none,                reversible: false}
+  - {from: blocked,            to: active,            guard: none,                reversible: true}
+  - {from: blocked,            to: queued,            guard: none,                reversible: true}
+  - {from: blocked,            to: failed,            guard: none,                reversible: false}
