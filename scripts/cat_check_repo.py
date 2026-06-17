@@ -32,6 +32,46 @@ REQUIRED_DIRS = [
     'playbooks', 'docs', 'state', 'learnings', 'prompts', 'checklists', 'reference'
 ]
 
+# --- Root allowlist (keep in sync with CAT_MANIFEST.md sections 3, 3.1, 3.2, 4) ---
+
+# Required root files (CAT_MANIFEST.md section 3) + optional root files (section 3.1).
+ALLOWED_ROOT_FILES = {
+    # section 3 — required
+    'README.md', 'START_HERE.md', 'PDR_CAT_000_ESTABLISH_CORE_REPO.md',
+    'CAT_MANIFEST.md', 'CAT_PRINCIPLES.md', 'CHROMATIC_TREES.md', 'AGENTS.md',
+    'requirements.txt', 'Makefile',
+    # section 3.1 — allowed optional
+    'CAT_ROADMAP.md', 'CHANGELOG.md', 'GOVERNANCE.md', 'CONTRIBUTING.md',
+    'SECURITY.md', 'QUICKSTART.md', 'VERSION', 'CHROMATIC_TREES.worktree.json',
+    'pyproject.toml', '.editorconfig', '.env.example', '.gitignore',
+}
+
+# Canonical directories (section 4) + allowed tooling directories (section 3.2).
+ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {
+    '.github', '.vscode', '.agent', 'tests',
+}
+
+# Transient / VCS / cache entries that are gitignored and not governed by the manifest.
+IGNORED_ROOT_ENTRIES = {
+    '.git', '.venv', '__pycache__', '.pytest_cache', '.claude', '.DS_Store',
+}
+
+
+def find_stray_root_entries() -> list[str]:
+    """Flag any root entry not blessed by the manifest allowlists."""
+    stray: list[str] = []
+    for entry in sorted(p.name for p in ROOT.iterdir()):
+        if entry in IGNORED_ROOT_ENTRIES:
+            continue
+        target = ROOT / entry
+        if target.is_dir():
+            if entry not in ALLOWED_ROOT_DIRS:
+                stray.append(entry + '/')
+        else:
+            if entry not in ALLOWED_ROOT_FILES:
+                stray.append(entry)
+    return stray
+
 
 def main() -> int:
     missing: list[str] = []
@@ -42,15 +82,25 @@ def main() -> int:
         if not (ROOT / item).is_dir():
             missing.append(item + '/')
 
-    if missing:
-        print('CAT repo check failed. Missing:')
-        for item in missing:
-            print(f'  - {item}')
+    stray = find_stray_root_entries()
+
+    if missing or stray:
+        print('CAT repo check failed.')
+        if missing:
+            print('Missing required files/directories:')
+            for item in missing:
+                print(f'  - {item}')
+        if stray:
+            print('Stray root entries not blessed by CAT_MANIFEST.md (sections 3, 3.1, 3.2, 4):')
+            for item in stray:
+                print(f'  - {item}')
+            print('Fix: move it under the right plane, gitignore it, or add it to the manifest + this allowlist.')
         return 1
 
     print('CAT repo check passed.')
     print(f'Required files checked: {len(REQUIRED_FILES)}')
     print(f'Required directories checked: {len(REQUIRED_DIRS)}')
+    print('No stray root entries.')
     return 0
 
 
