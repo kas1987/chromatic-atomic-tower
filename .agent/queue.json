@@ -4,6 +4,7 @@
   "items": [
     {
       "id": "T001",
+      "bead_id": "BEAD-CAT-002-001",
       "status": "pending",
       "priority": "p1",
       "task": "Create model route config",
@@ -12,6 +13,7 @@
     },
     {
       "id": "T002",
+      "bead_id": "BEAD-CAT-002-002",
       "status": "pending",
       "priority": "p1",
       "task": "Create worker prompt template",
@@ -20,6 +22,7 @@
     },
     {
       "id": "T003",
+      "bead_id": "BEAD-CAT-002-003",
       "status": "pending",
       "priority": "p1",
       "task": "Run first local worker patch",
@@ -28,6 +31,7 @@
     },
     {
       "id": "T004",
+      "bead_id": "BEAD-CAT-002-004",
       "status": "pending",
       "priority": "p1",
       "task": "Create final review packet format",
@@ -36,6 +40,7 @@
     },
     {
       "id": "DEMO-001",
+      "bead_id": "BEAD-CAT-002-003",
       "status": "review",
       "priority": "p1",
       "task": "Implement harness_demo.py utility functions",

@@ -9,6 +9,7 @@ objective: >-
   cheap_review, implementation) to concrete models with a budget-aware ordering.
 allowed_paths:
   - agents/model_routes.yaml
+  - .agent/model_routes.yaml
   - evidence/reports/**
 forbidden_paths:
   - .env

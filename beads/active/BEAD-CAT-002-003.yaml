@@ -1,7 +1,7 @@
 bead_id: BEAD-CAT-002-003
 mission_id: MP-CAT-002
 title: Run first local worker patch
-status: queued
+status: validating
 agent_role: Builder
 autonomy_level: L3
 objective: >-

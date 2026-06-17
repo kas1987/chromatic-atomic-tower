@@ -331,7 +331,7 @@ def check_sensitive(content: str) -> list[str]:
 # Main loop
 # ---------------------------------------------------------------------------
 
-def run_ticket(ticket_id: str, worker_model: str) -> None:
+def run_ticket(ticket_id: str, worker_model: str, bead_id: str | None = None) -> None:
     # ---- Load config -------------------------------------------------------
     routes_path = AGENT_DIR / "model_routes.yaml"
     settings_path = AGENT_DIR / "harness_settings.yaml"
@@ -662,6 +662,21 @@ Approve, request revision, or reject this patch. Identify blocking issues and re
     print(f"Queue status     : {ticket_id} -> review (NOT done -- awaiting human approval)")
     print("=" * 60)
 
+    # ---- Optional CAT kernel bridge ---------------------------------------
+    if bead_id:
+        bridge = REPO_ROOT / "scripts" / "harness_bridge.py"
+        if bridge.exists():
+            log(f"Bridging run into CAT kernel (bead {bead_id})...")
+            br_out, br_err, br_rc = run_command(
+                f'"{sys.executable}" "{bridge}" --bead {bead_id} --ticket {ticket_id}',
+                REPO_ROOT,
+            )
+            print(br_out + br_err)
+            if br_rc != 0:
+                log(f"WARNING: bridge exited with code {br_rc}.")
+        else:
+            log(f"Bead {bead_id} supplied but {bridge} not found; skipping bridge.")
+
     if not test_passed:
         print("\nWARNING: Tests did not pass. Review the packet before proceeding.")
         sys.exit(1)
@@ -681,10 +696,16 @@ def main() -> None:
         default="kimi-k2.7-code:cloud",
         help="Worker model tag (default: kimi-k2.7-code:cloud)",
     )
+    parser.add_argument(
+        "--bead",
+        default=None,
+        help="Optional CAT BEAD id to bridge this run into (e.g. BEAD-CAT-002-003). "
+             "When set, emits evidence and advances the BEAD/queue after the run.",
+    )
     args = parser.parse_args()
 
     try:
-        run_ticket(args.ticket, args.worker)
+        run_ticket(args.ticket, args.worker, args.bead)
     except RuntimeError as exc:
         print(f"\nFATAL ERROR: {exc}", file=sys.stderr)
         sys.exit(2)
