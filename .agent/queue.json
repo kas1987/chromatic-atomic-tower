@@ -46,6 +46,16 @@
       "task": "Implement harness_demo.py utility functions",
       "owner": "kimi-k2.7-code:cloud",
       "done_when": "tests/test_harness_demo.py passes: add, is_even, slugify all pass"
+    },
+    {
+      "id": "REAL-001",
+      "bead_id": null,
+      "status": "review",
+      "priority": "p1",
+      "task": "Implement scripts/cat_stats.py",
+      "owner": "kimi-k2.7-code:cloud",
+      "note": "harness validation on real repo-useful code",
+      "done_when": "tests/test_cat_stats.py passes: summarize() returns correct keys, active_mission_id=MP-CAT-000, total_missions>=3, total_active_beads>=4, --json output valid"
     }
   ]
 }
