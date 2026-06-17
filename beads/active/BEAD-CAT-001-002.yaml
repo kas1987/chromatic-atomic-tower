@@ -4,14 +4,20 @@ title: Implement transition CLI
 status: queued
 agent_role: Builder
 autonomy_level: L3
-objective: Implement `scripts/cat_transition.py` to apply or dry-run mission and BEAD
-  lifecycle transitions with audit logging and deterministic state updates.
+objective: >-
+  Implement scripts/cat_transition.py as a CLI tool that loads the transition
+  rules from gates/state/transition_rules.yaml, validates a requested
+  (entity, from_state, to_state) against those rules, and emits a predicted
+  diff in dry-run mode or mutates MISSION_REGISTRY.yaml atomically in execute
+  mode. The script must append each transition to the canonical log
+  evidence/logs/transitions.jsonl (who, what, when, before/after) and write a
+  structured review record to evidence/reports/ on every invocation.
 allowed_paths:
 - scripts/cat_transition.py
-- scripts/cat_status.py
 - scripts/common.py
 - evidence/logs/**
-- tests/test_transition_engine.py
+- evidence/reports/**
+- tests/test_transitions.py
 forbidden_paths:
 - .env
 - infra/prod/**
@@ -40,14 +46,14 @@ risk_level: medium
 reversibility: high
 stop_conditions:
 - Required evidence path is missing for a review/completion transition.
-- Requested transition is not listed in gates/state/STATE_TRANSITION_RULES.yaml.
+- Requested transition is not listed in gates/state/transition_rules.yaml.
 - Transition attempts to touch a forbidden path.
 - Registry and target contract disagree on mission or BEAD identity.
 - Tests fail for reasons inside Sprint 001 scope.
 definition_of_done:
 - CLI supports mission and BEAD targets.
 - CLI supports dry-run and apply modes.
-- Transition events are written as JSONL.
+- Transition events are written as JSONL to evidence/logs/transitions.jsonl.
 - Registry and tower state update when appropriate.
 validation:
 - type: transition_dry_run

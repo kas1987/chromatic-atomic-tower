@@ -65,10 +65,10 @@ acceptance_criteria:
 - Unit tests cover allowed, denied, and terminal transitions.
 - Operator guide explains how to move missions and BEADs safely.
 success_metrics:
-- 100% of included tests pass.
+- 100% of defined valid mission/BEAD transitions pass automated tests.
+- 100% of defined invalid transitions are rejected with explicit error codes.
 - 100% of YAML contracts validate.
-- 0 unauthorized paths required.
-- Transition event schema included and documented.
+- All transitions capture evidence artifacts in evidence/logs/transitions.jsonl.
 - GO resolver continues selecting the active Sprint 001 BEAD.
 required_validation:
 - type: schema
@@ -113,12 +113,10 @@ beads:
 - bead_id: BEAD-CAT-001-004
   title: Document operator workflow and closeout evidence
 evidence_requirements:
-- transition_matrix
-- transition_cli_output
-- test_results
-- schema_validation
-- go_resolution
-- audit_log_sample
+- evidence/logs/transitions.jsonl
+- evidence/test-results/sprint_001_transition_tests.txt
+- evidence/reports/sprint_001_schema_validation.md
+- evidence/rollbacks/rollback_records.jsonl
 notes:
 - Sprint 001 makes CAT lifecycle movement executable instead of purely documented.
 - This mission is intentionally M3 because it mutates state files and controls future
