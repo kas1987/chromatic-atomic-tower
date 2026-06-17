@@ -1,0 +1,19 @@
+{
+  "// notes": "Minimal, additive workspace settings to enable VS Code Insiders chat customization discovery for the harness. Chat modes live in .github/chatmodes, prompts in .github/prompts, instructions in .github/instructions.",
+  "chat.promptFiles": true,
+  "chat.promptFilesLocations": {
+    ".github/prompts": true
+  },
+  "chat.modeFilesLocations": {
+    ".github/chatmodes": true
+  },
+  "chat.instructionsFilesLocations": {
+    ".github/instructions": true
+  },
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "files.associations": {
+    "*.chatmode.md": "markdown",
+    "*.prompt.md": "markdown",
+    "*.instructions.md": "markdown"
+  }
+}
