@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 from pathlib import Path
 
 from common import ROOT, load_yaml, rel, validate_with_schema
@@ -36,6 +37,115 @@ TEMPLATE_PATTERNS = [
     ('bead template', 'beads/templates/*.yaml', ROOT / 'schemas/bead.schema.json'),
 ]
 
+NEW_MISSION_ID_RE = re.compile(r'^MP-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}$')
+LEGACY_MISSION_ID_RE = re.compile(r'^MP-CAT-([0-9]{3})$')
+EXAMPLE_MISSION_ID_RE = re.compile(r'^MP-CAT-EXAMPLE-[A-Z0-9-]+$')
+
+NEW_BEAD_ID_RE = re.compile(r'^(BD|BEAD)-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}$')
+LEGACY_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[0-9]{3}-[0-9]{3}$')
+LEGACY_BEAD_EXAMPLE_RE = re.compile(r'^BEAD-CAT-(EXAMPLE-[0-9]+|[0-9]{3}-CLOSEOUT-EXAMPLE)$')
+
+NEW_WORK_LEGACY_NUMERIC_CUTOFF = 6
+
+
+def _legacy_mission_number(mission_id: str) -> int | None:
+    match = LEGACY_MISSION_ID_RE.match(mission_id)
+    if not match:
+        return None
+    return int(match.group(1))
+
+
+def _is_new_mission_id(mission_id: str) -> bool:
+    return bool(NEW_MISSION_ID_RE.match(mission_id))
+
+
+def _is_legacy_allowed_mission_id(mission_id: str) -> bool:
+    if EXAMPLE_MISSION_ID_RE.match(mission_id):
+        return True
+    mission_num = _legacy_mission_number(mission_id)
+    return mission_num is not None and mission_num < NEW_WORK_LEGACY_NUMERIC_CUTOFF
+
+
+def _is_new_bead_id(bead_id: str) -> bool:
+    return bool(NEW_BEAD_ID_RE.match(bead_id))
+
+
+def _is_legacy_allowed_bead_id(bead_id: str) -> bool:
+    return bool(LEGACY_BEAD_ID_RE.match(bead_id) or LEGACY_BEAD_EXAMPLE_RE.match(bead_id))
+
+
+def validate_id_policy(kind: str, instance: dict, file_path: Path) -> list[str]:
+    if 'templates' in file_path.parts:
+        return []
+
+    errors: list[str] = []
+
+    if kind == 'mission':
+        mission_id = str(instance.get('mission_id', '')).strip()
+        if _is_new_mission_id(mission_id) or _is_legacy_allowed_mission_id(mission_id):
+            return []
+
+        mission_num = _legacy_mission_number(mission_id)
+        if mission_num is not None and mission_num >= NEW_WORK_LEGACY_NUMERIC_CUTOFF:
+            errors.append(
+                f'mission_id {mission_id} is legacy numeric at or above cutover; '
+                'use MP-CAT-S001-4C01 style'
+            )
+            return errors
+
+        errors.append(
+            f'mission_id {mission_id} is invalid; expected MP-CAT-S001-4C01 style '
+            'or grandfathered legacy mission id below cutover'
+        )
+        return errors
+
+    if kind == 'bead':
+        bead_id = str(instance.get('bead_id', '')).strip()
+        mission_id = str(instance.get('mission_id', '')).strip()
+
+        mission_new = _is_new_mission_id(mission_id)
+        mission_legacy_num = _legacy_mission_number(mission_id)
+        mission_legacy_allowed = _is_legacy_allowed_mission_id(mission_id)
+
+        if not (mission_new or mission_legacy_allowed):
+            if mission_legacy_num is not None and mission_legacy_num >= NEW_WORK_LEGACY_NUMERIC_CUTOFF:
+                errors.append(
+                    f'mission_id {mission_id} is legacy numeric at or above cutover; '
+                    'use MP-CAT-S001-4C01 style'
+                )
+            else:
+                errors.append(
+                    f'mission_id {mission_id} is invalid for bead; expected new mission id '
+                    'or grandfathered legacy mission id below cutover'
+                )
+
+        bead_new = _is_new_bead_id(bead_id)
+        bead_legacy_allowed = _is_legacy_allowed_bead_id(bead_id)
+
+        if mission_new:
+            if not bead_new:
+                errors.append(
+                    f'bead_id {bead_id} is legacy under new-format mission {mission_id}; '
+                    'use mission-stem bead style, e.g. BD-CAT-S001-4C01-01'
+                )
+            return errors
+
+        if mission_legacy_num is not None and mission_legacy_num >= NEW_WORK_LEGACY_NUMERIC_CUTOFF:
+            if not bead_new:
+                errors.append(
+                    f'bead_id {bead_id} must use new format because mission {mission_id} '
+                    'is at or above legacy cutover'
+                )
+            return errors
+
+        if not (bead_new or bead_legacy_allowed):
+            errors.append(
+                f'bead_id {bead_id} is invalid; expected BD-CAT-S001-4C01-01 style '
+                'or grandfathered legacy bead id'
+            )
+
+    return errors
+
 
 def validate_file(kind: str, file_path: Path, schema_path: Path) -> tuple[bool, list[str]]:
     try:
@@ -43,6 +153,8 @@ def validate_file(kind: str, file_path: Path, schema_path: Path) -> tuple[bool, 
     except Exception as exc:  # pragma: no cover
         return False, [f'could not parse YAML: {exc}']
     errors = validate_with_schema(instance, schema_path)
+    if not errors and isinstance(instance, dict):
+        errors.extend(validate_id_policy(kind, instance, file_path))
     return not errors, errors
 
 
