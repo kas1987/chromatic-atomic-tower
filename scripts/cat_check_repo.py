@@ -12,7 +12,7 @@ REQUIRED_FILES = [
     'CAT_MANIFEST.md',
     'CAT_PRINCIPLES.md',
     'CAT_ROADMAP.md',
-    'SPRINT_000_PLAN.md',
+    'docs/operations/SPRINT_000_PLAN.md',
     'QUICKSTART.md',
     'AGENTS.md',
     'CHROMATIC_TREES.md',

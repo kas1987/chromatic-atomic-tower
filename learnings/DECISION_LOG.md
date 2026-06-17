@@ -12,3 +12,4 @@
 | 2026-06-17 | Verified Ollama Cloud worker tags: kimi-k2.7-code:cloud, minimax-m3:cloud | Implementation role for MP-CAT-002 workers | Human Owner |
 | 2026-06-17 | Adopt budget_agent_harness_pdr_pack as MP-CAT-002 implementation; harness home is .agent/ (pack-native, harness_settings paths) | Pack is self-consistent and design-complete; avoid refactoring its layout into separate planes | Human Owner |
 | 2026-06-17 | Promote MP-CAT-002 draft->approved and dispatch via implementer subagent | Human Owner directed "set up a plan and have a subagent implement" | Human Owner |
+| 2026-06-17 | Root cleanup: delete local clutter (sprint_000.zip, _pdr_pack/), relocate SPRINT_000_PLAN.md to docs/operations/, bless optional root files + tooling dirs in CAT_MANIFEST 3.1/3.2, commit GitHub App token scripts | Workers had dropped ungoverned files at root; make CAT_MANIFEST the single source of truth and reconcile reality to it (manifest 10) | Human Owner |

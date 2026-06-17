@@ -36,6 +36,39 @@ Human Goal
 | `requirements.txt` | Python script dependencies |
 | `Makefile` | Common local commands |
 
+### 3.1 Allowed optional root files
+
+These standard project files may also live at the root. Nothing else may be
+created at the root without a manifest update (see §10).
+
+| File | Purpose |
+|---|---|
+| `CAT_ROADMAP.md` | Sprint roadmap |
+| `CHANGELOG.md` | Version history |
+| `GOVERNANCE.md` | Governance model |
+| `CONTRIBUTING.md` | Contribution rules |
+| `SECURITY.md` | Security policy |
+| `QUICKSTART.md` | Fast-start guide |
+| `VERSION` | Version marker |
+| `CHROMATIC_TREES.worktree.json` | Worktree map data (pairs with `CHROMATIC_TREES.md`) |
+| `pyproject.toml` | Python project / tooling config |
+| `.editorconfig`, `.env.example`, `.gitignore` | Editor/env/VCS dotfiles |
+
+Sprint plans are **not** root files — they live under `docs/operations/`
+(e.g. `docs/operations/SPRINT_000_PLAN.md`).
+
+### 3.2 Allowed tooling directories
+
+Beyond the canonical directories in §4, these tooling directories are permitted:
+
+| Directory | Purpose | Tracked? |
+|---|---|---|
+| `.github/` | CI workflows, issue/PR templates | yes |
+| `.vscode/` | VS Code agent surface for the harness (MP-CAT-002) | yes |
+| `.agent/` | Multi-model harness home (MP-CAT-002) | yes |
+| `tests/` | Python test suite | yes |
+| `.claude/`, `.pytest_cache/`, `.venv/`, `__pycache__/` | Local tooling/cache | no (gitignored) |
+
 ## 4. Canonical directories
 
 | Directory | Owner | Allowed content |
