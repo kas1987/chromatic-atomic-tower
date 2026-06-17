@@ -51,9 +51,10 @@ ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {
     '.github', '.vscode', '.agent', 'tests',
 }
 
-# Transient / VCS / cache entries that are gitignored and not governed by the manifest.
+# Transient / VCS / cache / local-tooling entries not governed by the manifest.
 IGNORED_ROOT_ENTRIES = {
     '.git', '.venv', '__pycache__', '.pytest_cache', '.claude', '.DS_Store',
+    '.beads',
 }
 
 
