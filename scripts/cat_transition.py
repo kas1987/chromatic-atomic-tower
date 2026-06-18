@@ -422,8 +422,9 @@ def main() -> int:
             elif f.name.startswith('mission_') or f.name.startswith('bead_'):
                 entity_type = 'missions' if f.name.startswith('mission_') else 'beads'
                 contract_id = f.stem.split('_', 1)[1]
-                existing = list(ROOT.glob(f'{entity_type}/**/{contract_id}.yaml'))
-                dest = existing[0] if existing else ROOT / entity_type / 'active' / f'{contract_id}.yaml'
+                # Always restore to the active folder — using the current on-disk location
+                # (post-move) would restore to completed/failed/archived instead of active.
+                dest = ROOT / entity_type / 'active' / f'{contract_id}.yaml'
             else:
                 dest = None
             if dest:

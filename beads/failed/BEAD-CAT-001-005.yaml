@@ -5,10 +5,10 @@ status: archived
 agent_role: Scribe
 autonomy_level: L3
 objective: 'Write docs/architecture/STATE_MACHINE.md as the authoritative human-readable
-  reference for the CAT State Transition Engine: include the Mermaid diagram from
-  BEAD-001-001, a table of valid transitions with guard conditions, CLI usage examples,
-  rollback procedure, and evidence trail expectations. Also finalize any evidence
-  template stubs under evidence/reports/ needed by future sprints.'
+  reference for the CAT State Transition Engine: include a table of valid transitions
+  with guard conditions, CLI usage examples, rollback procedure, and evidence trail
+  expectations. Also finalize any evidence template stubs under evidence/reports/
+  needed by future sprints.'
 allowed_paths:
 - docs/architecture/STATE_MACHINE.md
 - evidence/reports/**

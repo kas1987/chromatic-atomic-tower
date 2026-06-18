@@ -118,12 +118,13 @@ def check_alignment(root: Path = ROOT) -> AlignmentResult:
         if bead_path and bead_data:
             result.ok.append(f'BEAD file exists ({bead_folder}): {rel(bead_path)}')
             bead_status = bead_data.get('status')
-            if bead_status == 'active':
-                result.ok.append(f'active BEAD status is "active": {bead_id}')
+            BEAD_INFLIGHT = {'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}
+            if bead_status in BEAD_INFLIGHT:
+                result.ok.append(f'active BEAD status is in-flight ({bead_status!r}): {bead_id}')
             elif bead_status == 'queued':
                 result.drift.append(DriftItem(
                     'BEAD_NOT_ACTIVE',
-                    f'active BEAD {bead_id} has status={bead_status!r}, expected "active"',
+                    f'active BEAD {bead_id} has status={bead_status!r}, expected in-flight state',
                     'Transition queued -> active before GO dispatch',
                 ))
             elif bead_status in BEAD_TERMINAL:
@@ -135,7 +136,7 @@ def check_alignment(root: Path = ROOT) -> AlignmentResult:
             else:
                 result.drift.append(DriftItem(
                     'BEAD_NOT_ACTIVE',
-                    f'active BEAD {bead_id} has status={bead_status!r}, expected "active"',
+                    f'active BEAD {bead_id} has status={bead_status!r}, expected in-flight state',
                 ))
         else:
             result.drift.append(DriftItem('BEAD_FILE_MISSING', f'active BEAD file missing for {bead_id}'))
