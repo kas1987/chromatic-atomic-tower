@@ -25,10 +25,33 @@ def matches_any(path: str, patterns: list[str]) -> bool:
 
 
 def check(bead_path: str | Path, changed_files_path: str | Path) -> dict:
-    bead = yaml.safe_load(Path(bead_path).read_text(encoding='utf-8'))
-    allowed = bead.get('allowed_paths', [])
-    forbidden = bead.get('forbidden_paths', [])
-    changed = load_lines(changed_files_path)
+    try:
+        bead = yaml.safe_load(Path(bead_path).read_text(encoding='utf-8')) or {}
+    except FileNotFoundError:
+        return {
+            'allowed': False,
+            'errors': [f'BEAD contract file not found: {bead_path}'],
+            'changed_files': [],
+            'bead_id': None,
+        }
+    except yaml.YAMLError as e:
+        return {
+            'allowed': False,
+            'errors': [f'Invalid YAML in BEAD contract: {e}'],
+            'changed_files': [],
+            'bead_id': None,
+        }
+    try:
+        changed = load_lines(changed_files_path)
+    except FileNotFoundError:
+        return {
+            'allowed': False,
+            'errors': [f'Changed files list not found: {changed_files_path}'],
+            'changed_files': [],
+            'bead_id': bead.get('bead_id'),
+        }
+    allowed = bead.get('allowed_paths') or []
+    forbidden = bead.get('forbidden_paths') or []
     errors: list[str] = []
     for path in changed:
         if matches_any(path, forbidden):

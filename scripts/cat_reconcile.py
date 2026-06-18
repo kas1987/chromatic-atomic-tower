@@ -39,7 +39,7 @@ def check(target_path: Path, root: Path) -> dict:
         if mid not in missions:
             missing.append(mid)
 
-    for term in target.get('required_roadmap_terms', []):
+    for term in (target.get('required_roadmap_terms') or []):
         passed = term in roadmap
         checks.append({
             'name': f'roadmap_contains_{term[:32]}',

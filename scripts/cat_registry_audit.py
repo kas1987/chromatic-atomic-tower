@@ -59,7 +59,7 @@ def audit(registry_path: Path, target_path: Path | None = None) -> tuple[bool, l
     repo_root = registry_path.resolve().parents[2]
     for m in missions:
         p = m.get('path')
-        if p and not (repo_root / p).exists():
+        if p and not (repo_root / Path(p.replace('\\', '/'))).exists():
             errors.append(f'mission {m.get("mission_id")} path does not exist: {p}')
 
     return (not errors), errors

@@ -104,7 +104,7 @@ missions:
   autonomy_level: L3
   confidence: 80
   current_bead_id: ''
-  path: missions\archived\MP-CAT-005_MULTI_MODEL_HARNESS_MVP.yaml
+  path: missions/archived/MP-CAT-005_MULTI_MODEL_HARNESS_MVP.yaml
   created: '2026-06-17'
   last_updated: '2026-06-18T00:49:51+00:00'
 - mission_id: MP-CAT-A006-4C01
@@ -120,7 +120,7 @@ missions:
   autonomy_level: L2
   confidence: 72
   current_bead_id: ''
-  path: missions\archived\MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml
+  path: missions/archived/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml
   created: '2026-06-17'
   last_updated: '2026-06-18T01:32:51+00:00'
 - mission_id: MP-CAT-A007-4C01
@@ -136,7 +136,7 @@ missions:
   autonomy_level: L2
   confidence: 80
   current_bead_id: ''
-  path: missions\archived\MP-CAT-A007-4C01_LOGHOUSE_INTELLIGENCE.yaml
+  path: missions/archived/MP-CAT-A007-4C01_LOGHOUSE_INTELLIGENCE.yaml
   created: '2026-06-17'
   last_updated: '2026-06-18T01:25:59+00:00'
 - mission_id: MP-CAT-A008-4C01
@@ -168,7 +168,7 @@ missions:
   autonomy_level: L3
   confidence: 90
   current_bead_id: ''
-  path: missions\archived\MP-CAT-A009-4C01_REPO_ALIGNMENT_RECONCILIATION.yaml
+  path: missions/archived/MP-CAT-A009-4C01_REPO_ALIGNMENT_RECONCILIATION.yaml
   created: '2026-06-18'
   last_updated: '2026-06-18T02:44:34+00:00'
 - mission_id: MP-CAT-A010-4C01
@@ -184,7 +184,7 @@ missions:
   autonomy_level: L3
   confidence: 88
   current_bead_id: ''
-  path: missions\archived\MP-CAT-A010-4C01_GITHUB_BRIDGE_PR_GOVERNANCE.yaml
+  path: missions/archived/MP-CAT-A010-4C01_GITHUB_BRIDGE_PR_GOVERNANCE.yaml
   created: '2026-06-18'
   last_updated: '2026-06-18T02:51:29+00:00'
 - mission_id: MP-CAT-A011-4C01
