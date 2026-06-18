@@ -1,0 +1,22 @@
+[run]
+source = scripts
+omit =
+    scripts/__pycache__/*
+    tests/*
+
+[report]
+fail_under = 0
+show_missing = true
+skip_covered = false
+
+[paths]
+source =
+    scripts/
+
+[coverage:modules]
+# Critical modules — should target 80%+ eventually
+harness_run = 70
+cat_transition = 70
+cat_validate = 70
+harness_bridge = 70
+cat_resolve_go = 60

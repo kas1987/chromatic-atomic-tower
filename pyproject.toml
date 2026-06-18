@@ -11,3 +11,13 @@ dependencies = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+addopts = "--tb=short"
+
+[tool.coverage.run]
+source = ["scripts"]
+omit = ["tests/*", "scripts/__pycache__/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 0
