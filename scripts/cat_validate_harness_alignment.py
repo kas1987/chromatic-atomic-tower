@@ -64,16 +64,19 @@ def validate(root: Path) -> tuple[int, list[str]]:
         if not (root / rel).exists():
             errors.append(f'missing required file: {rel}')
 
-    for path in (
-        list((root / 'gates').glob('*.yaml'))
-        + list((root / 'agents').glob('**/*.yaml'))
-        + list((root / 'missions').glob('**/*.yaml'))
-        + list((root / 'beads').glob('**/*.yaml'))
-    ):
-        try:
-            load_structured(path)
-        except Exception as exc:
-            errors.append(f'parse failure: {path.relative_to(root)}: {exc}')
+    if yaml is None:
+        errors.append('PyYAML is required for YAML validation')
+    else:
+        for path in (
+            list((root / 'gates').glob('*.yaml'))
+            + list((root / 'agents').glob('**/*.yaml'))
+            + list((root / 'missions').glob('**/*.yaml'))
+            + list((root / 'beads').glob('**/*.yaml'))
+        ):
+            try:
+                load_structured(path)
+            except Exception as exc:
+                errors.append(f'parse failure: {path.relative_to(root)}: {exc}')
 
     mission_path = root / MISSION_PATH
     if mission_path.exists() and yaml is not None:

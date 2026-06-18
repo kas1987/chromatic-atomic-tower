@@ -89,13 +89,13 @@ def validate_id_policy(kind: str, instance: dict, file_path: Path) -> list[str]:
         if mission_num is not None and mission_num >= NEW_WORK_LEGACY_NUMERIC_CUTOFF:
             errors.append(
                 f'mission_id {mission_id} is legacy numeric at or above cutover; '
-                'use MP-CAT-S001-4C01 style'
+                'use MP-CAT-A006-4C01 style (tier in [S,A,B,C])'
             )
             return errors
 
         errors.append(
-            f'mission_id {mission_id} is invalid; expected MP-CAT-S001-4C01 style '
-            'or grandfathered legacy mission id below cutover'
+            f'mission_id {mission_id} is invalid; expected MP-CAT-A006-4C01 style '
+            '(tier in [S,A,B,C]) or grandfathered legacy mission id below cutover'
         )
         return errors
 
@@ -126,7 +126,7 @@ def validate_id_policy(kind: str, instance: dict, file_path: Path) -> list[str]:
             if not bead_new:
                 errors.append(
                     f'bead_id {bead_id} is legacy under new-format mission {mission_id}; '
-                    'use mission-stem bead style, e.g. BD-CAT-S001-4C01-01'
+                    'use mission-stem bead style, e.g. BEAD-CAT-A006-4C01-01'
                 )
             return errors
 
@@ -140,7 +140,7 @@ def validate_id_policy(kind: str, instance: dict, file_path: Path) -> list[str]:
 
         if not (bead_new or bead_legacy_allowed):
             errors.append(
-                f'bead_id {bead_id} is invalid; expected BD-CAT-S001-4C01-01 style '
+                f'bead_id {bead_id} is invalid; expected BEAD-CAT-A006-4C01-01 style '
                 'or grandfathered legacy bead id'
             )
 

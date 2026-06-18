@@ -162,6 +162,12 @@ complexity_routing:
       route: {model_class: strong_coding_reasoning, agent: orchestrator_plus_builder, review: reviewer_and_auditor, max_retries: 2}
     - match: {mission_rigor: M4_ATOMIC, execution_complexity: C4_NOVEL}
       route: {model_class: frontier_reasoning, agent: orchestrator_plus_specialists, review: human_gate_reviewer_auditor_security_if_applicable, max_retries: 1}
+  off_diagonal_fallback:
+    description: >
+      For mission/complexity combinations not covered by default_routes, escalate
+      to the model class matching the higher of the two axes.
+    rule: use max(mission_rigor_rank, execution_complexity_rank) to select route
+    example: M3/C2 → apply M3/C3 route (strong_coding_reasoning)
   fallback_rules:
     - {trigger: repeated_validation_failure, action: escalate_model_class}
     - {trigger: scope_ambiguity, action: require_human_clarification}
@@ -179,11 +185,11 @@ complexity_routing:
       use_for: [structured_code_change, tests, validators]
     strong_coding_reasoning:
       provider: anthropic
-      examples: [claude-sonnet-4-6]
+      examples: [claude-sonnet-4.6]
       use_for: [architecture_change, multi_file_change, complex_debugging]
     frontier_reasoning:
       provider: anthropic
-      examples: [claude-opus-4-8]
+      examples: [claude-opus-4.8]
       use_for: [M4_governance, novel_architecture, high_risk_decision]
   non_negotiables:
     - No model bypasses gates.

@@ -8,15 +8,24 @@ from pathlib import Path
 def validate_doc(path: Path) -> list[str]:
     text = path.read_text(encoding='utf-8')
     errors: list[str] = []
-    opens = text.count('```mermaid')
-    closes = text.count('```')
-    if opens == 0:
-        errors.append(f'{path}: no Mermaid fences found')
-    if closes < opens * 2:
-        errors.append(f'{path}: Mermaid fence appears unclosed')
+    opens = 0
+    unclosed = 0
+    in_mermaid = False
     for idx, line in enumerate(text.splitlines(), start=1):
+        stripped = line.rstrip()
+        if not in_mermaid and stripped == '```mermaid':
+            opens += 1
+            in_mermaid = True
+            unclosed += 1
+        elif in_mermaid and stripped == '```':
+            in_mermaid = False
+            unclosed -= 1
         if line.startswith('\t'):
             errors.append(f'{path}:{idx}: tab indentation in Mermaid doc')
+    if opens == 0:
+        errors.append(f'{path}: no Mermaid fences found')
+    if unclosed > 0:
+        errors.append(f'{path}: {unclosed} Mermaid fence(s) appear unclosed')
     return errors
 
 

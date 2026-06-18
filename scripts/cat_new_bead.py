@@ -22,12 +22,12 @@ def _legacy_mission_number(mission_id: str) -> int | None:
 
 
 def _derive_bead_id_from_mission(mission_id: str, seq: str) -> str:
-    return mission_id.replace('MP-CAT', 'BD-CAT', 1) + f'-{seq}'
+    return mission_id.replace('MP-CAT', 'BEAD-CAT', 1) + f'-{seq}'
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description='Create a new CAT BEAD from the BEAD template.')
-    parser.add_argument('--id', help='BEAD ID, e.g. BD-CAT-S001-4C01-01 or BEAD-CAT-S001-4C01-01')
+    parser.add_argument('--id', help='BEAD ID, e.g. BEAD-CAT-S001-4C01-01')
     parser.add_argument('--seq', help='Two-digit sequence for mission-stem bead ID, e.g. 01')
     parser.add_argument('--mission', required=True, help='Mission ID, e.g. MP-CAT-S001-4C01')
     parser.add_argument('--allow-legacy-id', action='store_true', help='Allow grandfathered legacy IDs below cutover.')
@@ -44,14 +44,14 @@ def main() -> int:
         parser.error('one of --id or --seq is required')
 
     if mission_num is not None and mission_num >= NEW_WORK_LEGACY_NUMERIC_CUTOFF:
-        parser.error('legacy numeric mission IDs at or above MP-CAT-006 are not allowed; use MP-CAT-S001-4C01 style')
+        parser.error('legacy numeric mission IDs at or above MP-CAT-006 are not allowed; use MP-CAT-A006-4C01 style (tier in [S,A,B,C])')
 
     if args.seq:
         seq = args.seq.strip()
         if not re.fullmatch(r'[0-9]{2}', seq):
             parser.error('--seq must be a two-digit value, e.g. 01')
         if not NEW_MISSION_ID_RE.match(mission_id):
-            parser.error('--seq generation requires a new-format mission id, e.g. MP-CAT-S001-4C01')
+            parser.error('--seq generation requires a new-format mission id, e.g. MP-CAT-A006-4C01')
         bead_id = _derive_bead_id_from_mission(mission_id, seq)
     else:
         bead_id = args.id.strip()
@@ -70,9 +70,9 @@ def main() -> int:
                 parser.error('invalid bead id; expected new format or grandfathered legacy format')
     else:
         if not mission_is_new:
-            parser.error('mission id must use MP-CAT-S001-4C01 style (use --allow-legacy-id for grandfathered ids)')
+            parser.error('mission id must use MP-CAT-A006-4C01 style (tier in [S,A,B,C]); use --allow-legacy-id for grandfathered ids')
         if not bead_is_new:
-            parser.error('bead id must use BD-CAT-S001-4C01-01 style (or use --seq)')
+            parser.error('bead id must use BEAD-CAT-S001-4C01-01 style (or use --seq)')
 
     data = load_yaml(ROOT / 'beads/templates/BEAD_TEMPLATE.yaml')
     data['bead_id'] = bead_id

@@ -8,14 +8,16 @@ inputs:
   - evidence_bundle
   - validation_report
 checks:
-  - id: required_inputs_present
-    description: Required inputs exist and are parseable.
-  - id: mission_bead_linkage
-    description: Work traces to mission and BEAD identifiers.
-  - id: evidence_present
-    description: Evidence is present for each claimed result.
+  - id: tests_executed
+    description: Automated tests or runtime checks were executed and results recorded.
+  - id: schema_validation_passed
+    description: All YAML/JSON contracts validated against their schemas without errors.
+  - id: validators_ran
+    description: Mission-specific validator scripts were invoked and produced output artifacts.
+  - id: actual_outputs_verified
+    description: Claimed deliverables exist, are parseable, and satisfy acceptance criteria.
   - id: exceptions_disclosed
-    description: Failures, limitations, and unresolved items are disclosed.
+    description: Failures, limitations, and unresolved items are disclosed in the exception log.
 pass_criteria:
   - All critical checks pass.
   - No unresolved critical exception remains.

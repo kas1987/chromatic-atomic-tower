@@ -35,8 +35,25 @@ def main() -> int:
 
     if args.scores:
         components = json.loads(args.scores)
-    else:
+    elif args.dry_run:
+        # In dry-run mode a placeholder is acceptable for local testing.
         components = {key: 90 for key in WEIGHTS}
+    else:
+        root = Path(args.root)
+        report_path = root / 'evidence' / 'reports' / f'{args.mission}_validation_report.json'
+        if report_path.exists():
+            report = json.loads(report_path.read_text(encoding='utf-8'))
+            components = report.get('gate_scores', {})
+            if not components:
+                print(f'ERROR: validation report exists but contains no gate_scores: {report_path}', flush=True)
+                return 1
+        else:
+            print(
+                f'ERROR: --scores not provided and no validation report found at {report_path}. '
+                'Run the harness alignment validator first or pass --scores explicitly.',
+                flush=True,
+            )
+            return 1
 
     score = sum(float(components.get(key, 0)) * weight for key, weight in WEIGHTS.items())
     result = {

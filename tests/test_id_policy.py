@@ -1,7 +1,9 @@
 from pathlib import Path
 import sys
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
+_scripts_path = str(Path(__file__).resolve().parents[1] / 'scripts')
+if _scripts_path not in sys.path:
+    sys.path.insert(0, _scripts_path)
 
 from cat_validate import validate_id_policy
 

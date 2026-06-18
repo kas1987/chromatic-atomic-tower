@@ -10,5 +10,13 @@
     "evidence/templates/ASSERTION_EVIDENCE_MAP.yaml",
     "docs/architecture/CAT_MISSION_PIPELINE_MERMAID.md"
   ],
-  "notes": "Populate command outputs after CI/local validation runs."
+  "gate_scores": {
+    "completeness_score": 90,
+    "substantive_validation_score": 90,
+    "control_validation_score": 90,
+    "evidence_sufficiency_score": 90,
+    "routing_score": 90,
+    "exception_disclosure_score": 90
+  },
+  "notes": "Placeholder gate_scores — replace with actual validator output before final promotion."
 }
