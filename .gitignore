@@ -12,3 +12,4 @@ evidence/test-results/*.xml
 cat_dispatch.json
 cat_dispatch.md
 .claude/
+.coverage
