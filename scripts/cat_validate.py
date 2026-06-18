@@ -111,7 +111,7 @@ def validate_id_policy(kind: str, instance: dict, file_path: Path) -> list[str]:
             if mission_legacy_num is not None and mission_legacy_num >= NEW_WORK_LEGACY_NUMERIC_CUTOFF:
                 errors.append(
                     f'mission_id {mission_id} is legacy numeric at or above cutover; '
-                    'use MP-CAT-S001-4C01 style'
+                    'use MP-CAT-A006-4C01 style (tier in [S,A,B,C])'
                 )
             else:
                 errors.append(
