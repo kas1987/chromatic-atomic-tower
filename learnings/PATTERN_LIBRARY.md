@@ -100,3 +100,29 @@ Any test that calls a function reading an env var must call `monkeypatch.delenv(
 ## Pattern: Closeout sequence — close before doc work
 
 `MISSION_BEADS_COMPLETE_MISSION_OPEN` fires the moment all BEADs reach a terminal state, immediately breaking freshness + reconciliation tests. Run `cat_sprint_closeout.py --execute` as the very last action, not before evidence/doc BEADs complete.
+
+## Anti-pattern: Dual-module import namespace in test files
+
+In Python, `import scripts.cat_foo` and `import cat_foo` (when `scripts/` is on `sys.path`) produce **two distinct module objects**. Any monkeypatch applied to one namespace has no effect on code running in the other.
+
+**Rule:** Choose one import style per test file and use it everywhere:
+- Preferred: `import cat_foo as mod` → `monkeypatch.setattr(mod, 'VAR', ...)` + `mod.func()`.
+- Never mix `import cat_foo as mod` with `from scripts.cat_foo import func` in the same test.
+
+Root incident: INC-003 — `test_record_writes_and_prints` corrupted the real `AGENT_SCORECARD.yaml` on every pytest run.
+
+## Pattern: Root allowlist must include build artefacts
+
+`gates/hygiene/root_allowlist.yaml` `ignored_entries` must include every file a build/test tool writes to the repo root. Add to the allowlist in the same PR that introduces the tool:
+
+| Tool | Artefact |
+|------|----------|
+| pytest-cov | `.coverage` |
+| coverage.py XML | `coverage.xml` |
+| ruff | `.ruff_cache/` (already listed) |
+
+Failure to add artefacts causes `schema_validation` (which calls `find_root_hygiene_issues()`) to fail on every CI run.
+
+## Pattern: Simulate missing dependency — `sys.modules[pkg] = None`
+
+To test an ImportError fallback path, use `monkeypatch.setitem(sys.modules, 'pkg', None)`. Python treats a `None` value in `sys.modules` as "module not available" and raises `ImportError` on `import pkg`. This is safer than patching `builtins.__import__` because: (a) it is auto-restored by monkeypatch after the test, (b) it does not intercept unrelated imports, (c) it is the approach documented in the Python reference manual.
