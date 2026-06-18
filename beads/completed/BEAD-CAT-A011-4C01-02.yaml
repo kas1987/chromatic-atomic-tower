@@ -1,0 +1,152 @@
+bead_id: BEAD-CAT-A011-4C01-02
+mission_id: MP-CAT-A011-4C01
+title: Implement trust scoring engine CLI
+status: completed
+agent_role: Builder
+autonomy_level: L2
+objective: "Implement scripts/cat_agent_scorecard.py with subcommands: score-bead\
+  \ (record a completed/failed BEAD), penalize (apply incident penalty), promote (raise\
+  \ trust level), demote (lower trust level), report (print per-agent summary). Scoring\
+  \ formula: +5 completed, -10 failed, -15 incident (floor 40, promote \u2265 85,\
+  \ demote \u2264 55). All mutations require --dry-run by default; --execute required\
+  \ to write."
+allowed_paths:
+- scripts/cat_agent_scorecard.py
+- agents/registry/AGENT_SCORECARD.yaml
+- agents/scorecards/**
+- tests/test_agent_scorecard.py
+- tests/fixtures/scorecards/**
+- evidence/scorecard/BEAD-CAT-A011-4C01-02_tests.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+- agents/registry/AGENT_REGISTRY.yaml
+dependencies:
+- BEAD-CAT-A011-4C01-01
+tool_budget:
+  search: 2
+  read: 8
+  write: 6
+  execute: 4
+  max_runtime_minutes: 45
+confidence:
+  minimum: 80
+  current: 85
+  objective_clarity: 88
+  scope_clarity: 87
+  evidence_quality: 82
+  reversibility: 85
+  tool_fit: 90
+  risk_awareness: 82
+  testability: 88
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Script mutates AGENT_SCORECARD.yaml without --execute flag.
+- Trust level changes without human review logged.
+- Tests fail after implementation.
+definition_of_done:
+- scripts/cat_agent_scorecard.py implemented with all 5 subcommands.
+- Dry-run mode is the default; --execute required for writes.
+- tests/test_agent_scorecard.py covers score-bead, penalize, promote, demote, report.
+- All new tests pass.
+- Evidence JSON produced.
+validation:
+- type: tests
+  command: python -m pytest -q tests/test_agent_scorecard.py
+  evidence_path: evidence/scorecard/BEAD-CAT-A011-4C01-02_tests.json
+  required: true
+required_output:
+- scoring_engine_script
+- test_suite
+handoff:
+  from: Builder
+  to: Reviewer
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A011-4C01-03
+last_updated: '2026-06-18T04:04:49+00:00'
+transition_history:
+- timestamp: '2026-06-18T04:04:48+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A011-4C01-02
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'A011 sprint closeout: BEAD-CAT-A011-4C01-02 -> active'
+  evidence: evidence/scorecard/A011_final_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A011-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T040448Z
+- timestamp: '2026-06-18T04:04:48+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A011-4C01-02
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: 'A011 sprint closeout: BEAD-CAT-A011-4C01-02 -> in_progress'
+  evidence: evidence/scorecard/A011_final_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A011-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T040448Z
+- timestamp: '2026-06-18T04:04:49+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A011-4C01-02
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: 'A011 sprint closeout: BEAD-CAT-A011-4C01-02 -> validating'
+  evidence: evidence/scorecard/A011_final_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A011-4C01-02.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T040449Z
+- timestamp: '2026-06-18T04:04:49+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A011-4C01-02
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: 'A011 sprint closeout: BEAD-CAT-A011-4C01-02 -> reviewed'
+  evidence: evidence/scorecard/A011_final_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A011-4C01-02.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T040449Z
+- timestamp: '2026-06-18T04:04:49+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A011-4C01-02
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: 'A011 sprint closeout: BEAD-CAT-A011-4C01-02 -> completed'
+  evidence: evidence/scorecard/A011_final_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A011-4C01-02.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T040449Z

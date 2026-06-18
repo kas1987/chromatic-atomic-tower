@@ -1,0 +1,18 @@
+{
+  "bead_id": "BEAD-CAT-A011-4C01-04",
+  "mission_id": "MP-CAT-A011-4C01",
+  "generated_at": "2026-06-18T07:30:00+00:00",
+  "validation_type": "tests",
+  "status": "passed",
+  "test_count": 255,
+  "passed": 255,
+  "failed": 0,
+  "artifacts": [
+    "scripts/cat_sprint_closeout.py",
+    "docs/agent_scorecard_spec.md"
+  ],
+  "integration": "cat_sprint_closeout._score_beads_on_closeout called on mission closeout",
+  "cat_check_repo": "pass",
+  "cat_validate_all": "pass",
+  "cat_align_check_strict": "pass"
+}

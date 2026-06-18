@@ -1,0 +1,141 @@
+mission_id: MP-CAT-A011-4C01
+title: Agent Scorecard Automation
+level: M3
+status: closed
+owner: Human Owner
+priority: 3
+risk_level: medium
+reversibility: medium
+autonomy_level: L2
+confidence_minimum: 80
+created: '2026-06-18'
+last_updated: '2026-06-18T04:05:08+00:00'
+id_convention:
+  scheme: MP-<repo>-<tier><NNN>-<cx>C<oo>
+  type: MP
+  repo: CAT
+  priority_tier: A
+  global_mission_number: '011'
+  complexity: 4
+  relative_execution_order: '01'
+objective: 'Automate agent scorecard maintenance: define a validated schema, implement
+  a CLI scoring engine (promotion, demotion, incident penalties), add tool-budget
+  usage tracking per BEAD, and wire scorecard updates into the bead closeout flow
+  so every BEAD completion drives a measurable trust signal.'
+background: "The AGENT_SCORECARD.yaml exists as a v0.0.0 placeholder with zeroed counters.\
+  \ No automation updates it. A011 builds the full data \u2192 rule \u2192 script\
+  \ \u2192 evidence pipeline so agent trust scores reflect actual delivery history.\
+  \ Dependencies MP-CAT-A009-4C01 and MP-CAT-A010-4C01 are both closed."
+scope:
+  in:
+  - Agent scorecard JSON schema (schemas/agent_scorecard.schema.json)
+  - Scored AGENT_SCORECARD.yaml upgrade to v1.0.0 with history
+  - CLI scoring engine (scripts/cat_agent_scorecard.py)
+  - Tool-budget tracker (scripts/cat_tool_budget_tracker.py)
+  - Integration hook in bead closeout (scripts/cat_sprint_closeout.py)
+  - Tests and evidence reports
+  - Scorecard spec doc (docs/agent_scorecard_spec.md)
+  out:
+  - Automatic role changes without human gate
+  - Cross-repo scorecard mutation
+  - Production deployment
+  - Breaking changes to existing agent registry or mission contracts
+dependencies:
+- MP-CAT-A009-4C01
+- MP-CAT-A010-4C01
+allowed_paths:
+- missions/active/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
+- beads/active/BEAD-CAT-A011-4C01-*.yaml
+- schemas/agent_scorecard.schema.json
+- agents/registry/AGENT_SCORECARD.yaml
+- agents/scorecards/**
+- scripts/cat_agent_scorecard.py
+- scripts/cat_tool_budget_tracker.py
+- scripts/cat_sprint_closeout.py
+- docs/agent_scorecard_spec.md
+- tests/test_agent_scorecard.py
+- tests/test_tool_budget_tracker.py
+- tests/fixtures/scorecards/**
+- evidence/scorecard/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+- agents/registry/AGENT_REGISTRY.yaml
+acceptance_criteria:
+- schema/agent_scorecard.schema.json validates per bead BEAD schema.
+- AGENT_SCORECARD.yaml upgraded to v1.0.0 with history list.
+- cat_agent_scorecard.py score-bead / promote / demote / penalize / report commands
+  functional.
+- cat_tool_budget_tracker.py summarize produces per-BEAD usage JSON.
+- Bead closeout calls scorecard update on BEAD completion.
+- "All new tests pass (226+ \u2192 230+ passing)."
+- Evidence report produced for each BEAD.
+- Human Owner approves before any trust-level change is committed.
+success_metrics:
+- All tests pass.
+- Schema validates via cat_validate.py --file.
+- Scorecard shows A011 BEADs in completed_beads count after closeout.
+required_validation:
+- type: schema
+  command: python scripts/cat_validate.py --file schemas/agent_scorecard.schema.json
+  evidence_path: evidence/scorecard/A011_schema_validation.json
+  required: true
+- type: tests
+  command: python -m pytest -q tests/test_agent_scorecard.py tests/test_tool_budget_tracker.py
+  evidence_path: evidence/scorecard/A011_test_report.json
+  required: true
+rollback:
+  required: true
+  plan: Remove scripts/cat_agent_scorecard.py, scripts/cat_tool_budget_tracker.py,
+    schemas/agent_scorecard.schema.json; revert AGENT_SCORECARD.yaml to v0.0.0; remove
+    any agents/scorecards/ entries.
+human_gate:
+  required: true
+  approver: Human Owner
+  trigger: Before any trust-level change is written to AGENT_SCORECARD.yaml
+tool_budget:
+  search: 3
+  read: 15
+  write: 10
+  execute: 6
+  max_runtime_minutes: 90
+beads:
+- bead_id: BEAD-CAT-A011-4C01-01
+  title: Define agent scorecard schema and upgrade data model
+  status: active
+- bead_id: BEAD-CAT-A011-4C01-02
+  title: Implement trust scoring engine CLI
+  status: queued
+- bead_id: BEAD-CAT-A011-4C01-03
+  title: Implement tool-budget tracker
+  status: queued
+- bead_id: BEAD-CAT-A011-4C01-04
+  title: Wire scorecard into bead closeout and produce final evidence
+  status: queued
+evidence_requirements:
+- schema_validation
+- test_suite_pass
+- scorecard_report
+notes:
+- "No automatic role promotions \u2014 all trust changes require human review."
+- 'Scoring formula: +5 per completed BEAD, -10 per failed BEAD, -15 per incident (floor:
+  40).'
+transition_history:
+- timestamp: '2026-06-18T04:05:08+00:00'
+  target_type: mission
+  target_id: MP-CAT-A011-4C01
+  from_status: approved
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: "Sprint closeout \u2014 all BEADs terminal"
+  evidence: evidence/scorecard/A011_final_report.json
+  actor: Human Owner
+  message: direct closeout via cat_sprint_closeout.py
+  contract_path: missions\active\MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

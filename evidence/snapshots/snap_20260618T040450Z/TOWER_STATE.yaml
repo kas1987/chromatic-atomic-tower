@@ -1,11 +1,11 @@
 version: 0.1.0
 state_id: TOWER-STATE-011
-status: sprint_idle
+status: sprint_active
 active_sprint: SPRINT-011
-active_mission_id: ''
-active_bead_id: ''
+active_mission_id: MP-CAT-A011-4C01
+active_bead_id: BEAD-CAT-A011-4C01-04
 go_mode: enabled
-last_updated: '2026-06-18T04:05:08+00:00'
+last_updated: '2026-06-18T04:04:50+00:00'
 operator: Human Owner
 control_planes:
   mission: active

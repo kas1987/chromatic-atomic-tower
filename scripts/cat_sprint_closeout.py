@@ -114,8 +114,35 @@ def closeout_mission(mission_id: str, *, dry_run: bool, evidence: str, actor: st
     if subprocess_result.returncode != 0:
         print('warning: cat_render_sprint_state.py failed', file=sys.stderr)
 
+    _score_beads_on_closeout(mission_beads, dry_run=False)
+
     print(f'Mission {mission_id} closeout complete -> closed')
     return 0
+
+
+def _score_beads_on_closeout(mission_beads: list, *, dry_run: bool) -> None:
+    """Call cat_agent_scorecard score-bead for each terminal BEAD (dry-run by default)."""
+    import subprocess as sp
+    scorecard_script = ROOT / 'scripts' / 'cat_agent_scorecard.py'
+    if not scorecard_script.exists():
+        return
+    for bead_id, status, bead_path in mission_beads:
+        bead_data = load_yaml(bead_path) if isinstance(bead_path, Path) and bead_path.exists() else {}
+        role = ((bead_data or {}).get('agent_role') or 'Builder')
+        result = 'completed' if status == 'completed' else 'failed'
+        mode = '--dry-run' if dry_run else '--execute'
+        cmd = [
+            sys.executable, str(scorecard_script),
+            mode, 'score-bead',
+            '--role', role,
+            '--bead', bead_id,
+            '--result', result,
+        ]
+        proc = sp.run(cmd, cwd=ROOT, check=False, capture_output=True, text=True)
+        if proc.stdout:
+            print(proc.stdout.rstrip())
+        if proc.returncode != 0:
+            print(f'warning: scorecard update failed for {bead_id}: {proc.stderr.strip()}', file=sys.stderr)
 
 
 def main() -> int:

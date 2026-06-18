@@ -4,7 +4,7 @@ This document summarizes the target state encoded in `LIVE_REPO_ALIGNMENT_TARGET
 
 ## Active Mission
 
-`MP-CAT-A011-4C01` — Agent Scorecard Automation (tower is `sprint_active`, SPRINT-011).
+None (tower is `sprint_idle` post–Sprint 011 closeout).
 
 ## Next Mission
 
@@ -12,7 +12,7 @@ This document summarizes the target state encoded in `LIVE_REPO_ALIGNMENT_TARGET
 
 ## Required Sprint Truth
 
-Sprints 000 through 010 must be represented in `missions/registry/MISSION_REGISTRY.yaml` with their final statuses (`closed` or `learned`). Mission A011 must be present as `approved`. Backlog mission A012 must exist as a draft scaffold.
+Sprints 000 through 011 must be represented in `missions/registry/MISSION_REGISTRY.yaml` with their final statuses (`closed` or `learned`). Backlog mission A012 must exist as a draft scaffold.
 
 ## Rule
 
