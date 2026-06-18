@@ -26,7 +26,6 @@ def test_reconciliation_passes():
         Path.cwd(),
     )
     assert report['status'] == 'passed', report
-    assert report['active_mission_id'] in ('', None)
 
 
 def test_roadmap_contains_canonical_sprints():

@@ -58,7 +58,7 @@ ALLOWED_ROOT_FILES = {
     'pyproject.toml', '.editorconfig', '.env.example', '.gitignore',
     # sprint plans at root (backward-compat; sprint 000+ ship these here)
     'SPRINT_000_PLAN.md', 'SPRINT_001_PLAN.md', 'SPRINT_002_PLAN.md', 'SPRINT_003_PLAN.md',
-    'SPRINT_009_PLAN.md', 'SPRINT_010_PLAN.md',
+    'SPRINT_009_PLAN.md', 'SPRINT_010_PLAN.md', 'SPRINT_011_PLAN.md',
     # PDR design records (one per sprint)
     'PDR_CAT_001_STATE_TRANSITION_ENGINE.md',
     'PDR_CAT_002_EVIDENCE_GATE_CLOSEOUT_ENGINE.md',
@@ -66,6 +66,7 @@ ALLOWED_ROOT_FILES = {
     'PDR_CAT_004_V2_ALIGNMENT_GUARDS.md',
     'PDR_CAT_A009_REPO_ALIGNMENT_RECONCILIATION.md',
     'PDR_CAT_A010_GITHUB_BRIDGE_PR_GOVERNANCE.md',
+    'PDR_CAT_A011_AGENT_SCORECARD_AUTOMATION.md',
 }
 
 ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {

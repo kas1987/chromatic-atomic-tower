@@ -1,11 +1,11 @@
 version: 0.1.0
-state_id: TOWER-STATE-010
-status: sprint_idle
-active_sprint: SPRINT-010
-active_mission_id: ''
-active_bead_id: ''
+state_id: TOWER-STATE-011
+status: sprint_active
+active_sprint: SPRINT-011
+active_mission_id: MP-CAT-A011-4C01
+active_bead_id: BEAD-CAT-A011-4C01-01
 go_mode: enabled
-last_updated: '2026-06-18T02:51:29+00:00'
+last_updated: '2026-06-18T06:00:00+00:00'
 operator: Human Owner
 control_planes:
   mission: active
@@ -20,5 +20,5 @@ current_constraints:
 - Opus invoked at most once per ticket (final review only).
 - No GitHub Mutation = No Mission + BEAD Trace.
 next_command: python scripts/cat_resolve_go.py
-sprint_goal: Connect GitHub branches, PRs, commits, and changed files to Mission Packs
-  and BEADs.
+sprint_goal: Automate agent scorecard maintenance — schema, scoring engine, tool-budget
+  tracker, and closeout integration.
