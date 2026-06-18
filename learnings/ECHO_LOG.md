@@ -39,3 +39,10 @@ The Echo Log records what the system should remember next time.
 - **Reconciliation target requires sprint-close update.** Add the closed mission to `required_missions` and clear `canonical_active_mission_id` in `LIVE_REPO_ALIGNMENT_TARGET.yaml`; failing this breaks `test_reconciliation_passes` and `test_registry_audit_passes`.
 - **Closeout backslash bug.** `cat_sprint_closeout.py` writes `missions\archived\...` (backslash) on Windows; fix with `path.as_posix()` before writing path into the registry YAML. Low-severity but should be patched.
 - **Next sprint:** Tower is `sprint_idle` — no backlog missions remain. G-8 (live DB/comms integration) requires a new security-gated mission kickoff.
+
+## Sprint 013 / PR #40 review-response learnings
+
+- **Rollback integration tests are missing.** Existing tests cover happy-path transitions but not rollback scenarios: (a) rollback after `--move` terminal transition, (b) rollback after non-terminal transition, (c) rapid-succession rollback. Four sequential P1 rollback bugs were caught by AI reviewers, not tests.
+- **`sprint_idle` skip in enforcement scripts is by design.** Governance PRs (retros, conformance, structural fixes) are legitimate during idle state; fail-closed would block them. Document skip reason explicitly in the stderr message.
+- **Stale mission files cause `MISSION_ID_COLLISION`.** Before merging any PR touching `missions/`, run `pytest tests/test_state_freshness.py -k test_live_repo_is_fresh` locally.
+- **YAML list items should be indented 2 spaces under their key**, not at the same level — the at-level form is valid per spec but flagged by Copilot as invalid.
