@@ -76,3 +76,19 @@ New root-level PDR or sprint plan files must be added to **both** `scripts/cat_c
 ## Pattern: Test paths follow BEAD lifecycle folder
 
 After BEAD closeout, contracts move from `beads/active/` to `beads/completed/`. Tests and validation examples that hardcode `beads/active/` paths will fail post-closeout. Reference `beads/completed/` for archived sprint fixtures or resolve path dynamically.
+
+## Pattern: BEAD lifecycle glob coverage
+
+`BEAD_GLOB_PATTERNS` in `cat_align_common.py` must include every BEAD lifecycle folder (`queued/`, `active/`, `completed/`, `failed/`, `examples/`). If a folder is omitted, the GO pipeline's `plan_decompose` stage cannot count BEADs in that state — it silently reports "no BEADs decomposed" even after contracts are created. Order: `queued` first so newly-created BEADs are visible immediately.
+
+## Anti-pattern: OS path separators in YAML registry
+
+`cat_sprint_closeout.py` uses `str(path)` to write the `path:` field in `MISSION_REGISTRY.yaml`. On Windows this produces backslash (`missions\archived\...`) which breaks forward-slash conventions and can fail strict path comparators. Fix: always use `path.as_posix()` when writing paths into YAML files.
+
+## Pattern: Mission `beads:` field is always `[]`
+
+The `mission.schema.json` `beads` field is `array of objects` — it is NOT used to list BEAD IDs. Use `beads: []` in every mission contract. BEAD contracts live as separate YAML files in `beads/queued/`, `beads/active/`, etc. Writing string IDs like `beads: [BEAD-CAT-A012-4C01-01]` fails schema validation.
+
+## Pattern: Closeout sequence — close before doc work
+
+`MISSION_BEADS_COMPLETE_MISSION_OPEN` fires the moment all BEADs reach a terminal state, immediately breaking freshness + reconciliation tests. Run `cat_sprint_closeout.py --execute` as the very last action, not before evidence/doc BEADs complete.

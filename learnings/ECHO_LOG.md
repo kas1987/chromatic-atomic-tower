@@ -31,3 +31,11 @@ The Echo Log records what the system should remember next time.
 - **GitHub Bridge validators need dual ID regex.** Legacy `[MP-CAT-###]` and A-tier `[MP-CAT-A010-4C01]` patterns must both pass; donor-only legacy regex breaks new-work policy.
 - **Post-closeout tests must use `beads/completed/`.** Hardcoded `beads/active/` paths fail after transition engine moves contracts.
 - **Next sprint:** `MP-CAT-A011-4C01` Agent Scorecard Automation — expand backlog scaffold before GO.
+
+## Sprint 012 / MP-CAT-A012-4C01 (2026-06-18)
+
+- **`BEAD_GLOB_PATTERNS` must include `beads/queued/`.** GO pipeline plan_decompose was blind to queued BEADs; add the folder to the front of `cat_align_common.py` `BEAD_GLOB_PATTERNS` whenever a new lifecycle folder is introduced.
+- **`beads: []` in mission contracts.** Never put BEAD IDs in the `beads:` array — schema expects objects; IDs live in separate BEAD YAML files.
+- **Reconciliation target requires sprint-close update.** Add the closed mission to `required_missions` and clear `canonical_active_mission_id` in `LIVE_REPO_ALIGNMENT_TARGET.yaml`; failing this breaks `test_reconciliation_passes` and `test_registry_audit_passes`.
+- **Closeout backslash bug.** `cat_sprint_closeout.py` writes `missions\archived\...` (backslash) on Windows; fix with `path.as_posix()` before writing path into the registry YAML. Low-severity but should be patched.
+- **Next sprint:** Tower is `sprint_idle` — no backlog missions remain. G-8 (live DB/comms integration) requires a new security-gated mission kickoff.
