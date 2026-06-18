@@ -91,14 +91,10 @@ def main() -> int:
     parser.add_argument('--changed-files', help='Path to newline-delimited changed files list.')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args()
-    mission_id = args.mission
-    bead_id = args.bead
+    mission_id = args.mission or os.getenv('CAT_MISSION', '')
+    bead_id = args.bead or os.getenv('CAT_BEAD', '')
     if not mission_id or not bead_id:
-        detected_mission, detected_bead = _detect_active_ids()
-        mission_id = mission_id or detected_mission
-        bead_id = bead_id or detected_bead
-    if not mission_id or not bead_id:
-        print('warning: no active mission/BEAD in tower state — skipping scope check', file=sys.stderr)
+        print('PR scope check: --mission/--bead not set and CAT_MISSION/CAT_BEAD not set — skipping.', file=sys.stderr)
         return 0
     result = check_scope(mission_id, bead_id, load_changed_files(args.changed_files))
     if args.json:
