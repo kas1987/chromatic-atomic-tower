@@ -77,3 +77,4 @@ jobs:
         with:
           name: promotion-evidence-${{ inputs.mission_id }}
           path: evidence/
+          retention-days: 14
