@@ -99,7 +99,7 @@ def closeout_mission(mission_id: str, *, dry_run: bool, evidence: str, actor: st
             mission['status'] = 'closed'
             mission['current_bead_id'] = ''
             mission['last_updated'] = now
-            mission['path'] = rel(contract_path)
+            mission['path'] = contract_path.relative_to(ROOT).as_posix()
     write_yaml(REGISTRY_PATH, registry)
 
     if TOWER_STATE_PATH.exists():
