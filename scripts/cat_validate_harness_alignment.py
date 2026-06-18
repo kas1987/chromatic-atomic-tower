@@ -17,10 +17,13 @@ try:
 except Exception:  # pragma: no cover
     yaml = None
 
-MISSION_PATH = 'missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml'
+MISSION_CANDIDATES = [
+    'missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml',
+    'missions/archived/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml',
+]
+BEAD_SEARCH_DIRS = ['beads/active', 'beads/completed']
 
 REQUIRED_FILES = [
-    MISSION_PATH,
     'gates/assertion_gates.yaml',
     'agents/skills/SKILL_REGISTRY.yaml',
     'agents/model_routes.yaml',
@@ -46,6 +49,26 @@ REQUIRED_BEAD_KEYS = [
 ]
 
 
+def _resolve_mission_path(root: Path) -> str | None:
+    for rel in MISSION_CANDIDATES:
+        if (root / rel).exists():
+            return rel
+    return None
+
+
+def _find_bead_files(root: Path, bead_id: str) -> list[Path]:
+    matches: list[Path] = []
+    for base in BEAD_SEARCH_DIRS:
+        matches.extend(sorted((root / base).glob(f'{bead_id}*.yaml')))
+    seen: set[Path] = set()
+    unique: list[Path] = []
+    for path in matches:
+        if path not in seen:
+            seen.add(path)
+            unique.append(path)
+    return unique
+
+
 def load_structured(path: Path):
     text = path.read_text(encoding='utf-8')
     if path.suffix == '.json':
@@ -64,6 +87,10 @@ def validate(root: Path) -> tuple[int, list[str]]:
         if not (root / rel).exists():
             errors.append(f'missing required file: {rel}')
 
+    mission_rel = _resolve_mission_path(root)
+    if not mission_rel:
+        errors.append(f'missing mission contract: {" or ".join(MISSION_CANDIDATES)}')
+
     if yaml is None:
         errors.append('PyYAML is required for YAML validation')
     else:
@@ -78,8 +105,8 @@ def validate(root: Path) -> tuple[int, list[str]]:
             except Exception as exc:
                 errors.append(f'parse failure: {path.relative_to(root)}: {exc}')
 
-    mission_path = root / MISSION_PATH
-    if mission_path.exists() and yaml is not None:
+    mission_path = root / mission_rel if mission_rel else None
+    if mission_path and mission_path.exists() and yaml is not None:
         mission = load_structured(mission_path) or {}
         # CAT-native missions list beads as objects with a bead_id key.
         mission_beads = {
@@ -91,9 +118,9 @@ def validate(root: Path) -> tuple[int, list[str]]:
             errors.append(f'mission missing BEAD references: {missing}')
 
     for bead_id in REQUIRED_BEADS:
-        matches = list((root / 'beads/active').glob(f'{bead_id}*.yaml'))
+        matches = _find_bead_files(root, bead_id)
         if not matches:
-            errors.append(f'missing active BEAD file for {bead_id}')
+            errors.append(f'missing BEAD file for {bead_id} (searched {", ".join(BEAD_SEARCH_DIRS)})')
         for match in matches:
             bead = load_structured(match) if yaml is not None else {}
             for key in REQUIRED_BEAD_KEYS:

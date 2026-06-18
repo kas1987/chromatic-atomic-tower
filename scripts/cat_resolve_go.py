@@ -202,6 +202,9 @@ def main() -> int:
     registry = load_yaml(ROOT / 'missions/registry/MISSION_REGISTRY.yaml')
     mission = select_mission(registry)
     if not mission:
+        if tower.get('status') == 'sprint_idle':
+            print('No approved mission available (sprint_idle — expected).')
+            return 0
         print('No approved mission available.')
         return 1
 
