@@ -138,12 +138,13 @@ Ordered by leverage. Each becomes a mission or BEAD when scheduled.
 | **G-2** | Intent stage lacks a normalized intent envelope schema | Input | BEAD under G-1 |
 | **G-3** | Handoff has no structured packet schema (manual `.md` queue) | Orchestrator | `schemas/handoff_packet.schema.json` + wiring |
 | **G-4** | No single bundled "Mission Package" artifact per GO run | Orchestrator | BEAD under G-1 |
-| **G-6** | Control-plane docs (`CONTROL_PLANES.md`) are stubs vs. this map | Docs | Expand to reference implementations |
 
 ### Recently closed
 
 - **G-1 spine — GO-mode pipeline status driver** — `scripts/cat_go.py`
   evaluates all 7 stages read-only and emits a `go_run_record` (Sprint 011).
+- **G-6 — control-plane docs** — `CONTROL_PLANES.md` expanded from stub to a
+  full plane↔implementation reference incl. the Collect→…→Recommend flow.
 - **G-5 — Scorecard parity in CI** — `scorecard_parity` check added to
   `scripts/cat_ci.py` `CHECKS`; the gate now fails if any registry role is
   untracked (Sprint 011).
