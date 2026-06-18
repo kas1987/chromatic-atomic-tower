@@ -153,6 +153,15 @@ class TestCatAdapter:
         result = _adapt_agent_runs([header, run], _COMMIT, _SPRINT, _ENV)
         assert len(result) == 1
 
+    def test_adapter_skips_dry_run_closeouts(self):
+        records = [
+            {"timestamp": _ts(), "allowed": False, "target_id": "BEAD-X", "reason": "test mismatch", "actor": "pytest", "errors": [], "dry_run": True},
+            {"timestamp": _ts(), "allowed": False, "target_id": "BEAD-Y", "reason": "real rejection", "actor": "Human Owner", "errors": []},
+        ]
+        result = _adapt_closeouts(records, _COMMIT, _SPRINT, _ENV)
+        assert len(result) == 1
+        assert result[0]["attrs"]["target_id"] == "BEAD-Y"
+
 
 # ─── rule: bead-stuck-in-state ────────────────────────────────────────────────
 

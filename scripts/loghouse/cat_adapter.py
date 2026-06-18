@@ -139,6 +139,8 @@ def _adapt_transitions(records: list[dict], commit_sha: str, deploy_id: str, env
 def _adapt_closeouts(records: list[dict], commit_sha: str, deploy_id: str, env: str) -> list[dict]:
     out = []
     for r in records:
+        if r.get("dry_run"):
+            continue
         ts = r.get("timestamp", "1970-01-01T00:00:00+00:00")
         allowed = r.get("allowed", True)
         target_id = r.get("target_id", "unknown")
