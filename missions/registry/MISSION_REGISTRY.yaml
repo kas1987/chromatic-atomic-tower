@@ -1,6 +1,6 @@
 version: 0.1.0
-last_updated: '2026-06-18T14:30:00+00:00'
-active_mission_id: MP-CAT-A012-4C01
+last_updated: '2026-06-18T14:37:39+00:00'
+active_mission_id: ''
 selection_policy:
   priority_order:
   - approved
@@ -206,7 +206,7 @@ missions:
 - mission_id: MP-CAT-A012-4C01
   title: CAT Portable Project Adapter
   level: M3
-  status: approved
+  status: closed
   priority: 4
   priority_tier: A
   complexity_order: 4C01
@@ -215,10 +215,10 @@ missions:
   reversibility: medium
   autonomy_level: L2
   confidence: 82
-  current_bead_id: BEAD-CAT-A012-4C01-01
-  path: missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
   created: '2026-06-18'
-  last_updated: '2026-06-18T14:30:00+00:00'
+  last_updated: '2026-06-18T14:37:39+00:00'
 - mission_id: MP-CAT-A013-4C01
   title: Tool-Plane Scaffolding (Database + Calendar/Email)
   level: M3

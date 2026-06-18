@@ -1,7 +1,7 @@
 bead_id: BEAD-CAT-A012-4C01-01
 mission_id: MP-CAT-A012-4C01
 title: Portable adapter specification and design doc
-status: queued
+status: completed
 agent_role: Scout
 autonomy_level: L2
 objective: >-

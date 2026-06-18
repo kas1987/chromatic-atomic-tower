@@ -1,7 +1,7 @@
 bead_id: BEAD-CAT-A012-4C01-02
 mission_id: MP-CAT-A012-4C01
 title: Adapter JSON schemas (config + state)
-status: queued
+status: completed
 agent_role: Builder
 autonomy_level: L2
 objective: >-

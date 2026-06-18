@@ -1,5 +1,5 @@
 version: 1.0.0
-last_updated: '2026-06-18T05:29:41+00:00'
+last_updated: '2026-06-18T14:37:41+00:00'
 score_policy:
   starting_score: 70
   promote_threshold: 85
@@ -14,15 +14,19 @@ agents:
   current_trust: provisional
   history: []
 - role: Scout
-  score: 70
-  completed_beads: 0
+  score: 75
+  completed_beads: 1
   failed_beads: 0
   incidents: 0
   current_trust: provisional
-  history: []
+  history:
+  - timestamp: '2026-06-18T14:37:40+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A012-4C01-01
 - role: Builder
   score: 100.0
-  completed_beads: 7
+  completed_beads: 9
   failed_beads: 0
   incidents: 0
   current_trust: provisional
@@ -55,6 +59,14 @@ agents:
     event: bead_completed
     delta: 5
     bead_id: BEAD-CAT-A013-4C01-03
+  - timestamp: '2026-06-18T14:37:40+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A012-4C01-02
+  - timestamp: '2026-06-18T14:37:40+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A012-4C01-03
 - role: Reviewer
   score: 70
   completed_beads: 0
@@ -70,8 +82,8 @@ agents:
   current_trust: provisional
   history: []
 - role: Scribe
-  score: 75
-  completed_beads: 1
+  score: 80
+  completed_beads: 2
   failed_beads: 0
   incidents: 0
   current_trust: provisional
@@ -80,6 +92,10 @@ agents:
     event: bead_completed
     delta: 5
     bead_id: BEAD-CAT-A013-4C01-04
+  - timestamp: '2026-06-18T14:37:41+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A012-4C01-04
 - role: Security
   score: 70
   completed_beads: 0
