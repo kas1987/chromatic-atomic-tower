@@ -93,10 +93,12 @@ def main() -> int:
     args = parser.parse_args()
     mission_id = args.mission or os.getenv('CAT_MISSION', '')
     bead_id = args.bead or os.getenv('CAT_BEAD', '')
-    if not mission_id or not bead_id:
-        detected_mission, detected_bead = _detect_active_ids()
-        mission_id = mission_id or detected_mission
-        bead_id = bead_id or detected_bead
+    if not mission_id and not bead_id:
+        mission_id, bead_id = _detect_active_ids()
+    elif bead_id and not mission_id:
+        bead_data, _ = load_bead(bead_id)
+        if bead_data:
+            mission_id = bead_data.get('mission_id', '')
     if not mission_id or not bead_id:
         print('PR scope check: no active mission/bead in args, env, or TOWER_STATE — skipping.', file=sys.stderr)
         return 0

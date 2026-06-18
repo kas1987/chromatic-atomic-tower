@@ -118,8 +118,8 @@ def check_alignment(root: Path = ROOT) -> AlignmentResult:
         if bead_path and bead_data:
             result.ok.append(f'BEAD file exists ({bead_folder}): {rel(bead_path)}')
             bead_status = bead_data.get('status')
-            BEAD_INFLIGHT = {'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}
-            if bead_status in BEAD_INFLIGHT:
+            from cat_align_common import BEAD_ACTIVE_STATES
+            if bead_status in BEAD_ACTIVE_STATES:
                 result.ok.append(f'active BEAD status is in-flight ({bead_status!r}): {bead_id}')
             elif bead_status == 'queued':
                 result.drift.append(DriftItem(
