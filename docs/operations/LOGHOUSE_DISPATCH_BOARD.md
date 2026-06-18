@@ -25,6 +25,10 @@ by `scripts/loghouse/dispatch.py`.
 | `forbidden-dependency-edge` | drift | p1 | **AUDITOR** | Architecture violation; requires governance review |
 | `forbidden-edge-drift` | drift | p0–p1 | **AUDITOR** | Critical architecture drift; escalate immediately |
 | `agent-drift` (aiops) | aiops | p2 | **REVIEWER** | Anomalous agent behaviour; review trace before taking action |
+| `bead-stuck-in-state` | governance | p2–p1 | **AUDITOR** | BEAD stalled >24h; governance triage required |
+| `go-block-frequency` | governance | p1–p0 | **AUDITOR** | Repeated GO blocks in 1h; systematic governance failure |
+| `closeout-rejection-spike` | governance | p2–p0 | **REVIEWER** | High evidence gate rejection rate; review quality before next submission |
+| `confidence-below-threshold` | governance | p2 | **REVIEWER** | Agent run confidence <70; review output before accepting |
 | Unknown rule | (any) | any | **REVIEWER** | Fallback: human triage before assigning |
 
 ---

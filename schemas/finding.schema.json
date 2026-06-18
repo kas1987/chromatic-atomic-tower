@@ -77,7 +77,7 @@
     },
     "blast_radius": {
       "type": "string",
-      "enum": ["service", "domain", "platform", "org"]
+      "enum": ["service", "domain", "platform", "org", "bead", "sprint"]
     },
     "sla_impact": {
       "type": "boolean"
@@ -96,7 +96,10 @@
         "properties": {
           "source_type": {
             "type": "string",
-            "enum": ["log", "metric", "trace", "dependency", "deploy", "git", "catalog"]
+            "enum": [
+              "log", "metric", "trace", "dependency", "deploy", "git", "catalog",
+              "transition_log", "go_decisions", "closeouts", "agent_run_log"
+            ]
           },
           "source_ref": {
             "type": "string",

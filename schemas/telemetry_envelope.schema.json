@@ -27,7 +27,7 @@
     },
     "signal_type": {
       "type": "string",
-      "enum": ["log", "metric", "trace", "event"]
+      "enum": ["log", "metric", "trace", "event", "bead_transition", "closeout", "go_decision", "agent_run"]
     },
     "service": {
       "type": "string",
@@ -35,7 +35,7 @@
     },
     "env": {
       "type": "string",
-      "enum": ["dev", "staging", "prod"]
+      "enum": ["dev", "staging", "prod", "local", "ci"]
     },
     "severity": {
       "type": "string",

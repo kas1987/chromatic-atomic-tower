@@ -68,6 +68,20 @@ jobs:
       - name: LOGHOUSE alignment validator
         run: python scripts/cat_validate_loghouse.py --root .
 
+      # ── Self-monitor (CAT watches its own governance logs) ───────────────
+      # Runs in advisory mode (no --strict) in CI since go_decisions.jsonl
+      # and AGENT_RUN_LOG.jsonl may not exist in a fresh checkout.
+      # The strict gate runs locally via cat_resolve_go.py.
+      - name: LOGHOUSE self-monitor (advisory)
+        run: |
+          python scripts/cat_loghouse.py --mode self \
+            --output /tmp/loghouse_self_output
+        continue-on-error: true
+
+      # ── Self-monitor test suite ──────────────────────────────────────────
+      - name: LOGHOUSE self-monitor pytest suite
+        run: pytest -q tests/test_loghouse_self_monitor.py
+
       # ── Upload evidence ───────────────────────────────────────────────────
       - name: Upload LOGHOUSE evidence
         uses: actions/upload-artifact@v4

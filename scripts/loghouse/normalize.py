@@ -21,8 +21,16 @@ ENVELOPE_REQUIRED = {"service", "env", "signal_type", "ts", "commit_sha", "deplo
 # Required attributes for a deploy event record
 DEPLOY_REQUIRED = {"deploy_id", "service", "commit_sha", "actor", "started_at", "completed_at", "status"}
 
-VALID_SIGNAL_TYPES = {"log", "metric", "trace", "event"}
-VALID_ENVS = {"dev", "staging", "prod"}
+VALID_SIGNAL_TYPES = {
+    "log", "metric", "trace", "event",
+    # CAT governance signals (self-observability)
+    "bead_transition", "closeout", "go_decision", "agent_run",
+}
+VALID_ENVS = {
+    "dev", "staging", "prod",
+    # CAT local and CI environments
+    "local", "ci",
+}
 VALID_SEVERITIES = {"debug", "info", "warn", "error", "fatal", "na"}
 VALID_DEPLOY_STATUSES = {"started", "succeeded", "failed", "rolled_back"}
 
