@@ -1,0 +1,46 @@
+mission_id: MP-CAT-A006-4C01
+assertion_evidence_map:
+  completeness:
+    claim: All required mission inputs, dependencies, BEADs, validation steps, and evidence outputs are captured.
+    procedures:
+      - mission_packet_required_field_check
+      - objective_to_bead_trace
+      - acceptance_criteria_to_validation_trace
+    evidence:
+      - missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml
+      - beads/active/BEAD-CAT-A006-4C01-*.yaml
+      - scripts/cat_validate_harness_alignment.py
+  substantive_validation:
+    claim: The produced contracts, scripts, and workflows are valid and executable.
+    procedures:
+      - yaml_json_parse
+      - pytest
+      - local_validation_scripts
+      - ci_workflow_review
+    evidence:
+      - evidence/reports/MP-CAT-A006-4C01_validation_report.json
+      - tests/test_harness_alignment_contracts.py
+  control_validation:
+    claim: CAT governance controls prevent unscoped, unevidenced, or ungated work.
+    procedures:
+      - allowed_paths_check
+      - required_gates_check
+      - registry_linkage_check
+    evidence:
+      - gates/assertion_gates.yaml
+      - .github/workflows/cat-governance-ci.yml
+  classification:
+    claim: Missions route to appropriate agents/models by complexity, cost, and risk.
+    procedures:
+      - routing_policy_parse
+      - route_matrix_check
+    evidence:
+      - agents/model_routes.yaml
+  presentation_and_disclosure:
+    claim: Humans and agents can review diagrams, risks, exceptions, and next steps.
+    procedures:
+      - mermaid_fence_validation
+      - documentation_review
+    evidence:
+      - docs/architecture/CAT_MISSION_PIPELINE_MERMAID.md
+      - evidence/templates/EXCEPTION_LOG.yaml

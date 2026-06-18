@@ -230,7 +230,7 @@ def update_tower_state(target_type: str, target_id: str, to_status: str, data: d
             tower['active_mission_id'] = data.get('mission_id')
     elif target_type == 'bead' and to_status in {'completed', 'failed', 'archived'}:
         if tower.get('active_bead_id') == target_id:
-            tower['active_bead_id'] = None
+            tower['active_bead_id'] = ''
     write_yaml(TOWER_STATE_PATH, tower)
 
 

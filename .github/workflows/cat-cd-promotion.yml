@@ -1,0 +1,79 @@
+name: CAT CI/CD Promotion Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      mission_id:
+        description: Mission ID to score
+        required: true
+        default: MP-CAT-A006-4C01
+      minimum_confidence:
+        description: Minimum confidence score required for promotion
+        required: true
+        default: '90'
+
+permissions:
+  contents: read
+
+jobs:
+  # M4 missions require explicit human sign-off via a GitHub protected environment.
+  # Configure the "m4-promotion" environment in Settings → Environments with at least
+  # one required reviewer before this workflow can proceed for -4C missions.
+  require-m4-approval:
+    name: Require human approval (M4 only)
+    runs-on: ubuntu-latest
+    if: contains(inputs.mission_id, '-4C')
+    environment: m4-promotion
+    steps:
+      - run: echo "M4 promotion approved by ${{ github.actor }} for ${{ inputs.mission_id }}"
+
+  promotion-gate:
+    name: Score evidence and gate promotion
+    runs-on: ubuntu-latest
+    needs: [require-m4-approval]
+    if: always() && (needs.require-m4-approval.result == 'success' || needs.require-m4-approval.result == 'skipped')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate before promotion
+        run: |
+          python scripts/cat_check_repo.py
+          python scripts/cat_validate.py --all
+          python scripts/cat_validate_harness_alignment.py --root .
+          python scripts/cat_validate_mermaid.py --root .
+          pytest -q
+
+      - name: Score confidence
+        run: |
+          python scripts/cat_score_confidence.py --root . --mission "${{ inputs.mission_id }}"
+
+      - name: Enforce minimum confidence
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          mission = '${{ inputs.mission_id }}'
+          minimum = float('${{ inputs.minimum_confidence }}')
+          path = Path('evidence/reports') / f'{mission}_confidence_score.json'
+          data = json.loads(path.read_text())
+          score = float(data['confidence_score'])
+          print(f'confidence_score={score} minimum={minimum}')
+          if score < minimum:
+              raise SystemExit(f'Confidence score below promotion threshold: {score} < {minimum}')
+
+      - name: Upload promotion evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: promotion-evidence-${{ inputs.mission_id }}
+          path: evidence/

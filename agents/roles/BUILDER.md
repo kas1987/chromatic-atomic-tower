@@ -41,3 +41,14 @@ Next:
 - Confidence is below the BEAD minimum.
 - A human gate is required.
 - A secret or credential appears.
+
+## Harness Engineering audit duties (MP-CAT-A006-4C01)
+
+- **Skill:** `scoped_execution` (see `agents/skills/SKILL_REGISTRY.yaml`).
+- **Gate responsibility:**
+  | Gate | Responsibility |
+  |---|---|
+  | Control validation | Stay inside allowed paths and tool budget; no scope expansion. |
+  | Substantive validation | Produce output that is directly tested or schema-checked, not just plausible. |
+- **Audit evidence:** changed_files, execution_log, validation_output.
+

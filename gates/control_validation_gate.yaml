@@ -1,0 +1,27 @@
+gate_id: control_validation_gate
+assertion: control_validation
+purpose: >
+  CAT controls operated as designed before mutation, closeout, or promotion.
+inputs:
+  - mission_pack
+  - active_beads
+  - evidence_bundle
+  - validation_report
+checks:
+  - id: required_inputs_present
+    description: Required inputs exist and are parseable.
+  - id: mission_bead_linkage
+    description: Work traces to mission and BEAD identifiers.
+  - id: evidence_present
+    description: Evidence is present for each claimed result.
+  - id: exceptions_disclosed
+    description: Failures, limitations, and unresolved items are disclosed.
+pass_criteria:
+  - All critical checks pass.
+  - No unresolved critical exception remains.
+  - Confidence impact has been scored.
+fail_actions:
+  - block_closeout
+  - create_remediation_bead
+  - require_reviewer_if_m3_or_m4
+confidence_weight: 0.20

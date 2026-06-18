@@ -1,0 +1,29 @@
+gate_id: substantive_validation_gate
+assertion: substantive_validation
+purpose: >
+  The actual mission outputs are validated directly with tests, runtime checks, schema checks, or review.
+inputs:
+  - mission_pack
+  - active_beads
+  - evidence_bundle
+  - validation_report
+checks:
+  - id: tests_executed
+    description: Automated tests or runtime checks were executed and results recorded.
+  - id: schema_validation_passed
+    description: All YAML/JSON contracts validated against their schemas without errors.
+  - id: validators_ran
+    description: Mission-specific validator scripts were invoked and produced output artifacts.
+  - id: actual_outputs_verified
+    description: Claimed deliverables exist, are parseable, and satisfy acceptance criteria.
+  - id: exceptions_disclosed
+    description: Failures, limitations, and unresolved items are disclosed in the exception log.
+pass_criteria:
+  - All critical checks pass.
+  - No unresolved critical exception remains.
+  - Confidence impact has been scored.
+fail_actions:
+  - block_closeout
+  - create_remediation_bead
+  - require_reviewer_if_m3_or_m4
+confidence_weight: 0.20
