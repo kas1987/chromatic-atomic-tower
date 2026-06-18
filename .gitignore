@@ -13,3 +13,9 @@ evidence/reports/*CLOSEOUT-EXAMPLE*
 evidence/reports/*DOES-NOT-MATCH*
 cat_dispatch.json
 cat_dispatch.md
+# Source distribution artifacts (kept locally, not part of baseline)
+chromatic_atomic_tower_sprint_000.zip
+_pdr_pack/
+# Harness run artifacts — generated per run, not part of the governed baseline
+.agent/runs/*
+!.agent/runs/.gitkeep
