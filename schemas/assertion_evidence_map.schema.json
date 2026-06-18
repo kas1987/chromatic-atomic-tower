@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Assertion Evidence Map",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "assertion_evidence_map"
+  ],
+  "properties": {
+    "mission_id": {
+      "type": "string"
+    },
+    "assertion_evidence_map": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "claim",
+          "procedures",
+          "evidence"
+        ],
+        "properties": {
+          "claim": {
+            "type": "string"
+          },
+          "procedures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

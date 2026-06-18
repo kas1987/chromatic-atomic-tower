@@ -1,0 +1,12 @@
+{
+  "mission_id": "MP-CAT-DRAFT",
+  "title": "Add sample GitHub bridge mission",
+  "body": "Create a draft mission from a GitHub issue intake payload.",
+  "level": "M2",
+  "allowed_paths": [
+    "docs/github/**"
+  ],
+  "definition_of_done": [
+    "Draft mission candidate exists"
+  ]
+}

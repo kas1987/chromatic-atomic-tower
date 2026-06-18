@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT CI Failure Classification",
+  "type": "object",
+  "required": ["failure_type", "severity", "route_to", "human_gate_required", "self_heal_allowed", "message"],
+  "properties": {
+    "failure_type": {"type": "string", "enum": ["schema_failure", "state_failure", "evidence_failure", "test_failure", "security_failure", "scope_failure", "unknown_failure"]},
+    "severity": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+    "route_to": {"type": "string"},
+    "human_gate_required": {"type": "boolean"},
+    "self_heal_allowed": {"type": "boolean"},
+    "message": {"type": "string"},
+    "recommended_action": {"type": "string"}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,153 @@
+mission_id: MP-CAT-A009-4C01
+title: Repo Alignment and Mission Packet Reconciliation
+level: M3
+status: closed
+owner: Human Owner
+priority: 1
+risk_level: medium
+reversibility: high
+autonomy_level: L3
+confidence_minimum: 90
+created: '2026-06-18'
+last_updated: '2026-06-18T02:44:34+00:00'
+id_convention:
+  scheme: MP-<repo>-<tier><NNN>-<cx>C<oo>
+  type: MP
+  repo: CAT
+  priority_tier: A
+  global_mission_number: 009
+  complexity: 4
+  relative_execution_order: '01'
+objective: Reconcile the live chromatic-atomic-tower repository with packaged sprint
+  outputs, update mission registry, roadmap, sprint state, BEAD queues, and governance
+  documents so the repository reflects true CAT operating state before new feature
+  sprints begin.
+background: The live repo completed missions MP-CAT-000 through MP-CAT-005 and MP-CAT-A006-4C01
+  through MP-CAT-A008-4C01, but CAT_ROADMAP.md and operator docs still describe an
+  older sprint sequence. Sprint 009 adapts the Sprint 004 reconciliation donor package
+  to restore auditable lineage and scaffold backlog missions for GitHub Bridge, Agent
+  Scorecard, and Portable Project Adapter work.
+scope:
+  in:
+  - Mission registry reconciliation
+  - Roadmap reconciliation
+  - Sprint state reconciliation
+  - BEAD queue reconciliation
+  - Evidence and report scaffolding
+  - Reconciliation validation scripts and tests
+  - Backlog Mission Pack scaffolds for MP-CAT-A010 through A012
+  out:
+  - Production deployment
+  - Secret handling
+  - Actual GitHub API mutation
+  - Multi-model coding execution
+  - Agent scorecard automation implementation
+allowed_paths:
+- README.md
+- START_HERE.md
+- QUICKSTART.md
+- CAT_ROADMAP.md
+- CHANGELOG.md
+- SPRINT_009_PLAN.md
+- PDR_CAT_A009_REPO_ALIGNMENT_RECONCILIATION.md
+- missions/**
+- beads/**
+- state/**
+- docs/**
+- gates/**
+- schemas/**
+- scripts/**
+- tests/**
+- playbooks/**
+- checklists/**
+- evidence/reports/**
+- evidence/reconciliation/**
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+dependencies:
+- MP-CAT-A008-4C01
+acceptance_criteria:
+- Mission registry reflects MP-CAT-000 through MP-CAT-005 and MP-CAT-A006-4C01 through
+  A012-4C01.
+- CAT_ROADMAP.md reflects actual sprint lineage through Sprint 009.
+- Active mission is MP-CAT-A009-4C01 until reconciliation is closed.
+- Completed or reconciled missions are not treated as active.
+- GO resolver can identify the next legal BEAD.
+- Registry audit, reconciliation check, roadmap sync, and tests pass.
+success_metrics:
+- python scripts/cat_registry_audit.py passes
+- python scripts/cat_reconcile.py --write-report reports passed
+- python scripts/cat_roadmap_sync.py --check passes
+- pytest -q passes including reconciliation tests
+required_validation:
+- type: registry_audit
+  command: python scripts/cat_registry_audit.py --registry missions/registry/MISSION_REGISTRY.yaml
+  evidence_path: evidence/reconciliation/reconciliation_report.md
+  required: true
+- type: reconciliation
+  command: python scripts/cat_reconcile.py --target docs/reconciliation/LIVE_REPO_ALIGNMENT_TARGET.yaml
+    --write-report
+  evidence_path: evidence/reconciliation/reconciliation_report.json
+  required: true
+- type: roadmap_sync
+  command: python scripts/cat_roadmap_sync.py --check
+  evidence_path: evidence/reports/MP-CAT-A009-4C01_roadmap_sync.md
+  required: true
+- type: alignment
+  command: python scripts/cat_align_check.py --strict
+  evidence_path: evidence/reports/MP-CAT-A009-4C01_alignment_check.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/MP-CAT-A009-4C01_tests.txt
+  required: true
+rollback:
+  required: true
+  plan: Revert Sprint 009 mission, BEADs, reconciliation scripts, target files, tests,
+    and generated evidence. Restore prior registry and roadmap via Git.
+human_gate:
+  required: false
+  approver: Human Owner
+tool_budget:
+  search: 4
+  read: 20
+  write: 18
+  execute: 10
+  max_runtime_minutes: 90
+beads:
+- bead_id: BEAD-CAT-A009-4C01-01
+  title: Audit live repo vs package lineage
+- bead_id: BEAD-CAT-A009-4C01-02
+  title: Reconcile mission registry and mission files
+- bead_id: BEAD-CAT-A009-4C01-03
+  title: Update roadmap, sprint state, changelog, and START_HERE
+- bead_id: BEAD-CAT-A009-4C01-04
+  title: Validate GO resolver, CI, and evidence reports
+evidence_requirements:
+- reconciliation_audit_report
+- reconciliation_report_json
+- reconciliation_report_md
+- roadmap_sync_check
+- alignment_check
+- test_results
+transition_history:
+- timestamp: '2026-06-18T02:44:34+00:00'
+  target_type: mission
+  target_id: MP-CAT-A009-4C01
+  from_status: approved
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: "Sprint closeout \u2014 all BEADs terminal"
+  evidence: evidence/reports/MP-CAT-A009-4C01_validation_summary.md
+  actor: Human Owner
+  message: direct closeout via cat_sprint_closeout.py
+  contract_path: missions\active\MP-CAT-A009-4C01_REPO_ALIGNMENT_RECONCILIATION.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

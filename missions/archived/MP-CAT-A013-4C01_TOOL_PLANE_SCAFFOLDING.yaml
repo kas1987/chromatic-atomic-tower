@@ -1,0 +1,135 @@
+mission_id: MP-CAT-A013-4C01
+title: Tool-Plane Scaffolding (Database + Calendar/Email)
+level: M3
+status: closed
+owner: Human Owner
+priority: 3
+risk_level: medium
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 80
+created: '2026-06-18'
+last_updated: '2026-06-18T05:29:41+00:00'
+id_convention:
+  scheme: MP-<repo>-<tier><NNN>-<cx>C<oo>
+  type: MP
+  repo: CAT
+  priority_tier: A
+  global_mission_number: '013'
+  complexity: 4
+  relative_execution_order: '01'
+objective: "Close conformance gap G-7 by scaffolding the diagram's remaining tool\
+  \ planes (Database and Calendar/Email) as validated schemas plus read-only adapter\
+  \ interfaces, and enumerate every tool plane in a governed tool registry \u2014\
+  \ with no live external credentials or outbound calls."
+background: The Chromatic Atomic Harness diagram shows a Tool + Context Layer spanning
+  Git, Filesystem, Database, Web, Terminal, Calendar/Email, LLM, Custom Tools and
+  3rd-party APIs. Most are implemented; the Database plane is only implicit (SQLite
+  via loghouse/codegraph) and Calendar/Email is absent. This mission adds the governance
+  scaffolding (schema + adapter interface + registry) so the planes are first-class
+  and auditable, deferring any live integration (which needs credentials and a security
+  gate) to a future mission.
+scope:
+  in:
+  - Database tool-plane schema + read-only adapter interface stub
+  - Calendar/Email (comms) tool-plane schema + read-only adapter interface stub
+  - Governed tool registry (agents/registry/TOOL_REGISTRY.yaml) + schema
+  - Tests, validation wiring, and conformance/doc updates
+  out:
+  - Live external credentials, secrets, or outbound network calls
+  - Real database migrations or email/calendar sends
+  - Changes to existing tool planes (Git, FS, Web, Terminal, LLM)
+dependencies:
+- MP-CAT-A011-4C01
+allowed_paths:
+- missions/active/MP-CAT-A013-4C01_TOOL_PLANE_SCAFFOLDING.yaml
+- beads/active/BEAD-CAT-A013-4C01-*.yaml
+- schemas/tool_plane_database.schema.json
+- schemas/tool_plane_comms.schema.json
+- schemas/tool_registry.schema.json
+- scripts/adapters/**
+- scripts/cat_kimi.py
+- scripts/cat_validate.py
+- agents/registry/TOOL_REGISTRY.yaml
+- tests/test_tool_plane_database.py
+- tests/test_tool_plane_comms.py
+- tests/test_tool_registry.py
+- tests/fixtures/toolplanes/**
+- docs/architecture/**
+- evidence/toolplanes/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+acceptance_criteria:
+- Database and Calendar/Email tool-plane schemas exist and validate.
+- Read-only adapter interface stubs exist with no live credentials or network I/O.
+- TOOL_REGISTRY.yaml enumerates every tool plane and validates against its schema.
+- All new tests pass; cat_validate --all and cat_ci stay green.
+- Conformance map G-7 marked closed; Tool Layer rows updated.
+success_metrics:
+- cat_validate --all passes including the new schemas.
+- cat_ci status passed.
+- Tool registry lists >= 9 planes.
+required_validation:
+- type: tests
+  command: python -m pytest -q tests/test_tool_plane_database.py tests/test_tool_plane_comms.py
+    tests/test_tool_registry.py
+  evidence_path: evidence/toolplanes/A013_test_report.md
+  required: true
+- type: schema
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/toolplanes/A013_validation.md
+  required: true
+rollback:
+  required: true
+  plan: Remove schemas/tool_plane_*.schema.json, schemas/tool_registry.schema.json,
+    scripts/adapters/**, agents/registry/TOOL_REGISTRY.yaml and the new tests; revert
+    the cat_validate.py target additions.
+human_gate:
+  required: false
+  approver: Auditor
+tool_budget:
+  search: 3
+  read: 14
+  write: 12
+  execute: 6
+  max_runtime_minutes: 90
+beads:
+- bead_id: BEAD-CAT-A013-4C01-01
+  title: Database tool-plane schema + adapter interface
+  status: active
+- bead_id: BEAD-CAT-A013-4C01-02
+  title: Calendar/Email tool-plane schema + adapter interface
+  status: queued
+- bead_id: BEAD-CAT-A013-4C01-03
+  title: Governed tool registry + schema
+  status: queued
+- bead_id: BEAD-CAT-A013-4C01-04
+  title: Conformance + docs + closeout evidence
+  status: queued
+evidence_requirements:
+- schema_validation
+- test_suite_pass
+- tool_registry_report
+notes:
+- "No live credentials or outbound calls \u2014 scaffolding only (security gate deferred)."
+- Adapters are read-only interface stubs; live integration is a future mission.
+transition_history:
+- timestamp: '2026-06-18T05:29:41+00:00'
+  target_type: mission
+  target_id: MP-CAT-A013-4C01
+  from_status: approved
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: "Sprint closeout \u2014 all BEADs terminal"
+  evidence: evidence/toolplanes/A013_closeout.md
+  actor: Auditor
+  message: direct closeout via cat_sprint_closeout.py
+  contract_path: missions\active\MP-CAT-A013-4C01_TOOL_PLANE_SCAFFOLDING.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

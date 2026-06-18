@@ -1,0 +1,22 @@
+version: 0.1.0
+state_id: TOWER-STATE-008
+status: sprint_idle
+active_sprint: SPRINT-008
+active_mission_id: MP-CAT-A006-4C01
+active_bead_id: BEAD-CAT-A006-4C01-06
+go_mode: enabled
+last_updated: '2026-06-18T01:32:32+00:00'
+operator: Human Owner
+control_planes:
+  mission: active
+  execution: state_transition_engine_available
+  evidence: evidence_gate_available
+  learning: multi_model_harness
+  governance: tower_guard_available
+current_constraints:
+- Workers touch only ticket-listed paths.
+- Max 2 retries per worker task.
+- No worker patch merged without Human Owner approval.
+- Opus invoked at most once per ticket (final review only).
+next_command: python scripts/cat_resolve_go.py
+sprint_goal: Enforce mission/BEAD state alignment and collision governance.

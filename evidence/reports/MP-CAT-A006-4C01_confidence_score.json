@@ -1,0 +1,21 @@
+{
+  "mission_id": "MP-CAT-A006-4C01",
+  "confidence_score": 90.0,
+  "decision": "auto_proceed",
+  "components": {
+    "completeness_score": 90,
+    "substantive_validation_score": 90,
+    "control_validation_score": 90,
+    "evidence_sufficiency_score": 90,
+    "routing_score": 90,
+    "exception_disclosure_score": 90
+  },
+  "weights": {
+    "completeness_score": 0.2,
+    "substantive_validation_score": 0.25,
+    "control_validation_score": 0.2,
+    "evidence_sufficiency_score": 0.15,
+    "routing_score": 0.1,
+    "exception_disclosure_score": 0.1
+  }
+}

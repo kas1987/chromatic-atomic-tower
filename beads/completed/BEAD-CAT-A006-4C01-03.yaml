@@ -1,0 +1,152 @@
+bead_id: BEAD-CAT-A006-4C01-03
+mission_id: MP-CAT-A006-4C01
+title: Build evidence fabric and exception logging model
+status: completed
+agent_role: Scribe
+autonomy_level: L2
+objective: Define the evidence bundle structure, exception logging format, and evidence
+  capture points ("magnets") so every gate decision is backed by durable, indexed
+  evidence.
+allowed_paths:
+- evidence/templates/EVIDENCE_BUNDLE_INDEX.yaml
+- evidence/templates/EXCEPTION_LOG.yaml
+- playbooks/CAT_AUDIT_HARNESS_PLAYBOOK.md
+forbidden_paths:
+- .env
+- .env.*
+- .venv/**
+- secrets/**
+- credentials/**
+- infra/prod/**
+- external_repos/**
+dependencies:
+- BEAD-CAT-A006-4C01-02
+assertions:
+- completeness
+- evidence_sufficiency
+- substantive_validation
+tool_budget:
+  search: 2
+  read: 8
+  write: 6
+  execute: 3
+  max_runtime_minutes: 30
+confidence:
+  minimum: 70
+  current: 79
+  objective_clarity: 85
+  scope_clarity: 84
+  evidence_quality: 78
+  reversibility: 95
+  tool_fit: 84
+  risk_awareness: 80
+  testability: 78
+risk_level: low
+reversibility: high
+stop_conditions:
+- Required input mission pack missing.
+- Requested path outside allowed_paths.
+- Validation failure that cannot be fixed within this BEAD scope.
+- Need for secret, credential, destructive action, or production access.
+definition_of_done:
+- Evidence bundle index and exception log templates exist.
+- Audit harness playbook documents the evidence fabric.
+- cat_generate_evidence_bundle.py can produce a dry-run bundle for MP-CAT-A006-4C01.
+- Evidence output location is identified.
+validation:
+- type: evidence_bundle
+  command: python scripts/cat_generate_evidence_bundle.py --mission MP-CAT-A006-4C01
+    --root . --dry-run
+  evidence_path: evidence/reports/BEAD-CAT-A006-4C01-03_evidence_fabric.md
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Scribe
+  reviewer: Human Owner
+  notes: "Evidence fabric model \u2014 human M4 review required."
+last_updated: '2026-06-18T01:32:27+00:00'
+transition_history:
+- timestamp: '2026-06-18T01:32:25+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-03
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: A006 backlog completion
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013225Z
+- timestamp: '2026-06-18T01:32:25+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-03
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: BEAD complete
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013225Z
+- timestamp: '2026-06-18T01:32:26+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-03
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Harness validation passed
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-03.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013226Z
+- timestamp: '2026-06-18T01:32:26+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-03
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: DoD satisfied
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-03.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013226Z
+- timestamp: '2026-06-18T01:32:27+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-03
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: A006 backlog closed
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A006-4C01-03.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013227Z

@@ -1,0 +1,8 @@
+{
+  "envelope_count": 4,
+  "deploy_event_count": 1,
+  "rejected_count": 0,
+  "first_envelope_service": "payments-api",
+  "first_envelope_env": "prod",
+  "deploy_event_deploy_id": "deploy-20260617-1200"
+}

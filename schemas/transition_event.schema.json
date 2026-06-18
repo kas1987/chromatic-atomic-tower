@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/transition_event.schema.json",
+  "title": "CAT Transition Event",
+  "type": "object",
+  "required": ["timestamp", "target_type", "target_id", "from_status", "to_status", "allowed", "dry_run", "reason", "evidence"],
+  "properties": {
+    "timestamp": {"type": "string"},
+    "target_type": {"type": "string", "enum": ["mission", "bead"]},
+    "target_id": {"type": "string"},
+    "from_status": {"type": "string"},
+    "to_status": {"type": "string"},
+    "allowed": {"type": "boolean"},
+    "dry_run": {"type": "boolean"},
+    "reason": {"type": "string", "minLength": 3},
+    "evidence": {"type": "string"},
+    "actor": {"type": "string"},
+    "message": {"type": "string"},
+    "contract_path": {"type": "string"}
+  },
+  "additionalProperties": true
+}

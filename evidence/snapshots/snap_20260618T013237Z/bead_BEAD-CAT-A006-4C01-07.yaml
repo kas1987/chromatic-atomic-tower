@@ -1,0 +1,140 @@
+bead_id: BEAD-CAT-A006-4C01-07
+mission_id: MP-CAT-A006-4C01
+title: Add CI/CD promotion workflow and confidence score
+status: reviewed
+agent_role: Builder
+autonomy_level: L2
+objective: Create the promotion workflow that requires an evidence bundle, gate results,
+  and a confidence-score threshold before release, backed by a deterministic confidence
+  scoring script and a CI/CD validation runbook.
+allowed_paths:
+- .github/workflows/cat-cd-promotion.yml
+- scripts/cat_score_confidence.py
+- scripts/cat_generate_evidence_bundle.py
+- playbooks/CI_CD_VALIDATION_RUNBOOK.md
+forbidden_paths:
+- .env
+- .env.*
+- .venv/**
+- secrets/**
+- credentials/**
+- infra/prod/**
+- external_repos/**
+dependencies:
+- BEAD-CAT-A006-4C01-03
+- BEAD-CAT-A006-4C01-06
+assertions:
+- control_validation
+- evidence_sufficiency
+- presentation_and_disclosure
+tool_budget:
+  search: 3
+  read: 12
+  write: 8
+  execute: 6
+  max_runtime_minutes: 50
+confidence:
+  minimum: 70
+  current: 78
+  objective_clarity: 83
+  scope_clarity: 82
+  evidence_quality: 78
+  reversibility: 90
+  tool_fit: 85
+  risk_awareness: 84
+  testability: 82
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Required input mission pack missing.
+- Requested path outside allowed_paths.
+- Promotion gate would auto-promote without human approval and cannot be constrained
+  in scope.
+- Need for secret, credential, destructive action, or production access.
+definition_of_done:
+- cat-cd-promotion.yml requires evidence bundle and confidence threshold before release.
+- cat_score_confidence.py and cat_generate_evidence_bundle.py exist and run in dry-run.
+- CI/CD validation runbook documents the promotion ladder.
+- Human approval remains required for promotion.
+- Evidence output location is identified.
+validation:
+- type: confidence_score
+  command: python scripts/cat_score_confidence.py --root . --mission MP-CAT-A006-4C01
+    --dry-run
+  evidence_path: evidence/reports/BEAD-CAT-A006-4C01-07_promotion.md
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+  notes: "Promotion gate \u2014 Opus authors scoring/workflow; human M4 review required."
+last_updated: '2026-06-18T01:32:36+00:00'
+transition_history:
+- timestamp: '2026-06-18T01:32:34+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-07
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: A006 backlog completion
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-07.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013234Z
+- timestamp: '2026-06-18T01:32:35+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-07
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: BEAD complete
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-07.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013235Z
+- timestamp: '2026-06-18T01:32:35+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-07
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Harness validation passed
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-07.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013235Z
+- timestamp: '2026-06-18T01:32:36+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-07
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: DoD satisfied
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-07.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013236Z

@@ -1,17 +1,37 @@
 # CAT State Machine
 
-## Mission lifecycle
+CAT uses explicit lifecycle state machines for missions and BEADs. The source of truth is `gates/state/STATE_TRANSITION_RULES.yaml`.
+
+## Mission Path
 
 ```text
-DRAFT -> TRIAGED -> APPROVED -> DISPATCHED -> IN_PROGRESS -> VALIDATING -> REVIEWED -> CLOSED -> LEARNED
+draft -> triaged -> approved -> dispatched -> in_progress -> validating -> reviewed -> closed -> learned
 ```
 
-## BEAD lifecycle
+## BEAD Path
 
 ```text
-QUEUED -> ACTIVE -> IN_PROGRESS -> VALIDATING -> REVIEWED -> COMPLETED -> ARCHIVED
+queued -> active -> in_progress -> validating -> reviewed -> completed -> archived
 ```
 
-## Sprint 000 limitation
+## Error Paths
 
-Sprint 000 provides the state model and rule file. Sprint 001 should enforce transitions with `scripts/cat_transition.py`.
+Mission error paths:
+
+```text
+blocked, escalated, incident, rolled_back, abandoned
+```
+
+BEAD error paths:
+
+```text
+blocked, changes_requested, failed
+```
+
+## Terminal Protection
+
+Terminal states do not reopen by default. A future sprint may add human-gated override logic, but Sprint 001 intentionally keeps terminal reopening blocked.
+
+## Evidence Rule
+
+A status that claims validation, review, completion, failure, incident, rollback, or learning must carry evidence. The transition engine enforces this rule.

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Skill Registry",
+  "type": "object",
+  "required": [
+    "skill_registry_id",
+    "version",
+    "skills"
+  ],
+  "properties": {
+    "skill_registry_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "skill_id",
+          "owner_agent",
+          "purpose",
+          "evidence_required"
+        ],
+        "properties": {
+          "skill_id": {
+            "type": "string"
+          },
+          "owner_agent": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "evidence_required": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

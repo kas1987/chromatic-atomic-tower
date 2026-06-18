@@ -2,14 +2,15 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+pytest-cache-files-*/
 .DS_Store
 .env
 .env.*
 !.env.example
-*.pem
-.github_app_token_cache
 evidence/logs/*.log
 evidence/test-results/*.xml
+evidence/reports/*CLOSEOUT-EXAMPLE*
+evidence/reports/*DOES-NOT-MATCH*
 cat_dispatch.json
 cat_dispatch.md
 # Source distribution artifacts (kept locally, not part of baseline)

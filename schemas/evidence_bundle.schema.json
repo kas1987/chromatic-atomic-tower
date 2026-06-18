@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/evidence_bundle.schema.json",
+  "title": "CAT Evidence Bundle",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "mission_id",
+    "target_type",
+    "type",
+    "summary",
+    "validation_result",
+    "required_artifacts",
+    "supporting_artifacts",
+    "created_by",
+    "created_at",
+    "learning_note",
+    "closeout_ready"
+  ],
+  "properties": {
+    "evidence_id": {"type": "string", "pattern": "^EB-[A-Z0-9-]+$"},
+    "mission_id": {"type": "string", "pattern": "^MP-[A-Z0-9-]+$"},
+    "bead_id": {"type": ["string", "null"], "pattern": "^BEAD-[A-Z0-9-]+$"},
+    "target_type": {"type": "string", "enum": ["bead", "mission"]},
+    "type": {"type": "string"},
+    "summary": {"type": "string", "minLength": 5},
+    "validation_result": {"type": "string", "enum": ["passed", "failed", "skipped", "blocked"]},
+    "required_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "supporting_artifacts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "created_by": {"type": "string"},
+    "created_at": {"type": "string"},
+    "learning_note": {"type": "string", "minLength": 5},
+    "closeout_ready": {"type": "boolean"},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["path", "kind", "required"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "kind": {"type": "string"},
+        "required": {"type": "boolean"},
+        "description": {"type": "string"},
+        "validation_result": {"type": "string", "enum": ["passed", "failed", "skipped", "blocked"]}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

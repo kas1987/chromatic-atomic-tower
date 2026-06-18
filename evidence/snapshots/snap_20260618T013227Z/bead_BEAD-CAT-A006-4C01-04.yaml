@@ -1,0 +1,78 @@
+bead_id: BEAD-CAT-A006-4C01-04
+mission_id: MP-CAT-A006-4C01
+title: Add skills registry and complexity-aware model routing
+status: queued
+agent_role: Orchestrator
+autonomy_level: L2
+objective: >-
+  Add a machine-readable skill registry and fold complexity-aware (M1-M4 / C1-C4) model
+  routing with fallback and cost/risk controls into the existing agents/model_routes.yaml,
+  and fold audit responsibilities into the existing agents/roles/*.md (no duplicate role
+  files, no parallel routing file).
+allowed_paths:
+  - agents/skills/**
+  - agents/roles/**
+  - agents/model_routes.yaml
+  - schemas/model_routing_policy.schema.json
+  - schemas/skill_registry.schema.json
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies:
+  - BEAD-CAT-A006-4C01-01
+assertions:
+  - completeness
+  - classification
+  - control_validation
+tool_budget:
+  search: 3
+  read: 12
+  write: 10
+  execute: 3
+  max_runtime_minutes: 45
+confidence:
+  minimum: 70
+  current: 78
+  objective_clarity: 84
+  scope_clarity: 82
+  evidence_quality: 75
+  reversibility: 90
+  tool_fit: 85
+  risk_awareness: 82
+  testability: 78
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - Required input mission pack missing.
+  - Requested path outside allowed_paths.
+  - Folding routing would break existing role-based routing consumed by harness_run.py.
+  - Need for secret, credential, destructive action, or production access.
+definition_of_done:
+  - agents/skills/SKILL_REGISTRY.yaml exists and validates against skill_registry.schema.json.
+  - Complexity routing block added to agents/model_routes.yaml without breaking existing roles.
+  - model_routing_policy.schema.json validates the complexity routing block.
+  - Audit responsibilities folded into existing agents/roles/*.md.
+  - Evidence output location is identified.
+validation:
+  - type: harness_alignment
+    command: python scripts/cat_validate_harness_alignment.py --root .
+    evidence_path: evidence/reports/BEAD-CAT-A006-4C01-04_skills_routing.md
+    required: true
+  - type: schema_validation
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/BEAD-CAT-A006-4C01-04_schema.md
+    required: true
+required_output:
+  - updated_files
+  - validation_output
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Orchestrator
+  reviewer: Human Owner
+  notes: EXTENDS existing routing/roles — must preserve harness_run.py consumers; human M4 review required.

@@ -1,0 +1,59 @@
+bead_id: BEAD-CAT-A012-4C01-04
+mission_id: MP-CAT-A012-4C01
+title: Evidence, scorecard, and conformance map update
+status: completed
+agent_role: Scribe
+autonomy_level: L2
+objective: >-
+  Capture the mission close-out evidence: write evidence/reports/MP-CAT-A012-4C01_validation.md
+  (full validation run output), update docs/architecture/CHROMATIC_ATOMIC_HARNESS_CONFORMANCE.md
+  to note A012 delivery, and confirm python scripts/cat_validate.py --all passes cleanly.
+allowed_paths:
+  - evidence/reports/MP-CAT-A012-4C01_validation.md
+  - docs/architecture/CHROMATIC_ATOMIC_HARNESS_CONFORMANCE.md
+  - docs/architecture/CAT_PORTABLE_ADAPTER.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - .git/**
+dependencies:
+  - BEAD-CAT-A012-4C01-03
+tool_budget:
+  search: 1
+  read: 5
+  write: 3
+  execute: 2
+  max_runtime_minutes: 15
+confidence:
+  minimum: 80
+  current: 88
+  objective_clarity: 92
+  scope_clarity: 90
+  evidence_quality: 88
+  reversibility: 96
+  tool_fit: 88
+  risk_awareness: 86
+  testability: 80
+risk_level: low
+reversibility: high
+stop_conditions:
+  - cat_validate.py --all fails.
+definition_of_done:
+  - evidence/reports/MP-CAT-A012-4C01_validation.md exists with passing run output.
+  - docs/architecture/CHROMATIC_ATOMIC_HARNESS_CONFORMANCE.md updated to reflect A012.
+  - python scripts/cat_validate.py --all passes.
+validation:
+  - type: command
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/MP-CAT-A012-4C01_validation.md
+    required: true
+required_output:
+  - validation_report
+  - conformance_map_update
+handoff:
+  next_bead_id: null
+  notes: []
+last_updated: '2026-06-18T14:30:00+00:00'

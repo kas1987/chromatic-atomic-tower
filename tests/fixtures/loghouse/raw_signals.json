@@ -1,0 +1,59 @@
+[
+  {
+    "event_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "ts": "2026-06-17T12:05:00Z",
+    "signal_type": "log",
+    "service": "payments-api",
+    "env": "prod",
+    "severity": "error",
+    "message": "Upstream timeout: connection refused",
+    "commit_sha": "abc1234",
+    "deploy_id": "deploy-20260617-1200",
+    "attrs": {"http.status_code": 503}
+  },
+  {
+    "event_id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+    "ts": "2026-06-17T12:06:00Z",
+    "signal_type": "log",
+    "service": "payments-api",
+    "env": "prod",
+    "severity": "error",
+    "message": "Unhandled exception in payment processor",
+    "commit_sha": "abc1234",
+    "deploy_id": "deploy-20260617-1200",
+    "attrs": {"exception": "NullPointerException"}
+  },
+  {
+    "event_id": "cccccccc-cccc-cccc-cccc-cccccccccccc",
+    "ts": "2026-06-17T12:07:00Z",
+    "signal_type": "log",
+    "service": "payments-api",
+    "env": "prod",
+    "severity": "error",
+    "message": "Database connection pool exhausted",
+    "commit_sha": "abc1234",
+    "deploy_id": "deploy-20260617-1200",
+    "attrs": {"pool_size": 10, "waiting": 25}
+  },
+  {
+    "event_id": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+    "ts": "2026-06-17T12:08:00Z",
+    "signal_type": "log",
+    "service": "payments-api",
+    "env": "prod",
+    "severity": "fatal",
+    "message": "Traceback: Exception in thread main",
+    "commit_sha": "abc1234",
+    "deploy_id": "deploy-20260617-1200",
+    "attrs": {}
+  },
+  {
+    "deploy_id": "deploy-20260617-1200",
+    "service": "payments-api",
+    "commit_sha": "abc1234",
+    "actor": "github-actions",
+    "started_at": "2026-06-17T11:59:00Z",
+    "completed_at": "2026-06-17T12:01:00Z",
+    "status": "succeeded"
+  }
+]

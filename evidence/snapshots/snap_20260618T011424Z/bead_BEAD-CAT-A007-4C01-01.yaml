@@ -1,0 +1,78 @@
+bead_id: BEAD-CAT-A007-4C01-01
+mission_id: MP-CAT-A007-4C01
+title: Lock LOGHOUSE contracts and architecture docs
+status: queued
+agent_role: Auditor
+autonomy_level: L2
+objective: >-
+  Confirm the pre-existing LOGHOUSE Phase-1 schemas (telemetry_envelope, finding,
+  dependency_edge, deploy_event) and extend the contract set with dispatch_queue_item,
+  architecture_rule, and drift_report schemas. Author the LOGHOUSE architecture and
+  data-flow documents that map raw signals to evidence-backed findings and dispatch items.
+allowed_paths:
+  - schemas/telemetry_envelope.schema.json
+  - schemas/finding.schema.json
+  - schemas/dependency_edge.schema.json
+  - schemas/deploy_event.schema.json
+  - schemas/dispatch_queue_item.schema.json
+  - schemas/architecture_rule.schema.json
+  - schemas/drift_report.schema.json
+  - docs/architecture/LOGHOUSE_ARCHITECTURE.md
+  - docs/architecture/LOGHOUSE_DATA_FLOW.md
+  - docs/operations/LOGHOUSE_FOUNDATION.md
+  - tests/test_loghouse_schemas.py
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies: []
+tool_budget:
+  search: 2
+  read: 12
+  write: 10
+  execute: 4
+  max_runtime_minutes: 45
+confidence:
+  minimum: 70
+  current: 84
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 88
+  risk_awareness: 82
+  testability: 85
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Required LOGHOUSE Phase-1 schema missing or unreadable.
+  - Requested path outside allowed_paths.
+  - Schema change would break the existing tests/test_loghouse_schemas.py samples.
+  - Need for secret, credential, destructive action, or production access.
+definition_of_done:
+  - The four Phase-1 schemas validate their existing samples unchanged.
+  - dispatch_queue_item, architecture_rule, and drift_report schemas exist and are valid JSON Schema.
+  - test_loghouse_schemas.py covers a valid and an invalid sample for each new schema.
+  - LOGHOUSE_ARCHITECTURE.md and LOGHOUSE_DATA_FLOW.md describe components, inputs, outputs, and the evidence-first principle.
+validation:
+  - type: schema_validation
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/MP-CAT-A007-4C01_schema_validation.md
+    required: true
+  - type: tests
+    command: pytest -q tests/test_loghouse_schemas.py
+    evidence_path: evidence/test-results/MP-CAT-A007-4C01_tests.txt
+    required: true
+required_output:
+  - updated_files
+  - validation_output
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Auditor
+  reviewer: Human Owner
+  notes: Foundational contracts — extends existing LOGHOUSE Phase-1, human M4 review required.

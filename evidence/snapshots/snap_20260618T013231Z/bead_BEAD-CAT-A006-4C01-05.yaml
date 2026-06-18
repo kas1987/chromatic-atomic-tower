@@ -1,0 +1,136 @@
+bead_id: BEAD-CAT-A006-4C01-05
+mission_id: MP-CAT-A006-4C01
+title: Add governance playbooks and checklists
+status: reviewed
+agent_role: Scribe
+autonomy_level: L2
+objective: Create operational playbooks for GO mode, audit harness validation, CI/CD
+  validation, closeout, and promotion, plus the PDR and promotion checklist that operationalize
+  the audit methodology for human operators.
+allowed_paths:
+- playbooks/**
+- checklists/**
+- docs/operations/PDR_MP_CAT_A006_4C01_HARNESS_ENGINEERING_ALIGNMENT.md
+forbidden_paths:
+- .env
+- .env.*
+- .venv/**
+- secrets/**
+- credentials/**
+- infra/prod/**
+- external_repos/**
+dependencies:
+- BEAD-CAT-A006-4C01-03
+assertions:
+- completeness
+- control_validation
+- presentation_and_disclosure
+tool_budget:
+  search: 2
+  read: 10
+  write: 8
+  execute: 2
+  max_runtime_minutes: 35
+confidence:
+  minimum: 70
+  current: 80
+  objective_clarity: 85
+  scope_clarity: 84
+  evidence_quality: 76
+  reversibility: 95
+  tool_fit: 84
+  risk_awareness: 80
+  testability: 75
+risk_level: low
+reversibility: high
+stop_conditions:
+- Required input mission pack missing.
+- Requested path outside allowed_paths.
+- Validation failure that cannot be fixed within this BEAD scope.
+- Need for secret, credential, destructive action, or production access.
+definition_of_done:
+- GO mode, audit harness, and CI/CD validation playbooks exist.
+- Closeout and promotion checklists exist.
+- PDR for MP-CAT-A006-4C01 exists under docs/operations.
+- Evidence output location is identified.
+validation:
+- type: harness_alignment
+  command: python scripts/cat_validate_harness_alignment.py --root .
+  evidence_path: evidence/reports/BEAD-CAT-A006-4C01-05_playbooks.md
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Scribe
+  reviewer: Human Owner
+  notes: "Operator-facing governance docs \u2014 Kimi-eligible drafting, Opus review;\
+    \ human M4 review required."
+last_updated: '2026-06-18T01:32:31+00:00'
+transition_history:
+- timestamp: '2026-06-18T01:32:30+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-05
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: A006 backlog completion
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-05.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013230Z
+- timestamp: '2026-06-18T01:32:30+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-05
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: BEAD complete
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-05.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013230Z
+- timestamp: '2026-06-18T01:32:30+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-05
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Harness validation passed
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-05.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013230Z
+- timestamp: '2026-06-18T01:32:31+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-05
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: DoD satisfied
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-05.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013231Z

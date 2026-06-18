@@ -1,0 +1,167 @@
+mission_id: MP-CAT-004
+status: archived
+agent_role: Builder
+autonomy_level: L3
+forbidden_paths:
+- C:/Users/kas41/chromatic-harness-v2/**
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies:
+- BEAD-CAT-004-003
+tool_budget:
+  search: 1
+  read: 8
+  write: 10
+  execute: 6
+  max_runtime_minutes: 40
+confidence:
+  minimum: 82
+  current: 85
+  objective_clarity: 86
+  scope_clarity: 86
+  evidence_quality: 84
+  reversibility: 90
+  tool_fit: 86
+  risk_awareness: 88
+  testability: 88
+risk_level: medium
+reversibility: high
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Combine existing checks into one report; no new behavior beyond BEADs 002-003.
+bead_id: BEAD-CAT-004-004
+title: Add unified Tower guard report and docs
+objective: Combine state freshness and hygiene checks into cat_tower_guard.py, emit
+  durable evidence, and document the Tower guard operating procedure.
+allowed_paths:
+- scripts/cat_tower_guard.py
+- schemas/tower_guard_report.schema.json
+- docs/operations/V2_ALIGNMENT_GUARDS.md
+- tests/test_tower_guard.py
+- evidence/tower/**
+- evidence/reports/**
+stop_conditions:
+- Unified guard attempts automatic repair.
+- Report schema conflicts with existing CAT validation schemas.
+- Tests fail for reasons inside Sprint 004 scope.
+definition_of_done:
+- Unified Tower guard script exists.
+- Markdown and JSON reports are generated under evidence/tower/.
+- Report schema validates generated JSON.
+- Operator docs explain when to run the guard.
+validation:
+- type: tower_guard
+  command: python scripts/cat_tower_guard.py --write-report
+  evidence_path: evidence/tower/tower_guard_report.md
+  required: true
+- type: tests
+  command: pytest -q tests/test_tower_guard.py
+  evidence_path: evidence/test-results/sprint_004_tower_guard_tests.txt
+  required: true
+last_updated: '2026-06-17T21:51:38+00:00'
+transition_history:
+- timestamp: '2026-06-17T21:50:12+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-004
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Activate next BEAD after hygiene checks
+  evidence: evidence/tower/branch_hygiene_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-004.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260617T215012Z
+- timestamp: '2026-06-17T21:51:33+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-004
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Unified tower guard implementation started
+  evidence: evidence/tower/tower_guard_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-004.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260617T215133Z
+- timestamp: '2026-06-17T21:51:34+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-004
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Tower guard command and schema validation complete
+  evidence: evidence/tower/tower_guard_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-004.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215134Z
+- timestamp: '2026-06-17T21:51:36+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-004
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Tower guard tests passed
+  evidence: evidence/test-results/sprint_004_tower_guard_tests.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-004.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215136Z
+- timestamp: '2026-06-17T21:51:37+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-004
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: Review complete
+  evidence: evidence/test-results/sprint_004_tower_guard_tests.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-004.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215137Z
+- timestamp: '2026-06-17T21:51:38+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-004
+  from_status: completed
+  to_status: archived
+  allowed: true
+  dry_run: false
+  reason: Archived after completion
+  evidence: evidence/tower/tower_guard_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-004.yaml
+  guard: closeout_complete
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215138Z

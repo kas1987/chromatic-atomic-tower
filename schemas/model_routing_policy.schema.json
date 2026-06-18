@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Model Routing Policy",
+  "type": "object",
+  "required": [
+    "policy_id",
+    "version",
+    "default_routes",
+    "fallback_rules",
+    "non_negotiables"
+  ],
+  "properties": {
+    "policy_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "principle": {
+      "type": "string"
+    },
+    "default_routes": {
+      "type": "array"
+    },
+    "fallback_rules": {
+      "type": "array"
+    },
+    "model_classes": {
+      "type": "object"
+    },
+    "non_negotiables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

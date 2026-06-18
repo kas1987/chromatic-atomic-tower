@@ -1,0 +1,69 @@
+bead_id: BEAD-CAT-A007-4C01-03
+mission_id: MP-CAT-A007-4C01
+title: Build event normalizer and correlation core
+status: queued
+agent_role: Builder
+autonomy_level: L2
+objective: >-
+  Implement the LOGHOUSE normalizer and correlation core. The normalizer maps heterogeneous
+  raw signals (logs, metrics, traces, deploy events) into validated telemetry_envelope and
+  deploy_event records. The correlator groups records by service, environment, commit_sha,
+  deploy_id, and trace_id into correlation windows the findings engine can reason over.
+allowed_paths:
+  - scripts/loghouse/__init__.py
+  - scripts/loghouse/normalize.py
+  - scripts/loghouse/correlate.py
+  - tests/test_loghouse_engine.py
+  - tests/fixtures/loghouse/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies:
+  - BEAD-CAT-A007-4C01-01
+tool_budget:
+  search: 3
+  read: 14
+  write: 12
+  execute: 6
+  max_runtime_minutes: 60
+confidence:
+  minimum: 70
+  current: 80
+  objective_clarity: 86
+  scope_clarity: 84
+  evidence_quality: 76
+  reversibility: 92
+  tool_fit: 85
+  risk_awareness: 80
+  testability: 86
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - telemetry_envelope or deploy_event schema unavailable.
+  - Requested path outside allowed_paths.
+  - Normalizer cannot deterministically map a required attribute without inventing data.
+  - Need for secret, credential, destructive action, or production access.
+definition_of_done:
+  - normalize.py emits telemetry_envelope-valid and deploy_event-valid records and rejects records missing required attributes.
+  - correlate.py produces correlation windows keyed by service, env, commit_sha, deploy_id, and trace_id.
+  - tests/fixtures/loghouse/ contains raw sample signals and the expected normalized output.
+  - tests/test_loghouse_engine.py exercises normalization and correlation against the fixtures and passes.
+validation:
+  - type: tests
+    command: pytest -q tests/test_loghouse_engine.py
+    evidence_path: evidence/test-results/MP-CAT-A007-4C01_tests.txt
+    required: true
+required_output:
+  - updated_files
+  - validation_output
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+  notes: Deterministic normalization/correlation only — no ML; every output must validate against the schemas.

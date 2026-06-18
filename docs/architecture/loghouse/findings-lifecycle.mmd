@@ -1,0 +1,32 @@
+stateDiagram-v2
+    [*] --> open : Finding emitted by engine<br/>(evidence required)
+
+    open --> triaged : Operator reviews<br/>dispatch_queue_item
+
+    triaged --> in_progress : CAT agent role<br/>accepts dispatch item
+
+    in_progress --> mitigated : Remediation applied<br/>but root cause unconfirmed
+
+    in_progress --> resolved : Root cause confirmed<br/>and fix verified
+
+    mitigated --> resolved : Monitoring confirms<br/>issue closed
+
+    open --> dismissed : Finding determined<br/>to be a false positive
+
+    triaged --> dismissed : Evidence insufficient<br/>after triage
+
+    resolved --> [*]
+    dismissed --> [*]
+
+    note right of open
+        finding_id assigned
+        evidence linked
+        dispatch item queued
+        status = "open"
+    end note
+
+    note right of in_progress
+        agent_role assigned
+        acceptance_criteria active
+        stop_condition monitored
+    end note

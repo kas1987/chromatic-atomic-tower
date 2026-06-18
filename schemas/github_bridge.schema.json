@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT GitHub Bridge Report",
+  "type": "object",
+  "required": [
+    "status",
+    "mission_id",
+    "bead_id",
+    "checks"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "passed",
+        "failed"
+      ]
+    },
+    "mission_id": {
+      "type": "string"
+    },
+    "bead_id": {
+      "type": "string"
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "changed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

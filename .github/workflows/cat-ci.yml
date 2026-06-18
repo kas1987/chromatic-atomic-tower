@@ -1,0 +1,55 @@
+name: CAT CI Governance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  cat-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Repo structure check
+        run: python scripts/cat_check_repo.py
+
+      - name: Root hygiene validation (builder mode)
+        run: python scripts/cat_root_hygiene_strict.py --mode warn
+
+      - name: Tower status
+        run: python scripts/cat_status.py
+
+      - name: PR scope check
+        if: github.event_name == 'pull_request'
+        run: |
+          git diff --name-only origin/${{ github.base_ref }}...HEAD > /tmp/changed_files.txt
+          python scripts/cat_pr_check.py --changed-files /tmp/changed_files.txt
+
+      - name: Tests
+        run: pytest -q
+
+      - name: CAT CI report
+        if: always()
+        run: python scripts/cat_ci.py --mode github --write-report
+
+      - name: Upload CAT CI evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cat-ci-evidence
+          path: |
+            evidence/ci/reports/
+            evidence/ci/summaries/
+            evidence/test-results/

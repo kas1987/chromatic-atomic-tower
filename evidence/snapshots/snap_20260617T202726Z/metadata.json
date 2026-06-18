@@ -1,0 +1,22 @@
+{
+  "snapshot_id": "snap_20260617T202726Z",
+  "timestamp": "2026-06-17T20:27:26.597804+00:00",
+  "entity_type": "bead",
+  "entity_id": "BEAD-CAT-001-005",
+  "from_state": "in_progress",
+  "to_state": "validating",
+  "files": [
+    {
+      "original": "missions\\registry\\MISSION_REGISTRY.yaml",
+      "snapshot": "MISSION_REGISTRY.yaml"
+    },
+    {
+      "original": "beads\\active\\BEAD-CAT-001-005.yaml",
+      "snapshot": "BEAD-CAT-001-005.yaml"
+    },
+    {
+      "original": "state\\TOWER_STATE.yaml",
+      "snapshot": "TOWER_STATE.yaml"
+    }
+  ]
+}

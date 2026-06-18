@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/agent_scorecard.schema.json",
+  "title": "CAT Agent Scorecard",
+  "type": "object",
+  "required": ["version", "last_updated", "score_policy", "agents"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "last_updated": {
+      "type": "string"
+    },
+    "score_policy": {
+      "type": "object",
+      "required": ["starting_score", "promote_threshold", "demote_threshold", "severe_incident_cap"],
+      "additionalProperties": false,
+      "properties": {
+        "starting_score": {"type": "number", "minimum": 0, "maximum": 100},
+        "promote_threshold": {"type": "number", "minimum": 0, "maximum": 100},
+        "demote_threshold": {"type": "number", "minimum": 0, "maximum": 100},
+        "severe_incident_cap": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "score", "completed_beads", "failed_beads", "incidents", "current_trust"],
+        "additionalProperties": false,
+        "properties": {
+          "role": {"type": "string", "minLength": 1},
+          "score": {"type": "number", "minimum": 0, "maximum": 100},
+          "completed_beads": {"type": "integer", "minimum": 0},
+          "failed_beads": {"type": "integer", "minimum": 0},
+          "incidents": {"type": "integer", "minimum": 0},
+          "current_trust": {
+            "type": "string",
+            "enum": ["provisional", "trusted", "restricted"]
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["timestamp", "event", "delta", "bead_id"],
+              "additionalProperties": false,
+              "properties": {
+                "timestamp": {"type": "string"},
+                "event": {
+                  "type": "string",
+                  "enum": ["bead_completed", "bead_failed", "incident", "promotion", "demotion"]
+                },
+                "delta": {"type": "number"},
+                "bead_id": {"type": "string"},
+                "note": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

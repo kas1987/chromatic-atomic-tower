@@ -1,0 +1,29 @@
+[
+  {
+    "edge_id": "77777777-7777-7777-7777-777777777777",
+    "source": "frontend",
+    "target": "payments-api",
+    "edge_type": "runtime",
+    "observed_at": "2026-06-17T12:00:00Z",
+    "confidence": 0.95,
+    "allowed": true
+  },
+  {
+    "edge_id": "33333333-3333-3333-3333-333333333333",
+    "source": "payments-api",
+    "target": "database",
+    "edge_type": "runtime",
+    "observed_at": "2026-06-17T12:00:00Z",
+    "confidence": 0.92,
+    "allowed": true
+  },
+  {
+    "edge_id": "44444444-4444-4444-4444-444444444444",
+    "source": "analytics",
+    "target": "database",
+    "edge_type": "runtime",
+    "observed_at": "2026-06-17T12:00:00Z",
+    "confidence": 0.85,
+    "allowed": true
+  }
+]

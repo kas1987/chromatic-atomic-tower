@@ -1,0 +1,148 @@
+mission_id: MP-CAT-A008-4C01
+title: Mission/BEAD State Alignment and Collision Governance
+level: M4
+status: learned
+owner: Human Owner
+priority: 1
+risk_level: medium
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 70
+created: "2026-06-18"
+last_updated: "2026-06-18"
+id_convention:
+  scheme: "MP-<repo>-<tier><NNN>-<cx>C<oo>"
+  type: MP
+  repo: CAT
+  priority_tier: A
+  global_mission_number: "008"
+  complexity: 4
+  relative_execution_order: "01"
+objective: >-
+  Make mission and BEAD status a single auditable truth enforced at creation,
+  transition, GO dispatch, and CI — with blocking failure on misalignment.
+background: >-
+  Documented drift between TOWER_STATE, MISSION_REGISTRY, and contract files caused
+  GO dispatch failures, mission ID collisions (MP-CAT-002 vs MP-CAT-005), and stale
+  sprint markdown. Sprint 004 guards were report-only and not wired into CI.
+scope:
+  in:
+    - Alignment invariants doc and extended freshness checks
+    - cat_align_check.py CI/GO entry point
+    - Mission ID collision prevention at creation and validation
+    - GO dispatch gate and sprint closeout operator script
+    - Blocking CI integration
+    - Auto-generated SPRINT_STATE.md and AGENT_HANDOFF_QUEUE.md
+    - Operator playbooks and live-repo remediation
+  out:
+    - Automatic repair of drift (report-only guards remain for tower guard)
+    - Renaming shipped MP-CAT-000..005 missions
+    - Production deployment changes
+allowed_paths:
+  - missions/active/MP-CAT-A008-4C01_STATE_ALIGNMENT_GOVERNANCE.yaml
+  - missions/registry/MISSION_REGISTRY.yaml
+  - beads/active/BEAD-CAT-A008-4C01-*.yaml
+  - scripts/cat_align_common.py
+  - scripts/cat_align_check.py
+  - scripts/cat_state_freshness.py
+  - scripts/cat_mission_id_check.py
+  - scripts/cat_sprint_closeout.py
+  - scripts/cat_render_sprint_state.py
+  - scripts/cat_resolve_go.py
+  - scripts/cat_transition.py
+  - scripts/cat_new_mission.py
+  - scripts/cat_validate.py
+  - scripts/cat_tower_guard.py
+  - scripts/cat_ci.py
+  - scripts/common.py
+  - gates/state/transition_rules.yaml
+  - gates/state/STATE_TRANSITION_RULES.yaml
+  - docs/architecture/STATE_ALIGNMENT.md
+  - docs/operations/V2_ALIGNMENT_GUARDS.md
+  - playbooks/STATE_ALIGNMENT_PLAYBOOK.md
+  - playbooks/SPRINT_CLOSEOUT_PLAYBOOK.md
+  - playbooks/GO_MODE_PLAYBOOK.md
+  - playbooks/STATE_TRANSITION_PLAYBOOK.md
+  - state/SPRINT_STATE.md
+  - state/AGENT_HANDOFF_QUEUE.md
+  - state/TOWER_STATE.yaml
+  - .github/workflows/cat-ci.yml
+  - .github/workflows/validate-cat.yml
+  - Makefile
+  - tests/test_state_freshness.py
+  - tests/test_align_check.py
+  - tests/test_mission_id_check.py
+  - evidence/reports/MP-CAT-A008-4C01_*
+  - evidence/tower/**
+  - learnings/MP-CAT-A008-4C01_ALIGNMENT.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+dependencies:
+  - MP-CAT-001
+  - MP-CAT-004
+acceptance_criteria:
+  - cat_align_check.py --strict passes on main after remediation
+  - Duplicate mission ID rejected at creation and by cat_validate --all
+  - GO exits non-zero when tower/registry/contract disagree
+  - CI fails PRs with alignment drift
+  - SPRINT_STATE.md auto-generated and matches tower
+  - MP-CAT-005 closed; no backlog MP-CAT-002 collision file remains
+success_metrics:
+  - python scripts/cat_validate.py --all passes
+  - python scripts/cat_align_check.py --strict passes
+  - pytest -q passes including alignment tests
+required_validation:
+  - type: schema_validation
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/MP-CAT-A008-4C01_schema_validation.md
+    required: true
+  - type: alignment
+    command: python scripts/cat_align_check.py --strict
+    evidence_path: evidence/reports/MP-CAT-A008-4C01_alignment_check.md
+    required: true
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/MP-CAT-A008-4C01_tests.txt
+    required: true
+rollback:
+  required: true
+  plan: Revert alignment scripts, CI steps, and mission pack; restore prior freshness checks.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 4
+  read: 30
+  write: 25
+  execute: 15
+  max_runtime_minutes: 120
+beads:
+  - bead_id: BEAD-CAT-A008-4C01-01
+    title: Mission pack and alignment contract spec
+  - bead_id: BEAD-CAT-A008-4C01-02
+    title: Extend state freshness and unified align check
+  - bead_id: BEAD-CAT-A008-4C01-03
+    title: Mission ID collision prevention
+  - bead_id: BEAD-CAT-A008-4C01-04
+    title: GO dispatch gate and transition hardening
+  - bead_id: BEAD-CAT-A008-4C01-05
+    title: Blocking CI integration
+  - bead_id: BEAD-CAT-A008-4C01-06
+    title: Sprint state plane automation
+  - bead_id: BEAD-CAT-A008-4C01-07
+    title: Operator playbooks and collision runbook
+  - bead_id: BEAD-CAT-A008-4C01-08
+    title: Validation evidence and live-repo remediation
+evidence_requirements:
+  - alignment_invariants_doc
+  - align_check_script
+  - collision_prevention
+  - go_and_closeout_gates
+  - ci_blocking
+  - sprint_state_automation
+  - operator_playbooks
+  - validation_report

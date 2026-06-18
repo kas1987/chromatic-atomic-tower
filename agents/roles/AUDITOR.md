@@ -40,3 +40,17 @@ Next:
 - Confidence is below the BEAD minimum.
 - A human gate is required.
 - A secret or credential appears.
+
+## Harness Engineering audit duties (MP-CAT-A006-4C01)
+
+- **Skill:** `governance_review` (see `agents/skills/SKILL_REGISTRY.yaml`).
+- **Gate responsibility:** owns the full assertion-gate set.
+  | Gate | Responsibility |
+  |---|---|
+  | Completeness | Confirm required context exists before execution. |
+  | Control validation | Confirm CAT rules (allowed paths, registry linkage, approvals) were followed. |
+  | Substantive validation | Confirm output is directly tested or reviewed. |
+  | Evidence sufficiency | Confirm evidence strength matches mission risk. |
+  | Promotion | Confirm residual risk is acceptable before merge/release. |
+- **Audit evidence:** gate_result, exception_log.
+

@@ -1,0 +1,76 @@
+bead_id: BEAD-CAT-A009-4C01-01
+mission_id: MP-CAT-A009-4C01
+title: Audit live repo vs package lineage
+status: active
+agent_role: Auditor
+autonomy_level: L3
+objective: >-
+  Audit repository roadmap, mission registry, state files, and package lineage
+  to identify drift against the Sprint 004 donor package and live mission history.
+allowed_paths:
+  - missions/**
+  - beads/**
+  - state/**
+  - docs/**
+  - scripts/**
+  - tests/**
+  - playbooks/**
+  - checklists/**
+  - evidence/reconciliation/**
+  - evidence/reports/**
+  - CAT_ROADMAP.md
+  - CHANGELOG.md
+  - README.md
+  - START_HERE.md
+  - QUICKSTART.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - .git/**
+dependencies: []
+tool_budget:
+  search: 3
+  read: 15
+  write: 8
+  execute: 6
+  max_runtime_minutes: 45
+confidence:
+  minimum: 82
+  current: 88
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 86
+  reversibility: 92
+  tool_fit: 88
+  risk_awareness: 88
+  testability: 84
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - Missing registry file.
+  - Missing target file.
+  - Contradictory sprint status.
+  - Need to mutate secrets or production config.
+  - Validation failure outside BEAD scope.
+definition_of_done:
+  - Audit report produced under evidence/reconciliation/.
+  - Drift classes documented.
+  - No forbidden paths changed.
+validation:
+  - type: registry_audit
+    command: python scripts/cat_registry_audit.py --registry missions/registry/MISSION_REGISTRY.yaml
+    evidence_path: evidence/reconciliation/audit_report_01.md
+    required: true
+required_output:
+  - audit_report
+  - drift_summary
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A009-4C01-02
+last_updated: "2026-06-18"

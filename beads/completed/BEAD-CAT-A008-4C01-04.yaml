@@ -1,0 +1,61 @@
+bead_id: BEAD-CAT-A008-4C01-04
+mission_id: MP-CAT-A008-4C01
+title: GO dispatch gate and transition hardening
+status: completed
+agent_role: Builder
+autonomy_level: L2
+objective: 'Deliver BEAD 04: GO dispatch gate and transition hardening.'
+allowed_paths:
+- scripts/cat_resolve_go.py
+- scripts/cat_transition.py
+- scripts/cat_sprint_closeout.py
+- gates/state/transition_rules.yaml
+- gates/state/STATE_TRANSITION_RULES.yaml
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+dependencies:
+- BEAD-CAT-A008-4C01-03
+tool_budget:
+  search: 2
+  read: 15
+  write: 12
+  execute: 6
+  max_runtime_minutes: 60
+confidence:
+  minimum: 70
+  current: 85
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 88
+  risk_awareness: 82
+  testability: 85
+risk_level: low
+reversibility: high
+stop_conditions:
+- Required path outside allowed_paths.
+- Confidence below minimum.
+definition_of_done:
+- GO dispatch gate and transition hardening complete.
+- Validation passes.
+- Evidence recorded.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/reports/MP-CAT-A008-4C01_bead_04.md
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+last_updated: '2026-06-18'

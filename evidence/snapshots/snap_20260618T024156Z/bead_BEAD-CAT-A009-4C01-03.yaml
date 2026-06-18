@@ -1,0 +1,75 @@
+bead_id: BEAD-CAT-A009-4C01-03
+mission_id: MP-CAT-A009-4C01
+title: Update roadmap, sprint state, changelog, and START_HERE
+status: queued
+agent_role: Scribe
+autonomy_level: L3
+objective: >-
+  Make operator-facing docs reflect canonical Sprint 000 through 009 lineage
+  and next-candidate backlog missions.
+allowed_paths:
+  - missions/**
+  - beads/**
+  - state/**
+  - docs/**
+  - scripts/**
+  - playbooks/**
+  - checklists/**
+  - evidence/reconciliation/**
+  - evidence/reports/**
+  - CAT_ROADMAP.md
+  - CHANGELOG.md
+  - README.md
+  - START_HERE.md
+  - QUICKSTART.md
+  - SPRINT_009_PLAN.md
+  - learnings/DECISION_LOG.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - .git/**
+dependencies:
+  - BEAD-CAT-A009-4C01-02
+tool_budget:
+  search: 1
+  read: 12
+  write: 14
+  execute: 4
+  max_runtime_minutes: 45
+confidence:
+  minimum: 82
+  current: 88
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 86
+  reversibility: 92
+  tool_fit: 88
+  risk_awareness: 88
+  testability: 84
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Roadmap contradicts target sprint order.
+  - Need to mutate secrets or production config.
+definition_of_done:
+  - CAT_ROADMAP.md reflects completed Sprints 000 through 008 and current Sprint 009.
+  - TOWER_STATE and SPRINT_STATE match registry.
+  - CHANGELOG and START_HERE updated.
+validation:
+  - type: roadmap_sync
+    command: python scripts/cat_roadmap_sync.py --check
+    evidence_path: evidence/reports/MP-CAT-A009-4C01_roadmap_sync.md
+    required: true
+required_output:
+  - updated_roadmap
+  - updated_state
+  - updated_operator_docs
+handoff:
+  from: Scribe
+  to: Scribe
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A009-4C01-04
+last_updated: "2026-06-18"

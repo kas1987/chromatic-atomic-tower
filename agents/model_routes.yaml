@@ -1,0 +1,198 @@
+# Multi-Model Harness Route Configuration
+#
+# Maps harness operational roles to concrete model providers and endpoints.
+# Budget-aware ordering ensures cost optimization: local models for labor,
+# external models for judgment.
+#
+# Version: 0.1.0
+# Created: 2026-06-17 (BEAD-CAT-002-001)
+
+version: 0.1.0
+last_updated: "2026-06-17"
+
+roles:
+  # Architecture & design decisions — use expensive, capable model
+  architecture:
+    provider: openai
+    model: gpt-5.5
+    endpoint: https://api.openai.com/v1/chat/completions
+    use_for:
+      - system architecture
+      - design tradeoffs
+      - technical strategy
+      - scope definition
+    cost_class: high
+    max_tokens: 8000
+
+  # Specifications, guardrails, acceptance criteria — use strong reasoning
+  specs:
+    provider: anthropic
+    model: claude-opus-4.8
+    endpoint: https://api.anthropic.com/v1/messages
+    use_for:
+      - task decomposition
+      - acceptance criteria
+      - guardrails
+      - escalation review
+      - ticket validation
+    cost_class: high
+    max_tokens: 6000
+
+  # Implementation (labor) — use local cost-effective models
+  implementation:
+    primary:
+      provider: ollama
+      model: kimi-k2.7-code:cloud
+      endpoint: http://localhost:11434/api/generate
+      use_for:
+        - code generation
+        - patch creation
+        - small refactors
+        - tests
+        - documentation
+      cost_class: local
+      max_tokens: 4096
+
+    secondary:
+      provider: ollama
+      model: minimax-m3:cloud
+      endpoint: http://localhost:11434/api/generate
+      use_for:
+        - alternate implementation
+        - code critique
+        - patch review fallback
+      cost_class: local
+      max_tokens: 4096
+
+  # Cheap review — use local secondary model
+  cheap_review:
+    provider: ollama
+    model: minimax-m3:cloud
+    endpoint: http://localhost:11434/api/generate
+    use_for:
+      - patch critique
+      - lint feedback
+      - style review
+      - performance observation
+    cost_class: local
+    max_tokens: 3000
+
+  # Final review & risk assessment — use strong model
+  review:
+    provider: anthropic
+    model: claude-opus-4.8
+    endpoint: https://api.anthropic.com/v1/messages
+    use_for:
+      - final code review
+      - risk assessment
+      - merge recommendation
+      - compliance check
+      - security sign-off
+    cost_class: high
+    max_tokens: 5000
+
+# Routing policy for harness operations
+routing_policy:
+  ticket_loop: architecture -> specs -> implementation -> cheap_review -> review
+  worker_allocation:
+    default_worker: implementation.primary
+    fallback_worker: implementation.secondary
+  escalation_to: review
+  final_approval_by: review
+
+# Budget controls & guardrails
+budget_controls:
+  max_retries_per_ticket: 2
+  max_files_changed_without_final_review: 5
+  require_final_review_for:
+    - auth
+    - security
+    - secrets
+    - database_migrations
+    - dependency_changes
+    - breaking_changes
+    - more_than_5_files_changed
+    - test_failures
+  require_human_approval_for:
+    - merge_to_main
+    - production_deploy
+    - destructive_migrations
+
+# Model fallback order (if primary unavailable)
+fallback_chain:
+  architecture:
+    - openai.gpt-5.5
+    - anthropic.claude-opus-4.8
+  specs:
+    - anthropic.claude-opus-4.8
+    - openai.gpt-5.5
+  implementation:
+    - ollama.kimi-k2.7-code:cloud
+    - ollama.minimax-m3:cloud
+  cheap_review:
+    - ollama.minimax-m3:cloud
+    - ollama.kimi-k2.7-code:cloud
+  review:
+    - anthropic.claude-opus-4.8
+    - openai.gpt-5.5
+
+# ---------------------------------------------------------------------------
+# Complexity-aware routing (added by MP-CAT-A006-4C01, BEAD-CAT-A006-4C01-04)
+#
+# Maps mission rigor (M1-M4) x execution complexity (C1-C4) to a model class,
+# agent, review path, and retry budget. This block is ADDITIVE: the role-based
+# `models`, `routing_rules`, `budget_controls`, and `fallback_chain` keys above
+# remain the source of truth consumed by scripts/harness_run.py and are not
+# changed. Validated by scripts/cat_validate_harness_alignment.py and described
+# by schemas/model_routing_policy.schema.json.
+# ---------------------------------------------------------------------------
+complexity_routing:
+  policy_id: CAT-MODEL-ROUTING-001
+  version: 1
+  principle: Use the lowest sufficient model and escalate based on risk, ambiguity, and validation failure.
+  complexity_axes:
+    mission_rigor: [M1_BASIC, M2_INTERMEDIATE, M3_COMPLEX, M4_ATOMIC]
+    execution_complexity: [C1_REPETITIVE, C2_STRUCTURED, C3_REASONING, C4_NOVEL]
+  default_routes:
+    - match: {mission_rigor: M1_BASIC, execution_complexity: C1_REPETITIVE}
+      route: {model_class: local_fast, agent: builder, review: self_review, max_retries: 1}
+    - match: {mission_rigor: M2_INTERMEDIATE, execution_complexity: C2_STRUCTURED}
+      route: {model_class: local_coding, agent: builder, review: reviewer_recommended, max_retries: 2}
+    - match: {mission_rigor: M3_COMPLEX, execution_complexity: C3_REASONING}
+      route: {model_class: strong_coding_reasoning, agent: orchestrator_plus_builder, review: reviewer_and_auditor, max_retries: 2}
+    - match: {mission_rigor: M4_ATOMIC, execution_complexity: C4_NOVEL}
+      route: {model_class: frontier_reasoning, agent: orchestrator_plus_specialists, review: human_gate_reviewer_auditor_security_if_applicable, max_retries: 1}
+  off_diagonal_fallback:
+    description: >
+      For mission/complexity combinations not covered by default_routes, escalate
+      to the model class matching the higher of the two axes.
+    rule: use max(mission_rigor_rank, execution_complexity_rank) to select route
+    example: M3/C2 → apply M3/C3 route (strong_coding_reasoning)
+  fallback_rules:
+    - {trigger: repeated_validation_failure, action: escalate_model_class}
+    - {trigger: scope_ambiguity, action: require_human_clarification}
+    - {trigger: secret_or_credential_detected, action: stop_and_security_review}
+    - {trigger: cost_budget_exceeded, action: stop_and_replan}
+    - {trigger: confidence_below_70, action: create_remediation_bead}
+  model_classes:
+    local_fast:
+      provider: ollama
+      examples: [minimax-m3:cloud, llama3.2:3b]
+      use_for: [docs_update, small_refactor, simple_schema_check]
+    local_coding:
+      provider: ollama
+      examples: [kimi-k2.7-code:cloud]
+      use_for: [structured_code_change, tests, validators]
+    strong_coding_reasoning:
+      provider: anthropic
+      examples: [claude-sonnet-4.6]
+      use_for: [architecture_change, multi_file_change, complex_debugging]
+    frontier_reasoning:
+      provider: anthropic
+      examples: [claude-opus-4.8]
+      use_for: [M4_governance, novel_architecture, high_risk_decision]
+  non_negotiables:
+    - No model bypasses gates.
+    - No model writes outside allowed paths.
+    - No model closes without evidence.
+    - No model handles secrets without security gate.

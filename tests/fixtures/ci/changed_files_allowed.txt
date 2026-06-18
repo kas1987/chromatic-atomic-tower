@@ -1,0 +1,3 @@
+gates/ci/CI_GOVERNANCE_RULES.yaml
+.github/workflows/cat-ci.yml
+docs/operations/CI_GOVERNANCE.md

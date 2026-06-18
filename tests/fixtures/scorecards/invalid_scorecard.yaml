@@ -1,0 +1,15 @@
+version: 1.0.0
+last_updated: '2026-06-18'
+score_policy:
+  starting_score: 70
+  promote_threshold: 85
+  demote_threshold: 55
+  severe_incident_cap: 40
+agents:
+  - role: Builder
+    score: 150
+    completed_beads: 2
+    failed_beads: 0
+    incidents: 0
+    current_trust: superadmin
+    history: []

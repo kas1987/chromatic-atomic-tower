@@ -1,0 +1,164 @@
+mission_id: MP-CAT-003
+title: Implement CAT CI Governance and Self-Healing Validation Engine
+level: M3
+status: dispatched
+owner: Human Owner
+priority: 1
+risk_level: medium
+reversibility: high
+autonomy_level: L3
+confidence_minimum: 80
+created: '2026-06-17'
+last_updated: '2026-06-17'
+objective: Implement enforceable CI governance, PR scope validation, failure classification,
+  and bounded self-healing so CAT can block invalid promotion and safely repair structural
+  drift.
+background: Sprint 000 established the CAT repo foundation, Sprint 001 added deterministic
+  state transitions, and Sprint 002 added evidence-gated closeout. Sprint 003 adds
+  CI as the external governance spine that proves and enforces those rules.
+scope:
+  in:
+  - CI governance rules
+  - GitHub Actions workflow
+  - local CI runner
+  - PR changed-file scope validation
+  - CI failure classification
+  - bounded self-healing dry-run and apply behavior
+  - CI report artifacts
+  - tests, fixtures, docs, prompt pack, and checklist
+  out:
+  - production deployment
+  - secret handling
+  - remote GitHub mutation
+  - multi-repo orchestration
+  - external artifact storage
+  - automatic logic repair
+  - automatic state transition application
+allowed_paths:
+- .github/workflows/cat-ci.yml
+- gates/ci/**
+- schemas/ci_failure.schema.json
+- schemas/ci_report.schema.json
+- scripts/cat_ci.py
+- scripts/cat_pr_check.py
+- scripts/cat_self_heal.py
+- scripts/cat_classify_failure.py
+- tests/test_ci_governance.py
+- tests/test_pr_check.py
+- tests/test_self_heal.py
+- tests/test_failure_classifier.py
+- tests/fixtures/ci/**
+- docs/operations/CI_GOVERNANCE.md
+- docs/operations/SELF_HEALING_VALIDATION.md
+- docs/operations/SPRINT_003_OPERATOR_GUIDE.md
+- playbooks/CI_GOVERNANCE_PLAYBOOK.md
+- checklists/CI_GOVERNANCE_CHECKLIST.md
+- missions/active/MP-CAT-003_CI_GOVERNANCE_SELF_HEALING.yaml
+- beads/active/BEAD-CAT-003-*.yaml
+- evidence/ci/**
+- state/**
+- learnings/**
+- prompts/PRO_GPT_SPRINT_003_PROMPT.md
+- PDR_CAT_003_CI_GOVERNANCE_SELF_HEALING.md
+- SPRINT_003_PLAN.md
+forbidden_paths:
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies:
+- MP-CAT-002
+acceptance_criteria:
+- CI governance rules are explicit and machine-readable.
+- GitHub Actions workflow runs CAT validation, CI report generation, and tests.
+- Local CI runner creates JSON and Markdown reports.
+- PR checker validates Mission ID, BEAD ID, allowed paths, and forbidden paths.
+- Failure classifier emits schema-valid routing output.
+- Self-healing supports dry-run and apply modes with safe repair classes only.
+- Self-healing never fabricates tests, evidence, secrets, deployment, architecture,
+  or state transitions.
+- Tests cover success and failure paths.
+- Operator guide, playbook, checklist, and prompt are complete.
+success_metrics:
+- 100% of included tests pass.
+- 100% of YAML contracts validate.
+- CI local runner exits 0 when checks pass.
+- PR checker passes allowed fixture and fails forbidden fixture.
+- Failure classifier returns valid JSON for known failure classes.
+- Self-heal dry-run lists only safe structural actions.
+required_validation:
+- type: schema
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/schema_validation_sprint_003.md
+  required: true
+- type: ci_local
+  command: python scripts/cat_ci.py --mode local --write-report
+  evidence_path: evidence/ci/reports/cat_ci_report.md
+  required: true
+- type: pr_scope_allowed
+  command: python scripts/cat_pr_check.py --mission MP-CAT-003 --bead BEAD-CAT-003-001
+    --changed-files tests/fixtures/ci/changed_files_allowed.txt
+  evidence_path: evidence/ci/reports/pr_scope_allowed_sprint_003.md
+  required: true
+- type: self_heal_dry_run
+  command: python scripts/cat_self_heal.py --dry-run
+  evidence_path: evidence/ci/self-heal/self_heal_dry_run_sprint_003.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_003_ci_tests.txt
+  required: true
+rollback:
+  required: true
+  plan: Revert Sprint 003 CI workflow, CI governance rules, CI scripts, schemas, tests,
+    fixtures, docs, prompt, mission, and BEADs. Preserve real CI evidence artifacts
+    if generated during review.
+human_gate:
+  required: false
+  approver: Human Owner
+tool_budget:
+  search: 2
+  read: 12
+  write: 18
+  execute: 10
+  max_runtime_minutes: 90
+beads:
+- bead_id: BEAD-CAT-003-001
+  title: Define CI governance rules and workflow
+- bead_id: BEAD-CAT-003-002
+  title: Implement PR scope validation and failure classification
+- bead_id: BEAD-CAT-003-003
+  title: Implement bounded self-healing validator
+- bead_id: BEAD-CAT-003-004
+  title: Add CI reports, tests, docs, and prompt pack
+evidence_requirements:
+- ci_governance_rules
+- ci_workflow
+- ci_local_report
+- pr_scope_allowed_output
+- pr_scope_forbidden_output
+- failure_classifier_output
+- self_heal_dry_run_output
+- test_results
+- schema_validation
+- learning_note
+notes:
+- Sprint 003 makes CAT enforceable through CI.
+- CD is intentionally excluded until the governance spine is stable.
+transition_history:
+- timestamp: '2026-06-17T20:56:09+00:00'
+  target_type: mission
+  target_id: MP-CAT-003
+  from_status: approved
+  to_status: dispatched
+  allowed: true
+  dry_run: false
+  reason: All BEADs archived
+  evidence: evidence/ci/reports/cat_ci_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-003_CI_GOVERNANCE_SELF_HEALING.yaml
+  guard: active_bead_present
+  guard_ok: true
+  guard_message: mission has bead contracts

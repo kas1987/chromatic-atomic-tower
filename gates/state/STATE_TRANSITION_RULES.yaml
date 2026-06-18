@@ -1,51 +1,167 @@
-version: 0.0.0
-mission_transitions:
-  draft:
+version: 0.1.0
+last_updated: '2026-06-18'
+deprecated: true
+superseded_by: gates/state/transition_rules.yaml
+note: >-
+  DEPRECATED — use gates/state/transition_rules.yaml. Retained for historical tests only.
+source_of_truth: gates/state/transition_rules.yaml
+principles:
+- No lifecycle transition without a valid current state.
+- No completion transition without evidence.
+- Terminal states cannot be reopened without explicit human-gate override.
+- Registry and tower state must be updated with the target contract.
+- Dry-run should be used before applying high-risk transitions.
+mission:
+  statuses:
+  - draft
+  - triaged
+  - approved
+  - dispatched
+  - in_progress
+  - validating
+  - reviewed
+  - closed
+  - blocked
+  - escalated
+  - rolled_back
+  - abandoned
+  - incident
+  - learned
+  terminal_statuses:
+  - closed
+  - learned
+  - rolled_back
+  - abandoned
+  evidence_required_targets:
+  - validating
+  - reviewed
+  - closed
+  - learned
+  - rolled_back
+  - incident
+  allowed_transitions:
+    draft:
     - triaged
+    - blocked
     - abandoned
-  triaged:
+    triaged:
     - approved
     - blocked
-  approved:
+    - escalated
+    - abandoned
+    approved:
     - dispatched
-    - blocked
-  dispatched:
     - in_progress
     - blocked
-  in_progress:
+    - escalated
+    dispatched:
+    - in_progress
+    - blocked
+    - incident
+    in_progress:
     - validating
     - blocked
     - incident
-  validating:
-    - reviewed
-    - blocked
-  reviewed:
-    - closed
-    - changes_requested
-  closed:
-    - learned
-  blocked:
-    - triaged
-    - abandoned
-  incident:
     - rolled_back
-    - blocked
-    - abandoned
-bead_transitions:
-  queued:
-    - active
-    - blocked
-  active:
+    validating:
+    - reviewed
     - in_progress
     - blocked
-  in_progress:
+    - incident
+    reviewed:
+    - closed
+    - in_progress
+    - blocked
+    blocked:
+    - triaged
+    - approved
+    - in_progress
+    - escalated
+    - abandoned
+    escalated:
+    - approved
+    - blocked
+    - abandoned
+    - incident
+    incident:
+    - blocked
+    - rolled_back
+    closed:
+    - learned
+    learned: []
+    rolled_back: []
+    abandoned: []
+bead:
+  statuses:
+  - queued
+  - active
+  - in_progress
+  - validating
+  - reviewed
+  - completed
+  - blocked
+  - failed
+  - changes_requested
+  - archived
+  terminal_statuses:
+  - completed
+  - failed
+  - archived
+  evidence_required_targets:
+  - validating
+  - reviewed
+  - completed
+  - failed
+  allowed_transitions:
+    queued:
+    - active
+    - blocked
+    - archived
+    active:
+    - in_progress
+    - blocked
+    - archived
+    in_progress:
     - validating
+    - blocked
     - failed
-  validating:
+    - changes_requested
+    validating:
     - reviewed
+    - in_progress
     - failed
-  reviewed:
+    - changes_requested
+    reviewed:
     - completed
     - changes_requested
-  completed:
+    - in_progress
+    changes_requested:
+    - in_progress
+    - blocked
+    - failed
+    blocked:
+    - active
+    - in_progress
+    - failed
     - archived
+    completed:
+    - archived
+    failed:
+    - archived
+    archived: []
+confidence_gate:
+  minimum_for_apply: 75
+  allow_dry_run_below_minimum: true
+  below_minimum_behavior: deny_apply_and_emit_reason
+audit:
+  event_log: evidence/logs/transitions.jsonl
+  required_fields:
+  - timestamp
+  - target_type
+  - target_id
+  - from_status
+  - to_status
+  - allowed
+  - dry_run
+  - reason
+  - evidence
