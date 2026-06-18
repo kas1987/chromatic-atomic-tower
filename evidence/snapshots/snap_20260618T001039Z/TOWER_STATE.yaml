@@ -3,9 +3,9 @@ state_id: TOWER-STATE-005
 status: sprint_005_active
 active_sprint: SPRINT-005
 active_mission_id: MP-CAT-005
-active_bead_id: null
+active_bead_id: BEAD-CAT-005-002
 go_mode: enabled
-last_updated: '2026-06-18T00:10:57+00:00'
+last_updated: '2026-06-17T22:05:51+00:00'
 operator: Human Owner
 control_planes:
   mission: active
