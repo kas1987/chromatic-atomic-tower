@@ -1,0 +1,59 @@
+bead_id: BEAD-CAT-A012-4C01-01
+mission_id: MP-CAT-A012-4C01
+title: Portable adapter specification and design doc
+status: queued
+agent_role: Scout
+autonomy_level: L2
+objective: >-
+  Author docs/architecture/CAT_PORTABLE_ADAPTER.md — the canonical specification
+  for the .cat adapter folder: folder structure, required files, config and state
+  field definitions, sync protocol (read-only pull; no automatic mutations), and
+  validation rule export/import semantics.
+allowed_paths:
+  - docs/architecture/CAT_PORTABLE_ADAPTER.md
+  - docs/**
+  - evidence/reports/BEAD-CAT-A012-4C01-01_spec.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - .git/**
+dependencies: []
+tool_budget:
+  search: 2
+  read: 8
+  write: 3
+  execute: 1
+  max_runtime_minutes: 20
+confidence:
+  minimum: 80
+  current: 84
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 78
+  reversibility: 95
+  tool_fit: 88
+  risk_awareness: 82
+  testability: 75
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Spec requires external research not available locally.
+  - File conflict outside allowed_paths.
+definition_of_done:
+  - docs/architecture/CAT_PORTABLE_ADAPTER.md exists and covers .cat folder
+    structure, required fields, sync protocol, and validation rule format.
+  - evidence/reports/BEAD-CAT-A012-4C01-01_spec.md created.
+validation:
+  - type: file_exists
+    path: docs/architecture/CAT_PORTABLE_ADAPTER.md
+    evidence_path: evidence/reports/BEAD-CAT-A012-4C01-01_spec.md
+    required: true
+required_output:
+  - adapter_spec_doc
+handoff:
+  next_bead_id: BEAD-CAT-A012-4C01-02
+  notes: []
+last_updated: '2026-06-18T14:30:00+00:00'

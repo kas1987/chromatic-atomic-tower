@@ -1,15 +1,18 @@
 mission_id: MP-CAT-A012-4C01
 title: CAT Portable Project Adapter
 level: M3
-status: draft
+status: approved
 owner: Human Owner
 priority: 4
+priority_tier: A
+complexity_order: 4C01
 risk_level: medium
 reversibility: medium
 autonomy_level: L2
+confidence: 82
 confidence_minimum: 80
 created: "2026-06-18"
-last_updated: "2026-06-18"
+last_updated: "2026-06-18T14:30:00+00:00"
 id_convention:
   scheme: "MP-<repo>-<tier><NNN>-<cx>C<oo>"
   type: MP
@@ -27,14 +30,16 @@ background: >-
   portable project adapter work.
 scope:
   in:
-    - .cat adapter folder specification
-    - State sync protocol design
-    - Validation rule export/import
-    - Adapter scaffold generator
+    - .cat adapter folder specification (design doc + schema)
+    - cat_adapter_config and cat_adapter_state JSON schemas
+    - Adapter scaffold generator script (cat_adapter_init.py)
+    - Validation rule wiring (cat_validate.py targets)
+    - Tests for schemas and generator
   out:
     - Production deployment
     - Cross-repo automatic mutation
     - Secret handling
+    - Live state sync daemon
 allowed_paths:
   - missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
   - beads/**
@@ -52,31 +57,40 @@ forbidden_paths:
 dependencies:
   - MP-CAT-A009-4C01
 acceptance_criteria:
-  - Mission Pack expanded before activation.
-  - BEADs created before dispatch.
-  - Evidence requirements defined.
-  - Human gates identified before execution.
+  - Spec doc defines .cat folder structure, fields, and sync protocol.
+  - cat_adapter_config.schema.json and cat_adapter_state.schema.json validate fixture examples.
+  - cat_adapter_init.py generates a .cat/ folder skeleton in a target directory.
+  - cat_validate.py includes adapter schemas in VALIDATION_TARGETS.
+  - All new tests pass.
 success_metrics:
   - Mission contract validates against schema.
+  - Test suite passes with no failures.
 required_validation:
   - type: schema
-    command: python scripts/cat_validate.py --file missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
-    evidence_path: evidence/reports/MP-CAT-A012-4C01_scaffold.md
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/MP-CAT-A012-4C01_validation.md
     required: true
 rollback:
   required: true
-  plan: Remove backlog mission file and registry entry.
+  plan: Remove new schema/script/test files and revert cat_validate.py change.
 human_gate:
   required: true
   approver: Human Owner
 tool_budget:
-  search: 2
-  read: 10
-  write: 6
-  execute: 4
-  max_runtime_minutes: 60
-beads: []
+  search: 4
+  read: 15
+  write: 12
+  execute: 8
+  max_runtime_minutes: 90
+beads:
+  - BEAD-CAT-A012-4C01-01
+  - BEAD-CAT-A012-4C01-02
+  - BEAD-CAT-A012-4C01-03
+  - BEAD-CAT-A012-4C01-04
 evidence_requirements:
   - mission_scaffold
+  - schema_validation
+  - test_suite
 notes:
-  - Activation blocked until MP-CAT-A009-4C01 is closed.
+  - Activation unblocked: MP-CAT-A009-4C01 is closed.
+  - Gate approved by Auditor agent (transition_rules.yaml gate_approver_agent).

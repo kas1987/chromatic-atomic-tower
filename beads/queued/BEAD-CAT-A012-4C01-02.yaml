@@ -1,0 +1,67 @@
+bead_id: BEAD-CAT-A012-4C01-02
+mission_id: MP-CAT-A012-4C01
+title: Adapter JSON schemas (config + state)
+status: queued
+agent_role: Builder
+autonomy_level: L2
+objective: >-
+  Author schemas/cat_adapter_config.schema.json and
+  schemas/cat_adapter_state.schema.json (Draft 2020-12, additionalProperties:false).
+  Create fixture files tests/fixtures/adapter/valid_config.json and
+  tests/fixtures/adapter/valid_state.json.
+  Write tests/test_cat_adapter_schemas.py covering valid fixtures, missing required
+  fields, and no extra properties.
+allowed_paths:
+  - schemas/cat_adapter_config.schema.json
+  - schemas/cat_adapter_state.schema.json
+  - tests/fixtures/adapter/valid_config.json
+  - tests/fixtures/adapter/valid_state.json
+  - tests/test_cat_adapter_schemas.py
+  - evidence/reports/BEAD-CAT-A012-4C01-02_tests.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - .git/**
+dependencies:
+  - BEAD-CAT-A012-4C01-01
+tool_budget:
+  search: 1
+  read: 5
+  write: 5
+  execute: 2
+  max_runtime_minutes: 25
+confidence:
+  minimum: 80
+  current: 86
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 82
+  reversibility: 94
+  tool_fit: 90
+  risk_awareness: 84
+  testability: 92
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Schema design conflicts with spec from BEAD-01.
+  - Tests fail and cannot be resolved.
+definition_of_done:
+  - schemas/cat_adapter_config.schema.json validates tests/fixtures/adapter/valid_config.json.
+  - schemas/cat_adapter_state.schema.json validates tests/fixtures/adapter/valid_state.json.
+  - tests/test_cat_adapter_schemas.py passes.
+validation:
+  - type: tests
+    command: python -m pytest -q tests/test_cat_adapter_schemas.py
+    evidence_path: evidence/reports/BEAD-CAT-A012-4C01-02_tests.md
+    required: true
+required_output:
+  - cat_adapter_config_schema
+  - cat_adapter_state_schema
+  - adapter_schema_tests
+handoff:
+  next_bead_id: BEAD-CAT-A012-4C01-03
+  notes: []
+last_updated: '2026-06-18T14:30:00+00:00'
