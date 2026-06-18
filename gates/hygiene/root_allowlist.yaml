@@ -34,6 +34,7 @@ allowed_files:
   - .editorconfig
   - .env.example
   - .gitignore
+  - .coveragerc
 allowed_dirs:
   - missions
   - beads
