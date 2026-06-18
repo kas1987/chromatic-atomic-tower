@@ -165,6 +165,10 @@ def create_snapshot(target_type: str, target_id: str, contract_path: Path) -> Pa
         shutil.copy2(TOWER_STATE_PATH, snap_dir / 'TOWER_STATE.yaml')
     if contract_path.exists():
         shutil.copy2(contract_path, snap_dir / f'{target_type}_{target_id}.yaml')
+    import json as _json
+    (snap_dir / 'metadata.json').write_text(
+        _json.dumps({'contract_path': contract_path.relative_to(ROOT).as_posix()})
+    )
     return snap_dir
 
 
@@ -411,6 +415,18 @@ def main() -> int:
         if not snap_dir.is_dir():
             print(f'error: snapshot {snapshot_id!r} not found at {rel(snap_dir)}', file=sys.stderr)
             return 1
+        import json as _json
+        import shutil as _shutil
+        # Read the original contract path recorded at snapshot time.
+        meta_file = snap_dir / 'metadata.json'
+        snap_meta: dict = {}
+        if meta_file.exists():
+            try:
+                snap_meta = _json.loads(meta_file.read_text())
+            except Exception:
+                pass
+        # Terminal subfolders — only copies here may have been created by --move.
+        TERMINAL_SUBDIRS = {'missions': {'archived'}, 'beads': {'completed', 'failed'}}
         restored = []
         for f in snap_dir.iterdir():
             if f.name == 'metadata.json':
@@ -422,23 +438,30 @@ def main() -> int:
             elif f.name.startswith('mission_') or f.name.startswith('bead_'):
                 entity_type = 'missions' if f.name.startswith('mission_') else 'beads'
                 contract_id = f.stem.split('_', 1)[1]
-                # Preserve the descriptive filename suffix (e.g. MP-CAT-003_CI_GOVERNANCE.yaml)
-                # but always restore to the 'active' folder, not the post-move location.
-                existing = list(ROOT.glob(f'{entity_type}/**/{contract_id}*.yaml'))
-                filename = existing[0].name if existing else f'{contract_id}.yaml'
-                dest = ROOT / entity_type / 'active' / filename
+                # Use the path recorded in metadata.json (pre-transition location).
+                # Fall back to finding any existing copy with a matching prefix.
+                orig_path_str = snap_meta.get('contract_path')
+                if orig_path_str:
+                    dest = ROOT / orig_path_str
+                else:
+                    existing_any = list(ROOT.glob(f'{entity_type}/**/{contract_id}*.yaml'))
+                    filename = existing_any[0].name if existing_any else f'{contract_id}.yaml'
+                    dest = ROOT / entity_type / 'active' / filename
             else:
                 dest = None
             if dest:
-                import shutil as _shutil
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 _shutil.copy2(f, dest)
                 restored.append(rel(dest))
-                # Remove any terminal copies (completed/failed/archived) left by --move
-                # so ID-collision checks pass after rollback.
+                # Clean up terminal copies left by --move (completed/failed/archived),
+                # but never remove the restored file or non-terminal copies.
                 if f.name.startswith(('mission_', 'bead_')):
-                    for terminal in existing:
-                        if terminal.resolve() != dest.resolve():
+                    entity_type = 'missions' if f.name.startswith('mission_') else 'beads'
+                    contract_id = f.stem.split('_', 1)[1]
+                    terminal_dirs = TERMINAL_SUBDIRS[entity_type]
+                    for terminal in ROOT.glob(f'{entity_type}/**/{contract_id}*.yaml'):
+                        parts = terminal.relative_to(ROOT).parts
+                        if len(parts) >= 2 and parts[1] in terminal_dirs and terminal.resolve() != dest.resolve():
                             terminal.unlink(missing_ok=True)
         print(f'rollback  : {snapshot_id}')
         for r in restored:
