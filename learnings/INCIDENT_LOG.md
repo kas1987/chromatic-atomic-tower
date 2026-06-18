@@ -15,6 +15,21 @@ Learning: See Anti-pattern: Shared tree without agent lock in PATTERN_LIBRARY.md
 
 ---
 
+## INC-002
+
+Date: 2026-06-18  
+Mission: MP-CAT-005  
+BEAD: BEAD-CAT-005-002 through 005-005  
+Agent: Claude Code (Sonnet 4.6)  
+Trigger: Every BEAD closeout transition left `TOWER_STATE.yaml` in schema-invalid state.  
+What happened: `cat_transition.py` line 233 set `tower['active_bead_id'] = None`. Python `None` serialises to YAML `null`, but `tower_state.schema.json` declares `active_bead_id` as `type: string`. Every BEAD moved to `completed/failed/archived` silently broke `cat_validate.py --all`.  
+Files affected: `state/TOWER_STATE.yaml` (invalid after each transition), `scripts/cat_transition.py` (root cause)  
+Immediate containment: Manually patched `active_bead_id` to `""` after each transition during the session.  
+Recovery recommendation: Fixed in commit `9b52adf` — line 233 now emits `''`. Also audit other tower-state key assignments for the same `None` pattern.  
+Learning: Schema validation should be run as a post-write assertion inside the transition engine itself, not only by the external `cat_validate.py` caller.
+
+---
+
 ## Incident template
 
 ```md

@@ -11,3 +11,5 @@ evidence/logs/*.log
 evidence/test-results/*.xml
 cat_dispatch.json
 cat_dispatch.md
+evidence/reports/BEAD-CAT-*-CLOSEOUT-EXAMPLE_closeout_*.md
+evidence/reports/BEAD-CAT-DOES-NOT-MATCH_closeout_*.md
