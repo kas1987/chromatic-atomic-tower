@@ -1,0 +1,23 @@
+gate_id: CAT-RECONCILIATION-GATE
+rule: No Reconciled Registry = No New Sprint
+required_before_new_sprint:
+  - mission_registry_valid
+  - active_mission_matches_expected
+  - roadmap_matches_canonical_sequence
+  - reconciliation_report_exists
+  - no_unknown_active_missions
+  - tests_passed
+allowed_statuses:
+  - closed
+  - learned
+  - active
+  - draft
+  - approved
+  - in_progress
+blocked_conditions:
+  - active_mission_id_missing
+  - active_mission_id_not_MP_CAT_A009_4C01_during_sprint_009
+  - missing_required_mission
+  - duplicate_active_mission
+  - roadmap_missing_canonical_terms
+  - no_reconciliation_evidence

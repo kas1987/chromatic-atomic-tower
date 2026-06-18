@@ -2,17 +2,17 @@
 
 # CAT Sprint State
 
-_Generated: 2026-06-18T01:32:51+00:00_
+_Generated: 2026-06-18T02:51:29+00:00_
 
 | Field | Value |
 |---|---|
-| Active Sprint | SPRINT-008 |
+| Active Sprint | SPRINT-010 |
 | Tower Status | sprint_idle |
 | Active Mission | — |
 | Active BEAD | — |
 | Mission Status | — |
 | GO Mode | enabled |
-| Sprint Goal | Enforce mission/BEAD state alignment and collision governance. |
+| Sprint Goal | Connect GitHub branches, PRs, commits, and changed files to Mission Packs and BEADs. |
 
 ## Canonical Sources
 

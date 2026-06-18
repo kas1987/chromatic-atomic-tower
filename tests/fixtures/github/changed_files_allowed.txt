@@ -1,0 +1,3 @@
+gates/github/GITHUB_BRIDGE_RULES.yaml
+docs/operations/GITHUB_BRIDGE.md
+playbooks/GITHUB_BRIDGE_PLAYBOOK.md

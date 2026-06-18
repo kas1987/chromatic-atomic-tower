@@ -1,0 +1,29 @@
+name: CAT GitHub Bridge
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  github-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run CAT validation
+        run: |
+          python scripts/cat_validate.py --all
+          python -m pytest -q tests
+      - name: GitHub Bridge sample validation
+        run: |
+          python scripts/cat_git_bridge.py validate-pr \
+            --title "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
+            --branch feat/mp-cat-a010-4c01-bead-cat-a010-4c01-01-github-contract \
+            --commit-message "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
+            --bead beads/active/BEAD-CAT-A010-4C01-01.yaml \
+            --changed-files tests/fixtures/github/changed_files_allowed.txt \
+            --write-report

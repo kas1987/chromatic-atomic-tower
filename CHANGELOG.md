@@ -1,5 +1,31 @@
 # Changelog
 
+## Sprint 010
+
+Added GitHub Bridge + PR Governance Engine.
+
+- Imported donor package from `chromatic_atomic_tower_sprint_005.zip` with A-tier ID remap to `MP-CAT-A010-4C01`
+- Added `PDR_CAT_A010_GITHUB_BRIDGE_PR_GOVERNANCE.md` and `SPRINT_010_PLAN.md`
+- Added GitHub Bridge scripts (`cat_git_bridge.py`, `cat_branch_name.py`, `cat_changed_files_guard.py`, `cat_issue_intake.py`)
+- Added `gates/github/GITHUB_BRIDGE_RULES.yaml` with legacy and A-tier ID patterns
+- Added GitHub Bridge playbook, checklist, operator guide, tests, and CI workflow
+- Added five BEADs (`BEAD-CAT-A010-4C01-01` through `-05`)
+- BEADs 01–05 completed; mission closed and archived
+
+## Sprint 009
+
+Added Repo Alignment and Mission Packet Reconciliation.
+
+- Added `PDR_CAT_A009_REPO_ALIGNMENT_RECONCILIATION.md`
+- Added `SPRINT_009_PLAN.md`
+- Added `MP-CAT-A009-4C01` mission pack and four BEADs
+- Added reconciliation scripts (`cat_registry_audit.py`, `cat_reconcile.py`, `cat_roadmap_sync.py`)
+- Added `docs/reconciliation/LIVE_REPO_ALIGNMENT_TARGET.yaml`
+- Added backlog mission scaffolds `MP-CAT-A010-4C01` through `MP-CAT-A012-4C01`
+- Updated `CAT_ROADMAP.md`, registry, and tower state
+- Added reconciliation playbook, checklist, tests, and evidence scaffolding
+- BEADs 01–04 completed; mission closed and archived
+
 ## Sprint 003
 
 Added CI Governance and Self-Healing Validation Engine.
