@@ -54,6 +54,7 @@ allowed_dirs:
   - .vscode
   - tests
   - ci
+  - .codex
 ignored_entries:
   - .git
   - .venv
