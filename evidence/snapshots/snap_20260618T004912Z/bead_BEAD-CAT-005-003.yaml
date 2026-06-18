@@ -1,0 +1,127 @@
+bead_id: BEAD-CAT-005-003
+mission_id: MP-CAT-005
+title: Record worker patch and test evidence
+status: reviewed
+agent_role: Auditor
+autonomy_level: L3
+objective: Confirm scripts/harness_demo.py was generated as the sample worker patch
+  and that all tests in tests/test_harness_demo.py pass. Capture test output as durable
+  evidence.
+allowed_paths:
+- scripts/harness_demo.py
+- tests/test_harness_demo.py
+- evidence/test-results/**
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
+dependencies:
+- BEAD-CAT-005-002
+tool_budget:
+  search: 1
+  read: 3
+  write: 3
+  execute: 3
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 84
+  objective_clarity: 90
+  scope_clarity: 90
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 88
+  risk_awareness: 80
+  testability: 92
+risk_level: low
+reversibility: high
+stop_conditions:
+- tests/test_harness_demo.py tests fail for reasons outside this BEAD scope.
+- harness_demo.py is absent and cannot be created within allowed_paths.
+definition_of_done:
+- pytest tests/test_harness_demo.py passes with zero failures.
+- Test output saved to evidence/test-results/mp_cat_005_demo_tests.txt.
+- Evidence report notes which model generated the patch (Kimi/MiniMax/other).
+validation:
+- type: tests
+  command: pytest -q tests/test_harness_demo.py
+  evidence_path: evidence/test-results/mp_cat_005_demo_tests.txt
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Auditor
+  reviewer: Human Owner
+  notes: "harness_demo.py already exists and tests pass \u2014 record evidence only."
+last_updated: '2026-06-18T00:49:12+00:00'
+transition_history:
+- timestamp: '2026-06-18T00:48:53+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-003
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Sprint closeout batch
+  evidence: evidence/reports/mp_cat_005_sprint_closeout.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-003.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T004853Z
+- timestamp: '2026-06-18T00:49:11+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-003
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: closeout
+  evidence: evidence/reports/mp_cat_005_sprint_closeout.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-003.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T004911Z
+- timestamp: '2026-06-18T00:49:11+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-003
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: closeout
+  evidence: evidence/reports/mp_cat_005_sprint_closeout.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-003.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T004911Z
+- timestamp: '2026-06-18T00:49:12+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-003
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: closeout
+  evidence: evidence/reports/mp_cat_005_sprint_closeout.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-003.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T004912Z

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""cat_tower_guard.py - unified Tower state freshness + hygiene guard."""
+"""cat_tower_guard.py - unified Tower state alignment + hygiene guard."""
 from __future__ import annotations
 
 import argparse
@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from cat_branch_hygiene import check_hygiene
-from cat_state_freshness import check_freshness
+from cat_state_freshness import check_alignment
 from common import ROOT, rel, validate_with_schema
 
 
@@ -17,15 +17,24 @@ def run_tower_guard(
     allowlist_path: Path | None = None,
     branch_name: str | None = None,
 ) -> dict:
-    freshness = check_freshness(root)
+    alignment = check_alignment(root)
     hygiene = check_hygiene(root=root, allowlist_path=allowlist_path, branch_name=branch_name)
+
+    alignment_issues = [
+        f"[{item.code}] {item.message}" + (f" | {item.remediation}" if item.remediation else "")
+        for item in alignment.drift
+    ]
 
     checks = [
         {
-            "name": "state_freshness",
-            "status": "pass" if freshness.is_fresh else "fail",
-            "ok": freshness.ok,
-            "issues": freshness.drift,
+            "name": "state_alignment",
+            "status": "pass" if alignment.is_aligned else "fail",
+            "ok": alignment.ok,
+            "issues": alignment_issues,
+            "drift": [
+                {"code": d.code, "message": d.message, "remediation": d.remediation}
+                for d in alignment.drift
+            ],
         },
         {
             "name": "branch_root_hygiene",

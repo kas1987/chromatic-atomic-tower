@@ -1,8 +1,8 @@
 # Learning Record: MP-CAT-A007-4C01 LOGHOUSE
 
 **Mission**: MP-CAT-A007-4C01 — LOGHOUSE Log Intelligence and Architecture Drift MVP  
-**Status**: Wave 2 complete (BEADs 06–08)  
-**Recorded**: 2026-06-17
+**Status**: Complete (all 8 BEADs closed; mission archived 2026-06-18)  
+**Recorded**: 2026-06-17 (updated 2026-06-18)
 
 ---
 

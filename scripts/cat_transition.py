@@ -108,7 +108,7 @@ def evidence_required(rules: dict[str, Any], target_type: str, from_status: str 
     return False
 
 
-def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any]) -> tuple[bool, str]:
+def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any], actor: str = '') -> tuple[bool, str]:
     if guard_name == 'none':
         return True, 'no precondition'
     if guard_name == 'active_bead_present' and target_type == 'mission':
@@ -132,6 +132,9 @@ def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any]) -> t
         required = bool(human_gate.get('required', False))
         if not required:
             return True, 'human gate not required'
+        approver = str(human_gate.get('approver', '')).strip()
+        if actor and approver and actor.strip() == approver:
+            return True, f"approver decision recorded (actor={actor!r})"
         return False, 'human gate required but no approver decision recorded'
     # Remaining guards are deferred in this harness phase.
     return True, 'guard evaluation deferred'
@@ -208,7 +211,7 @@ def update_registry_current_bead(mission_id: str, bead_id: str, to_status: str) 
             if to_status in {'queued', 'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}:
                 mission['current_bead_id'] = bead_id
             elif mission.get('current_bead_id') == bead_id and to_status in {'completed', 'failed', 'archived'}:
-                mission['current_bead_id'] = None
+                mission['current_bead_id'] = ''
             mission['last_updated'] = utc_now()
             updated = True
             break
@@ -230,7 +233,7 @@ def update_tower_state(target_type: str, target_id: str, to_status: str, data: d
             tower['active_mission_id'] = data.get('mission_id')
     elif target_type == 'bead' and to_status in {'completed', 'failed', 'archived'}:
         if tower.get('active_bead_id') == target_id:
-            tower['active_bead_id'] = None
+            tower['active_bead_id'] = ''
     write_yaml(TOWER_STATE_PATH, tower)
 
 
@@ -317,7 +320,7 @@ def apply_transition(
         allowed = False
         message = f'evidence is required for {target_type} transition to {to_status}'
 
-    guard_ok, guard_msg = evaluate_guard(guard, target_type, data)
+    guard_ok, guard_msg = evaluate_guard(guard, target_type, data, actor)
     if allowed and not guard_ok:
         allowed = False
         message = f'guard {guard} failed: {guard_msg}'

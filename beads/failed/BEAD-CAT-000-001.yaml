@@ -1,0 +1,72 @@
+bead_id: BEAD-CAT-000-001
+mission_id: MP-CAT-000
+title: Establish repo skeleton and canonical manifest
+status: archived
+agent_role: Scribe
+autonomy_level: L3
+objective: Confirm the CAT repo skeleton, manifest, start docs, and operating files
+  exist and are ready for baseline validation.
+allowed_paths:
+- README.md
+- START_HERE.md
+- PDR_CAT_000_ESTABLISH_CORE_REPO.md
+- CAT_MANIFEST.md
+- CAT_PRINCIPLES.md
+- CAT_ROADMAP.md
+- SPRINT_000_PLAN.md
+- QUICKSTART.md
+- AGENTS.md
+- CHROMATIC_TREES.md
+- GOVERNANCE.md
+- state/**
+- learnings/**
+- checklists/**
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+dependencies: []
+tool_budget:
+  search: 0
+  read: 8
+  write: 12
+  execute: 2
+  max_runtime_minutes: 30
+confidence:
+  minimum: 75
+  current: 88
+  objective_clarity: 90
+  scope_clarity: 90
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 85
+  risk_awareness: 85
+  testability: 85
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Need to import Harness V2 files wholesale.
+- Need to create a new top-level directory not listed in CAT_MANIFEST.md.
+- Need secret or credential.
+- Validation cannot be run.
+definition_of_done:
+- Core root docs exist.
+- CAT_MANIFEST.md and CHROMATIC_TREES.md agree.
+- Sprint state names MP-CAT-000 and BEAD-CAT-000-001.
+- Repo check passes.
+validation:
+- type: repo_check
+  command: python scripts/cat_check_repo.py
+  evidence_path: evidence/reports/repo_check_sprint_000.md
+  required: true
+required_output:
+- summary
+- repo_check_result
+- files_changed
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-000-002
+  notes:
+  - After this BEAD, validate schemas and sample contracts.

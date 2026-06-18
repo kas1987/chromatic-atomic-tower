@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Gate Result",
+  "type": "object",
+  "required": [
+    "gate_id",
+    "mission_id",
+    "status",
+    "score",
+    "evidence"
+  ],
+  "properties": {
+    "gate_id": {
+      "type": "string"
+    },
+    "mission_id": {
+      "type": "string"
+    },
+    "bead_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail",
+        "warning",
+        "not_run"
+      ]
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "decision": {
+      "enum": [
+        "auto_proceed",
+        "proceed",
+        "self_heal",
+        "escalate",
+        "block",
+        "not_set"
+      ]
+    }
+  }
+}

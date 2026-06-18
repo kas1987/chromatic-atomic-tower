@@ -1,0 +1,13 @@
+flowchart TB
+    PR[Pull Request] --> RH[Repo Health]
+    RH --> SC[Schema Validation]
+    SC --> HA[Harness Alignment Validation]
+    HA --> MM[Mermaid Fence Validation]
+    MM --> UT[Pytest]
+    UT --> EB[Evidence Bundle Artifact]
+    EB --> CS[Confidence Score]
+    CS -->|>=90| AP[Auto-Proceed Eligible]
+    CS -->|70-89| HR[Human Review Required]
+    CS -->|<70| BL[Block Promotion]
+    AP --> REL[Release / Merge]
+    HR --> REL

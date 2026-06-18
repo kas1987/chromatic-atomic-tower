@@ -1,0 +1,22 @@
+{
+  "mission_id": "MP-CAT-A006-4C01",
+  "generated_at": "2026-06-17T23:42:31.418439+00:00",
+  "status": "draft",
+  "expected_files": [
+    "missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml",
+    "gates/assertion_gates.yaml",
+    "agents/model_routes.yaml",
+    "agents/skills/SKILL_REGISTRY.yaml",
+    "evidence/templates/ASSERTION_EVIDENCE_MAP.yaml",
+    "docs/architecture/CAT_MISSION_PIPELINE_MERMAID.md"
+  ],
+  "gate_scores": {
+    "completeness_score": 90,
+    "substantive_validation_score": 90,
+    "control_validation_score": 90,
+    "evidence_sufficiency_score": 90,
+    "routing_score": 90,
+    "exception_disclosure_score": 90
+  },
+  "notes": "Placeholder gate_scores — replace with actual validator output before final promotion."
+}

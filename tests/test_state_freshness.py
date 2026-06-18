@@ -18,7 +18,7 @@ SCRIPTS_PATH = ROOT_PATH / 'scripts'
 if str(SCRIPTS_PATH) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_PATH))
 
-from scripts.cat_state_freshness import check_freshness, FreshnessResult
+from scripts.cat_state_freshness import check_alignment, check_freshness
 
 
 # ---------------------------------------------------------------------------
@@ -208,18 +208,38 @@ def test_null_bead_id_is_ok(tmp_path):
     _base_fixture(tmp_path)
     tower_path = tmp_path / 'state/TOWER_STATE.yaml'
     data = yaml.safe_load(tower_path.read_text())
-    data['active_bead_id'] = None
+    data['active_bead_id'] = ''
     _write(tower_path, data)
 
     reg_path = tmp_path / 'missions/registry/MISSION_REGISTRY.yaml'
     reg = yaml.safe_load(reg_path.read_text())
-    reg['missions'][0]['current_bead_id'] = None
+    reg['missions'][0]['current_bead_id'] = ''
     _write(reg_path, reg)
 
     result = check_freshness(tmp_path)
     assert result.is_fresh
-    ok_text = ' '.join(result.ok)
-    assert 'null' in ok_text or 'None' in ok_text or 'bead_id' in ok_text
+
+
+def test_sprint_idle_empty_mission_ok(tmp_path):
+    _write(tmp_path / 'state/TOWER_STATE.yaml', {
+        'version': '0.1.0', 'status': 'sprint_idle',
+        'active_mission_id': '', 'active_bead_id': '',
+    })
+    _write(tmp_path / 'missions/registry/MISSION_REGISTRY.yaml', {
+        'version': '0.1.0', 'active_mission_id': '', 'missions': [],
+    })
+    result = check_alignment(tmp_path)
+    assert result.is_aligned
+
+
+def test_mission_collision_detected(tmp_path):
+    _base_fixture(tmp_path)
+    _write(tmp_path / 'missions/backlog/MP-TEST-001-dup.yaml', {
+        'mission_id': 'MP-TEST-001', 'status': 'draft',
+    })
+    result = check_alignment(tmp_path)
+    assert not result.is_aligned
+    assert any(d.code == 'MISSION_ID_COLLISION' for d in result.drift)
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,107 @@
+bead_id: BEAD-CAT-005-004
+mission_id: MP-CAT-005
+title: Verify and commit review packet template
+status: validating
+agent_role: Auditor
+autonomy_level: L3
+objective: 'Verify playbooks/REVIEW_PACKET_TEMPLATE.md defines the final-review packet
+  format consumed by the Opus review step. Confirm it includes: ticket summary, diff/patch,
+  test results, cheap-review output, and merge recommendation fields. Record evidence.'
+allowed_paths:
+- playbooks/REVIEW_PACKET_TEMPLATE.md
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
+dependencies:
+- BEAD-CAT-005-003
+tool_budget:
+  search: 1
+  read: 3
+  write: 3
+  execute: 1
+  max_runtime_minutes: 15
+confidence:
+  minimum: 75
+  current: 82
+  objective_clarity: 90
+  scope_clarity: 90
+  evidence_quality: 75
+  reversibility: 95
+  tool_fit: 85
+  risk_awareness: 80
+  testability: 75
+risk_level: low
+reversibility: high
+stop_conditions:
+- Template is missing required fields and scope expansion is needed.
+definition_of_done:
+- playbooks/REVIEW_PACKET_TEMPLATE.md exists with all required review packet fields.
+- Evidence report written.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/reports/bead_cat_005_004_review_packet.md
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Auditor
+  reviewer: Human Owner
+  notes: "Pre-existing artifact \u2014 verify field completeness only."
+last_updated: '2026-06-18T00:49:14+00:00'
+transition_history:
+- timestamp: '2026-06-18T00:48:54+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-004
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Sprint closeout batch
+  evidence: evidence/reports/mp_cat_005_sprint_closeout.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-004.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T004854Z
+- timestamp: '2026-06-18T00:49:13+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-004
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: closeout
+  evidence: evidence/reports/mp_cat_005_sprint_closeout.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-004.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T004913Z
+- timestamp: '2026-06-18T00:49:14+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-004
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: closeout
+  evidence: evidence/reports/mp_cat_005_sprint_closeout.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-004.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T004914Z

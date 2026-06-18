@@ -2,12 +2,17 @@ from __future__ import annotations
 
 import json
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 ROOT = Path(os.environ.get("CAT_ROOT", str(Path(__file__).resolve().parents[1]))).resolve()
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
 def load_yaml(path: Path) -> Any:

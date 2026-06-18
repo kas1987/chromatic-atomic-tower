@@ -30,17 +30,19 @@ def _base_fixture(root: Path) -> Path:
         "active_bead_id": "BEAD-TEST-001",
     })
 
+    _write_yaml(root / "missions/active/MP-TEST-001.yaml", {
+        "mission_id": "MP-TEST-001",
+        "status": "approved",
+    })
+
     _write_yaml(root / "missions/registry/MISSION_REGISTRY.yaml", {
         "active_mission_id": "MP-TEST-001",
         "missions": [{
             "mission_id": "MP-TEST-001",
+            "status": "approved",
             "current_bead_id": "BEAD-TEST-001",
             "path": "missions/active/MP-TEST-001.yaml",
         }],
-    })
-
-    _write_yaml(root / "missions/active/MP-TEST-001.yaml", {
-        "mission_id": "MP-TEST-001",
     })
 
     _write_yaml(root / "beads/active/BEAD-TEST-001.yaml", {
@@ -81,7 +83,7 @@ def test_tower_guard_fails_on_state_drift(tmp_path):
         branch_name="feature/cat-004-004",
     )
     assert report["status"] == "fail"
-    state_check = next(c for c in report["checks"] if c["name"] == "state_freshness")
+    state_check = next(c for c in report["checks"] if c["name"] == "state_alignment")
     assert state_check["status"] == "fail"
 
 
@@ -108,7 +110,7 @@ def test_render_markdown_contains_sections(tmp_path):
     )
     text = render_markdown(report)
     assert "Tower Guard Report" in text
-    assert "state_freshness" in text
+    assert "state_alignment" in text
     assert "branch_root_hygiene" in text
 
 

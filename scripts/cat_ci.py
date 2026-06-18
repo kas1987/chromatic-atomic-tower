@@ -11,6 +11,7 @@ except ModuleNotFoundError:
 CHECKS = [
     ('repo_structure', ['python', 'scripts/cat_check_repo.py']),
     ('schema_validation', ['python', 'scripts/cat_validate.py', '--all']),
+    ('alignment_check', ['python', 'scripts/cat_align_check.py', '--strict']),
     ('tower_status', ['python', 'scripts/cat_status.py']),
 ]
 

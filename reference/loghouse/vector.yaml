@@ -82,6 +82,10 @@ transforms:
           .message = "no message"
         }
       }
+      # event_id — generated downstream if absent; normalizer may assign UUID
+      if !exists(.event_id) {
+        .event_id = uuid_v4()
+      }
       # attrs — carry remaining fields
       if !exists(.attrs) {
         .attrs = {}

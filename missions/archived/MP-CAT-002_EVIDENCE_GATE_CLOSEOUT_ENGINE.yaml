@@ -1,0 +1,140 @@
+mission_id: MP-CAT-002
+title: Implement CAT Evidence Gate and Closeout Engine
+level: M3
+status: closed
+owner: Human Owner
+priority: 1
+risk_level: medium
+reversibility: high
+autonomy_level: L3
+confidence_minimum: 78
+created: '2026-06-17'
+last_updated: '2026-06-18T01:10:18+00:00'
+objective: Implement enforceable evidence bundle validation and closeout tooling so
+  CAT can prevent BEAD or mission completion without proof, audit logs, and learning
+  notes.
+background: Sprint 001 made lifecycle transitions executable through the state transition
+  engine. Sprint 002 adds the evidence gate and closeout engine so completion is governed
+  by real artifacts rather than unsupported claims.
+scope:
+  in:
+  - evidence gate rules
+  - evidence bundle schema
+  - evidence bundle creation CLI
+  - evidence bundle validation CLI
+  - closeout report generation
+  - closeout audit logging
+  - transition engine integration
+  - tests for missing evidence and failed validation
+  - operator documentation
+  - Sprint 002 prompts and checklists
+  out:
+  - GitHub API mutation
+  - remote CI integration
+  - external artifact storage
+  - production deployment
+  - secrets handling
+  - multi-repo artifact collection
+allowed_paths:
+- gates/evidence/**
+- schemas/evidence_bundle.schema.json
+- schemas/evidence.schema.json
+- scripts/cat_evidence.py
+- scripts/cat_closeout.py
+- tests/test_evidence_gate.py
+- tests/test_closeout_engine.py
+- docs/operations/EVIDENCE_GATE.md
+- docs/operations/CLOSEOUT_ENGINE.md
+- docs/operations/SPRINT_002_OPERATOR_GUIDE.md
+- playbooks/EVIDENCE_GATE_PLAYBOOK.md
+- checklists/EVIDENCE_GATE_CHECKLIST.md
+- missions/active/MP-CAT-002_EVIDENCE_GATE_CLOSEOUT_ENGINE.yaml
+- beads/active/BEAD-CAT-002-*.yaml
+- evidence/**
+- state/**
+- learnings/**
+- prompts/PRO_GPT_SPRINT_002_PROMPT.md
+forbidden_paths:
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies:
+- MP-CAT-001
+acceptance_criteria:
+- Evidence gate rules are explicit and machine-readable.
+- Evidence bundle schema validates examples.
+- Evidence CLI can create and validate bundles.
+- Closeout CLI validates required artifacts before completion.
+- Closeout CLI blocks failed required validation.
+- Closeout CLI supports dry-run and applied transition modes.
+- Closeout CLI writes a report and JSONL audit event.
+- Tests cover successful, failed, and missing evidence paths.
+- Operator documentation explains evidence and closeout workflow.
+success_metrics:
+- 100% of included tests pass.
+- 100% of YAML contracts validate.
+- 0 missing required artifacts in the passing bundle example.
+- Missing-artifact example fails predictably.
+- GO resolver selects the active Sprint 002 BEAD.
+required_validation:
+- type: schema
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/schema_validation_sprint_002.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_002_evidence_closeout_tests.txt
+  required: true
+- type: evidence_bundle
+  command: python scripts/cat_evidence.py validate --bundle evidence/bundles/examples/EB-CAT-002-EXAMPLE.yaml
+  evidence_path: evidence/reports/evidence_bundle_validation_sprint_002.md
+  required: true
+- type: closeout_dry_run
+  command: python scripts/cat_closeout.py --type bead --id BEAD-CAT-002-CLOSEOUT-EXAMPLE
+    --bundle evidence/bundles/examples/EB-CAT-002-EXAMPLE.yaml --to completed --reason
+    "dry-run closeout validation" --dry-run
+  evidence_path: evidence/reports/closeout_dry_run_sprint_002.md
+  required: true
+- type: go_resolution
+  command: python scripts/cat_resolve_go.py
+  evidence_path: evidence/reports/go_resolution_sprint_002.md
+  required: true
+rollback:
+  required: true
+  plan: Revert Sprint 002 evidence gate rules, evidence bundle schema, evidence and
+    closeout scripts, tests, docs, prompts, and mission/BEAD additions. Preserve real
+    closeout audit logs if any applied transitions occurred.
+human_gate:
+  required: false
+  approver: Human Owner
+tool_budget:
+  search: 2
+  read: 10
+  write: 14
+  execute: 8
+  max_runtime_minutes: 75
+beads:
+- bead_id: BEAD-CAT-002-001
+  title: Define evidence gate rules and bundle schema
+- bead_id: BEAD-CAT-002-002
+  title: Implement evidence bundle CLI
+- bead_id: BEAD-CAT-002-003
+  title: Implement closeout engine integration
+- bead_id: BEAD-CAT-002-004
+  title: Add tests, operator docs, prompts, and closeout checklist
+evidence_requirements:
+- evidence_gate_rules
+- evidence_bundle_schema
+- evidence_bundle_validation_output
+- closeout_dry_run_output
+- test_results
+- schema_validation
+- go_resolution
+- audit_log_sample
+- learning_note
+notes:
+- Sprint 002 enforces evidence before completion.
+- This mission is M3 because it introduces state-adjacent closeout behavior and audit
+  logging.

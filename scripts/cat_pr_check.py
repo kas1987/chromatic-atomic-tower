@@ -10,7 +10,7 @@ except ModuleNotFoundError:
 FORBIDDEN_DEFAULTS = ['.env', '.env.*', 'secrets/**', 'infra/prod/**', 'production/**', 'deploy/**']
 
 def load_bead(bead_id: str) -> tuple[dict | None, Path | None]:
-    for base in ['beads/active', 'beads/examples', 'beads/completed']:
+    for base in ['beads/active', 'beads/examples', 'beads/completed', 'beads/failed']:
         for path in sorted((ROOT / base).glob('*.yaml')):
             data = load_yaml(path)
             if data.get('bead_id') == bead_id:

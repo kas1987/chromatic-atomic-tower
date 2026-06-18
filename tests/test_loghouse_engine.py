@@ -142,6 +142,41 @@ def test_correlate_groups_by_deploy_context():
     assert window.has_deploy_event()
 
 
+def test_correlate_separates_different_trace_ids():
+    envelopes = [
+        {
+            "event_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            "ts": "2026-06-17T12:05:00Z",
+            "signal_type": "log",
+            "service": "payments-api",
+            "env": "prod",
+            "severity": "info",
+            "message": "span a",
+            "commit_sha": "abc1234",
+            "deploy_id": "deploy-20260617-1200",
+            "trace_id": "trace-a",
+            "attrs": {},
+        },
+        {
+            "event_id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+            "ts": "2026-06-17T12:06:00Z",
+            "signal_type": "log",
+            "service": "payments-api",
+            "env": "prod",
+            "severity": "info",
+            "message": "span b",
+            "commit_sha": "abc1234",
+            "deploy_id": "deploy-20260617-1200",
+            "trace_id": "trace-b",
+            "attrs": {},
+        },
+    ]
+    windows = correlate(envelopes, [])
+    assert len(windows) == 2
+    trace_ids = {w.trace_id for w in windows}
+    assert trace_ids == {"trace-a", "trace-b"}
+
+
 def test_correlate_separates_different_services():
     envelopes = [
         {

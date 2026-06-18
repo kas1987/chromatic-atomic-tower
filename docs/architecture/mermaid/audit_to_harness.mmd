@@ -1,0 +1,16 @@
+flowchart LR
+    A1[Audit Assertion] --> A2[Risk]
+    A2 --> A3[Audit Procedure]
+    A3 --> A4[Audit Evidence]
+    A4 --> A5[Audit Opinion]
+
+    H1[Mission Assertion] --> H2[Failure Mode]
+    H2 --> H3[BEAD or Gate Procedure]
+    H3 --> H4[Evidence Bundle]
+    H4 --> H5[Confidence Gate Decision]
+
+    A1 -.maps to.-> H1
+    A2 -.maps to.-> H2
+    A3 -.maps to.-> H3
+    A4 -.maps to.-> H4
+    A5 -.maps to.-> H5

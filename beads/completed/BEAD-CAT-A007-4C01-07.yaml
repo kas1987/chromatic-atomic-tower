@@ -1,0 +1,159 @@
+bead_id: BEAD-CAT-A007-4C01-07
+mission_id: MP-CAT-A007-4C01
+title: Add LOGHOUSE validation script and pytest suites
+status: completed
+agent_role: Auditor
+autonomy_level: L2
+objective: Add a single LOGHOUSE alignment validator and consolidate the test coverage.
+  The validator asserts the seven schemas are present and valid, the engine modules
+  import, the fixtures exist, and the engine produces at least one finding with linked
+  evidence and a dispatch item. Ensure the pytest suites cover schemas, engine, rules,
+  and drift end to end.
+allowed_paths:
+- scripts/cat_validate_loghouse.py
+- tests/test_loghouse_schemas.py
+- tests/test_loghouse_engine.py
+- tests/test_loghouse_rules.py
+- tests/test_loghouse_drift.py
+- tests/fixtures/loghouse/**
+- evidence/reports/MP-CAT-A007-4C01_validation_report.json
+forbidden_paths:
+- .env
+- .env.*
+- .venv/**
+- secrets/**
+- credentials/**
+- infra/prod/**
+- external_repos/**
+dependencies:
+- BEAD-CAT-A007-4C01-04
+- BEAD-CAT-A007-4C01-05
+tool_budget:
+  search: 3
+  read: 16
+  write: 10
+  execute: 8
+  max_runtime_minutes: 60
+confidence:
+  minimum: 70
+  current: 81
+  objective_clarity: 86
+  scope_clarity: 84
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 85
+  risk_awareness: 82
+  testability: 90
+risk_level: low
+reversibility: high
+stop_conditions:
+- Engine, rules, or drift modules unavailable.
+- Requested path outside allowed_paths.
+- Validator would need to fabricate evidence to pass.
+- Need for secret, credential, destructive action, or production access.
+definition_of_done:
+- cat_validate_loghouse.py --root . exits non-zero on missing schema, missing module,
+  or a finding without evidence, and zero when the slice is complete.
+- The validator writes a machine-readable report to the evidence path.
+- pytest -q passes including all four test_loghouse_* suites.
+- Test coverage includes a valid and an invalid case for every schema.
+validation:
+- type: loghouse_alignment
+  command: python scripts/cat_validate_loghouse.py --root .
+  evidence_path: evidence/reports/MP-CAT-A007-4C01_validation_report.json
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/MP-CAT-A007-4C01_tests.txt
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Auditor
+  reviewer: Human Owner
+  notes: Substantive validation gate for the mission; evidence before assertions.
+last_updated: '2026-06-18T01:25:44+00:00'
+transition_history:
+- timestamp: '2026-06-18T01:25:42+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A007-4C01-07
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Handoff after BEAD-CAT-A007-4C01-06
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A007-4C01-07.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T012542Z
+- timestamp: '2026-06-18T01:25:43+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A007-4C01-07
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: BEAD BEAD-CAT-A007-4C01-07 complete
+  evidence: evidence/reports/MP-CAT-A007-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A007-4C01-07.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T012543Z
+- timestamp: '2026-06-18T01:25:43+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A007-4C01-07
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: BEAD BEAD-CAT-A007-4C01-07 complete
+  evidence: evidence/reports/MP-CAT-A007-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A007-4C01-07.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T012543Z
+- timestamp: '2026-06-18T01:25:43+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A007-4C01-07
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: BEAD BEAD-CAT-A007-4C01-07 complete
+  evidence: evidence/reports/MP-CAT-A007-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A007-4C01-07.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T012543Z
+- timestamp: '2026-06-18T01:25:44+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A007-4C01-07
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: BEAD BEAD-CAT-A007-4C01-07 complete
+  evidence: evidence/reports/MP-CAT-A007-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A007-4C01-07.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T012544Z
