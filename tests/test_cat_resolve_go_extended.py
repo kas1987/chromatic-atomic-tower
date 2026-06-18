@@ -301,18 +301,8 @@ class TestValidateAgainstSchema:
         )
         monkeypatch.setattr(cat_resolve_go, 'ROOT', tmp_path)
 
-        # Patch builtins.__import__ to raise ImportError for jsonschema.
-        real_import = __builtins__.__import__ if hasattr(__builtins__, '__import__') else __import__
-
-        import builtins
-        original_import = builtins.__import__
-
-        def mock_import(name, *args, **kwargs):
-            if name == 'jsonschema':
-                raise ImportError("No module named 'jsonschema'")
-            return original_import(name, *args, **kwargs)
-
-        monkeypatch.setattr(builtins, '__import__', mock_import)
+        # Simulate jsonschema not being installed by setting it to None in sys.modules
+        monkeypatch.setitem(sys.modules, 'jsonschema', None)
         errors = cat_resolve_go._validate_against_schema(SAMPLE_DISPATCH)
         assert any('jsonschema not installed' in e for e in errors)
 

@@ -367,7 +367,7 @@ def test_create_snapshot_copies_contract(monkeypatch: pytest.MonkeyPatch, tmp_pa
     snap_dir = create_snapshot('bead', 'BEAD-SNAP-001', contract)
     assert snap_dir.is_dir()
     assert (snap_dir / 'bead_BEAD-SNAP-001.yaml').exists()
-    meta = json.loads((snap_dir / 'metadata.json').read_text())
+    meta = json.loads((snap_dir / 'metadata.json').read_text(encoding='utf-8'))
     assert 'contracts' in meta
 
 

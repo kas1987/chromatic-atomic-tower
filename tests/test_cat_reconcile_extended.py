@@ -154,13 +154,13 @@ class TestWriteReports:
 
     def test_json_content_is_valid(self, tmp_path):
         cat_reconcile.write_reports(_sample_report(), tmp_path)
-        raw = (tmp_path / 'evidence/reconciliation/reconciliation_report.json').read_text()
+        raw = (tmp_path / 'evidence/reconciliation/reconciliation_report.json').read_text(encoding='utf-8')
         parsed = json.loads(raw)
         assert parsed['report_id'] == 'CAT-RECONCILIATION-A009'
 
     def test_md_has_pass_status(self, tmp_path):
         cat_reconcile.write_reports(_sample_report(status='passed'), tmp_path)
-        md = (tmp_path / 'evidence/reconciliation/reconciliation_report.md').read_text()
+        md = (tmp_path / 'evidence/reconciliation/reconciliation_report.md').read_text(encoding='utf-8')
         assert 'PASS' in md
 
     def test_md_has_missing_section(self, tmp_path):
@@ -168,7 +168,7 @@ class TestWriteReports:
             _sample_report(status='failed', missing=['MP-CAT-X001', 'roadmap term: BEAD-X']),
             tmp_path,
         )
-        md = (tmp_path / 'evidence/reconciliation/reconciliation_report.md').read_text()
+        md = (tmp_path / 'evidence/reconciliation/reconciliation_report.md').read_text(encoding='utf-8')
         assert '## Missing' in md
         assert 'MP-CAT-X001' in md
 

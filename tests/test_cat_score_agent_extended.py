@@ -12,12 +12,6 @@ import sys
 import pytest
 
 import cat_score_agent as csa
-from scripts.cat_score_agent import (
-    _find_agent,
-    _print_diff,
-    compute_mutation,
-    main,
-)
 
 
 # ---------------------------------------------------------------------------
@@ -45,34 +39,34 @@ def _base_data(score: int = 70) -> dict:
 class TestPrintDiff:
     def test_prints_score_change(self, capsys):
         old = _base_data(70)
-        new = compute_mutation(old, 'Builder', 'B-001', 'M-001', 'bead_completed',
+        new = csa.compute_mutation(old, 'Builder', 'B-001', 'M-001', 'bead_completed',
                                 timestamp='2026-01-01T00:00:00Z')
-        _print_diff(old, new, 'Builder')
+        csa._print_diff(old, new, 'Builder')
         out = capsys.readouterr().out
         assert '70' in out
         assert '75' in out  # +5 for bead_completed
 
     def test_prints_trust_level(self, capsys):
         old = _base_data(85)
-        new = compute_mutation(old, 'Builder', 'B-001', 'M-001', 'bead_completed',
+        new = csa.compute_mutation(old, 'Builder', 'B-001', 'M-001', 'bead_completed',
                                 timestamp='2026-01-01T00:00:00Z')
-        _print_diff(old, new, 'Builder')
+        csa._print_diff(old, new, 'Builder')
         out = capsys.readouterr().out
         assert 'trust' in out
 
     def test_new_agent_shows_new_label(self, capsys):
         old = {'agents': [], 'score_policy': {}}
-        new = compute_mutation(old, 'Auditor', 'B-001', 'M-001', 'bead_completed',
+        new = csa.compute_mutation(old, 'Auditor', 'B-001', 'M-001', 'bead_completed',
                                 timestamp='2026-01-01T00:00:00Z')
-        _print_diff(old, new, 'Auditor')
+        csa._print_diff(old, new, 'Auditor')
         out = capsys.readouterr().out
         assert '(new)' in out
 
     def test_prints_last_event(self, capsys):
         old = _base_data(70)
-        new = compute_mutation(old, 'Builder', 'B-007', 'M-001', 'bead_completed',
+        new = csa.compute_mutation(old, 'Builder', 'B-007', 'M-001', 'bead_completed',
                                 timestamp='2026-01-01T00:00:00Z')
-        _print_diff(old, new, 'Builder')
+        csa._print_diff(old, new, 'Builder')
         out = capsys.readouterr().out
         assert 'bead_completed' in out
         assert 'B-007' in out
@@ -90,7 +84,7 @@ class TestMainDryRunWithArgs:
             '--bead-id', 'BEAD-CAT-A014-4C01-06',
             '--event', 'bead_completed',
         ])
-        result = main()
+        result = csa.main()
         assert result == 0
         out = capsys.readouterr().out
         assert 'DRY-RUN' in out
@@ -101,7 +95,7 @@ class TestMainDryRunWithArgs:
             '--role', 'Builder',
             # missing --bead-id and --event
         ])
-        result = main()
+        result = csa.main()
         assert result == 1
 
     def test_dry_run_with_mission_id(self, monkeypatch, capsys):
@@ -112,7 +106,7 @@ class TestMainDryRunWithArgs:
             '--event', 'bead_failed',
             '--mission-id', 'MP-CAT-A014-4C01',
         ])
-        result = main()
+        result = csa.main()
         assert result == 0
 
     def test_dry_run_incident_event(self, monkeypatch, capsys):
@@ -123,7 +117,7 @@ class TestMainDryRunWithArgs:
             '--event', 'incident',
             '--incident-count', '2',
         ])
-        result = main()
+        result = csa.main()
         assert result == 0
         out = capsys.readouterr().out
         assert 'DRY-RUN' in out
@@ -136,7 +130,7 @@ class TestMainDryRunWithArgs:
 class TestMainSample:
     def test_sample_prints_dry_run_marker(self, monkeypatch, capsys):
         monkeypatch.setattr(sys, 'argv', ['cat_score_agent.py', '--sample'])
-        result = main()
+        result = csa.main()
         assert result == 0
         out = capsys.readouterr().out
         assert 'DRY-RUN' in out
@@ -154,7 +148,7 @@ class TestMainRecord:
             '--role', 'Builder',
             # missing --bead-id and --event
         ])
-        result = main()
+        result = csa.main()
         assert result == 1
 
     def test_record_writes_and_prints(self, monkeypatch, tmp_path, capsys):
@@ -199,4 +193,4 @@ class TestMainRecord:
 class TestMainNoArgs:
     def test_no_args_returns_one(self, monkeypatch):
         monkeypatch.setattr(sys, 'argv', ['cat_score_agent.py'])
-        assert main() == 1
+        assert csa.main() == 1

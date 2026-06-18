@@ -121,13 +121,13 @@ class TestActiveMissionId:
 
 class TestRegistryEntry:
     def test_returns_none_when_no_registry(self, monkeypatch, tmp_path):
-        monkeypatch.setattr(cat_mission_package, 'REGISTRY_PATH', tmp_path / 'MISSING.yaml')
-        # The REGISTRY_PATH doesn't exist — _registry_entry should not crash
-        # but load_yaml will raise; patch it to return None
-        import common
-        monkeypatch.setattr(cat_mission_package, 'REGISTRY_PATH', tmp_path / 'missing.yaml')
-        # We can't call _registry_entry because load_yaml raises; instead test through build_package
-        # This is tested implicitly in TestBuildPackage below.
+        # Create a registry with an empty missions list so _registry_entry has a valid file to read.
+        _make_mission_registry(tmp_path, [])
+        monkeypatch.setattr(
+            cat_mission_package, 'REGISTRY_PATH',
+            tmp_path / 'missions' / 'registry' / 'MISSION_REGISTRY.yaml',
+        )
+        assert _registry_entry('MP-CAT-NONEXISTENT') is None
 
     def test_finds_mission_in_registry(self, monkeypatch, tmp_path):
         missions = [{'mission_id': 'MP-CAT-X001-4C01', 'title': 'T', 'status': 'active'}]

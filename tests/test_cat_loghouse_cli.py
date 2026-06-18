@@ -46,14 +46,14 @@ class TestRunPipeline:
     def test_output_findings_json_is_valid_list(self, tmp_path: Path) -> None:
         """findings.json must be a non-empty JSON list after a successful run."""
         run_pipeline(FIXTURE_DIR, tmp_path)
-        data = json.loads((tmp_path / "findings.json").read_text())
+        data = json.loads((tmp_path / "findings.json").read_text(encoding="utf-8"))
         assert isinstance(data, list)
         assert len(data) > 0
 
     def test_output_dispatch_queue_json_is_valid_list(self, tmp_path: Path) -> None:
         """dispatch_queue.json must be a non-empty JSON list after a successful run."""
         run_pipeline(FIXTURE_DIR, tmp_path)
-        data = json.loads((tmp_path / "dispatch_queue.json").read_text())
+        data = json.loads((tmp_path / "dispatch_queue.json").read_text(encoding="utf-8"))
         assert isinstance(data, list)
         assert len(data) > 0
 
@@ -100,7 +100,7 @@ class TestRunPipeline:
                 "status": "succeeded",
             }
         ]
-        (input_dir / "raw_signals.json").write_text(json.dumps(signals))
+        (input_dir / "raw_signals.json").write_text(json.dumps(signals), encoding="utf-8")
         result = run_pipeline(input_dir, tmp_path / "out4")
         assert result == 1
 
