@@ -53,3 +53,4 @@ jobs:
             evidence/ci/reports/
             evidence/ci/summaries/
             evidence/test-results/
+          retention-days: 14
