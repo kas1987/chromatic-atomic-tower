@@ -7,15 +7,9 @@ exercised here.
 """
 from __future__ import annotations
 
-import sys
-from pathlib import Path
+import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "scripts"
-if str(SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS))
-
-import cat_resolve_go as rg  # noqa: E402
+import cat_resolve_go as rg
 
 
 # ---------------------------------------------------------------------------
@@ -92,9 +86,6 @@ def test_select_bead_allow_queued_still_requires_active_for_return():
 # ---------------------------------------------------------------------------
 # confidence_band
 # ---------------------------------------------------------------------------
-
-import pytest  # noqa: E402
-
 
 @pytest.mark.parametrize("score,band", [
     (95, "very_high"),

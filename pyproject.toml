@@ -12,7 +12,10 @@ dependencies = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+# "." enables `from scripts.x import ...`; "scripts" lets modules that use bare
+# imports (e.g. `from common import ROOT`) be imported directly as `import cat_x`
+# without per-file sys.path manipulation.
+pythonpath = [".", "scripts"]
 
 # Coverage is opt-in (run `make coverage` or `pytest --cov`), not wired into the
 # default `pytest`/`make test` run. This keeps the plain test run fast and avoids

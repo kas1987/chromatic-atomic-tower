@@ -141,4 +141,5 @@ def test_detect_agent_drift_confidence_capped():
     trace = _trace(steps)
     envelopes = ao.trace_to_envelopes(trace)
     finding = ao.detect_agent_drift(trace, envelopes)
+    assert finding is not None
     assert finding["confidence"] <= 0.90

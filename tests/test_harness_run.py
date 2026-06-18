@@ -242,11 +242,11 @@ def test_run_command_nonzero_returncode(tmp_path):
 
 def _init_git_repo(path: Path) -> None:
     for cmd in (
-        "git init -q",
-        "git config user.email t@t.t",
-        "git config user.name t",
+        ["git", "init", "-q"],
+        ["git", "config", "user.email", "t@t.t"],
+        ["git", "config", "user.name", "t"],
     ):
-        subprocess.run(cmd, shell=True, cwd=path, check=True)
+        subprocess.run(cmd, cwd=path, check=True)
 
 
 def test_scoped_diff_empty_for_no_files(tmp_path):
@@ -261,7 +261,7 @@ def test_scoped_diff_shows_untracked_new_file(tmp_path):
     assert "print('x')" in full
     # repo must be left pristine — nothing staged
     staged = subprocess.run(
-        "git diff --cached --name-only", shell=True, cwd=tmp_path,
+        ["git", "diff", "--cached", "--name-only"], cwd=tmp_path,
         capture_output=True, text=True,
     )
     assert staged.stdout.strip() == ""
