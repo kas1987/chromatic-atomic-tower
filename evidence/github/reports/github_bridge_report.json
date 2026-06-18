@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "mission_id": "MP-CAT-A010-4C01",
+  "bead_id": "BEAD-CAT-A010-4C01-01",
+  "checks": [
+    {
+      "check": "pr_title",
+      "passed": true
+    },
+    {
+      "check": "branch",
+      "passed": true
+    },
+    {
+      "check": "commit_message",
+      "passed": true
+    },
+    {
+      "check": "changed_files_scope",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "changed_files": [
+    "gates/github/GITHUB_BRIDGE_RULES.yaml",
+    "docs/operations/GITHUB_BRIDGE.md",
+    "playbooks/GITHUB_BRIDGE_PLAYBOOK.md"
+  ]
+}

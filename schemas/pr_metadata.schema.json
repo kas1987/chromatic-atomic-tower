@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT PR Metadata",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "bead_id",
+    "title",
+    "branch",
+    "commit_message"
+  ],
+  "properties": {
+    "mission_id": {
+      "type": "string",
+      "oneOf": [
+        {
+          "pattern": "^MP-CAT-[0-9]{3}$"
+        },
+        {
+          "pattern": "^MP-CAT-[SABC][0-9]{3}-[0-9]C[0-9]{2}$"
+        }
+      ]
+    },
+    "bead_id": {
+      "type": "string",
+      "oneOf": [
+        {
+          "pattern": "^BEAD-CAT-[0-9]{3}-[0-9]{3}$"
+        },
+        {
+          "pattern": "^BEAD-CAT-[SABC][0-9]{3}-[0-9]C[0-9]{2}-[0-9]{2}$"
+        }
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "commit_message": {
+      "type": "string"
+    },
+    "changed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_bundle": {
+      "type": "string"
+    }
+  }
+}

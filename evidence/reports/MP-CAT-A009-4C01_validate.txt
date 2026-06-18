@@ -1,0 +1,21 @@
+PASS root hygiene: root entries satisfy allowlist
+PASS mission registry: missions\registry\MISSION_REGISTRY.yaml
+PASS agent registry: agents\registry\AGENT_REGISTRY.yaml
+PASS tower state: state\TOWER_STATE.yaml
+PASS mission: missions\active\MP-CAT-A009-4C01_REPO_ALIGNMENT_RECONCILIATION.yaml
+PASS mission: missions\backlog\MP-CAT-A010-4C01_GITHUB_BRIDGE_PR_GOVERNANCE.yaml
+PASS mission: missions\backlog\MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
+PASS mission: missions\backlog\MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
+PASS mission: missions\examples\MP-CAT-EXAMPLE-M2.yaml
+PASS bead: beads\active\BEAD-CAT-A009-4C01-04.yaml
+PASS bead: beads\examples\BEAD-CAT-002-CLOSEOUT-EXAMPLE.yaml
+PASS bead: beads\examples\BEAD-CAT-EXAMPLE-001.yaml
+PASS evidence bundle: evidence\bundles\examples\EB-CAT-002-EXAMPLE.yaml
+PASS evidence bundle: evidence\bundles\examples\EB-CAT-002-FAILED.yaml
+PASS evidence bundle: evidence\bundles\examples\EB-CAT-002-MISSING.yaml
+PASS mission template: missions\templates\M1_BASIC.yaml
+PASS mission template: missions\templates\M2_INTERMEDIATE.yaml
+PASS mission template: missions\templates\M3_COMPLEX.yaml
+PASS mission template: missions\templates\M4_ATOMIC.yaml
+PASS bead template: beads\templates\BEAD_TEMPLATE.yaml
+CAT validation passed.

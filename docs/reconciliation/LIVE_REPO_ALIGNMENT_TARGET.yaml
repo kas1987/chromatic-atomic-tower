@@ -1,0 +1,27 @@
+target_id: CAT-SPRINT-010-GITHUB-BRIDGE-TARGET
+canonical_active_mission_id: ''
+canonical_next_mission_id: MP-CAT-A011-4C01
+required_missions:
+  MP-CAT-000: closed
+  MP-CAT-001: closed
+  MP-CAT-002: closed
+  MP-CAT-003: learned
+  MP-CAT-004: learned
+  MP-CAT-005: closed
+  MP-CAT-A006-4C01: closed
+  MP-CAT-A007-4C01: closed
+  MP-CAT-A008-4C01: learned
+  MP-CAT-A009-4C01: closed
+  MP-CAT-A010-4C01: closed
+required_roadmap_terms:
+  - Repo Alignment and Mission Packet Reconciliation
+  - GitHub Bridge + PR Governance
+  - Agent Scorecard Automation
+  - CAT Portable Project Adapter
+required_rules:
+  - No Mission = No Work
+  - No BEAD = No Dispatch
+  - No Evidence = No Closeout
+  - No Gate = No Promotion
+  - No Registry Entry = No Commit
+  - No Reconciled Registry = No New Sprint

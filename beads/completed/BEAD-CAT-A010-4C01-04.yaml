@@ -1,0 +1,146 @@
+bead_id: BEAD-CAT-A010-4C01-04
+mission_id: MP-CAT-A010-4C01
+title: Implement issue intake scaffold
+status: completed
+agent_role: Builder
+autonomy_level: L3
+objective: Convert structured GitHub issue intake data into draft Mission Pack and
+  BEAD candidate scaffolds.
+allowed_paths:
+- scripts/cat_issue_intake.py
+- .github/ISSUE_TEMPLATE/**
+- docs/github/**
+- tests/test_issue_intake.py
+- tests/fixtures/github/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+dependencies:
+- BEAD-CAT-A010-4C01-03
+tool_budget:
+  search: 2
+  read: 8
+  write: 6
+  execute: 4
+  max_runtime_minutes: 45
+confidence:
+  minimum: 80
+  current: 86
+  objective_clarity: 88
+  scope_clarity: 86
+  evidence_quality: 84
+  reversibility: 88
+  tool_fit: 88
+  risk_awareness: 86
+  testability: 88
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Mission ID or BEAD ID cannot be determined.
+- Changed files exceed allowed paths.
+- Secret or credential handling is requested.
+definition_of_done:
+- Scoped files are created or updated.
+- Validation command passes.
+- Evidence report is produced where applicable.
+- No forbidden path is touched.
+validation:
+- type: tests
+  command: python -m pytest -q tests/test_issue_intake.py
+  evidence_path: evidence/github/reports/github_bridge_report.json
+  required: true
+required_output:
+- issue_intake_script
+- issue_template_docs
+- tests
+handoff:
+  from: Builder
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A010-4C01-05
+last_updated: '2026-06-18T02:50:55+00:00'
+transition_history:
+- timestamp: '2026-06-18T02:50:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A010-4C01-04
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Sprint 010 dispatch
+  evidence: evidence/github/reports/github_bridge_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A010-4C01-04.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T025055Z
+- timestamp: '2026-06-18T02:50:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A010-4C01-04
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Sprint 010 BEAD complete
+  evidence: evidence/github/reports/github_bridge_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A010-4C01-04.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T025055Z
+- timestamp: '2026-06-18T02:50:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A010-4C01-04
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Sprint 010 BEAD complete
+  evidence: evidence/github/reports/github_bridge_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A010-4C01-04.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T025055Z
+- timestamp: '2026-06-18T02:50:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A010-4C01-04
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Sprint 010 BEAD complete
+  evidence: evidence/github/reports/github_bridge_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A010-4C01-04.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T025055Z
+- timestamp: '2026-06-18T02:50:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A010-4C01-04
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: Sprint 010 BEAD complete
+  evidence: evidence/github/reports/github_bridge_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A010-4C01-04.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T025055Z

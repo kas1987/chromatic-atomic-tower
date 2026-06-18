@@ -1,5 +1,5 @@
 version: 0.1.0
-last_updated: '2026-06-18T01:32:51+00:00'
+last_updated: '2026-06-18T02:51:29+00:00'
 active_mission_id: ''
 selection_policy:
   priority_order:
@@ -104,7 +104,7 @@ missions:
   autonomy_level: L3
   confidence: 80
   current_bead_id: ''
-  path: missions\archived\MP-CAT-005_MULTI_MODEL_HARNESS_MVP.yaml
+  path: missions/archived/MP-CAT-005_MULTI_MODEL_HARNESS_MVP.yaml
   created: '2026-06-17'
   last_updated: '2026-06-18T00:49:51+00:00'
 - mission_id: MP-CAT-A006-4C01
@@ -120,7 +120,7 @@ missions:
   autonomy_level: L2
   confidence: 72
   current_bead_id: ''
-  path: missions\archived\MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml
+  path: missions/archived/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml
   created: '2026-06-17'
   last_updated: '2026-06-18T01:32:51+00:00'
 - mission_id: MP-CAT-A007-4C01
@@ -136,7 +136,7 @@ missions:
   autonomy_level: L2
   confidence: 80
   current_bead_id: ''
-  path: missions\archived\MP-CAT-A007-4C01_LOGHOUSE_INTELLIGENCE.yaml
+  path: missions/archived/MP-CAT-A007-4C01_LOGHOUSE_INTELLIGENCE.yaml
   created: '2026-06-17'
   last_updated: '2026-06-18T01:25:59+00:00'
 - mission_id: MP-CAT-A008-4C01
@@ -153,5 +153,69 @@ missions:
   confidence: 85
   current_bead_id: ''
   path: missions/archived/MP-CAT-A008-4C01_STATE_ALIGNMENT_GOVERNANCE.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18'
+- mission_id: MP-CAT-A009-4C01
+  title: Repo Alignment and Mission Packet Reconciliation
+  level: M3
+  status: closed
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 90
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A009-4C01_REPO_ALIGNMENT_RECONCILIATION.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T02:44:34+00:00'
+- mission_id: MP-CAT-A010-4C01
+  title: GitHub Bridge + PR Governance
+  level: M3
+  status: closed
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 88
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A010-4C01_GITHUB_BRIDGE_PR_GOVERNANCE.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T02:51:29+00:00'
+- mission_id: MP-CAT-A011-4C01
+  title: Agent Scorecard Automation
+  level: M3
+  status: draft
+  priority: 3
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: medium
+  autonomy_level: L2
+  confidence: 80
+  current_bead_id: ''
+  path: missions/backlog/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18'
+- mission_id: MP-CAT-A012-4C01
+  title: CAT Portable Project Adapter
+  level: M3
+  status: draft
+  priority: 4
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: medium
+  autonomy_level: L2
+  confidence: 80
+  current_bead_id: ''
+  path: missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
   created: '2026-06-18'
   last_updated: '2026-06-18'
