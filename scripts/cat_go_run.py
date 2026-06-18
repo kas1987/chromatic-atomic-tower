@@ -49,13 +49,15 @@ def next_actionable_stage(record: dict) -> str | None:
 
 
 def plan_action(record: dict) -> dict:
-    """Return a plan dict: {next_stage, action, automatable, reason}.
+    """Return a plan dict: {next_stage, action, automatable, kind, reason}.
 
-    Decision matrix:
-    - No pending stage          -> action='none', automatable=False
-    - next_stage=='continue_close' and conditions met
-                                -> action='run cat_sprint_closeout.py', automatable=True
-    - Any other pending stage   -> action='manual: ...', automatable=False
+    ``kind`` classifies the action so the executor knows how to run it safely:
+      - ``none``   : nothing to do (all stages satisfied)
+      - ``check``  : safe, read-only audited script (no gate) — e.g. the
+                     Score & Validate gate via cat_validate.py
+      - ``mutate`` : state-changing, delegated to an audited script behind the
+                     agent gate — e.g. closing via cat_sprint_closeout.py
+      - ``manual`` : agent/operator-driven; the orchestrator only recommends
     """
     next_stage = next_actionable_stage(record)
 
@@ -64,7 +66,19 @@ def plan_action(record: dict) -> dict:
             'next_stage': None,
             'action': 'none',
             'automatable': False,
+            'kind': 'none',
             'reason': 'all stages satisfied',
+        }
+
+    # Score & Validate — run the validation gate. Read-only: it reports PASS/FAIL
+    # without mutating any state, so it needs no approval gate.
+    if next_stage == 'score_validate':
+        return {
+            'next_stage': 'score_validate',
+            'action': 'run cat_validate.py --all',
+            'automatable': True,
+            'kind': 'check',
+            'reason': 'run the Score & Validate gate (schema + governance validation)',
         }
 
     if next_stage == 'continue_close':
@@ -85,6 +99,7 @@ def plan_action(record: dict) -> dict:
                 'next_stage': 'continue_close',
                 'action': 'run cat_sprint_closeout.py',
                 'automatable': True,
+                'kind': 'mutate',
                 'reason': (
                     f'all BEADs terminal and other stages satisfied '
                     f'({bead_count} BEAD(s)); mission ready to close'
@@ -96,6 +111,7 @@ def plan_action(record: dict) -> dict:
         'next_stage': next_stage,
         'action': f'manual: {next_stage} is agent/operator-driven',
         'automatable': False,
+        'kind': 'manual',
         'reason': f'stage {next_stage} requires agent or operator action before automation',
     }
 
@@ -190,27 +206,39 @@ def main() -> int:
 
     # --execute path.
     if not dry_run:
+        kind = action_plan.get('kind')
+
         if not action_plan['automatable']:
             print()
             print(f'Not automatable. Recommended action: {action_plan["action"]}')
             return 0
 
-        # Only automatable action currently: close via cat_sprint_closeout.py.
-        # The gate stays — it is approved by the agent approver (Auditor), and
-        # the closeout audit records that agent as the acting approver.
-        approver_agent = gate_approver_agent()
-        _agent_gate_close(mission_id, approver_agent)
-        emit_record['gate_approver'] = approver_agent
+        if kind == 'check':
+            # Safe, read-only audited script — no gate required.
+            cmd = [sys.executable, str(ROOT / 'scripts' / 'cat_validate.py'), '--all']
+            print(f'\nInvoking (check, read-only): {" ".join(cmd)}')
+            result = subprocess.run(cmd, cwd=str(ROOT))
+        elif kind == 'mutate':
+            # State-changing close — delegated to the audited script behind the
+            # agent gate (approved by the Auditor, recorded as the closeout actor).
+            approver_agent = gate_approver_agent()
+            _agent_gate_close(mission_id, approver_agent)
+            emit_record['gate_approver'] = approver_agent
+            cmd = [
+                sys.executable,
+                str(ROOT / 'scripts' / 'cat_sprint_closeout.py'),
+                '--execute',
+                '--mission', mission_id,
+                '--actor', approver_agent,
+            ]
+            print(f'\nInvoking: {" ".join(cmd)}')
+            result = subprocess.run(cmd, cwd=str(ROOT))
+        else:
+            print()
+            print(f'Recommended action: {action_plan["action"]}')
+            return 0
 
-        cmd = [
-            sys.executable,
-            str(ROOT / 'scripts' / 'cat_sprint_closeout.py'),
-            '--execute',
-            '--mission', mission_id,
-            '--actor', approver_agent,
-        ]
-        print(f'\nInvoking: {" ".join(cmd)}')
-        result = subprocess.run(cmd, cwd=str(ROOT))
+        emit_record['returncode'] = result.returncode
 
         # Write evidence only on --execute.
         EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)

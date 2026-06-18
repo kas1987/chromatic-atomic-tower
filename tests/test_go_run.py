@@ -112,8 +112,8 @@ def test_plan_action_automatable_close_other_stages_satisfied():
     assert result['action'] == 'run cat_sprint_closeout.py'
 
 
-def test_plan_action_manual_for_non_close_pending():
-    """plan_action returns manual action for a non-close pending stage."""
+def test_plan_action_score_validate_is_automatable_check():
+    """G-1b: score_validate pending -> automatable read-only check (no gate)."""
     statuses = {name: 'satisfied' for name in cat_go_run.STAGES}
     statuses['score_validate'] = 'pending'
     statuses['continue_close'] = 'pending'
@@ -121,6 +121,30 @@ def test_plan_action_manual_for_non_close_pending():
 
     result = cat_go_run.plan_action(record)
     # score_validate comes before continue_close in STAGES, so it's the next.
-    assert result['automatable'] is False
     assert result['next_stage'] == 'score_validate'
+    assert result['automatable'] is True
+    assert result['kind'] == 'check'
+    assert 'cat_validate.py' in result['action']
+
+
+def test_plan_action_manual_for_agent_driven_stage():
+    """A genuinely agent/operator-driven stage (execute) stays manual."""
+    statuses = {name: 'satisfied' for name in cat_go_run.STAGES}
+    statuses['execute'] = 'pending'
+    record = _make_record(statuses, bead_count=3, mission_status='active')
+
+    result = cat_go_run.plan_action(record)
+    assert result['next_stage'] == 'execute'
+    assert result['automatable'] is False
+    assert result['kind'] == 'manual'
     assert 'manual' in result['action']
+
+
+def test_plan_action_close_kind_is_mutate():
+    """The close action is classified as a gated mutation."""
+    statuses = {name: 'satisfied' for name in cat_go_run.STAGES}
+    statuses['continue_close'] = 'pending'
+    record = _make_record(statuses, bead_count=4, mission_status='active')
+    result = cat_go_run.plan_action(record)
+    assert result['kind'] == 'mutate'
+    assert result['automatable'] is True

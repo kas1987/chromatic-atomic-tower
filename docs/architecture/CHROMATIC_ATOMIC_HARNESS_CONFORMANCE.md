@@ -144,11 +144,14 @@ Ordered by leverage. Each becomes a mission or BEAD when scheduled.
 
 | ID | Gap | Plane | Proposed vehicle |
 |----|-----|-------|------------------|
-| **G-1b** | Orchestrator automates more stages than close (e.g. dispatch, validate) by delegating to audited scripts | Pipeline | extend `cat_go_run.py` |
-| **G-7** | First-class Database & Calendar/Email tool planes | Tool layer | future mission |
+| **G-7** | First-class Database & Calendar/Email tool planes (schema + adapter scaffolding) | Tool layer | mission pack |
 
 ### Recently closed
 
+- **G-1b — orchestrator automates Score & Validate** — `cat_go_run.py` now
+  runs the validation gate (`cat_validate.py --all`) as a safe read-only
+  `check` action when `score_validate` is the next stage; close stays a gated
+  `mutate`. Remaining stages (intent…execute) are intentionally agent-driven.
 - **G-1a — active GO-mode orchestrator** — `scripts/cat_go_run.py` picks the
   next actionable stage and advances it under `--execute` by
   delegating to `cat_sprint_closeout.py`; default dry-run, agent-approved gate
