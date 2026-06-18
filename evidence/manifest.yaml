@@ -1,0 +1,19 @@
+schema_version: 0.1.0
+generated_at: '2026-06-18T16:25:43+00:00'
+evidence:
+- evidence_id: EVD-A014-4C01-001
+  mission_id: MP-CAT-A014-4C01
+  bead_id: BEAD-CAT-A014-4C01-01
+  artifact_path: evidence/reports/state-transition-test-output.txt
+  artifact_type: test_output
+  generated_at: '2026-06-18T16:22:00+00:00'
+  validator: pytest
+  sha256: 8eb57ef8ec6e1a38336a7e2f9a3e851f5e7cd1b96a2d0f2e9723dda060a9ed32
+- evidence_id: EVD-A014-4C01-002
+  mission_id: MP-CAT-A014-4C01
+  bead_id: BEAD-CAT-A014-4C01-01
+  artifact_path: evidence/reports/validate_go001.txt
+  artifact_type: validation_log
+  generated_at: '2026-06-18T16:22:00+00:00'
+  validator: cat_validate.py
+  sha256: 060d8e29a9700eb1ea410f714693a2a0be8177113ba83f3806dd2a08f6480bb6

@@ -1,0 +1,24 @@
+version: 0.1.0
+state_id: TOWER-STATE-011
+status: sprint_idle
+active_sprint: SPRINT-012
+active_mission_id: MP-CAT-A014-4C01
+active_bead_id: BEAD-CAT-A014-4C01-03
+go_mode: enabled
+last_updated: '2026-06-18T16:27:04+00:00'
+operator: Human Owner
+control_planes:
+  mission: active
+  execution: state_transition_engine_available
+  evidence: evidence_gate_available
+  learning: multi_model_harness
+  governance: tower_guard_available
+current_constraints:
+- Workers touch only ticket-listed paths.
+- Max 2 retries per worker task.
+- No worker patch merged without Human Owner approval.
+- Opus invoked at most once per ticket (final review only).
+- No GitHub Mutation = No Mission + BEAD Trace.
+next_command: python scripts/cat_resolve_go.py
+sprint_goal: "CAT Portable Project Adapter \u2014 .cat folder spec, schemas, generator\
+  \ script, and validation wiring."

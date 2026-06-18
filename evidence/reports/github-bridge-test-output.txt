@@ -1,0 +1,4 @@
+PASS: SAMPLE_PASS validated correctly (no errors)
+PASS: SAMPLE_FAIL_NO_MISSION correctly rejected (missing Mission ID)
+PASS: SAMPLE_FAIL_NO_BEAD correctly rejected (missing BEAD ID)
+PASS: all 3 required templates present

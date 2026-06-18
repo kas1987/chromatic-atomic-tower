@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT GO Dispatch Packet",
+  "description": "Structured output from cat_resolve_go.py describing the next work unit.",
+  "type": "object",
+  "required": [
+    "dispatch_status",
+    "mission_id",
+    "bead_id",
+    "bead_title",
+    "allowed_paths",
+    "forbidden_paths",
+    "validation",
+    "stop_conditions"
+  ],
+  "properties": {
+    "dispatch_status": {
+      "type": "string",
+      "enum": ["ready", "blocked"]
+    },
+    "reason": {"type": "string"},
+    "mission_id": {"type": "string"},
+    "mission_title": {"type": "string"},
+    "mission_level": {"type": "string"},
+    "mission_risk": {"type": "string"},
+    "bead_id": {"type": "string"},
+    "bead_title": {"type": "string"},
+    "bead_status": {"type": "string"},
+    "agent_role": {"type": "string"},
+    "autonomy_level": {"type": "string"},
+    "confidence": {"type": "number"},
+    "confidence_minimum": {"type": "number"},
+    "confidence_band": {"type": "string"},
+    "risk_level": {"type": "string"},
+    "reversibility": {"type": "string"},
+    "allowed_paths": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "forbidden_paths": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "tool_budget": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "definition_of_done": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "validation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {"type": "string"},
+          "command": {"type": "string"},
+          "evidence_path": {"type": "string"},
+          "required": {"type": "boolean"}
+        }
+      }
+    },
+    "stop_conditions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "required_output": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "bead_path": {"type": ["string", "null"]},
+    "mission_path": {"type": ["string", "null"]}
+  }
+}

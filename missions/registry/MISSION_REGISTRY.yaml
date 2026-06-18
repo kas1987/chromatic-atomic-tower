@@ -1,5 +1,5 @@
 version: 0.1.0
-last_updated: '2026-06-18T14:37:39+00:00'
+last_updated: '2026-06-18T16:39:49+00:00'
 active_mission_id: ''
 selection_policy:
   priority_order:
@@ -235,3 +235,19 @@ missions:
   path: missions/archived/MP-CAT-A013-4C01_TOOL_PLANE_SCAFFOLDING.yaml
   created: '2026-06-18'
   last_updated: '2026-06-18T05:29:41+00:00'
+- mission_id: MP-CAT-A014-4C01
+  title: Complete CAT GO Automation Control Loop
+  level: M3
+  status: learned
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Kris Sayresmith
+  risk_level: medium-high
+  reversibility: high
+  autonomy_level: L3
+  confidence: 78
+  current_bead_id: BEAD-CAT-A014-4C01-07
+  path: missions/archived/MP-CAT-A014-4C01_GO_AUTOMATION.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T16:49:00+00:00'

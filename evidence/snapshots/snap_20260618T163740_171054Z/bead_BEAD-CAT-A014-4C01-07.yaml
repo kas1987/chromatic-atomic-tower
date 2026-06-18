@@ -1,0 +1,75 @@
+bead_id: BEAD-CAT-A014-4C01-07
+mission_id: MP-CAT-A014-4C01
+title: GO Resolver Dispatch Packet Standard — Schema Validation and Tests
+status: queued
+agent_role: Builder
+autonomy_level: L3
+objective: >-
+  Upgrade cat_resolve_go.py to emit output that validates against
+  go_dispatch_packet.schema.json; add --format json --check-schema flag;
+  add tests for the dispatch packet structure.
+allowed_paths:
+  - scripts/cat_resolve_go.py
+  - schemas/go_dispatch_packet.schema.json
+  - docs/go_dispatch_packet.md
+  - tests/test_cat_resolve_go.py
+forbidden_paths:
+  - .env
+  - secrets/**
+dependencies:
+  - BEAD-CAT-A014-4C01-06
+tool_budget:
+  search: 2
+  read: 8
+  write: 5
+  execute: 4
+  max_runtime_minutes: 30
+confidence:
+  minimum: 80
+  current: 83
+  objective_clarity: 88
+  scope_clarity: 88
+  evidence_quality: 80
+  reversibility: 90
+  tool_fit: 86
+  risk_awareness: 82
+  testability: 88
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - cat_resolve_go.py changes break existing callers.
+  - Schema validation fails due to missing required fields.
+  - Confidence drops below minimum.
+stop_on_forbidden_path: true
+definition_of_done:
+  - cat_resolve_go.py --format json --check-schema passes.
+  - go_dispatch_packet.schema.json is installed and valid.
+  - Dispatch packet contains mission, BEAD, allowed_paths, forbidden_paths, tool_budget, validation, stop_conditions.
+  - JSON and markdown output modes work.
+  - Low-confidence BEADs block dispatch.
+  - tests/test_cat_resolve_go.py passes.
+  - docs/go_dispatch_packet.md documents the schema.
+  - evidence/reports/go-dispatch-schema-test-output.txt written.
+validation:
+  - type: script_check
+    command: python scripts/cat_resolve_go.py --format json --check-schema
+    evidence_path: evidence/reports/go-dispatch-schema-test-output.txt
+    required: true
+  - type: unit_tests
+    command: python -m pytest -q tests/test_cat_resolve_go.py
+    evidence_path: evidence/reports/resolve-go-pytest-output.txt
+    required: true
+  - type: validate_all
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/validate_go007.txt
+    required: true
+required_output:
+  - summary
+  - files_changed
+  - validation_result
+  - evidence_path
+handoff:
+  next_bead_id: null
+  notes:
+    - This is the final BEAD of MP-CAT-A014-4C01.
+    - After completion, close the mission and run cat_sprint_closeout.py.

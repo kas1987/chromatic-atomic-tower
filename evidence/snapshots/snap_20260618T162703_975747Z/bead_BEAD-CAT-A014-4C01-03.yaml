@@ -1,0 +1,102 @@
+bead_id: BEAD-CAT-A014-4C01-03
+mission_id: MP-CAT-A014-4C01
+title: "Evidence Manifest Index \u2014 Build and Validate"
+status: in_progress
+agent_role: Builder
+autonomy_level: L3
+objective: Build cat_evidence_index.py that rebuilds evidence/manifest.yaml from the
+  evidence folder, validates entries against evidence_manifest.schema.json, and adds
+  tests.
+allowed_paths:
+- evidence/manifest.yaml
+- schemas/evidence_manifest.schema.json
+- scripts/cat_evidence_index.py
+- tests/test_cat_evidence_index.py
+- docs/evidence_index.md
+forbidden_paths:
+- .env
+- secrets/**
+dependencies:
+- BEAD-CAT-A014-4C01-02
+tool_budget:
+  search: 2
+  read: 8
+  write: 5
+  execute: 4
+  max_runtime_minutes: 25
+confidence:
+  minimum: 78
+  current: 80
+  objective_clarity: 85
+  scope_clarity: 85
+  evidence_quality: 78
+  reversibility: 92
+  tool_fit: 82
+  risk_awareness: 80
+  testability: 85
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Index rebuild writes outside evidence/ tree.
+- Confidence drops below minimum.
+stop_on_forbidden_path: true
+definition_of_done:
+- cat_evidence_index.py --check passes.
+- Evidence entries include mission_id, bead_id, artifact_path, artifact_type, generated_at,
+  sha256.
+- Missing artifact paths fail validation.
+- Duplicate evidence IDs fail validation.
+- tests/test_cat_evidence_index.py passes.
+- docs/evidence_index.md documents the index schema and usage.
+- evidence/reports/evidence-index-test-output.txt written.
+validation:
+- type: script_check
+  command: python scripts/cat_evidence_index.py --check
+  evidence_path: evidence/reports/evidence-index-test-output.txt
+  required: true
+- type: unit_tests
+  command: python -m pytest -q tests/test_cat_evidence_index.py
+  evidence_path: evidence/reports/evidence-index-pytest-output.txt
+  required: true
+required_output:
+- summary
+- files_changed
+- validation_result
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-A014-4C01-04
+  notes: []
+last_updated: '2026-06-18T16:27:03+00:00'
+transition_history:
+- timestamp: '2026-06-18T16:27:02+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A014-4C01-03
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'BEAD-03: cat_evidence_index.py built and tested'
+  evidence: evidence/reports/evidence-index-test-output.txt
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A014-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T162702_692987Z
+- timestamp: '2026-06-18T16:27:03+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A014-4C01-03
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: 'BEAD-03: cat_evidence_index.py built and tested'
+  evidence: evidence/reports/evidence-index-test-output.txt
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A014-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T162703_318167Z

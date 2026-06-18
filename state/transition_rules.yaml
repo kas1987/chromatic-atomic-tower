@@ -1,0 +1,60 @@
+# CAT State Transition Rules — governance-layer alias.
+#
+# This file is a governance-layer alias that delegates to the canonical rules
+# in gates/state/transition_rules.yaml (supersedes gates/state/STATE_TRANSITION_RULES.yaml).
+#
+# cat_transition.py searches this file first (state/transition_rules.yaml),
+# then falls back to gates/state/transition_rules.yaml and
+# gates/state/STATE_TRANSITION_RULES.yaml.
+#
+# To change transition rules: edit gates/state/transition_rules.yaml only.
+# This file re-exports the same structure so that governance tooling can read
+# transition rules from the state/ layer without importing from gates/.
+#
+# DO NOT add rules here that differ from gates/state/transition_rules.yaml.
+# Run `python scripts/cat_check_repo.py` after any change to either file.
+
+# Canonical source: gates/state/transition_rules.yaml
+# Schema: schemas/state_transition.schema.json (per-arc rule format)
+canonical: gates/state/transition_rules.yaml
+version: alias-0.1.0
+
+# Valid BEAD states (lifecycle summary for governance dashboards)
+bead_lifecycle:
+  states:
+    - queued
+    - active
+    - in_progress
+    - validating
+    - reviewed
+    - changes_requested
+    - completed
+    - failed
+    - blocked
+    - escalated
+    - archived
+  terminal_states:
+    - completed
+    - failed
+    - archived
+
+# Valid mission states
+mission_lifecycle:
+  states:
+    - draft
+    - triaged
+    - approved
+    - dispatched
+    - in_progress
+    - validating
+    - reviewed
+    - closed
+    - blocked
+    - escalated
+    - rolled_back
+    - abandoned
+    - incident
+    - learned
+  terminal_states:
+    - abandoned
+    - learned
