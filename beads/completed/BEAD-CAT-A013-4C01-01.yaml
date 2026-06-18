@@ -1,0 +1,61 @@
+bead_id: BEAD-CAT-A013-4C01-01
+mission_id: MP-CAT-A013-4C01
+title: Database tool-plane schema + adapter interface
+status: completed
+agent_role: Builder
+autonomy_level: L2
+objective: "Define schemas/tool_plane_database.schema.json (a validated descriptor\
+  \ for the Database tool plane) and scripts/adapters/database_adapter.py \u2014 a\
+  \ READ-ONLY adapter interface stub with no live credentials or network/db I/O."
+allowed_paths:
+- schemas/tool_plane_database.schema.json
+- scripts/adapters/database_adapter.py
+- tests/test_tool_plane_database.py
+- tests/fixtures/toolplanes/database_example.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+dependencies: []
+tool_budget:
+  search: 1
+  read: 5
+  write: 4
+  execute: 2
+  max_runtime_minutes: 25
+confidence:
+  minimum: 80
+  current: 84
+  objective_clarity: 88
+  scope_clarity: 86
+  evidence_quality: 80
+  reversibility: 92
+  tool_fit: 86
+  risk_awareness: 82
+  testability: 86
+risk_level: low
+reversibility: high
+stop_conditions:
+- Need to touch a file outside allowed_paths.
+- Need a secret, credential, or live DB connection.
+- Tests fail.
+definition_of_done:
+- schemas/tool_plane_database.schema.json created and validates a fixture example.
+- scripts/adapters/database_adapter.py provides a read-only interface stub (no I/O).
+- tests/test_tool_plane_database.py passes.
+validation:
+- type: tests
+  command: python -m pytest -q tests/test_tool_plane_database.py
+  evidence_path: evidence/toolplanes/BEAD-CAT-A013-4C01-01_tests.md
+  required: true
+required_output:
+- database_tool_plane_schema
+- database_adapter_stub
+- test_suite
+handoff:
+  next_bead_id: BEAD-CAT-A013-4C01-02
+  notes: []
+last_updated: '2026-06-18T05:29:40+00:00'

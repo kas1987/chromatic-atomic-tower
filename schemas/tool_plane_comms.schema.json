@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/tool_plane_comms.schema.json",
+  "title": "Calendar/Email (Comms) Tool Plane",
+  "description": "Governance descriptor for the Calendar/Email communications tool plane. Read-only by default; references the provider by NAME only (never live credentials).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["plane", "channels", "capabilities", "default_mode"],
+  "properties": {
+    "plane": {"const": "comms"},
+    "channels": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["email", "calendar"]},
+      "uniqueItems": true
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["read", "list", "draft", "send"]},
+      "uniqueItems": true
+    },
+    "default_mode": {"type": "string", "enum": ["read_only", "draft_only", "send"], "default": "read_only"},
+    "provider_ref": {
+      "type": "string",
+      "description": "A NAMED reference resolved out-of-band — never live credentials."
+    },
+    "allowed_senders": {"type": "array", "items": {"type": "string"}},
+    "forbidden_operations": {"type": "array", "items": {"type": "string"}}
+  }
+}

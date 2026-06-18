@@ -16,6 +16,9 @@ VALIDATION_TARGETS = [
     ('tower state', ROOT / 'state/TOWER_STATE.yaml', ROOT / 'schemas/tower_state.schema.json'),
     ('intent envelope example', ROOT / 'tests/fixtures/intent/intent_envelope_example.json', ROOT / 'schemas/intent_envelope.schema.json'),
     ('handoff packet example', ROOT / 'tests/fixtures/handoff/handoff_packet_example.json', ROOT / 'schemas/handoff_packet.schema.json'),
+    ('tool registry', ROOT / 'agents/registry/TOOL_REGISTRY.yaml', ROOT / 'schemas/tool_registry.schema.json'),
+    ('database tool plane example', ROOT / 'tests/fixtures/toolplanes/database_example.json', ROOT / 'schemas/tool_plane_database.schema.json'),
+    ('comms tool plane example', ROOT / 'tests/fixtures/toolplanes/comms_example.json', ROOT / 'schemas/tool_plane_comms.schema.json'),
 ]
 
 MISSION_PATTERNS = [
