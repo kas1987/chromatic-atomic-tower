@@ -1,32 +1,73 @@
-version: 0.0.0
-last_updated: "2026-06-17"
+version: 1.0.0
+last_updated: '2026-06-18T04:05:56+00:00'
 score_policy:
   starting_score: 70
   promote_threshold: 85
   demote_threshold: 55
   severe_incident_cap: 40
 agents:
-  - role: Orchestrator
-    score: 75
-    completed_beads: 0
-    failed_beads: 0
-    incidents: 0
-    current_trust: provisional
-  - role: Builder
-    score: 70
-    completed_beads: 0
-    failed_beads: 0
-    incidents: 0
-    current_trust: provisional
-  - role: Reviewer
-    score: 70
-    completed_beads: 0
-    failed_beads: 0
-    incidents: 0
-    current_trust: provisional
-  - role: Scribe
-    score: 70
-    completed_beads: 0
-    failed_beads: 0
-    incidents: 0
-    current_trust: provisional
+- role: Orchestrator
+  score: 75
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []
+- role: Scout
+  score: 70
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []
+- role: Builder
+  score: 90
+  completed_beads: 4
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history:
+  - timestamp: '2026-06-18T04:05:55+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A011-4C01-01
+  - timestamp: '2026-06-18T04:05:55+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A011-4C01-02
+  - timestamp: '2026-06-18T04:05:56+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A011-4C01-03
+  - timestamp: '2026-06-18T04:05:56+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A011-4C01-04
+- role: Reviewer
+  score: 70
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []
+- role: Auditor
+  score: 70
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []
+- role: Scribe
+  score: 70
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []
+- role: Security
+  score: 70
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []

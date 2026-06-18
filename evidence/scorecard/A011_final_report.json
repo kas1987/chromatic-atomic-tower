@@ -1,0 +1,45 @@
+{
+  "mission_id": "MP-CAT-A011-4C01",
+  "title": "Agent Scorecard Automation",
+  "generated_at": "2026-06-18T07:30:00+00:00",
+  "status": "ready_for_closeout",
+  "beads_completed": [
+    "BEAD-CAT-A011-4C01-01",
+    "BEAD-CAT-A011-4C01-02",
+    "BEAD-CAT-A011-4C01-03",
+    "BEAD-CAT-A011-4C01-04"
+  ],
+  "test_suite": {
+    "total": 255,
+    "passed": 255,
+    "failed": 0,
+    "delta_from_start": "+29 tests (226 -> 255)"
+  },
+  "deliverables": {
+    "schemas/agent_scorecard.schema.json": "created",
+    "agents/registry/AGENT_SCORECARD.yaml": "upgraded v0.0.0 -> v1.0.0",
+    "agents/scorecards/README.md": "created",
+    "scripts/cat_agent_scorecard.py": "created (score-bead, promote, demote, penalize, report)",
+    "scripts/cat_tool_budget_tracker.py": "created (summarize, check)",
+    "scripts/cat_sprint_closeout.py": "integrated _score_beads_on_closeout",
+    "docs/agent_scorecard_spec.md": "created",
+    "tests/test_agent_scorecard.py": "created (18 tests)",
+    "tests/test_tool_budget_tracker.py": "created (11 tests)",
+    "scripts/cat_validate.py": "added agent_scorecard to VALIDATION_TARGETS"
+  },
+  "acceptance_criteria": {
+    "schema_validates": true,
+    "scorecard_upgraded_to_v1": true,
+    "scoring_engine_all_subcommands": true,
+    "tool_budget_tracker_functional": true,
+    "closeout_integration": true,
+    "spec_doc_written": true,
+    "all_tests_pass": true
+  },
+  "cat_validation_chain": {
+    "cat_check_repo": "pass",
+    "cat_validate_all": "pass",
+    "cat_align_check_strict": "pass",
+    "pytest": "255 passed"
+  }
+}

@@ -20,13 +20,17 @@ def test_registry_audit_passes():
 
 
 def test_reconciliation_passes():
+    import yaml
     mod = _load_module('cat_reconcile', 'scripts/cat_reconcile.py')
     report = mod.check(
         Path('docs/reconciliation/LIVE_REPO_ALIGNMENT_TARGET.yaml'),
         Path.cwd(),
     )
     assert report['status'] == 'passed', report
-    assert report['active_mission_id'] in ('', None)
+    target = yaml.safe_load(
+        Path('docs/reconciliation/LIVE_REPO_ALIGNMENT_TARGET.yaml').read_text(encoding='utf-8')
+    )
+    assert report['active_mission_id'] == target.get('canonical_active_mission_id', ''), report
 
 
 def test_roadmap_contains_canonical_sprints():

@@ -12,6 +12,7 @@ CHECKS = [
     ('repo_structure', ['python', 'scripts/cat_check_repo.py']),
     ('schema_validation', ['python', 'scripts/cat_validate.py', '--all']),
     ('alignment_check', ['python', 'scripts/cat_align_check.py', '--strict']),
+    ('scorecard_parity', ['python', 'scripts/cat_agent_scorecard.py', 'check-parity']),
     ('tower_status', ['python', 'scripts/cat_status.py']),
 ]
 

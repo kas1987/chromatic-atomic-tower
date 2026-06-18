@@ -1,0 +1,20 @@
+{
+  "bead_id": "BEAD-CAT-A011-4C01-03",
+  "mission_id": "MP-CAT-A011-4C01",
+  "generated_at": "2026-06-18T07:00:00+00:00",
+  "validation_type": "tests",
+  "status": "passed",
+  "test_file": "tests/test_tool_budget_tracker.py",
+  "test_count": 11,
+  "passed": 11,
+  "failed": 0,
+  "artifacts": ["scripts/cat_tool_budget_tracker.py"],
+  "subcommands_implemented": ["summarize", "check"],
+  "features": [
+    "Reads BEAD contract tool_budget field",
+    "Computes per-category usage % vs limit",
+    "Detects exceeded categories",
+    "Writes JSON report file",
+    "Exits 1 on exceeded budget (check subcommand)"
+  ]
+}

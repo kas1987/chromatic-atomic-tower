@@ -1,6 +1,6 @@
 version: 0.1.0
-last_updated: '2026-06-18T04:13:31+00:00'
-active_mission_id: ''
+last_updated: '2026-06-18T04:04:50+00:00'
+active_mission_id: MP-CAT-A011-4C01
 selection_policy:
   priority_order:
   - approved
@@ -190,7 +190,7 @@ missions:
 - mission_id: MP-CAT-A011-4C01
   title: Agent Scorecard Automation
   level: M3
-  status: closed
+  status: approved
   priority: 3
   priority_tier: A
   complexity_order: 4C01
@@ -199,10 +199,10 @@ missions:
   reversibility: medium
   autonomy_level: L2
   confidence: 80
-  current_bead_id: ''
-  path: missions/archived/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
+  current_bead_id: BEAD-CAT-A011-4C01-04
+  path: missions/active/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
   created: '2026-06-18'
-  last_updated: '2026-06-18T04:05:08+00:00'
+  last_updated: '2026-06-18T04:04:50+00:00'
 - mission_id: MP-CAT-A012-4C01
   title: CAT Portable Project Adapter
   level: M3
