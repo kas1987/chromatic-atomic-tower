@@ -56,3 +56,47 @@ def test_archived_with_malformed_history_does_not_raise():
 def test_non_terminal_status_returns_none():
     assert csc._derive_bead_outcome('in_progress', {}) is None
     assert csc._derive_bead_outcome('blocked', {}) is None
+
+
+# --- role pre-flight validation (codex #3433013374) -------------------------
+
+import yaml
+
+
+def _bead_tuple(tmp_path, bead_id, status, role):
+    p = tmp_path / f'{bead_id}.yaml'
+    body = {'bead_id': bead_id, 'status': status}
+    if role is not None:
+        body['agent_role'] = role
+    p.write_text(yaml.safe_dump(body), encoding='utf-8')
+    return (bead_id, status, p)
+
+
+def test_validate_roles_accepts_known_role(tmp_path):
+    beads = [_bead_tuple(tmp_path, 'B-1', 'completed', 'Builder')]
+    assert csc._validate_scorecard_roles(beads) == []
+
+
+def test_validate_roles_flags_unknown_role(tmp_path):
+    beads = [_bead_tuple(tmp_path, 'B-1', 'completed', 'Architect')]
+    errors = csc._validate_scorecard_roles(beads)
+    assert errors == [('B-1', 'Architect')]
+
+
+def test_validate_roles_skips_non_scoring_status(tmp_path):
+    # in_progress derives no outcome -> role is irrelevant, no error even if unknown.
+    beads = [_bead_tuple(tmp_path, 'B-1', 'in_progress', 'Architect')]
+    assert csc._validate_scorecard_roles(beads) == []
+
+
+def test_validate_roles_defaults_missing_role_to_builder(tmp_path):
+    beads = [_bead_tuple(tmp_path, 'B-1', 'completed', None)]
+    assert csc._validate_scorecard_roles(beads) == []
+
+
+def test_real_a011_beads_have_valid_roles():
+    """Regression: every A011 BEAD maps to a real scorecard role (no Architect)."""
+    from cat_align_common import beads_for_mission
+    beads = beads_for_mission('MP-CAT-A011-4C01', csc.ROOT)
+    assert beads, 'expected A011 BEADs to be discoverable'
+    assert csc._validate_scorecard_roles(beads) == []

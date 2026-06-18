@@ -2,7 +2,7 @@ bead_id: BEAD-CAT-A011-4C01-01
 mission_id: MP-CAT-A011-4C01
 title: Define agent scorecard schema and upgrade data model
 status: completed
-agent_role: Architect
+agent_role: Builder
 autonomy_level: L2
 objective: Create schemas/agent_scorecard.schema.json defining all scorecard fields
   (score, trust_level, completed_beads, failed_beads, incidents, history). Upgrade
@@ -67,7 +67,7 @@ required_output:
 - scorecards_directory
 handoff:
   from: Orchestrator
-  to: Architect
+  to: Builder
   reviewer: Human Owner
   next_bead_id: BEAD-CAT-A011-4C01-02
 last_updated: '2026-06-18T04:04:48+00:00'

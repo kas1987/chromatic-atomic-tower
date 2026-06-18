@@ -38,10 +38,27 @@ def closeout_mission(mission_id: str, *, dry_run: bool, evidence: str, actor: st
         print(f'mission {mission_id} already terminal: {status}')
         return 0
 
+    # Pre-flight: every scorable terminal BEAD must map to a known scorecard
+    # role. Validating BEFORE any mutation means an unknown role (e.g. a BEAD
+    # tagged 'Architect' when the scorecard has no such role) fails the closeout
+    # — and surfaces during --dry-run — instead of leaving the BEAD silently
+    # unscored after the mission has already been closed and archived.
+    role_errors = _validate_scorecard_roles(mission_beads)
+    if role_errors:
+        for bead_id, role in role_errors:
+            print(f"error: BEAD {bead_id} agent_role {role!r} is not in AGENT_SCORECARD.yaml",
+                  file=sys.stderr)
+        print('Refusing to close: fix the BEAD roles or add them to the scorecard '
+              '(scripts/cat_agent_scorecard.py check-parity).', file=sys.stderr)
+        return 1
+
     print(f'Closing mission {mission_id} (status: {status}, {len(mission_beads)} terminal BEADs)')
 
     if dry_run:
         print('Dry-run: would set mission status=closed, tower=sprint_idle, clear pointers')
+        # Exercise the scorecard hook in dry-run so role/schema problems are
+        # visible in the pre-execute gate (BEAD-04 DoD: score-bead dry-run by default).
+        _score_beads_on_closeout(mission_beads, dry_run=True)
         return 0
 
     now = utc_now()
@@ -141,6 +158,26 @@ def _derive_bead_outcome(status: str, bead_data: dict):
         return 'completed' if reached_completed else 'failed'
     # Any other (non-terminal / unexpected) state is not scored.
     return None
+
+
+def _scorecard_roles() -> set:
+    """Lower-cased set of roles tracked in AGENT_SCORECARD.yaml."""
+    sc = load_yaml(ROOT / 'agents/registry/AGENT_SCORECARD.yaml') or {}
+    return {(a.get('role') or '').lower() for a in (sc.get('agents') or []) if a.get('role')}
+
+
+def _validate_scorecard_roles(mission_beads: list) -> list:
+    """Return [(bead_id, role)] for scorable terminal BEADs with an unknown role."""
+    known = _scorecard_roles()
+    errors = []
+    for bead_id, status, bead_path in mission_beads:
+        bead_data = load_yaml(bead_path) if isinstance(bead_path, Path) and bead_path.exists() else {}
+        if _derive_bead_outcome(status, bead_data or {}) is None:
+            continue  # non-scoring terminal state — no role needed
+        role = ((bead_data or {}).get('agent_role') or 'Builder')
+        if role.lower() not in known:
+            errors.append((bead_id, role))
+    return errors
 
 
 def _score_beads_on_closeout(mission_beads: list, *, dry_run: bool) -> None:
