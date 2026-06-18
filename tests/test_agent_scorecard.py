@@ -115,6 +115,30 @@ class TestScoreBead:
         entry = yaml.safe_load(increments[0].read_text())
         assert entry['event'] == 'bead_completed'
 
+    def test_rerun_same_bead_is_idempotent(self, fresh_scorecard):
+        """A second score-bead for the same role/bead/event must not double-count."""
+        args = _make_args(command='score-bead', result='completed', dry_run=False)
+        assert cas.cmd_score_bead(args) == 0
+        assert cas.cmd_score_bead(args) == 0  # retry
+        data = yaml.safe_load(fresh_scorecard.read_text())
+        agent = cas._find_agent(data['agents'], 'Builder')
+        assert agent['score'] == 75.0           # +5 once, not +10
+        assert agent['completed_beads'] == 1
+        assert len(agent['history']) == 1
+
+    def test_idempotent_via_history_when_increment_file_cleaned(self, fresh_scorecard, tmp_path):
+        """Even if the increment file is removed, history alone blocks a re-score."""
+        args = _make_args(command='score-bead', result='completed', dry_run=False)
+        assert cas.cmd_score_bead(args) == 0
+        # Simulate increment-file cleanup; history retains the entry.
+        for inc in (tmp_path / 'agents' / 'scorecards').glob('*.yaml'):
+            inc.unlink()
+        assert cas.cmd_score_bead(args) == 0  # must still skip on history
+        data = yaml.safe_load(fresh_scorecard.read_text())
+        agent = cas._find_agent(data['agents'], 'Builder')
+        assert agent['score'] == 75.0
+        assert agent['completed_beads'] == 1
+
 
 class TestPenalize:
     def test_penalize_dry_run_no_write(self, fresh_scorecard):

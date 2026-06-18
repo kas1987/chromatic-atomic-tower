@@ -120,6 +120,29 @@ def closeout_mission(mission_id: str, *, dry_run: bool, evidence: str, actor: st
     return 0
 
 
+def _derive_bead_outcome(status: str, bead_data: dict):
+    """Map a terminal BEAD status to a scoring outcome ('completed'|'failed'|None).
+
+    ``archived`` is reachable from BOTH ``completed`` (success cleanup) and
+    ``failed`` (failure cleanup), so a blanket skip would drop the success
+    credit and a blanket 'failed' would penalize cleanup. Derive the real
+    outcome from transition_history: if the BEAD ever reached ``completed`` it
+    succeeded; otherwise treat an archived/failed state as a failure.
+    """
+    if status == 'completed':
+        return 'completed'
+    if status == 'failed':
+        return 'failed'
+    if status == 'archived':
+        history = (bead_data or {}).get('transition_history') or []
+        reached_completed = any(
+            isinstance(h, dict) and h.get('to_status') == 'completed' for h in history
+        )
+        return 'completed' if reached_completed else 'failed'
+    # Any other (non-terminal / unexpected) state is not scored.
+    return None
+
+
 def _score_beads_on_closeout(mission_beads: list, *, dry_run: bool) -> None:
     """Call cat_agent_scorecard score-bead for each terminal BEAD (dry-run by default)."""
     import subprocess as sp
@@ -129,9 +152,10 @@ def _score_beads_on_closeout(mission_beads: list, *, dry_run: bool) -> None:
     for bead_id, status, bead_path in mission_beads:
         bead_data = load_yaml(bead_path) if isinstance(bead_path, Path) and bead_path.exists() else {}
         role = ((bead_data or {}).get('agent_role') or 'Builder')
-        if status == 'archived':
+        result = _derive_bead_outcome(status, bead_data)
+        if result is None:
+            # Non-scoring terminal state (e.g. abandoned without a recorded outcome).
             continue
-        result = 'completed' if status == 'completed' else 'failed'
         mode = '--dry-run' if dry_run else '--execute'
         cmd = [
             sys.executable, str(scorecard_script),

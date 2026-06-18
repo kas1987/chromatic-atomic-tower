@@ -86,7 +86,14 @@ def cmd_score_bead(args: argparse.Namespace) -> int:
     delta = SCORE_DELTA[event]
 
     increment_path = ROOT / 'agents/scorecards' / f'{args.bead}_{args.role}_{event}.yaml'
-    if not args.dry_run and increment_path.exists():
+    # Idempotency: history is the source of truth that drives the score, so key
+    # on it as well as the increment file. A rerun after the increment file has
+    # been cleaned up must still not double-count an already-recorded delta.
+    already_in_history = any(
+        isinstance(h, dict) and h.get('bead_id') == args.bead and h.get('event') == event
+        for h in (agent.get('history') or [])
+    )
+    if not args.dry_run and (already_in_history or increment_path.exists()):
         print(f'score-bead [{args.role}] {args.bead}: already scored ({event}); skipping')
         return 0
 
