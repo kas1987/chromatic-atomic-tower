@@ -181,7 +181,11 @@ class TestMainRecord:
             '--bead-id', 'BEAD-TEST-001',
             '--event', 'bead_completed',
         ])
-        result = main()
+        # Must call csa.main() (not the `main` imported from scripts.cat_score_agent)
+        # so that monkeypatch.setattr(csa, 'SCORECARD_PATH', ...) is honoured —
+        # otherwise main() looks up globals in the scripts.cat_score_agent namespace
+        # and writes to the real scorecard file, corrupting subsequent tests.
+        result = csa.main()
         assert result == 0
         out = capsys.readouterr().out
         assert 'Recorded' in out
