@@ -1,0 +1,61 @@
+bead_id: BEAD-CAT-002-002
+mission_id: MP-CAT-002
+title: Create worker prompt template
+status: active
+agent_role: Scribe
+autonomy_level: L3
+objective: 'Create prompts/WORKER_PROMPT_TEMPLATE.md defining the contract handed
+  to a local worker model: objective, constraints, allowed files, and a machine-readable
+  output schema.'
+allowed_paths:
+- prompts/WORKER_PROMPT_TEMPLATE.md
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+dependencies:
+- BEAD-CAT-002-001
+tool_budget:
+  search: 1
+  read: 5
+  write: 3
+  execute: 1
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 84
+  objective_clarity: 88
+  scope_clarity: 88
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 85
+  risk_awareness: 80
+  testability: 80
+risk_level: low
+reversibility: high
+stop_conditions:
+- Output schema cannot be expressed without a new schema file outside scope.
+- Constraints conflict with mission allowed_paths.
+- Need owner decision on patch output format.
+definition_of_done:
+- prompts/WORKER_PROMPT_TEMPLATE.md exists.
+- It contains an objective section, a constraints section, and a machine-readable
+  output schema (e.g. JSON/diff block).
+- Constraints include - touch only ticket-listed files, explain any deviation, stop
+  after 2 retries.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/reports/mp_cat_002_worker_prompt_review.md
+  required: true
+required_output:
+- summary
+- files_changed
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-002-003
+  notes:
+  - With routes and prompt template ready, run the first worker patch.
+last_updated: '2026-06-17T20:31:39.191563+00:00'

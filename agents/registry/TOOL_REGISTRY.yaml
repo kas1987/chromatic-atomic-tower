@@ -1,0 +1,39 @@
+version: 1.0.0
+last_updated: '2026-06-18'
+planes:
+  - plane: git
+    title: Git Tool Plane
+    status: implemented
+    implementation: scripts/cat_git_bridge.py, .github/workflows/
+  - plane: filesystem
+    title: Filesystem Tool Plane
+    status: implemented
+    implementation: filesystem-native
+  - plane: terminal
+    title: Terminal Tool Plane
+    status: implemented
+    implementation: script execution layer
+  - plane: web
+    title: Web Tool Plane
+    status: implemented
+    implementation: harness tool layer
+  - plane: llm
+    title: LLM Tool Plane
+    status: implemented
+    implementation: .agent/model_routes.yaml, scripts/cat_kimi.py
+  - plane: database
+    title: Database Tool Plane
+    status: scaffolded
+    implementation: schemas/tool_plane_database.schema.json
+  - plane: comms
+    title: Calendar/Email (Comms) Tool Plane
+    status: scaffolded
+    implementation: schemas/tool_plane_comms.schema.json
+  - plane: custom
+    title: Custom Tool Plane
+    status: planned
+    implementation: extensible via harness tool registry
+  - plane: third_party
+    title: Third-Party Tool Plane
+    status: planned
+    implementation: 3rd-party APIs

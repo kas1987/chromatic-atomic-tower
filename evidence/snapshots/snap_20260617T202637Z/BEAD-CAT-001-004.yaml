@@ -1,0 +1,75 @@
+bead_id: BEAD-CAT-001-004
+mission_id: MP-CAT-001
+title: Add transition tests, schema validation, and evidence capture
+status: validating
+agent_role: Validator
+autonomy_level: L3
+objective: 'Write a comprehensive pytest suite under tests/ that covers: all valid
+  mission and BEAD transitions (positive cases), all invalid transitions (negative
+  cases with expected error codes), edge cases (idempotent dry-run, rollback restores
+  state), and schema validation of every file mutated by the transition engine. Capture
+  full test output to evidence/test-results/sprint_001_transition_tests.txt.'
+allowed_paths:
+- tests/**
+- evidence/test-results/**
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
+dependencies:
+- BEAD-CAT-001-003
+tool_budget:
+  search: 3
+  read: 12
+  write: 12
+  execute: 8
+  max_runtime_minutes: 30
+confidence:
+  minimum: 75
+  current: 85
+  objective_clarity: 88
+  scope_clarity: 86
+  evidence_quality: 85
+  reversibility: 92
+  tool_fit: 86
+  risk_awareness: 85
+  testability: 92
+risk_level: low
+reversibility: high
+stop_conditions:
+- The transition engine from BEAD-CAT-001-003 is missing a feature required by a test
+  case and cannot be remedied within scope.
+- A test fixture would require writing to a forbidden path.
+- pytest is unavailable or the test environment is misconfigured after one remediation
+  attempt.
+definition_of_done:
+- tests/test_transitions.py exists and covers positive, negative, and edge-case transitions.
+- pytest -q passes with 0 failures.
+- evidence/test-results/sprint_001_transition_tests.txt is populated with the full
+  pytest output.
+- Schema validation of all mutated files passes via python scripts/cat_validate.py
+  --all.
+validation:
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_001_transition_tests.txt
+  required: true
+- type: schema_validation
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/sprint_001_schema_validation.md
+  required: true
+required_output:
+- summary
+- test_results_path
+- schema_validation_path
+- pass_count
+- fail_count
+handoff:
+  next_bead_id: BEAD-CAT-001-005
+  notes:
+  - BEAD-001-005 writes the architecture doc; share the test coverage summary so the
+    doc reflects actual validated arcs.
+last_updated: '2026-06-17T20:26:35.588811+00:00'

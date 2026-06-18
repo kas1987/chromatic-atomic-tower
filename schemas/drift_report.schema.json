@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cat.local/schemas/drift_report.schema.json",
+  "title": "Drift Report",
+  "description": "Architecture drift analysis report comparing observed edges against declared rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_id",
+    "generated_at",
+    "edges",
+    "summary"
+  ],
+  "properties": {
+    "report_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this drift report."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this report was generated."
+    },
+    "edges": {
+      "type": "array",
+      "description": "Classified dependency edges.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["edge_id", "source", "target", "edge_type", "classification"],
+        "properties": {
+          "edge_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "edge_type": {
+            "type": "string",
+            "enum": ["static", "runtime"]
+          },
+          "classification": {
+            "type": "string",
+            "enum": ["intentional", "accidental", "blocked", "unknown"],
+            "description": "Drift classification for this edge."
+          },
+          "rule_id": {
+            "type": "string",
+            "description": "The rule that matched this edge, if any."
+          },
+          "finding_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Finding emitted for this edge, if it is blocked."
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intentional", "accidental", "blocked", "unknown", "total"],
+      "properties": {
+        "intentional": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accidental": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unknown": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

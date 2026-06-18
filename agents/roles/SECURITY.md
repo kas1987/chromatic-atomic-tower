@@ -39,3 +39,13 @@ Next:
 - Confidence is below the BEAD minimum.
 - A human gate is required.
 - A secret or credential appears.
+
+## Harness Engineering audit duties (MP-CAT-A006-4C01)
+
+- **Skill:** `security_tripwire` (see `agents/skills/SKILL_REGISTRY.yaml`).
+- **Gate responsibility:**
+  | Gate | Responsibility |
+  |---|---|
+  | Control validation | Enforce the security gate; halt secret-bearing, destructive, or unauthorized operations. |
+- **Audit evidence:** security_review, stop_or_continue_decision.
+

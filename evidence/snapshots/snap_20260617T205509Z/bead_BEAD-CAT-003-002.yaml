@@ -1,0 +1,85 @@
+mission_id: MP-CAT-003
+status: active
+agent_role: Builder
+autonomy_level: L3
+forbidden_paths:
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies: []
+tool_budget:
+  search: 1
+  read: 6
+  write: 6
+  execute: 4
+  max_runtime_minutes: 35
+confidence:
+  minimum: 80
+  current: 88
+  objective_clarity: 92
+  scope_clarity: 88
+  evidence_quality: 86
+  reversibility: 90
+  tool_fit: 88
+  risk_awareness: 88
+  testability: 90
+risk_level: medium
+reversibility: high
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Keep changes bounded to the assigned BEAD.
+bead_id: BEAD-CAT-003-002
+title: Implement PR scope validation and failure classification
+objective: Implement changed-file scope checks and failure classification so invalid
+  PRs are blocked and routed to the correct agent or gate.
+allowed_paths:
+- scripts/cat_pr_check.py
+- scripts/cat_classify_failure.py
+- schemas/ci_failure.schema.json
+- tests/test_pr_check.py
+- tests/test_failure_classifier.py
+- tests/fixtures/ci/**
+stop_conditions:
+- CI behavior would mutate truth-bearing evidence.
+- Self-heal attempts to touch forbidden paths.
+- PR scope behavior conflicts with BEAD allowed paths.
+- Tests fail for reasons inside Sprint 003 scope.
+definition_of_done:
+- PR checker validates Mission and BEAD IDs.
+- PR checker blocks forbidden paths.
+- PR checker blocks files outside BEAD allowed paths.
+- Failure classifier emits valid routing JSON.
+validation:
+- type: ci_local
+  command: python scripts/cat_ci.py --mode local --write-report
+  evidence_path: evidence/ci/reports/cat_ci_report.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_003_ci_tests.txt
+  required: true
+last_updated: '2026-06-17'
+transition_history:
+- timestamp: '2026-06-17T20:55:09+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-003-002
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Activated by GO
+  evidence: evidence/ci/reports/cat_ci_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-003-002.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition

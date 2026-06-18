@@ -1,0 +1,160 @@
+mission_id: MP-CAT-004
+status: archived
+agent_role: Builder
+autonomy_level: L3
+forbidden_paths:
+- C:/Users/kas41/chromatic-harness-v2/**
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies:
+- BEAD-CAT-004-002
+tool_budget:
+  search: 1
+  read: 6
+  write: 8
+  execute: 5
+  max_runtime_minutes: 35
+confidence:
+  minimum: 82
+  current: 85
+  objective_clarity: 86
+  scope_clarity: 86
+  evidence_quality: 84
+  reversibility: 90
+  tool_fit: 86
+  risk_awareness: 88
+  testability: 86
+risk_level: medium
+reversibility: high
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Dry-run hygiene only; do not delete, move, or prune branches.
+bead_id: BEAD-CAT-004-003
+title: Add branch and root hygiene checks
+objective: Add dry-run branch and root artifact hygiene checks inspired by v2 governance,
+  reporting issues without mutating files or branches.
+allowed_paths:
+- gates/hygiene/**
+- scripts/cat_branch_hygiene.py
+- tests/test_branch_hygiene.py
+- evidence/tower/**
+stop_conditions:
+- Any check would delete files, prune branches, or change remotes.
+- Check requires network mutation.
+- Tests fail for reasons inside Sprint 004 scope.
+definition_of_done:
+- Branch hygiene script exists.
+- Root hygiene allowlist exists.
+- Tests cover clean and dirty fixtures.
+validation:
+- type: tests
+  command: pytest -q tests/test_branch_hygiene.py
+  evidence_path: evidence/test-results/sprint_004_branch_hygiene_tests.txt
+  required: true
+last_updated: '2026-06-17T21:50:11+00:00'
+transition_history:
+- timestamp: '2026-06-17T21:47:16+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-003
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Next BEAD activated after state freshness completion
+  evidence: evidence/tower/state_freshness_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-003.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260617T214716Z
+- timestamp: '2026-06-17T21:50:06+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-003
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Branch/root hygiene implementation started
+  evidence: evidence/tower/branch_hygiene_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-003.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260617T215006Z
+- timestamp: '2026-06-17T21:50:08+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-003
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Branch hygiene tests completed
+  evidence: evidence/test-results/sprint_004_branch_hygiene_tests.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-003.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215008Z
+- timestamp: '2026-06-17T21:50:09+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-003
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Dry-run hygiene checks validated
+  evidence: evidence/tower/branch_hygiene_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-003.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215009Z
+- timestamp: '2026-06-17T21:50:10+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-003
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: Review complete
+  evidence: evidence/test-results/sprint_004_branch_hygiene_tests.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-003.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215010Z
+- timestamp: '2026-06-17T21:50:11+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-004-003
+  from_status: completed
+  to_status: archived
+  allowed: true
+  dry_run: false
+  reason: Archived after completion
+  evidence: evidence/tower/branch_hygiene_report.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-004-003.yaml
+  guard: closeout_complete
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260617T215011Z

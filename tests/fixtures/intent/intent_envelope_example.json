@@ -1,0 +1,11 @@
+{
+  "intent_id": "INT-CAT-0001",
+  "timestamp": "2026-06-18T00:00:00Z",
+  "source": "user",
+  "raw_text": "Implement the Intent Envelope schema and validation pipeline for GO-mode stage 1.",
+  "parsed_goal": "Implement Intent Envelope schema for GO-mode stage 1",
+  "constraints": ["must use JSON Schema Draft 2020-12", "no breaking changes to existing schemas"],
+  "priority": 3,
+  "proposed_mission_id": "MP-CAT-G002-4C01",
+  "trigger": "operator_request"
+}

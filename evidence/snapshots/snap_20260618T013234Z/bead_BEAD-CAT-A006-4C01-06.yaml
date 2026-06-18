@@ -1,0 +1,143 @@
+bead_id: BEAD-CAT-A006-4C01-06
+mission_id: MP-CAT-A006-4C01
+title: Add CI governance validation workflow
+status: reviewed
+agent_role: Builder
+autonomy_level: L2
+objective: Create the pull-request and push validation workflow that enforces CAT
+  and Harness contracts in CI, backed by the harness alignment validator, the mermaid
+  validator, and pytest contract coverage, reconciled with the existing cat-ci and
+  validate-cat workflows.
+allowed_paths:
+- .github/workflows/cat-governance-ci.yml
+- scripts/cat_validate_harness_alignment.py
+- scripts/cat_validate_mermaid.py
+- tests/test_harness_alignment_contracts.py
+forbidden_paths:
+- .env
+- .env.*
+- .venv/**
+- secrets/**
+- credentials/**
+- infra/prod/**
+- external_repos/**
+dependencies:
+- BEAD-CAT-A006-4C01-01
+- BEAD-CAT-A006-4C01-04
+assertions:
+- control_validation
+- substantive_validation
+- completeness
+tool_budget:
+  search: 3
+  read: 12
+  write: 8
+  execute: 6
+  max_runtime_minutes: 50
+confidence:
+  minimum: 70
+  current: 78
+  objective_clarity: 84
+  scope_clarity: 82
+  evidence_quality: 78
+  reversibility: 90
+  tool_fit: 86
+  risk_awareness: 82
+  testability: 85
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Required input mission pack missing.
+- Requested path outside allowed_paths.
+- New workflow conflicts with required status checks and cannot be reconciled in scope.
+- Need for secret, credential, destructive action, or production access.
+definition_of_done:
+- cat-governance-ci.yml runs schema, harness alignment, mermaid, and pytest validation.
+- cat_validate_harness_alignment.py and cat_validate_mermaid.py exist and pass locally.
+- test_harness_alignment_contracts.py passes under pytest.
+- Workflow composes with existing CI without duplicate required checks.
+- Evidence output location is identified.
+validation:
+- type: harness_alignment
+  command: python scripts/cat_validate_harness_alignment.py --root .
+  evidence_path: evidence/reports/BEAD-CAT-A006-4C01-06_ci_validation.md
+  required: true
+- type: tests
+  command: pytest -q tests/test_harness_alignment_contracts.py
+  evidence_path: evidence/test-results/BEAD-CAT-A006-4C01-06_tests.txt
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+  notes: "CI wiring \u2014 Opus authors validator/workflow; human M4 review required."
+last_updated: '2026-06-18T01:32:33+00:00'
+transition_history:
+- timestamp: '2026-06-18T01:32:32+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-06
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: A006 backlog completion
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-06.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013232Z
+- timestamp: '2026-06-18T01:32:32+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-06
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: BEAD complete
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-06.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013232Z
+- timestamp: '2026-06-18T01:32:33+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-06
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Harness validation passed
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-06.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013233Z
+- timestamp: '2026-06-18T01:32:33+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-06
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: DoD satisfied
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-06.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013233Z

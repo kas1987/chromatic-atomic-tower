@@ -1,0 +1,58 @@
+bead_id: BEAD-CAT-000-004
+mission_id: MP-CAT-000
+title: Close sprint with evidence and learning log
+status: archived
+agent_role: Scribe
+autonomy_level: L3
+objective: Create closeout evidence and update learning records for Sprint 000.
+allowed_paths:
+- evidence/reports/**
+- learnings/**
+- state/SPRINT_STATE.md
+- state/AGENT_HANDOFF_QUEUE.md
+forbidden_paths:
+- .env
+- infra/prod/**
+- secrets/**
+dependencies:
+- BEAD-CAT-000-003
+tool_budget:
+  search: 0
+  read: 6
+  write: 6
+  execute: 2
+  max_runtime_minutes: 20
+confidence:
+  minimum: 75
+  current: 80
+  objective_clarity: 80
+  scope_clarity: 80
+  evidence_quality: 80
+  reversibility: 90
+  tool_fit: 80
+  risk_awareness: 80
+  testability: 75
+risk_level: low
+reversibility: high
+stop_conditions:
+- Missing validation evidence.
+- Need to close mission without review.
+- Learning is unclear or unsupported.
+definition_of_done:
+- Closeout report created.
+- Learning log updated.
+- Next sprint recommendation recorded.
+validation:
+- type: closeout_review
+  command: manual
+  evidence_path: evidence/reports/sprint_000_closeout.md
+  required: true
+required_output:
+- closeout_summary
+- evidence_links
+- learning_update
+- next_sprint_recommendation
+handoff:
+  next_bead_id: null
+  notes:
+  - Begin MP-CAT-001 after human approval.

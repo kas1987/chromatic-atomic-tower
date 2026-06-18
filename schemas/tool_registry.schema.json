@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/tool_registry.schema.json",
+  "title": "CAT Tool Registry",
+  "description": "Validates the governed tool registry enumerating every tool plane in the Chromatic Atomic Harness.",
+  "type": "object",
+  "required": ["version", "last_updated", "planes"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "last_updated": {
+      "type": "string"
+    },
+    "planes": {
+      "type": "array",
+      "minItems": 9,
+      "items": {
+        "type": "object",
+        "required": ["plane", "title", "status", "implementation"],
+        "additionalProperties": false,
+        "properties": {
+          "plane": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": ["implemented", "scaffolded", "planned"]
+          },
+          "implementation": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

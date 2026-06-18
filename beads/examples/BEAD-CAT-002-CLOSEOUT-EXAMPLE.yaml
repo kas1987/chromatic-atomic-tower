@@ -1,0 +1,53 @@
+bead_id: BEAD-CAT-002-CLOSEOUT-EXAMPLE
+mission_id: MP-CAT-002
+title: Reviewed BEAD closeout example
+status: reviewed
+agent_role: Auditor
+autonomy_level: L2
+objective: Provide a reviewed BEAD example that can be used to validate closeout transitions to completed without mutating the active Sprint 002 BEAD.
+allowed_paths:
+  - evidence/bundles/examples/**
+  - evidence/reports/**
+  - evidence/logs/**
+forbidden_paths:
+  - .env
+  - infra/prod/**
+  - secrets/**
+  - production/**
+  - deploy/**
+dependencies: []
+tool_budget:
+  search: 0
+  read: 2
+  write: 2
+  execute: 2
+  max_runtime_minutes: 10
+confidence:
+  minimum: 75
+  current: 90
+  objective_clarity: 90
+  scope_clarity: 90
+  evidence_quality: 90
+  reversibility: 90
+  tool_fit: 90
+  risk_awareness: 90
+  testability: 90
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Evidence bundle fails validation.
+  - Transition engine rejects reviewed to completed.
+definition_of_done:
+  - Closeout dry-run passes.
+validation:
+  - type: closeout_dry_run
+    command: python scripts/cat_closeout.py --type bead --id BEAD-CAT-002-CLOSEOUT-EXAMPLE --bundle evidence/bundles/examples/EB-CAT-002-EXAMPLE.yaml --to completed --reason "dry-run closeout validation" --dry-run
+    evidence_path: evidence/reports/closeout_dry_run_sprint_002.md
+    required: true
+required_output:
+  - closeout_result
+handoff:
+  from: Orchestrator
+  to: Auditor
+  reviewer: Human Owner
+  notes: Example only. Do not use as active work item.

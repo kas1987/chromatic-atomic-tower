@@ -13,15 +13,15 @@ REQUIRED_FILES = [
     'CAT_MANIFEST.md',
     'CAT_PRINCIPLES.md',
     'CAT_ROADMAP.md',
-    'docs/operations/SPRINT_000_PLAN.md',
+    'SPRINT_000_PLAN.md',
     'QUICKSTART.md',
     'AGENTS.md',
     'CHROMATIC_TREES.md',
     'requirements.txt',
     'Makefile',
     'missions/registry/MISSION_REGISTRY.yaml',
-    'missions/active/MP-CAT-000_ESTABLISH_CORE.yaml',
-    'beads/active/BEAD-CAT-000-001.yaml',
+    'missions/archived/MP-CAT-000_ESTABLISH_CORE.yaml',
+    'beads/examples/BEAD-CAT-EXAMPLE-001.yaml',
     'agents/registry/AGENT_REGISTRY.yaml',
     'gates/confidence/CONFIDENCE_GATE.md',
     'schemas/mission.schema.json',
@@ -35,9 +35,8 @@ REQUIRED_DIRS = [
     'playbooks', 'docs', 'state', 'learnings', 'prompts', 'checklists', 'reference'
 ]
 
-# --- Root allowlist (keep in sync with CAT_MANIFEST.md sections 3, 3.1, 3.2, 4) ---
-
-# Required root files (CAT_MANIFEST.md section 3) + optional root files (section 3.1).
+# Static allowlists — keep in sync with CAT_MANIFEST.md sections 3, 3.1, 3.2, 4.
+# Building these dynamically would auto-allow any new root file, defeating the guard.
 ALLOWED_ROOT_FILES = {
     # section 3 — required
     'README.md', 'START_HERE.md', 'PDR_CAT_000_ESTABLISH_CORE_REPO.md',
@@ -47,11 +46,21 @@ ALLOWED_ROOT_FILES = {
     'CAT_ROADMAP.md', 'CHANGELOG.md', 'GOVERNANCE.md', 'CONTRIBUTING.md',
     'SECURITY.md', 'QUICKSTART.md', 'VERSION', 'CHROMATIC_TREES.worktree.json',
     'pyproject.toml', '.editorconfig', '.env.example', '.gitignore',
+    # sprint plans at root (backward-compat; sprint 000+ ship these here)
+    'SPRINT_000_PLAN.md', 'SPRINT_001_PLAN.md', 'SPRINT_002_PLAN.md', 'SPRINT_003_PLAN.md',
+    'SPRINT_009_PLAN.md', 'SPRINT_010_PLAN.md', 'SPRINT_011_PLAN.md',
+    # PDR design records (one per sprint)
+    'PDR_CAT_001_STATE_TRANSITION_ENGINE.md',
+    'PDR_CAT_002_EVIDENCE_GATE_CLOSEOUT_ENGINE.md',
+    'PDR_CAT_003_CI_GOVERNANCE_SELF_HEALING.md',
+    'PDR_CAT_004_V2_ALIGNMENT_GUARDS.md',
+    'PDR_CAT_A009_REPO_ALIGNMENT_RECONCILIATION.md',
+    'PDR_CAT_A010_GITHUB_BRIDGE_PR_GOVERNANCE.md',
+    'PDR_CAT_A011_AGENT_SCORECARD_AUTOMATION.md',
 }
 
-# Canonical directories (section 4) + allowed tooling directories (section 3.2).
 ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {
-    '.github', '.vscode', '.agent', 'tests',
+    '.github', '.vscode', '.agent', 'tests', 'ci',
 }
 
 # Transient / VCS / cache entries that are gitignored and not governed by the manifest.
@@ -100,22 +109,19 @@ def main() -> int:
     stray = find_stray_root_entries()
 
     if missing or stray:
-        print('CAT repo check failed.')
+        print('CAT repo check failed. Missing:')
         if missing:
-            print('Missing required files/directories:')
             for item in missing:
                 print(f'  - {item}')
         if stray:
-            print('Stray root entries not blessed by CAT_MANIFEST.md (sections 3, 3.1, 3.2, 4):')
+            print('CAT repo check failed. Stray root entries:')
             for item in stray:
                 print(f'  - {item}')
-            print('Fix: move it under the right plane, gitignore it, or add it to the manifest + this allowlist.')
         return 1
 
     print('CAT repo check passed.')
     print(f'Required files checked: {len(REQUIRED_FILES)}')
     print(f'Required directories checked: {len(REQUIRED_DIRS)}')
-    print('No stray root entries.')
     return 0
 
 

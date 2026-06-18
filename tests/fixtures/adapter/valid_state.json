@@ -1,0 +1,11 @@
+{
+  "snapshot_timestamp": "2026-06-18T14:00:00Z",
+  "cat_mission_id": "MP-CAT-A012-4C01",
+  "mission_status": "in_progress",
+  "active_bead_id": "BEAD-CAT-A012-4C01-02",
+  "last_sync": null,
+  "bead_statuses": {
+    "BEAD-CAT-A012-4C01-01": "completed",
+    "BEAD-CAT-A012-4C01-02": "active"
+  }
+}

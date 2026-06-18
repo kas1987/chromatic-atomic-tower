@@ -1,0 +1,70 @@
+mission_id: MP-CAT-003
+status: queued
+agent_role: Builder
+autonomy_level: L3
+forbidden_paths:
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies: []
+tool_budget:
+  search: 1
+  read: 6
+  write: 6
+  execute: 4
+  max_runtime_minutes: 35
+confidence:
+  minimum: 80
+  current: 88
+  objective_clarity: 92
+  scope_clarity: 88
+  evidence_quality: 86
+  reversibility: 90
+  tool_fit: 88
+  risk_awareness: 88
+  testability: 90
+risk_level: medium
+reversibility: high
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Keep changes bounded to the assigned BEAD.
+bead_id: BEAD-CAT-003-004
+title: Add CI reports, tests, docs, and prompt pack
+objective: Add CI report schema, report generation, Sprint 003 tests, operator docs,
+  playbook, checklist, and Pro GPT prompt pack.
+allowed_paths:
+- scripts/cat_ci.py
+- schemas/ci_report.schema.json
+- evidence/ci/**
+- docs/operations/SPRINT_003_OPERATOR_GUIDE.md
+- playbooks/CI_GOVERNANCE_PLAYBOOK.md
+- checklists/CI_GOVERNANCE_CHECKLIST.md
+- prompts/PRO_GPT_SPRINT_003_PROMPT.md
+- tests/test_ci_governance.py
+stop_conditions:
+- CI behavior would mutate truth-bearing evidence.
+- Self-heal attempts to touch forbidden paths.
+- PR scope behavior conflicts with BEAD allowed paths.
+- Tests fail for reasons inside Sprint 003 scope.
+definition_of_done:
+- CI report schema exists.
+- Local CI report generation works.
+- All Sprint 003 docs are complete.
+- All tests pass.
+validation:
+- type: ci_local
+  command: python scripts/cat_ci.py --mode local --write-report
+  evidence_path: evidence/ci/reports/cat_ci_report.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_003_ci_tests.txt
+  required: true

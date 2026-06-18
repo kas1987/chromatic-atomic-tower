@@ -1,0 +1,66 @@
+bead_id: BEAD-CAT-A007-4C01-06
+mission_id: MP-CAT-A007-4C01
+title: Add LOGHOUSE CI workflow and drift gate
+status: queued
+agent_role: Reviewer
+autonomy_level: L2
+objective: >-
+  Wire LOGHOUSE into CI. Add a GitHub Actions workflow that validates the schemas, runs the
+  LOGHOUSE engine over the fixtures, executes the pytest suites, and fails the build when a
+  critical (P0/P1) architecture-rule violation or forbidden dependency edge is detected. Add
+  Makefile targets so the same checks run locally.
+allowed_paths:
+  - .github/workflows/cat-loghouse-ci.yml
+  - Makefile
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies:
+  - BEAD-CAT-A007-4C01-05
+tool_budget:
+  search: 2
+  read: 12
+  write: 6
+  execute: 6
+  max_runtime_minutes: 50
+confidence:
+  minimum: 70
+  current: 80
+  objective_clarity: 86
+  scope_clarity: 85
+  evidence_quality: 76
+  reversibility: 95
+  tool_fit: 84
+  risk_awareness: 84
+  testability: 82
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - LOGHOUSE engine or drift detector entrypoints unavailable.
+  - Requested path outside allowed_paths.
+  - Gate would require network access to a live backend or secrets to run in CI.
+  - Need for secret, credential, destructive action, or production access.
+definition_of_done:
+  - cat-loghouse-ci.yml runs schema validation, the LOGHOUSE engine on fixtures, and the pytest suites on push and pull_request.
+  - The workflow fails when a P0/P1 architecture-rule violation or forbidden edge is present in the fixtures and passes when none is.
+  - Makefile exposes a loghouse target running the same checks locally.
+  - The workflow uses only repo-local fixtures and needs no secrets.
+validation:
+  - type: workflow_lint
+    command: python -c "import yaml; yaml.safe_load(open('.github/workflows/cat-loghouse-ci.yml')); print('loghouse workflow parses OK')"
+    evidence_path: evidence/reports/MP-CAT-A007-4C01_ci_workflow.md
+    required: true
+required_output:
+  - updated_files
+  - validation_output
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Reviewer
+  reviewer: Human Owner
+  notes: CI enforces the operating model; critical architecture rules must fail the build.

@@ -1,0 +1,38 @@
+evidence_id: EB-CAT-002-EXAMPLE
+mission_id: MP-CAT-002
+bead_id: BEAD-CAT-002-CLOSEOUT-EXAMPLE
+target_type: bead
+type: closeout
+summary: Evidence gate rules and schema were created and validated for Sprint 002.
+validation_result: passed
+required_artifacts:
+  - path: gates/evidence/EVIDENCE_GATE_RULES.yaml
+    kind: rules
+    required: true
+    description: Authoritative evidence gate rules.
+    validation_result: passed
+  - path: schemas/evidence_bundle.schema.json
+    kind: schema
+    required: true
+    description: Evidence bundle schema.
+    validation_result: passed
+  - path: evidence/reports/schema_validation_sprint_002.md
+    kind: report
+    required: true
+    description: Schema validation report.
+    validation_result: passed
+supporting_artifacts:
+  - path: docs/operations/EVIDENCE_GATE.md
+    kind: documentation
+    required: false
+    description: Operator documentation for evidence gate.
+    validation_result: skipped
+metrics:
+  required_artifacts: 3
+  supporting_artifacts: 1
+created_by: Human Owner
+created_at: '2026-06-17T00:00:00Z'
+learning_note: Evidence must be explicit, attached to IDs, and validated before closeout.
+closeout_ready: true
+notes:
+  - This is the passing Sprint 002 evidence bundle example.

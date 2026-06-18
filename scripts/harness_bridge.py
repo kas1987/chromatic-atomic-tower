@@ -33,6 +33,7 @@ AGENT_DIR = ROOT / ".agent"
 QUEUE_PATH = AGENT_DIR / "queue.json"
 BEAD_SCHEMA = ROOT / "schemas" / "bead.schema.json"
 REPORTS_DIR = ROOT / "evidence" / "reports"
+EVIDENCE_RUNS_DIR = ROOT / "evidence" / "runs"
 
 # Non-terminal target states only. The bridge must never set a terminal state.
 PASS_BEAD_STATUS = "validating"
@@ -137,6 +138,23 @@ def bead_is_valid(bead_path: Path) -> list[str]:
 # Evidence report
 # ---------------------------------------------------------------------------
 
+def copy_durable_artifacts(run_dir: Path, ticket: str) -> Path:
+    """Copy run artifacts from .agent/runs/<ticket>/ to evidence/runs/<ticket>/."""
+    dest_dir = EVIDENCE_RUNS_DIR / ticket
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    _DURABLE = {
+        "review_packet.md", "worker_response.md", "cheap_review.md",
+        "test_output.txt", "git_diff_full.txt", "git_diff_stat.txt",
+        "git_diff_names.txt",
+    }
+    for name in _DURABLE:
+        src = run_dir / name
+        if src.exists():
+            import shutil
+            shutil.copy2(src, dest_dir / name)
+    return dest_dir
+
+
 def write_evidence_report(
     *, bead_id: str, ticket: str, run_dir: Path, passed: bool, rationale: str,
     bead_status_change: str, queue_status: str,
@@ -180,12 +198,13 @@ Harness run for ticket `{ticket}` (BEAD `{bead_id}`) completed with tests **{res
 
 | Artifact | Path |
 |---|---|
-| Review packet | `.agent/runs/{ticket}/review_packet.md` |
-| Worker response | `.agent/runs/{ticket}/worker_response.md` |
-| Cheap review | `.agent/runs/{ticket}/cheap_review.md` |
-| Test output | `.agent/runs/{ticket}/test_output.txt` |
-| Git diff (full) | `.agent/runs/{ticket}/git_diff_full.txt` |
+| Review packet | `evidence/runs/{ticket}/review_packet.md` |
+| Worker response | `evidence/runs/{ticket}/worker_response.md` |
+| Cheap review | `evidence/runs/{ticket}/cheap_review.md` |
+| Test output | `evidence/runs/{ticket}/test_output.txt` |
+| Git diff (full) | `evidence/runs/{ticket}/git_diff_full.txt` |
 | Evidence report | `evidence/reports/{bead_id}_harness_run.md` |
+| Scratch (transient) | `.agent/runs/{ticket}/` |
 
 ## Validation
 
@@ -270,6 +289,10 @@ def main() -> int:
     else:
         log(f"WARNING: no queue item for ticket {ticket}; queue not updated.")
 
+    # ---- Copy durable artifacts to evidence plane ------------------------
+    evidence_run_dir = copy_durable_artifacts(run_dir, ticket)
+    log(f"Durable artifacts: {evidence_run_dir.relative_to(ROOT)}")
+
     # ---- Write evidence ----------------------------------------------------
     report = write_evidence_report(
         bead_id=bead_id, ticket=ticket, run_dir=run_dir, passed=passed,
@@ -285,6 +308,7 @@ def main() -> int:
     print(f"Outcome       : {'PASS' if passed else 'FAIL'}")
     print(f"Queue status  : {queue_status}")
     print(f"Evidence      : {report.relative_to(ROOT)}")
+    print(f"Durable run   : evidence/runs/{ticket}/")
     print("No terminal/done state set — human approval still gates merge.")
     print("=" * 56)
     return 0

@@ -1,0 +1,69 @@
+bead_id: BEAD-CAT-001-003
+mission_id: MP-CAT-001
+title: Implement atomic registry mutation and snapshot/rollback logic
+status: validating
+agent_role: Builder
+autonomy_level: L3
+objective: Extend scripts/cat_transition.py with pre-transition snapshot creation
+  (timestamped copies of MISSION_REGISTRY.yaml and all files under state/**) and a
+  --rollback <snapshot_id> mode that restores the saved files, updates last_updated
+  timestamps, and emits a rollback evidence record to evidence/rollbacks/. Mutation
+  must remain atomic (temp-file + rename).
+allowed_paths:
+- scripts/cat_transition.py
+- missions/registry/MISSION_REGISTRY.yaml
+- state/**
+- evidence/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
+dependencies:
+- BEAD-CAT-001-002
+tool_budget:
+  search: 3
+  read: 10
+  write: 10
+  execute: 5
+  max_runtime_minutes: 25
+confidence:
+  minimum: 75
+  current: 83
+  objective_clarity: 86
+  scope_clarity: 85
+  evidence_quality: 82
+  reversibility: 88
+  tool_fit: 85
+  risk_awareness: 88
+  testability: 83
+risk_level: medium
+reversibility: medium
+stop_conditions:
+- Snapshot storage would require a directory outside allowed_paths.
+- Rollback would overwrite a file that has been modified by a concurrent process and
+  cannot safely merge.
+- Atomic rename is not supported on the target filesystem.
+definition_of_done:
+- scripts/cat_transition.py --execute creates a timestamped snapshot before mutating
+  any file.
+- scripts/cat_transition.py --rollback <snapshot_id> restores all snapshotted files
+  and writes a rollback evidence record to evidence/rollbacks/.
+- All mutations (execute and rollback) remain atomic via temp-file + rename.
+- Snapshot metadata is recorded in evidence/transitions/transition_log.jsonl.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/reports/bead_cat_001_003_snapshot_rollback_review.md
+  required: true
+required_output:
+- summary
+- files_changed
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-001-004
+  notes:
+  - BEAD-001-004 writes the pytest suite; ensure snapshot IDs are deterministic enough
+    to assert in tests.
+last_updated: '2026-06-17T20:24:29.805864+00:00'

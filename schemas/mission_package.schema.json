@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/mission_package.schema.json",
+  "title": "CAT Mission Package",
+  "description": "Review-ready output bundle produced for one mission: metadata, BEADs, evidence refs, and next steps.",
+  "type": "object",
+  "required": ["kind", "timestamp", "mission_id", "beads", "bead_summary"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "mission_package"
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "ISO-8601 UTC timestamp of package assembly."
+    },
+    "mission_id": {
+      "type": ["string", "null"],
+      "description": "Canonical mission identifier, or null when no mission is active."
+    },
+    "mission_title": {
+      "type": ["string", "null"],
+      "description": "Human-readable mission title from the contract or registry."
+    },
+    "mission_status": {
+      "type": ["string", "null"],
+      "description": "Mission status string (e.g. active, closed, abandoned)."
+    },
+    "beads": {
+      "type": "array",
+      "description": "Ordered list of BEADs belonging to this mission.",
+      "items": {
+        "type": "object",
+        "required": ["bead_id", "status", "agent_role"],
+        "additionalProperties": false,
+        "properties": {
+          "bead_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agent_role": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "bead_summary": {
+      "type": "object",
+      "required": ["total", "completed", "terminal"],
+      "additionalProperties": false,
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of BEADs in this mission."
+        },
+        "completed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of BEADs with status 'completed'."
+        },
+        "terminal": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of BEADs in any terminal status (completed, failed, archived)."
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "description": "Relative paths to declared BEAD evidence files that exist on disk.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_steps": {
+      "type": "array",
+      "description": "Hint strings describing what remains to be done.",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

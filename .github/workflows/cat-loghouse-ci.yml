@@ -1,0 +1,94 @@
+name: LOGHOUSE CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  loghouse-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── Schema + governance validation ──────────────────────────────────
+      - name: CAT governance validation
+        run: python scripts/cat_validate.py --all
+
+      # ── LOGHOUSE engine over fixtures ────────────────────────────────────
+      - name: LOGHOUSE engine (pipeline smoke test)
+        run: |
+          python scripts/cat_loghouse.py \
+            --input tests/fixtures/loghouse \
+            --output /tmp/loghouse_ci_output
+
+      # ── Pytest suites (includes drift gate both-ways test) ────────────────
+      - name: LOGHOUSE pytest suites
+        run: |
+          pytest -q \
+            tests/test_loghouse_schemas.py \
+            tests/test_loghouse_engine.py \
+            tests/test_loghouse_rules.py \
+            tests/test_loghouse_drift.py
+
+      # ── Full test suite ───────────────────────────────────────────────────
+      - name: Full pytest suite
+        run: pytest -q
+
+      # ── Drift gate — clean fixture (must pass: no P0/P1 violations) ───────
+      # The clean fixture contains only allowed edges; the gate must exit 0.
+      - name: Drift gate (clean fixture — must pass)
+        run: |
+          python scripts/loghouse/drift_gate.py \
+            --rules reference/loghouse/architecture_rules.yaml \
+            --edges tests/fixtures/loghouse/dependency_edges_clean.json \
+            --fail-on p0,p1
+
+      # ── Drift gate — violation fixture (must fail: has P0 edge) ──────────
+      # The standard fixture contains a P0 forbidden edge (frontend→database).
+      # We invert the exit code here to prove the gate correctly blocks on violations.
+      # In production, the drift gate would run against live-extracted edges.
+      - name: Drift gate (violation fixture — gate triggers as expected)
+        run: |
+          python scripts/loghouse/drift_gate.py \
+            --rules reference/loghouse/architecture_rules.yaml \
+            --edges tests/fixtures/loghouse/dependency_edges.json \
+            --fail-on p0,p1 && exit 1 || exit 0
+
+      # ── LOGHOUSE alignment validator ─────────────────────────────────────
+      - name: LOGHOUSE alignment validator
+        run: python scripts/cat_validate_loghouse.py --root .
+
+      # ── Self-monitor (CAT watches its own governance logs) ───────────────
+      # Runs in advisory mode (no --strict) in CI since go_decisions.jsonl
+      # and AGENT_RUN_LOG.jsonl may not exist in a fresh checkout.
+      # The strict gate runs locally via cat_resolve_go.py.
+      - name: LOGHOUSE self-monitor (advisory)
+        run: |
+          python scripts/cat_loghouse.py --mode self \
+            --output /tmp/loghouse_self_output
+        continue-on-error: true
+
+      # ── Self-monitor test suite ──────────────────────────────────────────
+      - name: LOGHOUSE self-monitor pytest suite
+        run: pytest -q tests/test_loghouse_self_monitor.py
+
+      # ── Upload evidence ───────────────────────────────────────────────────
+      - name: Upload LOGHOUSE evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: loghouse-ci-evidence
+          path: |
+            evidence/reports/MP-CAT-A007-4C01_*.json
+            evidence/reports/MP-CAT-A007-4C01_*.md
+            /tmp/loghouse_ci_output/

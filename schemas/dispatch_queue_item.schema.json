@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cat.local/schemas/dispatch_queue_item.schema.json",
+  "title": "Dispatch Queue Item",
+  "description": "An agent-routable task derived from a LOGHOUSE finding.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "finding_id",
+    "owner",
+    "agent_role",
+    "evidence_ref",
+    "acceptance_criteria",
+    "stop_condition",
+    "priority",
+    "status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this dispatch item."
+    },
+    "finding_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference to the finding that produced this dispatch item."
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Team or person responsible for resolving this item."
+    },
+    "agent_role": {
+      "type": "string",
+      "enum": ["BUILDER", "AUDITOR", "REVIEWER", "SCOUT", "SCRIBE", "SECURITY", "ORCHESTRATOR"],
+      "description": "The CAT agent role best suited to handle this task."
+    },
+    "evidence_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to the primary evidence item (e.g., event_id, source_ref)."
+    },
+    "acceptance_criteria": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable statement of what done looks like."
+    },
+    "stop_condition": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Condition under which the agent must stop and escalate."
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["p0", "p1", "p2", "p3"],
+      "description": "Priority level matching the finding severity."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["queued", "in_progress", "resolved", "dismissed"],
+      "description": "Current dispatch status."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

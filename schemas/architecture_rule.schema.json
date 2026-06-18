@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cat.local/schemas/architecture_rule.schema.json",
+  "title": "Architecture Rule",
+  "description": "Declares an allowed or forbidden dependency edge between architecture components.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "rule_id",
+    "source",
+    "target",
+    "edge_type",
+    "decision",
+    "severity",
+    "rationale"
+  ],
+  "properties": {
+    "rule_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique stable identifier for this rule (e.g. RULE-001)."
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Source component or glob pattern (e.g. frontend, payments-*)."
+    },
+    "target": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Target component or glob pattern."
+    },
+    "edge_type": {
+      "type": "string",
+      "enum": ["static", "runtime", "any"],
+      "description": "Edge type this rule governs."
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["allowed", "forbidden"],
+      "description": "Whether this dependency is permitted."
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["p0", "p1", "p2", "p3"],
+      "description": "Severity of a violation of this rule."
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable explanation of why this rule exists."
+    }
+  }
+}

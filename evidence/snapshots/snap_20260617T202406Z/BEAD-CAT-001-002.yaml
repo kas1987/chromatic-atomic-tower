@@ -1,0 +1,67 @@
+bead_id: BEAD-CAT-001-002
+mission_id: MP-CAT-001
+title: Implement scripts/cat_transition.py with dry-run and execute modes
+status: reviewed
+agent_role: Builder
+autonomy_level: L3
+objective: Implement scripts/cat_transition.py as a CLI tool that loads the transition
+  rules from gates/state/transition_rules.yaml, validates a requested (entity, from_state,
+  to_state) against those rules, and emits a predicted diff in dry-run mode or mutates
+  MISSION_REGISTRY.yaml atomically in execute mode. The script must emit structured
+  evidence to evidence/reports/ on every invocation.
+allowed_paths:
+- scripts/cat_transition.py
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
+dependencies:
+- BEAD-CAT-001-001
+tool_budget:
+  search: 3
+  read: 10
+  write: 10
+  execute: 5
+  max_runtime_minutes: 25
+confidence:
+  minimum: 75
+  current: 85
+  objective_clarity: 88
+  scope_clarity: 86
+  evidence_quality: 82
+  reversibility: 90
+  tool_fit: 88
+  risk_awareness: 85
+  testability: 85
+risk_level: medium
+reversibility: high
+stop_conditions:
+- The transition rules file from BEAD-CAT-001-001 does not exist or fails to parse.
+- Implementing atomic write requires a library not available in the Python 3.12 stdlib
+  or already-installed packages.
+- The CLI interface conflicts with an existing script in scripts/.
+definition_of_done:
+- scripts/cat_transition.py exists and is importable.
+- Running with --dry-run prints a predicted diff without mutating any file.
+- Running with --execute validates the transition against rules and mutates MISSION_REGISTRY.yaml
+  atomically (write-to-temp + rename).
+- Invalid transitions exit non-zero with a descriptive error message.
+- Every invocation writes a structured evidence record to evidence/reports/.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/reports/bead_cat_001_002_transition_script_review.md
+  required: true
+required_output:
+- summary
+- files_changed
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-001-003
+  notes:
+  - BEAD-001-003 extends this script with snapshot/rollback logic; ensure the write
+    path is factored to support pre/post hooks.
+last_updated: '2026-06-17T20:24:04.722307+00:00'

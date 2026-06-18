@@ -1,52 +1,23 @@
-# Quickstart
-
-## 1. Unpack
-
-```bash
-unzip chromatic_atomic_tower_sprint_000.zip
-cd chromatic_atomic_tower_sprint_000
-```
-
-## 2. Create local environment
+# Quickstart - Sprint 003
 
 ```bash
 python -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
-```
-
-## 3. Check the repo
-
-```bash
 python scripts/cat_check_repo.py
-```
-
-## 4. Validate CAT contracts
-
-```bash
 python scripts/cat_validate.py --all
+python scripts/cat_ci.py --mode local --write-report
+pytest -q
 ```
 
-## 5. Resolve GO
+## CI Scope Check
 
 ```bash
-python scripts/cat_resolve_go.py
+python scripts/cat_pr_check.py --mission MP-CAT-003 --bead BEAD-CAT-003-001 --changed-files tests/fixtures/ci/changed_files_allowed.txt
 ```
 
-## 6. Start a new mission
+## Self-Heal Dry-Run
 
 ```bash
-python scripts/cat_new_mission.py --template M2_INTERMEDIATE --id MP-CAT-001 --title "Example Mission"
-```
-
-## 7. Start a new BEAD
-
-```bash
-python scripts/cat_new_bead.py --id BEAD-CAT-001-001 --mission MP-CAT-001 --title "Example Atomic Task"
-```
-
-## 8. Close a BEAD after work
-
-```bash
-python scripts/cat_closeout.py --bead BEAD-CAT-000-001 --result passed --summary "Repo foundation validated."
+python scripts/cat_self_heal.py --dry-run
 ```

@@ -1,0 +1,66 @@
+mission_id: MP-CAT-003
+status: active
+agent_role: Builder
+autonomy_level: L3
+forbidden_paths:
+- .env
+- infra/prod/**
+- secrets/**
+- production/**
+- deploy/**
+dependencies: []
+tool_budget:
+  search: 1
+  read: 6
+  write: 6
+  execute: 4
+  max_runtime_minutes: 35
+confidence:
+  minimum: 80
+  current: 88
+  objective_clarity: 92
+  scope_clarity: 88
+  evidence_quality: 86
+  reversibility: 90
+  tool_fit: 88
+  risk_awareness: 88
+  testability: 90
+risk_level: medium
+reversibility: high
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Auditor
+  notes: Keep changes bounded to the assigned BEAD.
+bead_id: BEAD-CAT-003-001
+title: Define CI governance rules and workflow
+objective: Create the authoritative CI governance rules and GitHub Actions workflow
+  that run CAT checks on pull requests and main branch pushes.
+allowed_paths:
+- gates/ci/**
+- .github/workflows/cat-ci.yml
+- docs/operations/CI_GOVERNANCE.md
+- tests/test_ci_governance.py
+stop_conditions:
+- CI behavior would mutate truth-bearing evidence.
+- Self-heal attempts to touch forbidden paths.
+- PR scope behavior conflicts with BEAD allowed paths.
+- Tests fail for reasons inside Sprint 003 scope.
+definition_of_done:
+- CI rules exist.
+- GitHub workflow exists.
+- Workflow includes CAT validation, local CI report, and tests.
+- CI governance docs explain how to run checks.
+validation:
+- type: ci_local
+  command: python scripts/cat_ci.py --mode local --write-report
+  evidence_path: evidence/ci/reports/cat_ci_report.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/sprint_003_ci_tests.txt
+  required: true

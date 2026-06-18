@@ -1,14 +1,10 @@
+<!-- AUTO-GENERATED — do not edit manually. Run cat_render_sprint_state.py or cat_transition.py -->
+
 # Agent Handoff Queue
 
-## Queue policy
+_Generated: 2026-06-18T14:37:39+00:00_
 
-Agents must work the first unblocked BEAD unless the Orchestrator selects a different approved BEAD with documented reason.
+## Status
 
-## Active queue
+No active mission — tower is in post-sprint idle or awaiting kickoff.
 
-| Order | BEAD | Mission | Role | Status | Reason |
-|---:|---|---|---|---|---|
-| 1 | BEAD-CAT-000-001 | MP-CAT-000 | Scribe/Orchestrator | active | Establish baseline repo skeleton |
-| 2 | BEAD-CAT-000-002 | MP-CAT-000 | Builder/Reviewer | queued | Validate schemas and examples |
-| 3 | BEAD-CAT-000-003 | MP-CAT-000 | Orchestrator/Auditor | queued | Prove GO resolver behavior |
-| 4 | BEAD-CAT-000-004 | MP-CAT-000 | Scribe/Auditor | queued | Close sprint with evidence and learning |

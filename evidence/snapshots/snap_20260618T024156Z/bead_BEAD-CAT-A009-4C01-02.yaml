@@ -1,0 +1,144 @@
+bead_id: BEAD-CAT-A009-4C01-02
+mission_id: MP-CAT-A009-4C01
+title: Reconcile mission registry and mission files
+status: reviewed
+agent_role: Scribe
+autonomy_level: L3
+objective: Update mission registry and create or align mission packet files for active
+  and backlog missions per reconciliation target.
+allowed_paths:
+- missions/**
+- beads/**
+- state/**
+- docs/**
+- scripts/**
+- tests/**
+- playbooks/**
+- checklists/**
+- gates/**
+- schemas/**
+- evidence/reconciliation/**
+- evidence/reports/**
+- CAT_ROADMAP.md
+- CHANGELOG.md
+- README.md
+- START_HERE.md
+- QUICKSTART.md
+- PDR_CAT_A009_REPO_ALIGNMENT_RECONCILIATION.md
+- SPRINT_009_PLAN.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+dependencies:
+- BEAD-CAT-A009-4C01-01
+tool_budget:
+  search: 2
+  read: 18
+  write: 20
+  execute: 8
+  max_runtime_minutes: 60
+confidence:
+  minimum: 82
+  current: 88
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 86
+  reversibility: 92
+  tool_fit: 88
+  risk_awareness: 88
+  testability: 84
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Missing registry file.
+- Missing target file.
+- Mission ID collision detected.
+- Need to mutate secrets or production config.
+definition_of_done:
+- Registry reflects missions through MP-CAT-A012-4C01.
+- Backlog scaffolds exist for A010 through A012.
+- Reconciliation scripts ported and adapted.
+validation:
+- type: registry_audit
+  command: python scripts/cat_registry_audit.py --registry missions/registry/MISSION_REGISTRY.yaml
+  evidence_path: evidence/reconciliation/registry_reconcile_02.md
+  required: true
+required_output:
+- updated_registry
+- backlog_missions
+- validation_output
+handoff:
+  from: Auditor
+  to: Scribe
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A009-4C01-03
+last_updated: '2026-06-18T02:41:56+00:00'
+transition_history:
+- timestamp: '2026-06-18T02:39:48+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A009-4C01-02
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: BEAD-01 complete; activate next
+  evidence: evidence/reconciliation/audit_report_01.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A009-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T023948Z
+- timestamp: '2026-06-18T02:41:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A009-4C01-02
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: BEAD-02 registry reconciliation
+  evidence: evidence/reconciliation/registry_reconcile_02.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A009-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T024155Z
+- timestamp: '2026-06-18T02:41:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A009-4C01-02
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Registry evidence assembled
+  evidence: evidence/reconciliation/registry_reconcile_02.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A009-4C01-02.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T024155Z
+- timestamp: '2026-06-18T02:41:56+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A009-4C01-02
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Registry audit passed
+  evidence: evidence/reconciliation/registry_reconcile_02.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A009-4C01-02.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T024156Z

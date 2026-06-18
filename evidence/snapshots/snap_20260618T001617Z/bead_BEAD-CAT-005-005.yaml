@@ -1,0 +1,132 @@
+bead_id: BEAD-CAT-005-005
+mission_id: MP-CAT-005
+title: Relocate durable harness evidence into evidence plane
+status: reviewed
+agent_role: Builder
+autonomy_level: L3
+objective: "Copy (not move) durable harness evidence from .agent/ into the evidence/\
+  \ plane so it is versioned alongside CAT contracts. Target: evidence/harness/. Do\
+  \ not delete source files in .agent/ \u2014 copy only."
+allowed_paths:
+- .agent/**
+- evidence/harness/**
+- evidence/reports/**
+- learnings/**
+forbidden_paths:
+- .env
+- .env.*
+- infra/prod/**
+- secrets/**
+- credentials/**
+dependencies:
+- BEAD-CAT-005-004
+tool_budget:
+  search: 2
+  read: 8
+  write: 8
+  execute: 3
+  max_runtime_minutes: 30
+confidence:
+  minimum: 75
+  current: 78
+  objective_clarity: 85
+  scope_clarity: 82
+  evidence_quality: 75
+  reversibility: 90
+  tool_fit: 82
+  risk_awareness: 80
+  testability: 75
+risk_level: low
+reversibility: high
+stop_conditions:
+- Evidence relocation would require touching forbidden paths.
+- .agent/ artifacts reference secrets or credentials.
+definition_of_done:
+- evidence/harness/ contains copies of key .agent/ artifacts (model_routes.yaml, prompts/,
+  templates/).
+- No files deleted from .agent/.
+- Evidence index written at evidence/harness/HARNESS_EVIDENCE_INDEX.md.
+validation:
+- type: schema_validation
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/mp_cat_005_schema_validation.md
+  required: true
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/test-results/mp_cat_005_demo_tests.txt
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+  notes: "Final BEAD \u2014 copy evidence then run full validation suite."
+last_updated: '2026-06-18T00:16:15+00:00'
+transition_history:
+- timestamp: '2026-06-18T00:16:10+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-005
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'Builder: 14 harness artifacts copied to evidence plane, validation passes'
+  evidence: evidence/reports/bead_cat_005_005_harness_evidence.md
+  actor: Claude Code
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-005.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T001610Z
+- timestamp: '2026-06-18T00:16:11+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-005
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: 'Builder: 14 harness artifacts copied to evidence plane, validation passes'
+  evidence: evidence/reports/bead_cat_005_005_harness_evidence.md
+  actor: Claude Code
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-005.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T001611Z
+- timestamp: '2026-06-18T00:16:13+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-005
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: 'Builder: 14 harness artifacts copied to evidence plane, validation passes'
+  evidence: evidence/reports/bead_cat_005_005_harness_evidence.md
+  actor: Claude Code
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-005.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T001613Z
+- timestamp: '2026-06-18T00:16:15+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-005-005
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: 'Builder: 14 harness artifacts copied to evidence plane, validation passes'
+  evidence: evidence/reports/bead_cat_005_005_harness_evidence.md
+  actor: Claude Code
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-005-005.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T001615Z

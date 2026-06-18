@@ -67,6 +67,7 @@ Beyond the canonical directories in §4, these tooling directories are permitted
 | `.vscode/` | VS Code agent surface for the harness (MP-CAT-002) | yes |
 | `.agent/` | Multi-model harness home (MP-CAT-002) | yes |
 | `tests/` | Python test suite | yes |
+| `ci/` | CI helper scripts | yes |
 | `.claude/`, `.pytest_cache/`, `.venv/`, `__pycache__/` | Local tooling/cache | no (gitignored) |
 
 ### 3.3 Gitignored root entries
@@ -81,6 +82,7 @@ checker's `IGNORED_ROOT_ENTRIES` / `IGNORED_ROOT_PATTERNS`.
 | `.env`, `.env.*` | Local secrets/config consumed by `scripts/gh_app_token.sh` (`.env.example` is the tracked template) | no (gitignored) |
 | `*.pem` | GitHub App private keys | no (gitignored) |
 | `.github_app_token_cache` | Cached GitHub App installation token written by `scripts/gh_app_token.sh` | no (gitignored) |
+
 
 ## 4. Canonical directories
 
@@ -117,6 +119,16 @@ No change may be made unless it can identify:
 Agents may only write files listed in the active BEAD `allowed_paths` field.
 
 Agents must halt if they need to touch a forbidden path or a path not explicitly allowed.
+
+### 6.1 Operator-plane exemption
+
+Human-invoked meta-work that governs the lifecycle itself — sprint closeouts,
+retrospectives, sprint kickoffs, and repository hygiene/cleanup — is **operator-plane**
+work, not agent execution of a BEAD. It is authorized directly by the Human Owner
+(see §10), is recorded in `learnings/DECISION_LOG.md`, and is therefore **exempt from
+the `allowed_paths` restriction** in §6. It must still respect `forbidden_paths`
+(secrets, credentials, production). It must not be used for feature/mission deliverable
+work — if the change implements a mission deliverable, it requires a BEAD.
 
 ## 7. Documentation rule
 

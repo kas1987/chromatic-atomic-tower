@@ -1,0 +1,15 @@
+mission_id: MP-CAT-DRAFT
+title: Add sample GitHub bridge mission
+level: M2
+status: draft
+source: github_issue_intake
+objective: Create a draft mission from a GitHub issue intake payload.
+allowed_paths:
+- docs/github/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+definition_of_done:
+- Draft mission candidate exists

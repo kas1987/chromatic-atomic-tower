@@ -59,23 +59,27 @@ class TestSummarize:
             "missions_by_status must be a dict"
         )
 
-    def test_missions_by_status_has_approved(self):
+    def test_missions_by_status_populated(self):
         result = cat_stats.summarize()
         mbs = result["missions_by_status"]
-        assert "approved" in mbs, (
-            f"'approved' must be a key in missions_by_status; got keys: {list(mbs.keys())}"
+        assert len(mbs) >= 1, f"missions_by_status must have at least one entry; got {mbs}"
+        assert all(isinstance(v, int) and v > 0 for v in mbs.values()), (
+            f"all missions_by_status values must be positive ints; got {mbs}"
         )
 
     def test_active_mission_id(self):
+        # active_mission_id is lifecycle-dependent: null between sprints, or an
+        # MP-* id while a mission is active. Assert shape, not a specific value.
         result = cat_stats.summarize()
-        assert result["active_mission_id"] == "MP-CAT-000", (
-            f"Expected active_mission_id='MP-CAT-000', got {result['active_mission_id']!r}"
+        amid = result["active_mission_id"]
+        assert amid is None or amid == '' or (isinstance(amid, str) and amid.startswith("MP-")), (
+            f"active_mission_id must be null, empty, or an MP-* id, got {amid!r}"
         )
 
-    def test_total_active_beads_minimum(self):
+    def test_total_active_beads_non_negative(self):
         result = cat_stats.summarize()
-        assert result["total_active_beads"] >= 4, (
-            f"Expected at least 4 active beads, got {result['total_active_beads']}"
+        assert result["total_active_beads"] >= 0, (
+            f"total_active_beads must be non-negative, got {result['total_active_beads']}"
         )
 
     def test_beads_by_status_is_dict(self):
@@ -92,13 +96,13 @@ class TestSummarize:
             f"total_active_beads ({result['total_active_beads']})"
         )
 
-    def test_mp_cat_000_counted_as_approved(self):
-        """MP-CAT-000 has status=approved in the registry — verify it contributes to count."""
+    def test_missions_by_status_sums_to_total(self):
+        """Every mission is counted under exactly one status (lifecycle-agnostic)."""
         result = cat_stats.summarize()
-        mbs = result["missions_by_status"]
-        approved_count = mbs.get("approved", 0)
-        assert approved_count >= 1, (
-            f"Expected at least 1 approved mission (MP-CAT-000), got {approved_count}"
+        status_sum = sum(result["missions_by_status"].values())
+        assert status_sum == result["total_missions"], (
+            f"missions_by_status sum ({status_sum}) must equal "
+            f"total_missions ({result['total_missions']})"
         )
 
 

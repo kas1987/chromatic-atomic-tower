@@ -1,0 +1,23 @@
+version: 1.0.0
+last_updated: '2026-06-18'
+score_policy:
+  starting_score: 70
+  promote_threshold: 85
+  demote_threshold: 55
+  severe_incident_cap: 40
+agents:
+  - role: Builder
+    score: 80
+    completed_beads: 2
+    failed_beads: 0
+    incidents: 0
+    current_trust: provisional
+    history:
+      - timestamp: '2026-06-18T01:00:00+00:00'
+        event: bead_completed
+        delta: 5
+        bead_id: BEAD-CAT-TEST-01
+      - timestamp: '2026-06-18T02:00:00+00:00'
+        event: bead_completed
+        delta: 5
+        bead_id: BEAD-CAT-TEST-02

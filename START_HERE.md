@@ -1,42 +1,47 @@
-# Start Here
+# Start Here - CAT (Post Sprint 010)
 
-Use this file when opening the repo for the first time.
+## 1. Install
 
-## Step 1: Read in this order
+```bash
+python -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+```
 
-1. `README.md`
-2. `PDR_CAT_000_ESTABLISH_CORE_REPO.md`
-3. `CAT_MANIFEST.md`
-4. `CHROMATIC_TREES.md`
-5. `state/SPRINT_STATE.md`
-6. `missions/registry/MISSION_REGISTRY.yaml`
-7. `beads/active/BEAD-CAT-000-001.yaml`
-8. `docs/operations/GO_MODE.md`
-9. `prompts/PRO_GPT_STARTER_PROMPT.md`
-
-## Step 2: Validate the foundation
+## 2. Validate the Package
 
 ```bash
 python scripts/cat_check_repo.py
 python scripts/cat_validate.py --all
+python scripts/cat_align_check.py --strict
+pytest -q
 ```
 
-## Step 3: Resolve the next action
+## 3. GitHub Bridge Quick Check
 
 ```bash
-python scripts/cat_resolve_go.py
+python scripts/cat_git_bridge.py validate-pr \
+  --title "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
+  --branch feat/mp-cat-a010-4c01-bead-cat-a010-4c01-01-github-contract \
+  --commit-message "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
+  --bead beads/completed/BEAD-CAT-A010-4C01-01.yaml \
+  --changed-files tests/fixtures/github/changed_files_allowed.txt \
+  --write-report
 ```
 
-## Step 4: Commit only after validation
+## 4. Next Sprint
 
-Use this commit pattern:
+Sprint 010 (`MP-CAT-A010-4C01`) is **closed**. To start Sprint 011:
 
-```text
-[MISSION_ID][BEAD_ID] Clear imperative summary
-```
+1. Review `missions/backlog/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml`
+2. Expand mission pack and create BEADs
+3. Transition `MP-CAT-A011-4C01` from `draft` → `approved`
+4. Run `python scripts/cat_resolve_go.py`
 
-Example:
+## 5. Reference
 
-```text
-[MP-CAT-000][BEAD-CAT-000-001] Establish CAT core repo skeleton
-```
+- `PDR_CAT_A010_GITHUB_BRIDGE_PR_GOVERNANCE.md` — Sprint 010 design record
+- `SPRINT_010_PLAN.md` — completed sprint plan
+- `playbooks/GITHUB_BRIDGE_PLAYBOOK.md` — GitHub Bridge procedures
+- `docs/operations/SPRINT_010_OPERATOR_GUIDE.md` — operator guide
+- `CAT_ROADMAP.md` — full sprint lineage
