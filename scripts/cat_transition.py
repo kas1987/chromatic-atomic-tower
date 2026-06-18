@@ -434,6 +434,12 @@ def main() -> int:
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 _shutil.copy2(f, dest)
                 restored.append(rel(dest))
+                # Remove any terminal copies (completed/failed/archived) left by --move
+                # so ID-collision checks pass after rollback.
+                if f.name.startswith(('mission_', 'bead_')):
+                    for terminal in existing:
+                        if terminal.resolve() != dest.resolve():
+                            terminal.unlink(missing_ok=True)
         print(f'rollback  : {snapshot_id}')
         for r in restored:
             print(f'  restored: {r}')

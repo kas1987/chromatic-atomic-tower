@@ -70,5 +70,5 @@ required_output:
 handoff:
   next_bead_id: null
   notes:
-  - Resolves the PR #10 P1; only after this lands may .agent/runs scratch be ignored.
+    - Resolves the PR #10 P1; only after this lands may .agent/runs scratch be ignored.
 last_updated: '2026-06-17T20:37:42.983137+00:00'
