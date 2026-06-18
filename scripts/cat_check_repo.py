@@ -60,19 +60,20 @@ ALLOWED_ROOT_FILES = {
 }
 
 ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {
-    '.github', '.vscode', '.agent', 'tests', 'ci',
+    '.github', '.vscode', '.agent', 'tests', 'ci', '.codex',
 }
 
 # Transient / VCS / cache entries that are gitignored and not governed by the manifest.
 IGNORED_ROOT_ENTRIES = {
     '.git', '.venv', '__pycache__', '.pytest_cache', '.claude', '.DS_Store',
-    '.github_app_token_cache', '.beads',
+    '.github_app_token_cache', '.beads', '.coverage', 'coverage.xml', 'htmlcov',
 }
 
-# Gitignored glob patterns for secrets/credentials at the root (keep in sync with
-# .gitignore: .env, .env.*, *.pem). Expected in local workflows and never stray.
+# Gitignored glob patterns for secrets/credentials and transient tooling artifacts
+# at the root (keep in sync with .gitignore: .env, .env.*, *.pem, .coverage.*).
+# Expected in local workflows and never stray.
 # Note: .env.example is tracked and lives in ALLOWED_ROOT_FILES, so it passes regardless.
-IGNORED_ROOT_PATTERNS = ('.env', '.env.*', '*.pem')
+IGNORED_ROOT_PATTERNS = ('.env', '.env.*', '*.pem', '.coverage.*', 'pytest-cache-files-*')
 
 
 def find_stray_root_entries(root: Path = ROOT) -> list[str]:

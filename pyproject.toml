@@ -12,4 +12,31 @@ dependencies = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+# "." enables `from scripts.x import ...`; "scripts" lets modules that use bare
+# imports (e.g. `from common import ROOT`) be imported directly as `import cat_x`
+# without per-file sys.path manipulation.
+pythonpath = [".", "scripts", "scripts/adapters"]
+
+# Coverage is opt-in (run `make coverage` or `pytest --cov`), not wired into the
+# default `pytest`/`make test` run. This keeps the plain test run fast and avoids
+# writing a `.coverage` file into the repo root on every invocation — which the
+# repo-hygiene check (scripts/cat_check_repo.py) would otherwise see mid-run when
+# the CI self-test shells out to it.
+[tool.coverage.run]
+source = ["scripts"]
+branch = true
+omit = [
+  "scripts/__init__.py",
+  "scripts/*/__init__.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+# Floor below the current measured coverage; raise as coverage improves.
+fail_under = 55
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+]

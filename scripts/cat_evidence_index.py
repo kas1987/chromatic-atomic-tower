@@ -29,7 +29,7 @@ VALID_ARTIFACT_TYPES = {
     'diff', 'screenshot', 'bundle', 'other',
 }
 
-SKIP_DIRS = {'snapshots', 'bundles', 'manifest.yaml'}
+SKIP_DIRS = {'snapshots/', 'bundles/', 'manifest.yaml'}
 
 
 def utc_now() -> str:
@@ -39,7 +39,9 @@ def utc_now() -> str:
 def sha256_of(path: Path) -> str:
     h = hashlib.sha256()
     try:
-        h.update(path.read_bytes())
+        with path.open('rb') as f:
+            for chunk in iter(lambda: f.read(65536), b''):
+                h.update(chunk)
         return h.hexdigest()
     except OSError:
         return 'error_reading_file'
@@ -129,8 +131,7 @@ def rebuild_manifest(evidence_root: Path = EVIDENCE_ROOT) -> dict:
         if not path.is_file():
             continue
         rel_str = rel(path)
-        # Skip the manifest itself, snapshots, bundles
-        if any(skip in rel_str for skip in ('manifest.yaml', 'snapshots/', 'bundles/')):
+        if any(skip in rel_str for skip in SKIP_DIRS):
             continue
         if path.suffix not in ('.txt', '.md', '.json', '.yaml', '.yml', '.diff', '.patch',
                                 '.png', '.jpg', '.jpeg', '.gif', '.webp'):

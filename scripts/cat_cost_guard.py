@@ -14,6 +14,8 @@ import argparse
 import sys
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parent.parent
 WORKFLOWS = ROOT / ".github" / "workflows"
 RISKY_RUNNERS = ["windows-latest", "macos-latest"]
@@ -34,24 +36,61 @@ def check_workflow(path: Path) -> tuple[list[str], list[str]]:
     except ValueError:
         rel = path.name
 
-    if "schedule:" in text and "CAT_BUDGET_APPROVED" not in text:
+    try:
+        data = yaml.safe_load(text) or {}
+    except Exception as exc:
+        failures.append(f"FAIL [{rel}]: invalid YAML: {exc}")
+        return failures, warnings
+
+    # schedule: trigger check — parse on: key properly.
+    # PyYAML (YAML 1.1) parses bare 'on' as the boolean True, so check both.
+    on_trigger = data.get(True, data.get("on", {}))
+    has_schedule = False
+    if isinstance(on_trigger, dict):
+        has_schedule = "schedule" in on_trigger
+    elif isinstance(on_trigger, list):
+        has_schedule = "schedule" in on_trigger
+    elif isinstance(on_trigger, str):
+        has_schedule = on_trigger == "schedule"
+
+    if has_schedule and "CAT_BUDGET_APPROVED" not in text:
         failures.append(
             f"FAIL [{rel}]: schedule: trigger present without CAT_BUDGET_APPROVED annotation"
         )
 
-    for runner in RISKY_RUNNERS:
-        if runner in text and "CAT_RUNNER_EXCEPTION" not in text:
-            failures.append(
-                f"FAIL [{rel}]: risky runner {runner!r} without CAT_RUNNER_EXCEPTION annotation"
-            )
+    # Risky runner check — inspect per-job runs-on to avoid false positives from comments
+    jobs = data.get("jobs", {})
+    if isinstance(jobs, dict):
+        for job_name, job in jobs.items():
+            if isinstance(job, dict):
+                runs_on = job.get("runs-on", "")
+                if isinstance(runs_on, str) and runs_on in RISKY_RUNNERS:
+                    if "CAT_RUNNER_EXCEPTION" not in text:
+                        failures.append(
+                            f"FAIL [{rel}]: risky runner {runs_on!r} in job {job_name!r} without CAT_RUNNER_EXCEPTION annotation"
+                        )
 
-    if "permissions:" not in text:
+    # Warnings: permissions (top-level or per-job)
+    has_top_perms = "permissions" in data
+    has_job_perms = isinstance(jobs, dict) and bool(jobs) and all(
+        isinstance(j, dict) and "permissions" in j for j in jobs.values()
+    )
+    if not has_top_perms and not has_job_perms:
         warnings.append(f"WARN [{rel}]: no explicit permissions block")
 
-    if "concurrency:" not in text:
+    # Warnings: concurrency (top-level or per-job)
+    has_top_concurrency = "concurrency" in data
+    has_job_concurrency = isinstance(jobs, dict) and bool(jobs) and all(
+        isinstance(j, dict) and "concurrency" in j for j in jobs.values()
+    )
+    if not has_top_concurrency and not has_job_concurrency:
         warnings.append(f"WARN [{rel}]: no concurrency block (cancel-in-progress recommended)")
 
-    if "timeout-minutes:" not in text:
+    # Warnings: timeout-minutes (any job)
+    has_timeout = isinstance(jobs, dict) and any(
+        isinstance(j, dict) and "timeout-minutes" in j for j in jobs.values()
+    )
+    if not has_timeout:
         warnings.append(f"WARN [{rel}]: no timeout-minutes on any job")
 
     return failures, warnings
@@ -78,7 +117,8 @@ def main() -> int:
     all_failures: list[str] = []
     all_warnings: list[str] = []
 
-    for path in sorted(WORKFLOWS.glob("*.yml")):
+    workflow_files = sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml")))
+    for path in workflow_files:
         f, w = check_workflow(path)
         all_failures.extend(f)
         all_warnings.extend(w)
@@ -96,7 +136,7 @@ def main() -> int:
         print(f"\ncost-guard: {len(all_failures)} failure(s) found.")
         return 1
 
-    print(f"cost-guard: all {len(list(WORKFLOWS.glob('*.yml')))} workflow(s) passed.")
+    print(f"cost-guard: all {len(workflow_files)} workflow(s) passed.")
     return 0
 
 

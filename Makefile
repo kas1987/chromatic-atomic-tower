@@ -1,4 +1,4 @@
-.PHONY: check validate align-check go test tree loghouse loghouse-gate loghouse-gate-test harness mermaid confidence bundle harness-all
+.PHONY: check validate align-check go test coverage tree loghouse loghouse-gate loghouse-gate-test harness mermaid confidence bundle harness-all
 
 check:
 	python scripts/cat_check_repo.py
@@ -14,6 +14,11 @@ go:
 
 test:
 	pytest -q
+
+# Coverage report for the scripts/ package. Config lives in pyproject.toml
+# ([tool.coverage.*]); fails if total coverage drops below the configured floor.
+coverage:
+	pytest -q --cov=scripts --cov-report=term-missing --cov-report=xml
 
 tree:
 	find . -maxdepth 3 -type f | sort
