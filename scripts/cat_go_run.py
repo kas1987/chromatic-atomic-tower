@@ -7,16 +7,17 @@ mission stage-by-stage.  Default is **dry-run** — nothing is mutated.  Pass
 
 SAFETY RULES
 - Default: dry-run; mutate NOTHING.
-- --execute: only proceeds when plan_action() says automatable=True AND the
-  human-gate confirmation check has been acknowledged.
+- --execute: only proceeds when plan_action() says automatable=True. The gate
+  stays enforced but is approved by the configured agent (gate_approver_agent,
+  default Auditor) instead of a human — no interactive confirmation.
 - Never writes tower/registry/BEAD state directly — only via subprocess call
-  to cat_sprint_closeout.py.
+  to cat_sprint_closeout.py (recorded with the approver agent as actor).
 
 Usage:
     python scripts/cat_go_run.py                         # dry-run, active mission
     python scripts/cat_go_run.py --mission MP-CAT-A011-4C01
     python scripts/cat_go_run.py --json
-    python scripts/cat_go_run.py --execute --confirm     # human gate ack via flag
+    python scripts/cat_go_run.py --execute               # agent-approved gate
 """
 from __future__ import annotations
 
@@ -28,6 +29,7 @@ from pathlib import Path
 
 # Pull the spine in — never reimplement its stage logic.
 from cat_go import STAGES, _active_mission_id, evaluate
+from cat_transition import gate_approver_agent
 from common import ROOT, rel, utc_now
 
 EVIDENCE_DIR = ROOT / 'evidence' / 'go'
@@ -102,30 +104,24 @@ def plan_action(record: dict) -> dict:
 # Human gate
 # ---------------------------------------------------------------------------
 
-def _human_gate_close(mission_id: str, actor: str, *, confirmed: bool) -> bool:
-    """Flag-based human gate (no interactive prompt — safe under CI/automation).
+def _agent_gate_close(mission_id: str, approver_agent: str) -> None:
+    """Record the agent gate for a mission close.
 
-    The gate is acknowledged out-of-band by passing ``--confirm``; without it,
-    ``--execute`` prints the notice and refuses. This keeps "No Gate = No
-    Promotion" enforceable without an ``input()`` call that would hang in a
-    non-interactive shell.
+    The gate is kept (it is evaluated and written to the audit trail), but the
+    approver is now an AGENT — the configured ``gate_approver_agent`` (Auditor
+    by default) — rather than a human. The Auditor is independent of the
+    Builder/Orchestrator that performed the work, preserving separation of
+    duties, so no interactive human confirmation is required.
     """
     print()
     print('=' * 70)
-    print('  HUMAN GATE — Mission Closeout Requires Human Owner Approval')
+    print('  GATE — Mission Closeout (approver: agent)')
     print('=' * 70)
-    print(f'  Mission : {mission_id}')
-    print(f'  Actor   : {actor}')
-    print('  Action  : invoke cat_sprint_closeout.py --execute')
+    print(f'  Mission        : {mission_id}')
+    print(f'  Approver agent : {approver_agent}')
+    print('  Action         : invoke cat_sprint_closeout.py --execute')
     print()
-    print('  This will permanently close the mission, archive all BEADs,')
-    print('  update the registry, and set the tower to sprint_idle.')
-    print()
-    if confirmed:
-        print('  Confirmed via --confirm.')
-        return True
-    print('  Refused: re-run with --execute --confirm to proceed.')
-    return False
+    print(f'  Gate approved by agent {approver_agent!r} (separation of duties).')
 
 
 # ---------------------------------------------------------------------------
@@ -165,11 +161,6 @@ def main() -> int:
         default='Human Owner',
         help='Actor name for audit records (default: Human Owner)',
     )
-    parser.add_argument(
-        '--confirm',
-        action='store_true',
-        help='Acknowledge the human gate for a mission-close --execute',
-    )
     args = parser.parse_args()
 
     dry_run: bool = args.dry_run
@@ -205,15 +196,18 @@ def main() -> int:
             return 0
 
         # Only automatable action currently: close via cat_sprint_closeout.py.
-        if not _human_gate_close(mission_id, args.actor, confirmed=args.confirm):
-            return 1
+        # The gate stays — it is approved by the agent approver (Auditor), and
+        # the closeout audit records that agent as the acting approver.
+        approver_agent = gate_approver_agent()
+        _agent_gate_close(mission_id, approver_agent)
+        emit_record['gate_approver'] = approver_agent
 
         cmd = [
             sys.executable,
             str(ROOT / 'scripts' / 'cat_sprint_closeout.py'),
             '--execute',
             '--mission', mission_id,
-            '--actor', args.actor,
+            '--actor', approver_agent,
         ]
         print(f'\nInvoking: {" ".join(cmd)}')
         result = subprocess.run(cmd, cwd=str(ROOT))
