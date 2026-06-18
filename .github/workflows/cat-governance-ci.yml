@@ -54,3 +54,4 @@ jobs:
         with:
           name: mp-cat-a006-4c01-evidence
           path: evidence/
+          retention-days: 14
