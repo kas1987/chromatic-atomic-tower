@@ -186,3 +186,43 @@ def test_blocked_edge_finding_has_evidence():
     assert findings
     for finding in findings:
         assert finding["evidence"], "Blocked-edge finding must have evidence"
+
+
+# ── Drift gate tests ─────────────────────────────────────────────────────────
+
+
+def test_drift_gate_exits_nonzero_on_p0_violation():
+    """drift_gate.run_gate must return 1 (fail) when a P0 forbidden edge is present."""
+    from scripts.loghouse.drift_gate import run_gate
+
+    rules_path = RULES_PATH
+    edges_path = FIXTURES / "dependency_edges.json"
+
+    # Standard fixture has frontend→database (RULE-002, severity p0 = forbidden)
+    result = run_gate(rules_path, edges_path, {"p0", "p1"})
+    assert result == 1, "Expected non-zero exit code for P0 forbidden edge"
+
+
+def test_drift_gate_exits_zero_on_clean_edges():
+    """drift_gate.run_gate must return 0 (pass) when no forbidden P0/P1 edges exist."""
+    from scripts.loghouse.drift_gate import run_gate
+
+    rules_path = RULES_PATH
+    edges_path = FIXTURES / "dependency_edges_clean.json"
+
+    result = run_gate(rules_path, edges_path, {"p0", "p1"})
+    assert result == 0, "Expected zero exit code for clean fixture with no P0/P1 violations"
+
+
+def test_drift_gate_respects_severity_filter():
+    """drift_gate.run_gate only blocks on the specified severity levels."""
+    from scripts.loghouse.drift_gate import run_gate
+
+    rules_path = RULES_PATH
+    edges_path = FIXTURES / "dependency_edges.json"
+
+    # Only fail on p2/p3 — the fixture's violation is p0 so this must not trigger
+    # BUT: the standard fixture also has analytics→payments-api which is RULE-005 p1
+    # So p2-only should be 0
+    result_p2_only = run_gate(rules_path, edges_path, {"p2"})
+    assert result_p2_only == 0, "P2-only filter should not block on P0/P1 violations"

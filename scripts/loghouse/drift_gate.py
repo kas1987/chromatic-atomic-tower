@@ -87,19 +87,19 @@ def run_gate(
 
     if violations:
         print(
-            f"[drift-gate] FAIL — {len(violations)} "
+            f"[drift-gate] FAIL -- {len(violations)} "
             f"forbidden edge(s) at severity {sorted(fail_on_severities)} detected:"
         )
         for v in violations:
             print(
-                f"  BLOCKED [{v['severity']}] {v['source']} → {v['target']} "
+                f"  BLOCKED [{v['severity']}] {v['source']} -> {v['target']} "
                 f"({v['edge_type']}) rule={v['rule_id']}"
             )
         print("[drift-gate] Build failed: critical architecture rule violation(s) present.")
         return 1
 
     print(
-        f"[drift-gate] PASS — no forbidden edge at severity "
+        f"[drift-gate] PASS -- no forbidden edge at severity "
         f"{sorted(fail_on_severities)} found in {edges_path.name}"
     )
     return 0
