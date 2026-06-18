@@ -439,8 +439,13 @@ def main() -> int:
             except Exception:
                 pass
         contracts_map: dict[str, str] = snap_meta.get('contracts', {})
-        # Legacy single-entry fallback: apply only when there's exactly one contract.
-        legacy_path: str = snap_meta.get('contract_path', '')
+        # Legacy single-entry fallback: only safe when snapshot has exactly one contract
+        # file — applying a single path to multiple contracts corrupts the last one.
+        contract_files = [
+            f for f in snap_dir.iterdir()
+            if f.name not in ('metadata.json', 'MISSION_REGISTRY.yaml', 'TOWER_STATE.yaml')
+        ]
+        legacy_path: str = snap_meta.get('contract_path', '') if len(contract_files) == 1 else ''
         # Terminal subfolders — only copies here may have been created by --move.
         TERMINAL_SUBDIRS = {'missions': {'archived'}, 'beads': {'completed', 'failed'}}
         restored = []
