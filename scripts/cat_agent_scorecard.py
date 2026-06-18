@@ -7,6 +7,7 @@ Subcommands:
   promote     --role ROLE --bead BEAD_ID [--note TEXT]
   demote      --role ROLE --bead BEAD_ID [--note TEXT]
   report      [--role ROLE]
+  check-parity (exit 1 if any AGENT_REGISTRY role is missing from the scorecard)
 
 Default mode: dry-run (prints proposed changes, writes nothing).
 Pass --execute to write changes to AGENT_SCORECARD.yaml.
@@ -29,6 +30,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 SCORECARD_PATH = ROOT / 'agents/registry/AGENT_SCORECARD.yaml'
+REGISTRY_PATH = ROOT / 'agents/registry/AGENT_REGISTRY.yaml'
 
 SCORE_DELTA = {
     'bead_completed': 5,
@@ -282,6 +284,46 @@ def cmd_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def _registry_roles() -> list[str]:
+    try:
+        reg = yaml.safe_load(REGISTRY_PATH.read_text(encoding='utf-8')) or {}
+    except (FileNotFoundError, yaml.YAMLError):
+        return []
+    return [a.get('role') for a in (reg.get('agents') or []) if a.get('role')]
+
+
+def cmd_check_parity(args: argparse.Namespace) -> int:
+    """Verify every role in AGENT_REGISTRY is tracked in AGENT_SCORECARD.
+
+    Enforces the diagram's Agent Layer contract: all registered roles
+    (Orchestrator, Scout, Builder, Reviewer, Auditor, Scribe, Security) must
+    carry a trust score. Exits 1 on any drift so CI can gate on it.
+    """
+    data = _load_scorecard()
+    scored = {(a.get('role') or '') for a in (data.get('agents') or [])}
+    registered = _registry_roles()
+    missing = [r for r in registered if r not in scored]
+    extra = [r for r in scored if r and r not in registered]
+
+    if getattr(args, 'json', False):
+        print(json.dumps({
+            'registered_roles': registered,
+            'scored_roles': sorted(scored),
+            'missing_from_scorecard': missing,
+            'extra_in_scorecard': extra,
+            'in_parity': not missing and not extra,
+        }, indent=2))
+    else:
+        if not missing and not extra:
+            print(f'parity OK: all {len(registered)} registry roles are scored')
+        else:
+            if missing:
+                print(f'MISSING from scorecard: {", ".join(missing)}')
+            if extra:
+                print(f'EXTRA in scorecard (not registered): {", ".join(extra)}')
+    return 0 if (not missing and not extra) else 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description='CAT agent trust scorecard CLI',
@@ -317,6 +359,9 @@ def main() -> int:
     p_rep.add_argument('--role', default='')
     p_rep.add_argument('--json', action='store_true')
 
+    p_par = sub.add_parser('check-parity', help='Verify scorecard tracks every registry role')
+    p_par.add_argument('--json', action='store_true')
+
     args = parser.parse_args()
     dispatch = {
         'score-bead': cmd_score_bead,
@@ -324,6 +369,7 @@ def main() -> int:
         'promote': cmd_promote,
         'demote': cmd_demote,
         'report': cmd_report,
+        'check-parity': cmd_check_parity,
     }
     return dispatch[args.command](args)
 

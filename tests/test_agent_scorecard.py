@@ -140,6 +140,24 @@ class TestScoreBead:
         assert agent['completed_beads'] == 1
 
 
+class TestCheckParity:
+    def test_real_repo_scorecard_in_parity_with_registry(self):
+        """The shipped scorecard must track every role in AGENT_REGISTRY."""
+        args = _make_args(command='check-parity', json=False)
+        assert cas.cmd_check_parity(args) == 0
+
+    def test_missing_role_detected(self, fresh_scorecard, tmp_path, monkeypatch):
+        registry = {'agents': [
+            {'role': 'Builder'}, {'role': 'Reviewer'}, {'role': 'Auditor'},
+        ]}
+        reg_path = tmp_path / 'AGENT_REGISTRY.yaml'
+        reg_path.write_text(yaml.safe_dump(registry), encoding='utf-8')
+        monkeypatch.setattr(cas, 'REGISTRY_PATH', reg_path)
+        # fresh_scorecard fixture only defines Builder + Reviewer -> Auditor missing.
+        args = _make_args(command='check-parity', json=False)
+        assert cas.cmd_check_parity(args) == 1
+
+
 class TestPenalize:
     def test_penalize_dry_run_no_write(self, fresh_scorecard):
         args = _make_args(command='penalize', dry_run=True)

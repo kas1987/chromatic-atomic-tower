@@ -13,6 +13,13 @@ agents:
   incidents: 0
   current_trust: provisional
   history: []
+- role: Scout
+  score: 70
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []
 - role: Builder
   score: 90
   completed_beads: 4
@@ -43,7 +50,21 @@ agents:
   incidents: 0
   current_trust: provisional
   history: []
+- role: Auditor
+  score: 70
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []
 - role: Scribe
+  score: 70
+  completed_beads: 0
+  failed_beads: 0
+  incidents: 0
+  current_trust: provisional
+  history: []
+- role: Security
   score: 70
   completed_beads: 0
   failed_beads: 0
