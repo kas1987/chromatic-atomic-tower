@@ -1,0 +1,29 @@
+{
+  "packet_id": "HOP-CAT-A011-01",
+  "timestamp": "2026-06-18T00:00:00Z",
+  "from_role": "Builder",
+  "to_role": "Reviewer",
+  "bead_id": "BEAD-CAT-A011-4C01-01",
+  "mission_id": "MP-CAT-A011-4C01",
+  "context_paths": [
+    "schemas/handoff_packet.schema.json",
+    "tests/fixtures/handoff/handoff_packet_example.json",
+    "tests/test_handoff_packet.py"
+  ],
+  "continuity": {
+    "prior_state": "Builder created schema, fixture, and test files for the G-3 Handoff Packet gap.",
+    "next_action": "Reviewer to run pytest tests/test_handoff_packet.py and verify schema correctness."
+  },
+  "allowed_paths": [
+    "schemas/",
+    "tests/fixtures/handoff/",
+    "tests/test_handoff_packet.py"
+  ],
+  "tool_budget": {
+    "search": 10,
+    "read": 20,
+    "write": 0,
+    "execute": 5
+  },
+  "reviewer": "Auditor"
+}

@@ -14,6 +14,8 @@ VALIDATION_TARGETS = [
     ('agent registry', ROOT / 'agents/registry/AGENT_REGISTRY.yaml', ROOT / 'schemas/agent.schema.json'),
     ('agent scorecard', ROOT / 'agents/registry/AGENT_SCORECARD.yaml', ROOT / 'schemas/agent_scorecard.schema.json'),
     ('tower state', ROOT / 'state/TOWER_STATE.yaml', ROOT / 'schemas/tower_state.schema.json'),
+    ('intent envelope example', ROOT / 'tests/fixtures/intent/intent_envelope_example.json', ROOT / 'schemas/intent_envelope.schema.json'),
+    ('handoff packet example', ROOT / 'tests/fixtures/handoff/handoff_packet_example.json', ROOT / 'schemas/handoff_packet.schema.json'),
 ]
 
 MISSION_PATTERNS = [
