@@ -12,8 +12,8 @@ SCRIPTS_PATH = ROOT_PATH / 'scripts'
 if str(SCRIPTS_PATH) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_PATH))
 
-from scripts.common import ROOT, load_yaml, validate_with_schema
-from scripts.cat_validate import (
+from common import ROOT, load_yaml, validate_with_schema
+from cat_validate import (
     NEW_MISSION_ID_RE,
     LEGACY_MISSION_ID_RE,
     EXAMPLE_MISSION_ID_RE,

@@ -55,7 +55,7 @@ ALLOWED_ROOT_FILES = {
     # section 3.1 — allowed optional
     'CAT_ROADMAP.md', 'CHANGELOG.md', 'GOVERNANCE.md', 'CONTRIBUTING.md',
     'SECURITY.md', 'QUICKSTART.md', 'VERSION', 'CHROMATIC_TREES.worktree.json',
-    'pyproject.toml', '.editorconfig', '.env.example', '.gitignore', '.coveragerc',
+    'pyproject.toml', '.editorconfig', '.env.example', '.gitignore', '.coveragerc', '.coverage',
     # sprint plans at root (backward-compat; sprint 000+ ship these here)
     'SPRINT_000_PLAN.md', 'SPRINT_001_PLAN.md', 'SPRINT_002_PLAN.md', 'SPRINT_003_PLAN.md',
     'SPRINT_009_PLAN.md', 'SPRINT_010_PLAN.md', 'SPRINT_011_PLAN.md',

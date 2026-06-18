@@ -12,7 +12,7 @@ SCRIPTS_PATH = ROOT_PATH / 'scripts'
 if str(SCRIPTS_PATH) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_PATH))
 
-from scripts.cat_align_common import (
+from cat_align_common import (
     MISSION_TERMINAL,
     BEAD_TERMINAL,
     BEAD_ACTIVE_STATES,

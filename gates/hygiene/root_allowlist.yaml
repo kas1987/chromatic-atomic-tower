@@ -66,4 +66,5 @@ ignored_entries:
   - venv
   - .mypy_cache
   - .ruff_cache
+  - .coverage
   - .idea

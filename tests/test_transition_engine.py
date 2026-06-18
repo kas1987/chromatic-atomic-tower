@@ -14,8 +14,8 @@ SCRIPTS_PATH = ROOT_PATH / 'scripts'
 if str(SCRIPTS_PATH) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_PATH))
 
-from scripts.common import ROOT, load_json, load_yaml
-from scripts.cat_transition import (
+from common import ROOT, load_json, load_yaml
+from cat_transition import (
     _registry_roles,
     _status_list,
     _terminal_statuses,
@@ -357,11 +357,11 @@ class TestEvaluateGuard:
         assert ok is True
         assert 'not required' in msg
 
-    def test_human_gate_required_with_registered_agent_passes(self):
-        # The real AGENT_REGISTRY has 'Auditor' registered; gate_approver_agent defaults to Auditor.
+    def test_human_gate_required_with_registered_agent_passes(self, monkeypatch):
+        import cat_transition
+        monkeypatch.setattr(cat_transition, '_registry_roles', lambda: {'auditor'})
         data = {'human_gate': {'required': True}}
         ok, msg = evaluate_guard('human_gate_if_required', 'mission', data)
-        # Auditor is registered so this should pass.
         assert ok is True
         assert 'auditor' in msg.lower() or 'gate' in msg.lower()
 
@@ -402,7 +402,7 @@ class TestRegistryRoles:
 class TestAppendAuditEvent:
 
     def test_audit_event_appended_to_log(self, tmp_path, monkeypatch):
-        import scripts.cat_transition as cat_transition
+        import cat_transition
         monkeypatch.setattr(cat_transition, 'ROOT', tmp_path)
         rules = {
             'audit': {'event_log': 'evidence/logs/transitions.jsonl'},
@@ -427,7 +427,7 @@ class TestAppendAuditEvent:
         assert parsed['target_id'] == 'MP-TEST-001'
 
     def test_audit_event_multiple_appends(self, tmp_path, monkeypatch):
-        import scripts.cat_transition as cat_transition
+        import cat_transition
         monkeypatch.setattr(cat_transition, 'ROOT', tmp_path)
         rules = {'audit': {'event_log': 'evidence/logs/transitions.jsonl'}}
         event = {
@@ -449,7 +449,7 @@ class TestAppendAuditEvent:
         assert len(lines) == 2
 
     def test_audit_event_uses_default_log_path(self, tmp_path, monkeypatch):
-        import scripts.cat_transition as cat_transition
+        import cat_transition
         monkeypatch.setattr(cat_transition, 'ROOT', tmp_path)
         # Rules without an audit key should fall back gracefully
         rules = {}

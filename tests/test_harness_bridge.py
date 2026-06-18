@@ -454,8 +454,8 @@ def test_write_evidence_report_truncates_long_test_output(tmp_path, monkeypatch)
     content = report.read_text(encoding="utf-8")
     # The file exists; we just verify it was created without error
     assert report.exists()
-    # Content should not include more than ~5000 chars of test output section
-    assert len(content) < len(long_output)
+    # Verify output is truncated — 2000 "line\n" = 10000 chars, report must be well under that
+    assert len(content) < 6000
 
 
 # ---------------------------------------------------------------------------
@@ -519,7 +519,6 @@ def _setup_bridge_env(
 
 def test_main_pass_updates_queue_to_review(tmp_path, monkeypatch):
     paths = _setup_bridge_env(tmp_path, monkeypatch, test_passed=True)
-    rc = harness_bridge.main.__wrapped__ if hasattr(harness_bridge.main, "__wrapped__") else harness_bridge.main
 
     with patch("sys.argv", ["harness_bridge.py", "--bead", "BEAD-TEST-001", "--ticket", "TEST-001"]):
         result = harness_bridge.main()

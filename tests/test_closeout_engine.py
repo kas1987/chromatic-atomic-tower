@@ -11,7 +11,7 @@ SCRIPTS_PATH = ROOT_PATH / 'scripts'
 if str(SCRIPTS_PATH) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_PATH))
 
-from scripts.cat_closeout import (
+from cat_closeout import (
     run_closeout,
     append_closeout_event,
     write_closeout_report,
@@ -170,7 +170,7 @@ def test_closeout_actor_recorded_in_event():
 def test_closeout_report_file_created(tmp_path, monkeypatch):
     """write_closeout_report creates a .md file in the configured report dir."""
     # Patch ROOT in cat_closeout to use tmp_path so we control the report dir.
-    import scripts.cat_closeout as cc_module
+    import cat_closeout as cc_module
     original_root = cc_module.ROOT
     monkeypatch.setattr(cc_module, 'ROOT', tmp_path)
 
@@ -217,7 +217,7 @@ def test_closeout_report_file_created(tmp_path, monkeypatch):
 
 def test_append_closeout_event_writes_jsonl(tmp_path, monkeypatch):
     """append_closeout_event appends a JSON line to the log file."""
-    import scripts.cat_closeout as cc_module
+    import cat_closeout as cc_module
     monkeypatch.setattr(cc_module, 'ROOT', tmp_path)
 
     gate_dir = tmp_path / 'gates' / 'evidence'
@@ -258,7 +258,7 @@ def test_append_closeout_event_writes_jsonl(tmp_path, monkeypatch):
 
 def test_append_closeout_event_appends_multiple_lines(tmp_path, monkeypatch):
     """Multiple calls to append_closeout_event build up JSONL correctly."""
-    import scripts.cat_closeout as cc_module
+    import cat_closeout as cc_module
     monkeypatch.setattr(cc_module, 'ROOT', tmp_path)
 
     gate_dir = tmp_path / 'gates' / 'evidence'
@@ -297,7 +297,7 @@ def test_append_closeout_event_appends_multiple_lines(tmp_path, monkeypatch):
 
 def test_closeout_report_contains_errors_section(tmp_path, monkeypatch):
     """write_closeout_report includes errors when provided."""
-    import scripts.cat_closeout as cc_module
+    import cat_closeout as cc_module
     monkeypatch.setattr(cc_module, 'ROOT', tmp_path)
 
     gate_dir = tmp_path / 'gates' / 'evidence'
@@ -342,7 +342,7 @@ def test_closeout_report_contains_errors_section(tmp_path, monkeypatch):
 
 def test_closeout_report_none_errors_shows_none(tmp_path, monkeypatch):
     """write_closeout_report shows '- none' when no errors."""
-    import scripts.cat_closeout as cc_module
+    import cat_closeout as cc_module
     monkeypatch.setattr(cc_module, 'ROOT', tmp_path)
 
     gate_dir = tmp_path / 'gates' / 'evidence'
