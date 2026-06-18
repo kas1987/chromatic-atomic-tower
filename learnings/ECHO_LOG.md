@@ -47,6 +47,13 @@ The Echo Log records what the system should remember next time.
 - **Stale mission files cause `MISSION_ID_COLLISION`.** Before merging any PR touching `missions/`, run `pytest tests/test_state_freshness.py -k test_live_repo_is_fresh` locally.
 - **YAML list items should be indented 2 spaces under their key**, not at the same level — the at-level form is valid per spec but flagged by Copilot as invalid.
 
+## 2026-06-18 — Command Center backend wiring (operator-plane)
+
+- **`reference/server.py` is the live data gateway.** Start with `python reference/server.py` (port 8000). Dashboard fetches `/api/all` every 5 s. No extra deps beyond PyYAML.
+- **Active BEAD confidence avg is 83.6 (warn band).** Worth a sweep of `beads/active/` to identify low-confidence contracts before next GO.
+- **25 failed BEADs in `beads/failed/`.** Not yet triaged for incident log eligibility. Review before Sprint 013 closeout.
+- **`reference/` is operator-plane, not CI-scoped.** If dashboard becomes a mission deliverable, open a new BEAD and move `server.py` to a proper `src/` or `tools/` location.
+
 ## Sprint 013 / coverage-80pct spike (2026-06-18)
 
 - **Dual-namespace test imports corrupt real files.** Any test that mixes `import cat_foo as mod` with `from scripts.cat_foo import func` risks patching the wrong namespace and writing to real repo state. CI caught it as a repeating `scorecard_parity` failure. Enforce single-namespace pattern in PR review.

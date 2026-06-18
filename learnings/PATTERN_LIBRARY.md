@@ -123,6 +123,36 @@ Root incident: INC-003 — `test_record_writes_and_prints` corrupted the real `A
 
 Failure to add artefacts causes `schema_validation` (which calls `find_root_hygiene_issues()`) to fail on every CI run.
 
+## Pattern: YAML→JSON server — always `default=str`
+
+Any Python HTTP server that reads YAML files with PyYAML and serializes them as JSON must pass
+`default=str` to `json.dumps()`. PyYAML parses YAML timestamps as Python `datetime` objects which
+`json.dumps()` cannot serialize by default. The failure is a silent 500 on every response.
+
+```python
+json.dumps(data, default=str)  # mandatory, not optional
+```
+
+## Anti-pattern: Field rename without filter sync
+
+When a normalization function renames fields (e.g. `timestamp→time`, `from_status→from`), every
+subsequent filter or sort that references the old field names will silently return empty results.
+After writing a normalization function, grep for old field names in the same module scope before shipping.
+
+## Pattern: Port cleanup before server restart
+
+When iterating on a local HTTP server, always kill all PIDs listening on the target port before
+restarting — not just the last known PID. Use `netstat -ano | Select-String ":PORT "` to find all
+listeners. Running a fixed binary against traffic that reaches an unfixed binary produces confusing
+"still broken" diagnostics.
+
+## Pattern: Parallel subagent file-scope isolation
+
+Dispatch two agents in parallel only when their file scopes are non-overlapping. Confirm paths before
+dispatch: mechanical file A → haiku, context-heavy file B → fork (fork inherits conversation history;
+use for files the fork agent already knows about from the compacted summary). Never have two agents
+writing the same file concurrently.
+
 ## Pattern: Simulate missing dependency — `sys.modules[pkg] = None`
 
 To test an ImportError fallback path, use `monkeypatch.setitem(sys.modules, 'pkg', None)`. Python treats a `None` value in `sys.modules` as "module not available" and raises `ImportError` on `import pkg`. This is safer than patching `builtins.__import__` because: (a) it is auto-restored by monkeypatch after the test, (b) it does not intercept unrelated imports, (c) it is the approach documented in the Python reference manual.

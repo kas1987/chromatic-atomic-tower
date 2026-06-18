@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAT — Chromatic Atomic Tower</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   CHROMATIC TOKEN SYSTEM  (from chromatic-harness-v2)
+═══════════════════════════════════════════════════════ */
+:root {
+  --color-background: #0a0a0f;
+  --color-background-elevated: #12121a;
+  --color-background-overlay: #1a1a2e;
+  --color-surface: #12121a;
+  --color-surface-hover: #1a1a2e;
+  --color-surface-active: #252540;
+  --color-primary-300: #c4b5fd;
+  --color-primary-400: #a78bfa;
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+  --color-primary-800: #5b21b6;
+  --color-primary-900: #4c1d95;
+  --color-accent-300: #67e8f9;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #475569;
+  --color-text-disabled: #334155;
+  --color-success: #22c55e;
+  --color-success-glow: #4ade80;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  --color-border: #1e293b;
+  --color-border-hover: #334155;
+  --glow-color-primary: rgba(124,58,237,0.4);
+  --glow-color-accent: rgba(6,182,212,0.4);
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', monospace;
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 10px;
+  --duration-fast: 150ms; --ease-out: cubic-bezier(0.33,1,0.68,1);
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHROMATIC EFFECTS  (glassmorphism, glows, gradients)
+═══════════════════════════════════════════════════════ */
+.cc-panel {
+  background: rgba(18,18,26,0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(124,58,237,0.12);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.035);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  position: relative;
+}
+.cc-panel-title {
+  font-family: var(--font-heading); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted);
+  margin: 0 0 10px 0;
+}
+.cc-dot-live { display:inline-block; width:7px; height:7px; border-radius:50%; background:#22c55e; box-shadow:0 0 8px rgba(34,197,94,0.8); animation:cc-pulse 2s infinite; }
+.cc-dot-warn { display:inline-block; width:7px; height:7px; border-radius:50%; background:#f59e0b; box-shadow:0 0 6px rgba(245,158,11,0.6); }
+.cc-dot-err  { display:inline-block; width:7px; height:7px; border-radius:50%; background:#ef4444; box-shadow:0 0 6px rgba(239,68,68,0.6); animation:pulse-red 1.4s ease-in-out infinite; }
+.cc-dot-idle { display:inline-block; width:7px; height:7px; border-radius:50%; background:#475569; }
+.cc-dot-blue { display:inline-block; width:7px; height:7px; border-radius:50%; background:#3b82f6; box-shadow:0 0 6px rgba(59,130,246,0.6); }
+.cc-dot-purple { display:inline-block; width:7px; height:7px; border-radius:50%; background:#8b5cf6; box-shadow:0 0 6px rgba(139,92,246,0.6); }
+@keyframes cc-pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+@keyframes pulse-red { 0%,100%{box-shadow:0 0 6px rgba(239,68,68,0.6);} 50%{box-shadow:0 0 14px rgba(239,68,68,1);} }
+@keyframes pulse-amber { 0%,100%{box-shadow:0 0 6px rgba(245,158,11,0.5);} 50%{box-shadow:0 0 12px rgba(245,158,11,0.9);} }
+
+.cc-tag { display:inline-flex; align-items:center; padding:2px 7px; border-radius:4px; font-size:9px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; font-family:var(--font-heading); border:1px solid transparent; white-space:nowrap; }
+.cc-tag-active  { background:rgba(139,92,246,0.15); color:#a78bfa; border-color:rgba(139,92,246,0.3); }
+.cc-tag-done    { background:rgba(34,197,94,0.1);   color:#22c55e; border-color:rgba(34,197,94,0.25); }
+.cc-tag-running { background:rgba(59,130,246,0.12); color:#60a5fa; border-color:rgba(59,130,246,0.28); }
+.cc-tag-warn    { background:rgba(245,158,11,0.12); color:#f59e0b; border-color:rgba(245,158,11,0.28); }
+.cc-tag-err     { background:rgba(239,68,68,0.12);  color:#f87171; border-color:rgba(239,68,68,0.28); }
+.cc-tag-idle    { background:rgba(71,85,105,0.1);   color:#64748b; border-color:rgba(71,85,105,0.2); }
+.cc-tag-pending { background:rgba(245,158,11,0.08); color:#a16207; border-color:rgba(245,158,11,0.18); }
+
+.cc-progress-bar { height:4px; background:var(--color-border); border-radius:2px; overflow:hidden; margin-top:4px; }
+.cc-progress-fill { height:100%; border-radius:2px; transition:width .4s var(--ease-out); }
+.cc-progress-fill--primary { background:linear-gradient(90deg,#7c3aed,#a78bfa); }
+.cc-progress-fill--success { background:linear-gradient(90deg,#16a34a,#22c55e); }
+.cc-progress-fill--warn    { background:linear-gradient(90deg,#b45309,#f59e0b); }
+.cc-progress-fill--err     { background:linear-gradient(90deg,#b91c1c,#ef4444); }
+
+.cc-text-gradient {
+  background: linear-gradient(90deg,var(--color-primary-400),var(--color-accent-400));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.chromatic-button-primary {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 14px; border-radius:var(--radius-sm);
+  background:var(--color-primary-600); color:#fff; border:1px solid var(--color-primary-700);
+  font-family:var(--font-heading); font-size:10px; font-weight:700; letter-spacing:0.08em;
+  text-transform:uppercase; cursor:pointer;
+  transition:background var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+.chromatic-button-primary:hover { background:var(--color-primary-500); box-shadow:0 0 12px rgba(124,58,237,0.5); }
+
+.chromatic-button-success {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 14px; border-radius:var(--radius-sm);
+  background:rgba(22,163,74,0.85); color:#fff; border:1px solid rgba(22,163,74,0.6);
+  font-family:var(--font-heading); font-size:10px; font-weight:700; letter-spacing:0.08em;
+  text-transform:uppercase; cursor:pointer;
+  box-shadow:0 0 14px rgba(34,197,94,0.3);
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.chromatic-button-success:hover { background:rgba(22,163,74,1); box-shadow:0 0 20px rgba(34,197,94,0.5); }
+
+.chromatic-button-ghost {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:5px 10px; border-radius:var(--radius-sm);
+  background:transparent; color:var(--color-text-muted);
+  border:1px solid rgba(71,85,105,0.3);
+  font-family:var(--font-heading); font-size:9px; font-weight:700; letter-spacing:0.07em;
+  text-transform:uppercase; cursor:pointer;
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.chromatic-button-ghost:hover { background:rgba(71,85,105,0.12); color:var(--color-text-secondary); border-color:rgba(71,85,105,0.5); }
+
+.chromatic-button-err {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:5px 10px; border-radius:var(--radius-sm);
+  background:rgba(239,68,68,0.12); color:#f87171;
+  border:1px solid rgba(239,68,68,0.3);
+  font-family:var(--font-heading); font-size:9px; font-weight:700; letter-spacing:0.07em;
+  text-transform:uppercase; cursor:pointer;
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.chromatic-button-err:hover { background:rgba(239,68,68,0.2); border-color:rgba(239,68,68,0.5); }
+
+/* ═══════════════════════════════════════════════════════
+   BASE + RESET
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 13px; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  height: 100vh; overflow: hidden;
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(124,58,237,0.10) 0%, transparent 40%),
+    radial-gradient(ellipse at 85% 90%, rgba(6,182,212,0.07) 0%, transparent 40%),
+    linear-gradient(180deg, #0a0a0f 0%, #0d0b18 100%);
+}
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════════════════
+   LAYOUT SHELL
+═══════════════════════════════════════════════════════ */
+#shell { display:flex; flex-direction:column; height:100vh; }
+
+/* TOPBAR */
+#topbar {
+  height: 44px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 0;
+  background: rgba(12,10,20,0.9);
+  border-bottom: 1px solid rgba(124,58,237,0.15);
+  backdrop-filter: blur(12px);
+  padding: 0 16px;
+  z-index: 100;
+}
+
+.tb-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-heading); font-weight: 700; font-size: 14px;
+  letter-spacing: 0.05em; color: var(--color-text-primary);
+  margin-right: 12px; white-space: nowrap;
+}
+.tb-logo-icon {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: white;
+  box-shadow: 0 0 12px rgba(124,58,237,0.5);
+}
+
+.tb-go-btn {
+  margin-right: 14px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: var(--radius-sm);
+  background: rgba(22,163,74,0.9); color: #fff;
+  border: 1px solid rgba(34,197,94,0.6);
+  font-family: var(--font-heading); font-size: 10px; font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
+  box-shadow: 0 0 14px rgba(34,197,94,0.4);
+  animation: go-glow 2.5s ease-in-out infinite;
+}
+@keyframes go-glow {
+  0%,100% { box-shadow: 0 0 12px rgba(34,197,94,0.3); }
+  50%      { box-shadow: 0 0 22px rgba(34,197,94,0.65); }
+}
+.tb-go-btn:hover { background: rgba(22,163,74,1); box-shadow: 0 0 28px rgba(34,197,94,0.7); }
+.tb-go-btn.dispatched { background: rgba(139,92,246,0.9); border-color: rgba(139,92,246,0.6); animation: none; box-shadow: 0 0 12px rgba(139,92,246,0.4); }
+
+.tb-sep { width:1px; height:20px; background:rgba(124,58,237,0.2); margin:0 12px; }
+
+.tb-field { display:flex; align-items:center; gap:6px; font-size:11px; white-space:nowrap; }
+.tb-field-label { color:var(--color-text-muted); font-family:var(--font-body); }
+.tb-field-val { color:var(--color-text-secondary); font-family:var(--font-mono); font-size:10.5px; }
+
+.tb-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+
+.tb-confidence { display:flex; align-items:baseline; gap:4px; }
+.tb-conf-label { font-size:11px; color:var(--color-text-muted); }
+.tb-conf-val { font-size:17px; font-weight:700; font-family:var(--font-heading); color:var(--color-success); }
+.tb-risk-val { font-size:12px; font-weight:600; }
+.tb-risk-val--low { color:var(--color-success); }
+.tb-risk-val--med { color:var(--color-warning); }
+.tb-clock { font-family:var(--font-mono); font-size:12px; color:var(--color-text-muted); }
+
+/* MIDDLE (sidebar + content + inspector) */
+#middle { display:flex; flex:1; min-height:0; }
+
+/* SIDEBAR */
+#sidebar {
+  width: 180px; flex-shrink: 0;
+  background: rgba(10,10,18,0.7);
+  border-right: 1px solid rgba(124,58,237,0.12);
+  display: flex; flex-direction: column;
+  overflow-y: auto; padding: 8px 0;
+}
+
+.nav-section { padding: 6px 12px 3px; font-size:8.5px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:rgba(71,85,105,0.6); margin-top:6px; }
+
+.nav-item {
+  display:flex; align-items:center; gap:8px;
+  padding:7px 14px; cursor:pointer; font-size:11.5px;
+  color:var(--color-text-muted); font-family:var(--font-body);
+  transition:all var(--duration-fast) var(--ease-out);
+  border-left: 2px solid transparent;
+  user-select:none;
+}
+.nav-item:hover { color:var(--color-text-primary); background:rgba(124,58,237,0.06); }
+.nav-item.active {
+  color:var(--color-primary-300);
+  background:rgba(124,58,237,0.1);
+  border-left-color:var(--color-primary-500);
+}
+.nav-item-icon { font-size:13px; width:16px; text-align:center; flex-shrink:0; }
+.nav-badge { margin-left:auto; padding:1px 6px; border-radius:10px; background:rgba(124,58,237,0.2); color:var(--color-primary-400); font-size:9px; font-weight:700; }
+
+/* CONTENT area */
+#content {
+  flex: 1; min-width: 0;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 0;
+}
+
+/* INSPECTOR */
+#inspector {
+  width: 268px; flex-shrink: 0;
+  background: rgba(10,10,18,0.65);
+  border-left: 1px solid rgba(124,58,237,0.12);
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAIN CONTENT SECTIONS
+═══════════════════════════════════════════════════════ */
+.content-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.content-header h2 { font-size:15px; font-weight:700; letter-spacing:0.01em; }
+.content-header p { font-size:11px; color:var(--color-text-muted); margin-top:2px; max-width:none; }
+
+/* KPI STRIP */
+.kpi-strip {
+  display: grid; grid-template-columns: repeat(6,1fr); gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.kpi-card {
+  background: rgba(18,18,26,0.7);
+  border: 1px solid rgba(124,58,237,0.1);
+  border-radius: var(--radius-md);
+  padding: 11px 12px;
+  position: relative; overflow: hidden;
+}
+.kpi-card::before { /* subtle top accent line */
+  content:''; position:absolute; top:0;left:0;right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(124,58,237,0.3),transparent);
+}
+.kpi-card-label { font-size:8.5px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-text-muted); margin-bottom:6px; }
+.kpi-card-value { font-size:20px; font-weight:700; font-family:var(--font-heading); color:var(--color-text-primary); line-height:1; }
+.kpi-card-sub { font-size:9.5px; color:var(--color-text-muted); margin-top:4px; display:flex; align-items:center; gap:4px; }
+.kpi-card-sub .up { color:var(--color-success); }
+.kpi-card-sub .warn { color:var(--color-warning); }
+.kpi-card--executing .kpi-card-value { color:var(--color-success); }
+.kpi-card--warning .kpi-card-value { color:var(--color-warning); }
+
+/* KPI CONFIDENCE — has SVG donut */
+.kpi-donut-wrap { display:flex; align-items:center; gap:10px; }
+.kpi-donut-svg { flex-shrink:0; }
+.kpi-donut-info { flex:1; min-width:0; }
+
+/* MID ROW */
+.mid-row {
+  display: grid; grid-template-columns: 300px 1fr 220px; gap: 10px;
+  padding: 0 14px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Mission Summary */
+.ms-field { display:flex; flex-direction:column; gap:2px; margin-bottom:8px; }
+.ms-field:last-child { margin-bottom:0; }
+.ms-key { font-size:8.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-text-muted); font-family:var(--font-heading); }
+.ms-val { font-size:11px; color:var(--color-text-secondary); font-family:var(--font-mono); }
+.ms-val--primary { color:var(--color-text-primary); font-weight:600; }
+
+.view-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  margin-top:8px; padding:5px 10px;
+  background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.25);
+  border-radius:var(--radius-sm); color:var(--color-primary-300);
+  font-family:var(--font-heading); font-size:9px; font-weight:700;
+  letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.view-btn:hover { background:rgba(124,58,237,0.2); }
+
+/* LIVE PIPELINE */
+.pipeline-stages {
+  display: flex; align-items: flex-start; gap: 0; overflow-x: auto; padding-bottom:4px;
+}
+.pipeline-stage {
+  display: flex; flex-direction: column; align-items: center; flex-shrink: 0; position: relative;
+}
+.stage-connector {
+  display: flex; align-items: center; padding-top: 14px; flex-shrink: 0;
+}
+.stage-connector::after { content:'→'; color:rgba(71,85,105,0.5); font-size:12px; padding:0 4px; }
+.stage-bubble {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-heading); font-size: 12px; font-weight: 700;
+  border: 1.5px solid rgba(71,85,105,0.3);
+  background: rgba(18,18,26,0.8);
+  color: var(--color-text-muted); font-size: 10px;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.stage-bubble.done { border-color:rgba(34,197,94,0.5); background:rgba(34,197,94,0.08); color:var(--color-success); }
+.stage-bubble.active { border-color:rgba(139,92,246,0.8); background:rgba(139,92,246,0.15); color:var(--color-primary-300); box-shadow:0 0 14px rgba(139,92,246,0.4); }
+.stage-bubble.pending { border-color:rgba(71,85,105,0.25); }
+.stage-num { font-size:8px; color:var(--color-text-muted); margin-bottom:3px; font-family:var(--font-mono); }
+.stage-label { font-size:8.5px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--color-text-muted); margin-top:3px; text-align:center; width:52px; }
+.stage-label.active { color:var(--color-primary-300); }
+.stage-label.done { color:var(--color-success); }
+.stage-sub { font-size:8px; color:rgba(71,85,105,0.6); font-family:var(--font-mono); margin-top:1px; text-align:center; width:52px; }
+
+/* Next Action */
+.next-action-card {
+  padding: 12px;
+  background: rgba(124,58,237,0.06);
+  border: 1px solid rgba(124,58,237,0.15);
+  border-radius: var(--radius-md);
+}
+.next-action-label { font-size:8.5px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-text-muted); margin-bottom:6px; }
+.next-action-icon { font-size:20px; margin-bottom:6px; }
+.next-action-text { font-size:11px; color:var(--color-text-secondary); line-height:1.5; margin-bottom:10px; }
+.next-action-alert {
+  padding:8px; border-radius:var(--radius-sm);
+  background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2);
+  font-size:10.5px; color:#f59e0b; margin-bottom:8px;
+}
+.next-action-alert strong { color:#fbbf24; }
+
+/* EVENTS + GATES + BEADS + HEALTH ROW */
+.bottom-info-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px;
+  padding: 0 14px 12px;
+}
+
+.event-item { display:flex; gap:8px; align-items:flex-start; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.event-item:last-child { border-bottom:none; }
+.event-time { font-family:var(--font-mono); font-size:8.5px; color:var(--color-text-muted); white-space:nowrap; flex-shrink:0; padding-top:1px; }
+.event-text { font-size:10.5px; color:var(--color-text-muted); line-height:1.4; }
+.event-text strong { color:var(--color-text-secondary); }
+
+.gate-mini { display:flex; align-items:center; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.gate-mini:last-child { border-bottom:none; }
+.gate-mini-left { display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--color-text-muted); }
+.gate-mini-right { font-size:8.5px; font-family:var(--font-mono); }
+
+/* Beads donut */
+.beads-donut-wrap { display:flex; gap:12px; align-items:center; }
+.beads-legend { display:flex; flex-direction:column; gap:4px; }
+.beads-legend-item { display:flex; align-items:center; gap:5px; font-size:9.5px; color:var(--color-text-muted); }
+.beads-legend-dot { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+
+/* System Health */
+.sys-health-row { display:flex; align-items:center; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.sys-health-row:last-child { border-bottom:none; }
+.sys-health-label { font-size:10.5px; color:var(--color-text-muted); display:flex; align-items:center; gap:5px; }
+.sys-health-val { font-family:var(--font-mono); font-size:9.5px; }
+.sys-health-val--ok   { color:var(--color-success); }
+.sys-health-val--warn { color:var(--color-warning); }
+
+/* ═══════════════════════════════════════════════════════
+   INSPECTOR PANEL
+═══════════════════════════════════════════════════════ */
+.inspector-tabs { display:flex; border-bottom:1px solid rgba(124,58,237,0.12); }
+.inspector-tab {
+  flex:1; padding:10px 0; font-size:9.5px; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; text-align:center; color:var(--color-text-muted);
+  cursor:pointer; border-bottom:2px solid transparent;
+  transition:all var(--duration-fast) var(--ease-out);
+  font-family:var(--font-heading);
+}
+.inspector-tab:hover { color:var(--color-text-secondary); }
+.inspector-tab.active { color:var(--color-primary-300); border-bottom-color:var(--color-primary-500); }
+
+.inspector-body { padding:12px; flex:1; overflow-y:auto; }
+
+.ins-section { margin-bottom:14px; }
+.ins-section-title { font-size:8.5px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-primary-400); margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid rgba(124,58,237,0.12); }
+
+.ins-node-card { background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.18); border-radius:var(--radius-sm); padding:8px 10px; margin-bottom:10px; }
+.ins-node-role { font-size:13px; font-weight:700; color:var(--color-text-primary); }
+.ins-node-status { display:flex; align-items:center; gap:5px; font-size:10px; color:var(--color-success); margin-top:3px; }
+
+.ins-row { display:flex; justify-content:space-between; align-items:center; padding:3.5px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.ins-row:last-child { border-bottom:none; }
+.ins-row-key { font-size:10px; color:var(--color-text-muted); }
+.ins-row-val { font-family:var(--font-mono); font-size:9.5px; color:var(--color-text-secondary); }
+.ins-row-val--warn { color:var(--color-warning); }
+.ins-row-val--err  { color:var(--color-error); }
+.ins-row-val--ok   { color:var(--color-success); }
+
+.ins-action-item { display:flex; align-items:center; gap:6px; padding:3px 0; font-size:10px; color:var(--color-text-muted); font-family:var(--font-mono); }
+.ins-action-time { color:rgba(71,85,105,0.6); font-size:9px; white-space:nowrap; }
+
+.ins-path-chip { display:inline-flex; padding:2px 6px; background:rgba(6,182,212,0.08); border:1px solid rgba(6,182,212,0.15); border-radius:3px; font-family:var(--font-mono); font-size:9px; color:var(--color-accent-300); margin:2px; }
+
+.pause-agent-btn {
+  display:flex; align-items:center; justify-content:center; gap:6px; width:100%;
+  padding:8px; margin-top:12px;
+  background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3);
+  border-radius:var(--radius-sm); color:#f87171;
+  font-family:var(--font-heading); font-size:9.5px; font-weight:700;
+  letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+  transition:all var(--duration-fast) var(--ease-out);
+}
+.pause-agent-btn:hover { background:rgba(239,68,68,0.18); }
+
+/* ═══════════════════════════════════════════════════════
+   BOTTOM STRIP (3 columns, below main content)
+═══════════════════════════════════════════════════════ */
+#bottom-strip {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+  padding: 10px 14px;
+  background: rgba(8,7,16,0.6);
+  border-top: 1px solid rgba(124,58,237,0.15);
+  min-height: 0;
+  /* Height: occupies whatever space is left */
+}
+
+/* GATES CONSOLE */
+.gate-card-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.gate-card {
+  background:rgba(18,18,26,0.8);
+  border:1px solid rgba(124,58,237,0.1);
+  border-radius:var(--radius-sm); padding:8px 9px;
+}
+.gate-card.gate--healthy { border-color:rgba(34,197,94,0.15); }
+.gate-card.gate--warn    { border-color:rgba(245,158,11,0.2); }
+.gate-card.gate--pend    { border-color:rgba(59,130,246,0.2); }
+.gate-card.gate--open    { border-color:rgba(71,85,105,0.15); }
+.gate-card-name { font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--color-text-muted); margin-bottom:4px; display:flex; align-items:center; gap:5px; }
+.gate-card-status { font-size:12px; font-weight:700; font-family:var(--font-heading); }
+.gate-card-sub { font-size:8.5px; color:var(--color-text-muted); margin-top:2px; font-family:var(--font-mono); }
+.gate-card-delta { font-size:8.5px; }
+.delta-pos { color:var(--color-success); }
+.delta-neg { color:var(--color-error); }
+.delta-neu { color:var(--color-text-muted); }
+
+.event-stream { margin-top:8px; }
+.es-item { display:flex; align-items:flex-start; gap:5px; padding:3px 0; font-size:9.5px; color:var(--color-text-muted); border-bottom:1px solid rgba(255,255,255,0.025); }
+.es-item:last-child { border-bottom:none; }
+.es-time { font-family:var(--font-mono); font-size:8.5px; color:rgba(71,85,105,0.7); white-space:nowrap; }
+
+/* BEADS QUEUE */
+.kanban-cols { display:flex; gap:5px; overflow-x:auto; flex:1; padding-bottom:2px; }
+.kanban-col { flex-shrink:0; width:100px; display:flex; flex-direction:column; gap:5px; }
+.kanban-col-head { font-size:8.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-text-muted); padding-bottom:4px; border-bottom:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:space-between; }
+.kanban-col-count { background:rgba(71,85,105,0.2); color:var(--color-text-muted); border-radius:3px; padding:1px 5px; font-size:9px; }
+.bead-card {
+  background:rgba(18,18,26,0.9);
+  border:1px solid rgba(124,58,237,0.12);
+  border-radius:var(--radius-sm); padding:7px 8px;
+  cursor:pointer; transition:all var(--duration-fast) var(--ease-out);
+}
+.bead-card:hover { border-color:rgba(124,58,237,0.3); transform:translateY(-1px); }
+.bead-card.bead--active { border-color:rgba(139,92,246,0.35); background:rgba(139,92,246,0.06); }
+.bead-card-id { font-family:var(--font-mono); font-size:8.5px; color:var(--color-primary-300); font-weight:600; margin-bottom:3px; }
+.bead-card-title { font-size:9.5px; color:var(--color-text-secondary); line-height:1.35; margin-bottom:5px; }
+.bead-card-meta { display:flex; align-items:center; justify-content:space-between; }
+.bead-card-agent { font-size:8.5px; color:var(--color-text-muted); font-family:var(--font-body); }
+.bead-card-conf { font-size:8.5px; font-family:var(--font-mono); color:var(--color-success); }
+.new-bead-btn {
+  display:flex; align-items:center; gap:4px; margin-left:auto;
+  padding:4px 8px; border-radius:var(--radius-sm);
+  background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.25);
+  color:var(--color-success); font-family:var(--font-heading); font-size:9px;
+  font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+  cursor:pointer; transition:all var(--duration-fast) var(--ease-out);
+}
+.new-bead-btn:hover { background:rgba(34,197,94,0.18); }
+
+/* AGENT SCORECARDS */
+.agent-tabs { display:flex; gap:0; border-bottom:1px solid rgba(124,58,237,0.12); margin-bottom:8px; }
+.agent-tab { padding:5px 10px; font-size:8.5px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--color-text-muted); cursor:pointer; border-bottom:1.5px solid transparent; transition:all var(--duration-fast) var(--ease-out); font-family:var(--font-heading); }
+.agent-tab:hover { color:var(--color-text-secondary); }
+.agent-tab.active { color:var(--color-primary-300); border-bottom-color:var(--color-primary-500); }
+
+.agent-summary-text { font-size:10.5px; color:var(--color-text-muted); line-height:1.6; margin-bottom:10px; max-width:none; }
+
+.conf-breakdown { display:flex; flex-direction:column; gap:5px; }
+.cb-row { display:flex; align-items:center; gap:8px; }
+.cb-label { font-size:9.5px; color:var(--color-text-muted); width:100px; flex-shrink:0; }
+.cb-bar { flex:1; height:3px; background:var(--color-border); border-radius:2px; overflow:hidden; }
+.cb-fill { height:100%; border-radius:2px; background:var(--color-primary-500); }
+.cb-pct { font-family:var(--font-mono); font-size:9px; color:var(--color-text-secondary); width:30px; text-align:right; }
+
+.review-swarm { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:8px; }
+.reviewer-card { background:rgba(18,18,26,0.8); border:1px solid rgba(124,58,237,0.1); border-radius:var(--radius-sm); padding:6px 8px; }
+.reviewer-name { font-size:9.5px; font-weight:700; color:var(--color-text-secondary); margin-bottom:2px; display:flex; align-items:center; gap:4px; }
+.reviewer-role { font-size:8.5px; color:var(--color-text-muted); margin-bottom:4px; }
+.reviewer-verdict { font-size:9.5px; font-weight:700; display:flex; align-items:center; gap:4px; }
+.verdict-approve { color:var(--color-success); }
+.reviewer-conf { font-family:var(--font-mono); font-size:8.5px; color:var(--color-text-muted); }
+
+.scorecard-bars { display:flex; flex-direction:column; gap:7px; }
+.sc-agent { display:flex; align-items:center; gap:8px; }
+.sc-name { font-size:10.5px; color:var(--color-text-secondary); width:80px; flex-shrink:0; font-weight:600; }
+.sc-track { flex:1; height:6px; background:var(--color-border); border-radius:3px; overflow:hidden; position:relative; }
+.sc-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#7c3aed,#a78bfa); position:relative; }
+.sc-val { font-family:var(--font-mono); font-size:9px; color:var(--color-text-muted); width:28px; text-align:right; }
+
+.recommend-actions { display:flex; gap:5px; flex-wrap:wrap; margin-top:10px; padding-top:8px; border-top:1px solid rgba(124,58,237,0.1); }
+
+/* Responsive */
+@media (max-width:1400px) {
+  .kpi-strip { grid-template-columns:repeat(3,1fr); }
+  .mid-row { grid-template-columns:280px 1fr; }
+  .mid-row .next-action-panel { display:none; }
+}
+@media (max-width:1100px) {
+  #inspector { display:none; }
+  .bottom-info-row { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="shell">
+
+<!-- ══════════════════ TOPBAR ══════════════════ -->
+<div id="topbar">
+  <div class="tb-logo">
+    <div class="tb-logo-icon">⬡</div>
+    CHROMATIC ATOMIC TOWER
+  </div>
+
+  <button class="tb-go-btn" id="goModeBtn" onclick="toggleGoMode()">
+    <span id="goModeText">GO-MODE</span>
+  </button>
+
+  <div class="tb-sep"></div>
+
+  <div class="tb-field">
+    <span class="tb-field-label">Mission:</span>
+    <span class="tb-field-val">Agent Scorecard Automation</span>
+  </div>
+
+  <div class="tb-sep"></div>
+
+  <div class="tb-field">
+    <span class="tb-field-label">Repo:</span>
+    <span class="tb-field-val">.01_CAT</span>
+  </div>
+
+  <div class="tb-sep"></div>
+
+  <div class="tb-field">
+    <span class="tb-field-label">Branch:</span>
+    <span class="tb-field-val" style="color:#22c55e">main</span>
+  </div>
+
+  <div class="tb-right">
+    <div class="tb-confidence">
+      <span class="tb-conf-label">Confidence:</span>
+      <span class="tb-conf-val" id="tbConfidence">85%</span>
+    </div>
+
+    <div class="tb-sep"></div>
+
+    <div class="tb-field">
+      <span class="tb-field-label">Risk:</span>
+      <span class="tb-risk-val tb-risk-val--low">Low</span>
+    </div>
+
+    <div class="tb-sep"></div>
+    <div class="tb-clock" id="clock">--:--:--</div>
+    <span id="connectionStatus" class="cc-dot-idle" title="Backend status" style="margin-left:4px"></span>
+  </div>
+</div>
+
+<!-- ══════════════════ MIDDLE ══════════════════ -->
+<div id="middle">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="nav-section">Control</div>
+
+    <div class="nav-item active" onclick="setNav(this)">
+      <span class="nav-item-icon">⊞</span>
+      Mission Control
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">⟶</span>
+      Pipeline
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">◈</span>
+      Gates
+      <span class="nav-badge">2</span>
+    </div>
+
+    <div class="nav-section">Execution</div>
+
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">◇</span>
+      Beads
+      <span class="nav-badge">4</span>
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">◉</span>
+      Agents
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">⚑</span>
+      Reviews
+    </div>
+
+    <div class="nav-section">Plane</div>
+
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">⊟</span>
+      Evidence
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">⌘</span>
+      Scripts
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">∷</span>
+      PDRs
+    </div>
+
+    <div class="nav-section">System</div>
+
+    <div class="nav-item" onclick="setNav(this)">
+      <span class="nav-item-icon">⚙</span>
+      Settings
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div id="content">
+
+    <!-- Header -->
+    <div class="content-header">
+      <h2>MISSION CONTROL</h2>
+      <p>Real-time overview of the Chromatic Atomic Tower · Sprint 011 · MP-CAT-A011-4C01</p>
+    </div>
+
+    <!-- KPI STRIP -->
+    <div class="kpi-strip">
+
+      <!-- Mission Status -->
+      <div class="kpi-card kpi-card--executing">
+        <div class="kpi-card-label">Mission Status</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-size:18px">▶</span>
+          <span class="kpi-card-value" style="font-size:16px">Executing</span>
+        </div>
+        <div class="kpi-card-sub"><span class="cc-dot-live"></span> GO-MODE Active</div>
+      </div>
+
+      <!-- Confidence -->
+      <div class="kpi-card">
+        <div class="kpi-card-label">Confidence Score</div>
+        <div class="kpi-donut-wrap">
+          <svg class="kpi-donut-svg" viewBox="0 0 80 80" width="60" height="60">
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#1e293b" stroke-width="8"/>
+            <!-- 85% of 2*π*30 = 188.5 → 160.2 -->
+            <circle cx="40" cy="40" r="30" fill="none" stroke="url(#dg)" stroke-width="8"
+              stroke-dasharray="160.2 28.3" stroke-dashoffset="47.1" stroke-linecap="round"
+              style="filter:drop-shadow(0 0 6px rgba(139,92,246,0.6))"/>
+            <defs>
+              <linearGradient id="dg" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#22d3ee"/>
+              </linearGradient>
+            </defs>
+            <text x="40" y="45" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="700" font-family="Inter,sans-serif">85%</text>
+          </svg>
+          <div class="kpi-donut-info">
+            <div style="font-size:10px;color:var(--color-success);font-weight:700">High</div>
+            <div style="font-size:9px;color:var(--color-text-muted);margin-top:2px">Gate: PASS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk -->
+      <div class="kpi-card">
+        <div class="kpi-card-label">Risk Level</div>
+        <div class="kpi-card-value" style="color:var(--color-success);font-size:18px">Low</div>
+        <div class="kpi-card-sub" style="margin-top:6px">
+          <svg width="60" height="18" viewBox="0 0 60 18">
+            <polyline points="0,14 10,10 20,11 30,6 40,7 50,3 60,5" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="kpi-card-sub" style="margin-top:2px">Schema-only BEAD</div>
+      </div>
+
+      <!-- Active Agent -->
+      <div class="kpi-card">
+        <div class="kpi-card-label">Active Agent</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:28px;height:28px;border-radius:6px;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;">🤖</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--color-text-primary)">Architect</div>
+            <div style="font-size:9px;color:var(--color-text-muted);font-family:var(--font-mono)">claude-sonnet-4-6</div>
+          </div>
+        </div>
+        <div class="kpi-card-sub" style="margin-top:6px"><span class="cc-dot-live"></span> Executing</div>
+      </div>
+
+      <!-- Open Beads -->
+      <div class="kpi-card">
+        <div class="kpi-card-label">Open BEADs</div>
+        <div class="kpi-card-value" id="kpiActiveBeads">4</div>
+        <div class="kpi-card-sub"><span class="up">↑ 1 active</span> · 3 queued</div>
+      </div>
+
+      <!-- Tool Budget -->
+      <div class="kpi-card kpi-card--warning">
+        <div class="kpi-card-label">Tool Budget</div>
+        <div class="kpi-card-value" style="font-size:18px">85%</div>
+        <div class="cc-progress-bar" style="margin-top:6px">
+          <div class="cc-progress-fill cc-progress-fill--success" style="width:85%"></div>
+        </div>
+        <div class="kpi-card-sub" style="margin-top:4px">21 / 29 calls remaining</div>
+      </div>
+
+    </div><!-- /kpi-strip -->
+
+    <!-- MID ROW: Mission Summary + Pipeline + Next Action -->
+    <div class="mid-row" style="padding-top:10px">
+
+      <!-- Mission Summary -->
+      <div class="cc-panel">
+        <div class="cc-panel-title">Mission Summary</div>
+
+        <div class="ms-field">
+          <span class="ms-key">Objective</span>
+          <span class="ms-val ms-val--primary">Automate agent trust scorecard maintenance</span>
+        </div>
+        <div class="ms-field">
+          <span class="ms-key">Started</span>
+          <span class="ms-val">2026-06-18 11:00:10</span>
+        </div>
+        <div style="display:flex;gap:12px">
+          <div class="ms-field" style="flex:1">
+            <span class="ms-key">Elapsed</span>
+            <span class="ms-val" id="elapsed">00:00:00</span>
+          </div>
+          <div class="ms-field" style="flex:1">
+            <span class="ms-key">Mode</span>
+            <span class="ms-val" style="color:#22c55e;font-weight:700">GO-MODE</span>
+          </div>
+        </div>
+        <div class="ms-field">
+          <span class="ms-key">Human Gate</span>
+          <span class="ms-val warn" style="color:#f59e0b">Pending approval</span>
+        </div>
+        <div class="ms-field">
+          <span class="ms-key">Sprint</span>
+          <span class="ms-val">SPRINT-011 · sprint_active · Tower v0.3.1</span>
+        </div>
+
+        <button class="view-btn">⊞ VIEW MISSION PACKET</button>
+      </div>
+
+      <!-- Live Pipeline -->
+      <div class="cc-panel" style="overflow:hidden">
+        <div class="cc-panel-title" style="display:flex;align-items:center;gap:8px">
+          LIVE PIPELINE
+          <span style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:9px;color:#22c55e"><span class="cc-dot-live"></span> LIVE</span>
+        </div>
+
+        <div class="pipeline-stages" style="margin-bottom:8px">
+
+          <div class="pipeline-stage">
+            <div class="stage-num">1</div>
+            <div class="stage-bubble done">✓</div>
+            <div class="stage-label done">Intent</div>
+            <div class="stage-sub">Received</div>
+          </div>
+          <div class="stage-connector"></div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num">2</div>
+            <div class="stage-bubble done">✓</div>
+            <div class="stage-label done">Mission</div>
+            <div class="stage-sub">Approved</div>
+          </div>
+          <div class="stage-connector"></div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num">3</div>
+            <div class="stage-bubble done">✓</div>
+            <div class="stage-label done">BEAD</div>
+            <div class="stage-sub">Created</div>
+          </div>
+          <div class="stage-connector"></div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num">4</div>
+            <div class="stage-bubble active">⟳</div>
+            <div class="stage-label active">Dispatch</div>
+            <div class="stage-sub">Running</div>
+          </div>
+          <div class="stage-connector"></div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num">5</div>
+            <div class="stage-bubble pending">5</div>
+            <div class="stage-label">Evidence</div>
+            <div class="stage-sub">Open</div>
+          </div>
+          <div class="stage-connector"></div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num">6</div>
+            <div class="stage-bubble pending">6</div>
+            <div class="stage-label">Gates</div>
+            <div class="stage-sub">Open</div>
+          </div>
+          <div class="stage-connector"></div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num">7</div>
+            <div class="stage-bubble pending">7</div>
+            <div class="stage-label">Validate</div>
+            <div class="stage-sub">Open</div>
+          </div>
+          <div class="stage-connector"></div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num">8</div>
+            <div class="stage-bubble pending">8</div>
+            <div class="stage-label">Closeout</div>
+            <div class="stage-sub">Open</div>
+          </div>
+
+        </div>
+
+        <!-- Feedback loop indicator -->
+        <div style="border-top:1px solid rgba(255,255,255,0.04);padding-top:6px;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <div style="height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.3))"></div>
+          <span style="font-size:8.5px;color:rgba(71,85,105,0.6);letter-spacing:0.1em;text-transform:uppercase;">FEEDBACK LOOP</span>
+          <div style="height:1px;flex:1;background:linear-gradient(90deg,rgba(124,58,237,0.3),transparent)"></div>
+        </div>
+      </div>
+
+      <!-- Next Recommended Action -->
+      <div class="next-action-panel">
+        <div class="cc-panel" style="height:100%">
+          <div class="cc-panel-title" style="display:flex;align-items:center;gap:6px">
+            <span style="color:#f59e0b">⚡</span> NEXT RECOMMENDED ACTION
+          </div>
+          <div class="next-action-alert">
+            <strong>Human Gate:</strong> Approve BEAD-01 before first write action
+          </div>
+          <div style="font-size:10.5px;color:var(--color-text-muted);line-height:1.5;margin-bottom:8px">
+            Continue execution within approved scope. Architect will define agent scorecard schema in dry-run mode.
+          </div>
+          <button class="chromatic-button-primary" style="width:100%;justify-content:center">⊞ PROCEED</button>
+        </div>
+      </div>
+
+    </div><!-- /mid-row -->
+
+    <!-- BOTTOM INFO ROW -->
+    <div class="bottom-info-row" style="padding-top:10px">
+
+      <!-- Recent Events -->
+      <div class="cc-panel">
+        <div class="cc-panel-title">Recent BEAD Events</div>
+        <div id="eventsFeed">
+          <div class="event-item">
+            <span class="event-time">14:22</span>
+            <span class="event-text"><strong style="color:#22c55e">✓</strong> Confidence gate passed schema checks</span>
+          </div>
+          <div class="event-item">
+            <span class="event-time">14:20</span>
+            <span class="event-text"><strong style="color:#f59e0b">△</strong> Tool budget: 85% remaining — OK</span>
+          </div>
+          <div class="event-item">
+            <span class="event-time">14:18</span>
+            <span class="event-text"><strong style="color:#22c55e">✓</strong> Architect agent recorded 0 tool calls</span>
+          </div>
+          <div class="event-item">
+            <span class="event-time">14:15</span>
+            <span class="event-text"><strong style="color:#22c55e">✓</strong> Scope gate verified allowed paths</span>
+          </div>
+          <div class="event-item">
+            <span class="event-time">14:12</span>
+            <span class="event-text"><strong style="color:#60a5fa">◈</strong> Intake gate captured mission packet</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Gates Summary -->
+      <div class="cc-panel">
+        <div class="cc-panel-title" style="display:flex;align-items:center;justify-content:space-between">
+          Active Gates
+          <span style="font-size:9px;color:var(--color-text-muted)">4 / 5 OK</span>
+        </div>
+        <div>
+          <div class="gate-mini"><span class="gate-mini-left"><span class="cc-dot-live"></span> Confidence</span><span class="gate-mini-right cc-tag cc-tag-done">PASS</span></div>
+          <div class="gate-mini"><span class="gate-mini-left"><span class="cc-dot-warn" style="animation:pulse-amber 1.8s ease-in-out infinite"></span> Human</span><span class="gate-mini-right cc-tag cc-tag-warn">PENDING</span></div>
+          <div class="gate-mini"><span class="gate-mini-left"><span class="cc-dot-idle"></span> Review</span><span class="gate-mini-right cc-tag cc-tag-idle">OPEN</span></div>
+          <div class="gate-mini"><span class="gate-mini-left"><span class="cc-dot-idle"></span> Promotion</span><span class="gate-mini-right cc-tag cc-tag-idle">OPEN</span></div>
+          <div class="gate-mini"><span class="gate-mini-left"><span class="cc-dot-live"></span> Tool Budget</span><span class="gate-mini-right cc-tag cc-tag-done">OK</span></div>
+        </div>
+      </div>
+
+      <!-- Beads Overview -->
+      <div class="cc-panel">
+        <div class="cc-panel-title">BEADs Overview</div>
+        <div class="beads-donut-wrap">
+          <svg id="beadsDonutSvg" viewBox="0 0 80 80" width="70" height="70">
+            <!-- Total 4: 1 active (purple), 3 queued (gray) -->
+            <!-- Active: 25% of circumference = 2*π*30 * 0.25 = 47.1 -->
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#1e293b" stroke-width="10"/>
+            <circle class="donut-active" cx="40" cy="40" r="30" fill="none" stroke="#8b5cf6" stroke-width="10"
+              stroke-dasharray="47.1 141.4" stroke-dashoffset="47.1" stroke-linecap="butt"/>
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#334155" stroke-width="10"
+              stroke-dasharray="141.4 47.1" stroke-dashoffset="0" stroke-linecap="butt"/>
+            <text id="beadsTotal" x="40" y="38" text-anchor="middle" fill="#f8fafc" font-size="13" font-weight="700" font-family="Inter,sans-serif">4</text>
+            <text x="40" y="51" text-anchor="middle" fill="#475569" font-size="8" font-family="Inter,sans-serif">Total</text>
+          </svg>
+          <div class="beads-legend">
+            <div class="beads-legend-item"><div class="beads-legend-dot" style="background:#8b5cf6"></div> Active &nbsp;<strong id="beadsActive" style="color:var(--color-text-primary)">1</strong></div>
+            <div class="beads-legend-item"><div class="beads-legend-dot" style="background:#334155"></div> Queued <strong id="beadsQueued" style="color:var(--color-text-primary)">3</strong></div>
+            <div class="beads-legend-item" style="margin-top:4px"><div class="beads-legend-dot" style="background:#16a34a;opacity:0.6"></div> Done &nbsp;&nbsp;<strong id="beadsDone" style="color:var(--color-text-primary)">0</strong></div>
+            <div class="beads-legend-item"><div class="beads-legend-dot" style="background:#ef4444;opacity:0.6"></div> Failed <strong id="beadsFailed" style="color:var(--color-text-primary)">0</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Health -->
+      <div class="cc-panel">
+        <div class="cc-panel-title" style="display:flex;align-items:center;gap:6px">
+          System Health
+          <span style="margin-left:auto;font-size:9px;color:#22c55e;font-weight:700">All Systems OK</span>
+        </div>
+        <div>
+          <div class="sys-health-row"><span class="sys-health-label"><span class="cc-dot-live"></span> Orchestrator</span><span class="sys-health-val sys-health-val--ok">●</span></div>
+          <div class="sys-health-row"><span class="sys-health-label"><span class="cc-dot-live"></span> Gate Engine</span><span class="sys-health-val sys-health-val--ok">●</span></div>
+          <div class="sys-health-row"><span class="sys-health-label"><span class="cc-dot-live"></span> CI Runner</span><span class="sys-health-val sys-health-val--ok">●</span></div>
+          <div class="sys-health-row"><span class="sys-health-label"><span class="cc-dot-live"></span> Evidence Store</span><span class="sys-health-val sys-health-val--ok">●</span></div>
+          <div class="sys-health-row"><span class="sys-health-label"><span class="cc-dot-warn" style="animation:pulse-amber 1.8s ease-in-out infinite"></span> Human Gate</span><span class="sys-health-val sys-health-val--warn">Pending</span></div>
+        </div>
+      </div>
+
+    </div><!-- /bottom-info-row -->
+
+    <!-- BOTTOM STRIP: 3 panels -->
+    <div id="bottom-strip">
+
+      <!-- GATES CONSOLE -->
+      <div style="display:flex;flex-direction:column;gap:8px;min-height:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-primary-400)">GATES CONSOLE</span>
+          <span style="font-size:9px;color:var(--color-text-muted);font-family:var(--font-mono)">MP-CAT-A011-4C01</span>
+          <span style="margin-left:auto;display:flex;align-items:center;gap:4px;font-size:9px;color:#22c55e"><span class="cc-dot-live"></span> LIVE</span>
+        </div>
+
+        <div class="gate-card-grid">
+          <div class="gate-card gate--healthy">
+            <div class="gate-card-name"><span class="cc-dot-live"></span> Confidence Gate</div>
+            <div class="gate-card-status" style="color:#22c55e">Healthy</div>
+            <div class="gate-card-sub">Score: 85% · Threshold: 70%</div>
+            <div class="gate-card-delta delta-pos">Δ +0%</div>
+          </div>
+          <div class="gate-card gate--pend">
+            <div class="gate-card-name"><span class="cc-dot-warn" style="animation:pulse-amber 1.8s ease-in-out infinite"></span> Human Gate</div>
+            <div class="gate-card-status" style="color:#f59e0b">Pending</div>
+            <div class="gate-card-sub">Approval required before write</div>
+            <div class="gate-card-delta delta-neu">waiting</div>
+          </div>
+          <div class="gate-card gate--healthy">
+            <div class="gate-card-name"><span class="cc-dot-live"></span> Scope Gate</div>
+            <div class="gate-card-status" style="color:#22c55e">Healthy</div>
+            <div class="gate-card-sub">Paths verified · 4 allowed</div>
+            <div class="gate-card-delta delta-pos">Δ +0%</div>
+          </div>
+          <div class="gate-card gate--healthy">
+            <div class="gate-card-name"><span class="cc-dot-live"></span> Tool Budget</div>
+            <div class="gate-card-status" style="color:#22c55e">Healthy</div>
+            <div class="gate-card-sub">21/29 calls · 85% remaining</div>
+            <div class="gate-card-delta delta-neu">—</div>
+          </div>
+          <div class="gate-card gate--open">
+            <div class="gate-card-name"><span class="cc-dot-idle"></span> Review Gate</div>
+            <div class="gate-card-status" style="color:#475569">Open</div>
+            <div class="gate-card-sub">Not yet triggered</div>
+            <div class="gate-card-delta delta-neu">—</div>
+          </div>
+          <div class="gate-card gate--open">
+            <div class="gate-card-name"><span class="cc-dot-idle"></span> Promotion Gate</div>
+            <div class="gate-card-status" style="color:#475569">Open</div>
+            <div class="gate-card-sub">Awaiting closeout</div>
+            <div class="gate-card-delta delta-neu">—</div>
+          </div>
+        </div>
+
+        <div style="background:rgba(18,18,26,0.7);border:1px solid rgba(124,58,237,0.1);border-radius:var(--radius-sm);padding:8px">
+          <div class="cc-panel-title" style="margin-bottom:5px">Gate Event Stream</div>
+          <div class="event-stream">
+            <div class="es-item"><span class="es-time">14:22</span>&nbsp;<span style="color:#22c55e">✓</span>&nbsp; Confidence gate passed schema checks — score 85%</div>
+            <div class="es-item"><span class="es-time">14:20</span>&nbsp;<span style="color:#22c55e">✓</span>&nbsp; Scope gate verified allowed paths — 4 paths OK</div>
+            <div class="es-item"><span class="es-time">14:18</span>&nbsp;<span style="color:#22c55e">✓</span>&nbsp; Tool budget gate: 85% remaining, within threshold</div>
+            <div class="es-item"><span class="es-time">14:12</span>&nbsp;<span style="color:#60a5fa">◈</span>&nbsp; Human gate raised — write action pending approval</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BEADS QUEUE -->
+      <div style="display:flex;flex-direction:column;gap:8px;min-height:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-primary-400)">BEADS QUEUE</span>
+          <span style="font-size:9px;color:var(--color-text-muted);font-family:var(--font-mono)">Beads / Work Intake</span>
+          <button class="new-bead-btn" style="margin-left:auto">+ NEW BEAD</button>
+        </div>
+
+        <div class="kanban-cols">
+          <div class="kanban-col">
+            <div class="kanban-col-head">New <span class="kanban-col-count">0</span></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-head">Ready <span class="kanban-col-count">0</span></div>
+          </div>
+          <div class="kanban-col" id="kanbanActive" style="width:120px">
+            <div class="kanban-col-head">Active <span class="kanban-col-count">1</span></div>
+            <div class="bead-card bead--active">
+              <div class="bead-card-id">BEAD-A011-01</div>
+              <div class="bead-card-title">Define agent scorecard schema and upgrade data model</div>
+              <div class="bead-card-meta">
+                <span class="bead-card-agent">Architect</span>
+                <span class="bead-card-conf">85%</span>
+              </div>
+            </div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-head">Review <span class="kanban-col-count">0</span></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-head">Blocked <span class="kanban-col-count">0</span></div>
+          </div>
+          <div class="kanban-col" style="width:110px">
+            <div class="kanban-col-head">Done <span class="kanban-col-count">0</span></div>
+            <div style="font-size:9px;color:rgba(71,85,105,0.5);padding:6px 0;text-align:center">sprint 011<br>no closed beads yet</div>
+          </div>
+          <div class="kanban-col" style="width:110px">
+            <div class="kanban-col-head" style="color:rgba(71,85,105,0.5)">Queued <span class="kanban-col-count">3</span></div>
+            <div class="bead-card">
+              <div class="bead-card-id" style="color:#475569">BEAD-A011-02</div>
+              <div class="bead-card-title">Implement trust scoring engine CLI</div>
+              <div class="bead-card-meta"><span class="bead-card-agent">Builder</span></div>
+            </div>
+            <div class="bead-card">
+              <div class="bead-card-id" style="color:#475569">BEAD-A011-03</div>
+              <div class="bead-card-title">Implement tool-budget tracker</div>
+              <div class="bead-card-meta"><span class="bead-card-agent">Builder</span></div>
+            </div>
+            <div class="bead-card">
+              <div class="bead-card-id" style="color:#475569">BEAD-A011-04</div>
+              <div class="bead-card-title">Wire scorecard into bead closeout</div>
+              <div class="bead-card-meta"><span class="bead-card-agent">Builder</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AGENT SCORECARDS & REVIEWS -->
+      <div style="display:flex;flex-direction:column;gap:8px;min-height:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-primary-400)">AGENT SCORECARDS</span>
+          <span style="font-size:9px;color:var(--color-text-muted);font-family:var(--font-mono)">Agent Lead / v1.0.0</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0">
+
+          <!-- Left: Summary + scorebars -->
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:rgba(18,18,26,0.7);border:1px solid rgba(124,58,237,0.1);border-radius:var(--radius-sm);padding:9px;flex:1">
+              <div class="cc-panel-title">Agent Lead Summary</div>
+              <p class="agent-summary-text">Sprint 011 active on MP-CAT-A011. BEAD-01 dispatched to Architect. Confidence gates passing. Human gate pending before first write action. System operating within approved scope.</p>
+              <div class="scorecard-bars" id="scorebarsContainer">
+                <div class="sc-agent">
+                  <span class="sc-name">Architect</span>
+                  <div class="sc-track"><div class="sc-fill" style="width:50%"></div></div>
+                  <span class="sc-val">70.0</span>
+                </div>
+                <div class="sc-agent">
+                  <span class="sc-name">Builder</span>
+                  <div class="sc-track"><div class="sc-fill" style="width:50%"></div></div>
+                  <span class="sc-val">70.0</span>
+                </div>
+                <div class="sc-agent">
+                  <span class="sc-name">Orchestrator</span>
+                  <div class="sc-track"><div class="sc-fill" style="width:50%"></div></div>
+                  <span class="sc-val">70.0</span>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:8.5px;color:rgba(71,85,105,0.6);margin-top:4px;font-family:var(--font-mono)">
+                <span>40 (floor)</span><span>55 ▸ restrict</span><span>85 ▸ trust</span><span>100</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Confidence breakdown + review swarm -->
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:rgba(18,18,26,0.7);border:1px solid rgba(124,58,237,0.1);border-radius:var(--radius-sm);padding:9px">
+              <div class="cc-panel-title" style="display:flex;align-items:center;justify-content:space-between">Confidence Breakdown <span style="font-size:14px;font-weight:700;color:#8b5cf6">85%</span></div>
+              <div class="conf-breakdown">
+                <div class="cb-row"><span class="cb-label">Objective Clarity</span><div class="cb-bar"><div class="cb-fill" style="width:90%"></div></div><span class="cb-pct">90%</span></div>
+                <div class="cb-row"><span class="cb-label">Scope Clarity</span><div class="cb-bar"><div class="cb-fill" style="width:85%"></div></div><span class="cb-pct">85%</span></div>
+                <div class="cb-row"><span class="cb-label">Evidence Quality</span><div class="cb-bar"><div class="cb-fill" style="width:75%"></div></div><span class="cb-pct">75%</span></div>
+                <div class="cb-row"><span class="cb-label">Reversibility</span><div class="cb-bar"><div class="cb-fill" style="width:92%;background:linear-gradient(90deg,#16a34a,#22c55e)"></div></div><span class="cb-pct">92%</span></div>
+                <div class="cb-row"><span class="cb-label">Tool Fit</span><div class="cb-bar"><div class="cb-fill" style="width:88%"></div></div><span class="cb-pct">88%</span></div>
+              </div>
+            </div>
+
+            <div style="background:rgba(18,18,26,0.7);border:1px solid rgba(124,58,237,0.1);border-radius:var(--radius-sm);padding:9px">
+              <div class="cc-panel-title">Review Swarm</div>
+              <div class="review-swarm">
+                <div class="reviewer-card">
+                  <div class="reviewer-name">🏗 Architect</div>
+                  <div class="reviewer-role">Strategic Review</div>
+                  <div class="reviewer-verdict verdict-approve">✓ Approve <span class="reviewer-conf">85%</span></div>
+                </div>
+                <div class="reviewer-card">
+                  <div class="reviewer-name">🔬 Validator</div>
+                  <div class="reviewer-role">Schema Review</div>
+                  <div class="reviewer-verdict verdict-approve">✓ Approve <span class="reviewer-conf">88%</span></div>
+                </div>
+                <div class="reviewer-card">
+                  <div class="reviewer-name">🔒 Security</div>
+                  <div class="reviewer-role">Scope Review</div>
+                  <div class="reviewer-verdict verdict-approve">✓ Approve <span class="reviewer-conf">92%</span></div>
+                </div>
+                <div class="reviewer-card">
+                  <div class="reviewer-name">⚙ CI Runner</div>
+                  <div class="reviewer-role">CI Review</div>
+                  <div class="reviewer-verdict verdict-approve">✓ Approve <span class="reviewer-conf">100%</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Recommended actions -->
+        <div class="recommend-actions">
+          <button class="chromatic-button-success" onclick="handleApprove()">✓ APPROVE BEAD-01</button>
+          <button class="chromatic-button-ghost">⚑ REQUEST REVIEW</button>
+          <button class="chromatic-button-ghost">∷ CREATE PDR</button>
+          <button class="chromatic-button-err">⏸ PAUSE MISSION</button>
+        </div>
+      </div>
+
+    </div><!-- /bottom-strip -->
+
+  </div><!-- /content -->
+
+  <!-- INSPECTOR PANEL -->
+  <div id="inspector">
+    <div class="inspector-tabs">
+      <div class="inspector-tab active" onclick="setTab(this,'inspector')">Inspector</div>
+      <div class="inspector-tab" onclick="setTab(this,'inspector')">Details</div>
+      <div class="inspector-tab" onclick="setTab(this,'inspector')">Evidence</div>
+    </div>
+    <div class="inspector-body">
+
+      <div class="ins-section">
+        <div class="ins-section-title">Selected Node</div>
+        <div class="ins-node-card">
+          <div style="font-size:11px;color:var(--color-text-muted);margin-bottom:4px">Agent: <strong style="color:var(--color-text-primary)">Architect Agent</strong></div>
+          <div class="ins-node-status"><span class="cc-dot-live"></span> Executing</div>
+        </div>
+      </div>
+
+      <div class="ins-section">
+        <div class="ins-section-title">Node Information</div>
+        <div class="ins-row"><span class="ins-row-key">Agent Type</span><span class="ins-row-val">Architect</span></div>
+        <div class="ins-row"><span class="ins-row-key">Model</span><span class="ins-row-val">claude-sonnet-4-6</span></div>
+        <div class="ins-row"><span class="ins-row-key">Task</span><span class="ins-row-val" style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Define scorecard schema</span></div>
+        <div class="ins-row"><span class="ins-row-key">Start Time</span><span class="ins-row-val" id="insStartTime">14:12:04</span></div>
+        <div class="ins-row"><span class="ins-row-key">Confidence</span><span class="ins-row-val ins-row-val--ok">85%</span></div>
+        <div class="ins-row"><span class="ins-row-key">Risk Level</span><span class="ins-row-val" style="color:#f59e0b">⬤ Low</span></div>
+      </div>
+
+      <div class="ins-section">
+        <div class="ins-section-title">Scope & Permissions</div>
+        <div class="ins-row"><span class="ins-row-key">Allowed Paths</span><span class="ins-row-val ins-row-val--ok">4</span></div>
+        <div class="ins-row"><span class="ins-row-key">Forbidden Paths</span><span class="ins-row-val ins-row-val--err">∞ others</span></div>
+        <div class="ins-row"><span class="ins-row-key">Dry-run Default</span><span class="ins-row-val ins-row-val--ok">Yes</span></div>
+        <div class="ins-row"><span class="ins-row-key">Tool Budget</span><span class="ins-row-val">21 / 29</span></div>
+        <div style="margin-top:6px">
+          <span class="ins-path-chip">schemas/</span>
+          <span class="ins-path-chip">agents/registry/</span>
+          <span class="ins-path-chip">tests/fixtures/</span>
+          <span class="ins-path-chip">docs/operations/</span>
+        </div>
+      </div>
+
+      <div class="ins-section">
+        <div class="ins-section-title">Latest Alert</div>
+        <div style="padding:8px;border-radius:var(--radius-sm);background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);margin-bottom:6px">
+          <div style="font-size:10px;color:#f59e0b;font-weight:600;margin-bottom:3px">⚡ Human Gate Required</div>
+          <div style="font-size:9.5px;color:rgba(245,158,11,0.7);line-height:1.4">Approve BEAD-01 before Architect executes first write action.</div>
+        </div>
+      </div>
+
+      <div class="ins-section">
+        <div class="ins-section-title">Recent Actions</div>
+        <div class="ins-action-item"><span class="ins-action-time">14:22</span> Read schemas/validation.json</div>
+        <div class="ins-action-item"><span class="ins-action-time">14:20</span> Read agents/registry/AGENT_SCORECARD.yaml</div>
+        <div class="ins-action-item"><span class="ins-action-time">14:18</span> Read docs/agent_scorecard_spec.md</div>
+        <div class="ins-action-item"><span class="ins-action-time">14:15</span> Tool Call: shell (pytest -q)</div>
+        <div class="ins-action-item"><span class="ins-action-time">14:12</span> Tool Call: shell (cat_validate.py)</div>
+      </div>
+
+      <button class="pause-agent-btn" onclick="handlePause()">⏸ PAUSE AGENT</button>
+
+    </div>
+  </div>
+
+</div><!-- /middle -->
+
+</div><!-- /shell -->
+
+<script>
+/* ─── Clock ─── */
+var _startTime = Date.now();
+function tick() {
+  var now = new Date();
+  var h = String(now.getHours()).padStart(2,'0');
+  var m = String(now.getMinutes()).padStart(2,'0');
+  var s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = h+':'+m+':'+s;
+  var elapsed = Math.floor((Date.now() - _startTime)/1000);
+  var eh = String(Math.floor(elapsed/3600)).padStart(2,'0');
+  var em = String(Math.floor((elapsed%3600)/60)).padStart(2,'0');
+  var es = String(elapsed%60).padStart(2,'0');
+  var el = document.getElementById('elapsed');
+  if(el) el.textContent = eh+':'+em+':'+es;
+}
+
+/* ─── GO-MODE button ─── */
+var goActive = true;
+function toggleGoMode() {
+  goActive = !goActive;
+  var btn = document.getElementById('goModeBtn');
+  var txt = document.getElementById('goModeText');
+  if(goActive) { btn.className='tb-go-btn'; txt.textContent='GO-MODE'; }
+  else { btn.className='tb-go-btn dispatched'; txt.textContent='PAUSED'; }
+}
+
+/* ─── Nav ─── */
+function setNav(el) {
+  document.querySelectorAll('.nav-item').forEach(function(i){ i.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+/* ─── Inspector tabs ─── */
+function setTab(el, group) {
+  var parent = el.parentElement;
+  parent.querySelectorAll('.inspector-tab, .agent-tab').forEach(function(t){ t.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+/* ─── Actions ─── */
+function handleApprove() {
+  var btn = event.target;
+  btn.textContent = '✓ BEAD-01 APPROVED';
+  btn.style.background = 'rgba(22,163,74,1)';
+  btn.disabled = true;
+  document.querySelectorAll('.gate-mini').forEach(function(row){
+    if(row.textContent.includes('Human')) {
+      var tag = row.querySelector('.cc-tag');
+      if(tag){ tag.className='cc-tag cc-tag-done'; tag.textContent='APPROVED'; }
+      var dot = row.querySelector('.cc-dot-warn');
+      if(dot){ dot.className='cc-dot-live'; dot.style.animation=''; }
+    }
+  });
+}
+
+function handlePause() {
+  var btn = event.target;
+  btn.textContent = '▶ RESUME AGENT';
+  btn.style.background='rgba(139,92,246,0.1)';
+  btn.style.borderColor='rgba(139,92,246,0.3)';
+  btn.style.color='#a78bfa';
+  btn.onclick = function(){ location.reload(); };
+}
+
+/* ─── Helpers ─── */
+function setTextById(id, val) {
+  var el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+
+/* ─── Live data updaters ─── */
+function updateFromData(d) {
+  updateState(d.state || {});
+  updateBeads(d.beads || []);
+  updateAgents(d.agents || {});
+  updateGates(d.gates || {});
+  updateEvents(d.events || []);
+}
+
+function updateState(state) {
+  if(state.active_sprint) setTextById('tbSprint', state.active_sprint);
+  if(state.active_mission_id) setTextById('tbMission', state.active_mission_id || '—');
+  if(state.active_sprint) setTextById('kpiSprint', state.active_sprint);
+  if(state.go_mode) {
+    goActive = state.go_mode === 'enabled';
+    var btn = document.getElementById('goModeBtn');
+    var txt = document.getElementById('goModeText');
+    if(btn && txt) {
+      if(goActive) { btn.className='tb-go-btn'; txt.textContent='GO-MODE'; }
+      else { btn.className='tb-go-btn dispatched'; txt.textContent='PAUSED'; }
+    }
+  }
+}
+
+function updateBeads(beads) {
+  var active    = beads.filter(function(b){ return b._dir==='active'; }).length;
+  var queued    = beads.filter(function(b){ return b._dir==='queued'; }).length;
+  var completed = beads.filter(function(b){ return b._dir==='completed'; }).length;
+  var failed    = beads.filter(function(b){ return b._dir==='failed'; }).length;
+  var total = active + queued + completed + failed;
+
+  setTextById('beadsTotal', total);
+  setTextById('beadsActive', active);
+  setTextById('beadsQueued', queued);
+  setTextById('beadsDone', completed);
+  setTextById('beadsFailed', failed);
+  setTextById('kpiActiveBeads', active);
+
+  /* Update donut arc */
+  var activePct = total > 0 ? active/total : 0;
+  var circ = 2*Math.PI*30;
+  var activeArc = Math.round(activePct*circ*10)/10;
+  var donutActive = document.querySelector('#beadsDonutSvg .donut-active');
+  if(donutActive) donutActive.setAttribute('stroke-dasharray', activeArc+' '+(Math.round((circ-activeArc)*10)/10));
+
+  /* Confidence from active beads */
+  var confScores = beads.filter(function(b){ return b._dir==='active' && b.confidence && b.confidence.current; }).map(function(b){ return b.confidence.current; });
+  if(confScores.length > 0) {
+    var avg = Math.round(confScores.reduce(function(a,b){ return a+b; },0)/confScores.length);
+    setTextById('tbConfidence', avg+'%');
+  }
+
+  /* Kanban active column */
+  var kanbanActive = document.getElementById('kanbanActive');
+  if(kanbanActive) {
+    var activeBeads = beads.filter(function(b){ return b._dir==='active'; });
+    var countEl = kanbanActive.querySelector('.kanban-col-count');
+    if(countEl) countEl.textContent = activeBeads.length;
+    kanbanActive.querySelectorAll('.bead-card').forEach(function(c){ c.remove(); });
+    activeBeads.slice(0,5).forEach(function(b) {
+      var card = document.createElement('div');
+      card.className = 'bead-card bead--active';
+      var conf = b.confidence ? '<span class="bead-card-conf">'+(b.confidence.current||0)+'%</span>' : '';
+      card.innerHTML = '<div class="bead-card-id">'+b.bead_id+'</div>'
+        +'<div class="bead-card-title">'+(b.title||'')+'</div>'
+        +'<div class="bead-card-meta"><span class="bead-card-agent">'+(b.agent_role||'')+'</span>'+conf+'</div>';
+      kanbanActive.appendChild(card);
+    });
+  }
+}
+
+function updateAgents(agentData) {
+  var agents = agentData.agents || [];
+  var policy = agentData.score_policy || {};
+  var container = document.getElementById('scorebarsContainer');
+  if(!container || !agents.length) return;
+  container.innerHTML = agents.map(function(a) {
+    var pct = Math.max(0, Math.min(100, Math.round(((a.score||70)-40)/60*100)));
+    var color = (a.score|0) >= (policy.promote_threshold||85) ? '#22c55e' :
+                (a.score|0) <= (policy.demote_threshold||55) ? '#ef4444' : '#8b5cf6';
+    return '<div class="sc-agent">'
+      +'<span class="sc-name">'+a.role+'</span>'
+      +'<div class="sc-track"><div class="sc-fill" style="width:'+pct+'%;background:'+color+'"></div></div>'
+      +'<span class="sc-val">'+(a.score||70)+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+function updateGates(gates) {
+  var statusMap = {pass:'done', warn:'warn', fail:'err', ok:'done', pending:'warn', open:'idle'};
+  document.querySelectorAll('.gate-mini').forEach(function(row) {
+    var text = row.textContent;
+    var key = text.includes('Confidence') ? 'confidence' :
+              text.includes('Human')      ? 'human' :
+              text.includes('Review')     ? 'review' :
+              text.includes('Promotion')  ? 'promotion' :
+              text.includes('Tool')       ? 'tool_budget' : null;
+    if(!key || !gates[key]) return;
+    var g = gates[key];
+    var status = g.status || 'open';
+    var tag = row.querySelector('.cc-tag');
+    if(tag) {
+      tag.className = 'cc-tag cc-tag-'+(statusMap[status]||'idle');
+      tag.textContent = status.toUpperCase().replace(/_/g,' ');
+    }
+  });
+}
+
+function updateEvents(events) {
+  var feed = document.getElementById('eventsFeed');
+  if(!feed || !events.length) return;
+  feed.innerHTML = events.slice(0,10).map(function(e) {
+    var icon = e.ok ? '<strong style="color:#22c55e">✓</strong>'
+                    : '<strong style="color:#ef4444">✗</strong>';
+    var time = e.time ? e.time.substr(11,5) : '';
+    var label = e.bead_id ? e.bead_id.split('-').slice(-2).join('-') : '';
+    return '<div class="event-item">'
+      +'<span class="event-time">'+time+'</span> '
+      +icon+' '+label+' '+e.from+'→'+e.to+(e.actor?' ('+e.actor+')':'')
+      +'</div>';
+  }).join('');
+}
+
+/* ─── API polling ─── */
+var API_BASE = 'http://localhost:8000';
+
+function loadData() {
+  var ctrl = new AbortController();
+  var timeout = setTimeout(function(){ ctrl.abort(); }, 2000);
+  fetch(API_BASE+'/api/all', {signal: ctrl.signal})
+    .then(function(r){ clearTimeout(timeout); return r.json(); })
+    .then(function(d) {
+      var dot = document.getElementById('connectionStatus');
+      if(dot) dot.className = 'cc-dot-live';
+      updateFromData(d);
+    })
+    .catch(function() {
+      var dot = document.getElementById('connectionStatus');
+      if(dot) dot.className = 'cc-dot-warn';
+      /* static data remains visible */
+    });
+}
+
+/* ─── Boot ─── */
+setInterval(tick, 1000); tick();
+loadData();
+setInterval(loadData, 5000);
+</script>
+</body>
+</html>
