@@ -1,0 +1,253 @@
+version: 0.1.0
+last_updated: '2026-06-18T16:36:08+00:00'
+active_mission_id: ''
+selection_policy:
+  priority_order:
+  - approved
+  - in_progress
+  - validating
+  - dispatched
+  tie_breakers:
+  - highest_priority
+  - current_bead_present
+  - highest_confidence
+  - lowest_risk
+  - oldest_created
+  blocked_statuses:
+  - draft
+  - blocked
+  - escalated
+  - rolled_back
+  - abandoned
+  - incident
+  - closed
+  - learned
+missions:
+- mission_id: MP-CAT-000
+  title: Establish Chromatic Atomic Tower Core Foundation
+  level: M3
+  status: closed
+  priority: 5
+  owner: Human Owner
+  risk_level: high
+  reversibility: high
+  autonomy_level: L4
+  confidence: 92
+  current_bead_id: null
+  path: missions/archived/MP-CAT-000_ESTABLISH_CORE.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-18T01:10:18+00:00'
+- mission_id: MP-CAT-001
+  title: Implement CAT State Transition Engine
+  level: M3
+  status: closed
+  priority: 5
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 86
+  current_bead_id: null
+  path: missions/archived/MP-CAT-001_STATE_TRANSITION_ENGINE.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-18T01:10:18+00:00'
+- mission_id: MP-CAT-002
+  title: Implement CAT Evidence Gate and Closeout Engine
+  level: M3
+  status: closed
+  priority: 5
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 88
+  current_bead_id: null
+  path: missions/archived/MP-CAT-002_EVIDENCE_GATE_CLOSEOUT_ENGINE.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-18T01:10:18+00:00'
+- mission_id: MP-CAT-003
+  title: Implement CAT CI Governance and Self-Healing Validation Engine
+  level: M3
+  status: learned
+  priority: 1
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 88
+  current_bead_id: null
+  path: missions/archived/MP-CAT-003_CI_GOVERNANCE_SELF_HEALING.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-18T01:10:18+00:00'
+- mission_id: MP-CAT-004
+  title: Align CAT Tower with Harness v2 Operating Guards
+  level: M3
+  status: learned
+  priority: 1
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 88
+  current_bead_id: null
+  path: missions/archived/MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-18T01:10:18+00:00'
+- mission_id: MP-CAT-005
+  title: Multi-Model Coding Harness MVP
+  level: M3
+  status: closed
+  priority: 1
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 80
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-005_MULTI_MODEL_HARNESS_MVP.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-18T00:49:51+00:00'
+- mission_id: MP-CAT-A006-4C01
+  title: Harness Engineering Audit Alignment and Autonomous Governance Upgrade
+  level: M4
+  status: closed
+  priority: 2
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: high
+  reversibility: high
+  autonomy_level: L2
+  confidence: 72
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-18T01:32:51+00:00'
+- mission_id: MP-CAT-A007-4C01
+  title: LOGHOUSE Log Intelligence and Architecture Drift MVP
+  level: M4
+  status: closed
+  priority: 2
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: high
+  reversibility: high
+  autonomy_level: L2
+  confidence: 80
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A007-4C01_LOGHOUSE_INTELLIGENCE.yaml
+  created: '2026-06-17'
+  last_updated: '2026-06-18T01:25:59+00:00'
+- mission_id: MP-CAT-A008-4C01
+  title: Mission/BEAD State Alignment and Collision Governance
+  level: M4
+  status: learned
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L2
+  confidence: 85
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A008-4C01_STATE_ALIGNMENT_GOVERNANCE.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18'
+- mission_id: MP-CAT-A009-4C01
+  title: Repo Alignment and Mission Packet Reconciliation
+  level: M3
+  status: closed
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 90
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A009-4C01_REPO_ALIGNMENT_RECONCILIATION.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T02:44:34+00:00'
+- mission_id: MP-CAT-A010-4C01
+  title: GitHub Bridge + PR Governance
+  level: M3
+  status: closed
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L3
+  confidence: 88
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A010-4C01_GITHUB_BRIDGE_PR_GOVERNANCE.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T02:51:29+00:00'
+- mission_id: MP-CAT-A011-4C01
+  title: Agent Scorecard Automation
+  level: M3
+  status: closed
+  priority: 3
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: medium
+  autonomy_level: L2
+  confidence: 80
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T04:05:08+00:00'
+- mission_id: MP-CAT-A012-4C01
+  title: CAT Portable Project Adapter
+  level: M3
+  status: closed
+  priority: 4
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: medium
+  autonomy_level: L2
+  confidence: 82
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T14:37:39+00:00'
+- mission_id: MP-CAT-A013-4C01
+  title: Tool-Plane Scaffolding (Database + Calendar/Email)
+  level: M3
+  status: closed
+  priority: 3
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L2
+  confidence: 82
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A013-4C01_TOOL_PLANE_SCAFFOLDING.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T05:29:41+00:00'
+- mission_id: MP-CAT-A014-4C01
+  title: Complete CAT GO Automation Control Loop
+  level: M3
+  status: approved
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Kris Sayresmith
+  risk_level: medium-high
+  reversibility: high
+  autonomy_level: L3
+  confidence: 78
+  current_bead_id: BEAD-CAT-A014-4C01-06
+  path: missions/active/MP-CAT-A014-4C01_GO_AUTOMATION.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T16:36:08+00:00'

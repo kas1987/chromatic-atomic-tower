@@ -1,0 +1,43 @@
+PASS root hygiene: root entries satisfy allowlist
+PASS mission registry: missions\registry\MISSION_REGISTRY.yaml
+PASS agent registry: agents\registry\AGENT_REGISTRY.yaml
+PASS agent scorecard: agents\registry\AGENT_SCORECARD.yaml
+PASS tower state: state\TOWER_STATE.yaml
+PASS intent envelope example: tests\fixtures\intent\intent_envelope_example.json
+PASS handoff packet example: tests\fixtures\handoff\handoff_packet_example.json
+PASS tool registry: agents\registry\TOOL_REGISTRY.yaml
+PASS database tool plane example: tests\fixtures\toolplanes\database_example.json
+PASS comms tool plane example: tests\fixtures\toolplanes\comms_example.json
+PASS adapter config example: tests\fixtures\adapter\valid_config.json
+PASS adapter state example: tests\fixtures\adapter\valid_state.json
+PASS mission: missions\active\MP-CAT-A014-4C01_GO_AUTOMATION.yaml
+PASS mission: missions\examples\MP-CAT-EXAMPLE-M2.yaml
+PASS bead: beads\active\BEAD-CAT-003-001.yaml
+PASS bead: beads\active\BEAD-CAT-003-002.yaml
+PASS bead: beads\active\BEAD-CAT-003-003.yaml
+PASS bead: beads\active\BEAD-CAT-003-004.yaml
+PASS bead: beads\active\BEAD-CAT-004-001.yaml
+PASS bead: beads\active\BEAD-CAT-004-002.yaml
+PASS bead: beads\active\BEAD-CAT-004-003.yaml
+PASS bead: beads\active\BEAD-CAT-004-004.yaml
+PASS bead: beads\active\BEAD-CAT-005-001.yaml
+PASS bead: beads\active\BEAD-CAT-005-002.yaml
+PASS bead: beads\active\BEAD-CAT-005-003.yaml
+PASS bead: beads\active\BEAD-CAT-005-004.yaml
+PASS bead: beads\active\BEAD-CAT-005-005.yaml
+PASS bead: beads\active\BEAD-CAT-A014-4C01-03.yaml
+PASS bead: beads\active\BEAD-CAT-A014-4C01-04.yaml
+PASS bead: beads\active\BEAD-CAT-A014-4C01-05.yaml
+PASS bead: beads\active\BEAD-CAT-A014-4C01-06.yaml
+PASS bead: beads\active\BEAD-CAT-A014-4C01-07.yaml
+PASS bead: beads\examples\BEAD-CAT-002-CLOSEOUT-EXAMPLE.yaml
+PASS bead: beads\examples\BEAD-CAT-EXAMPLE-001.yaml
+PASS evidence bundle: evidence\bundles\examples\EB-CAT-002-EXAMPLE.yaml
+PASS evidence bundle: evidence\bundles\examples\EB-CAT-002-FAILED.yaml
+PASS evidence bundle: evidence\bundles\examples\EB-CAT-002-MISSING.yaml
+PASS mission template: missions\templates\M1_BASIC.yaml
+PASS mission template: missions\templates\M2_INTERMEDIATE.yaml
+PASS mission template: missions\templates\M3_COMPLEX.yaml
+PASS mission template: missions\templates\M4_ATOMIC.yaml
+PASS bead template: beads\templates\BEAD_TEMPLATE.yaml
+CAT validation passed.

@@ -14,6 +14,7 @@ from common import ROOT, load_yaml, write_yaml
 RULES_PATHS = [
     ROOT / 'gates/state/transition_rules.yaml',
     ROOT / 'gates/state/STATE_TRANSITION_RULES.yaml',
+    ROOT / 'state/transition_rules.yaml',
 ]
 REGISTRY_PATH = ROOT / 'missions/registry/MISSION_REGISTRY.yaml'
 TOWER_STATE_PATH = ROOT / 'state/TOWER_STATE.yaml'

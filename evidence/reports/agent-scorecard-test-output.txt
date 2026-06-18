@@ -1,0 +1,6 @@
+[DRY-RUN] Sample event: {'agent_role': 'Builder', 'mission_id': 'MP-CAT-A014-4C01', 'bead_id': 'BEAD-CAT-A014-4C01-06', 'result': 'bead_completed', 'validation_passed': True, 'budget_used': 3, 'incident_count': 0}
+  role: Builder
+  score: 100.0 -> 100
+  trust: trusted
+  last event: bead_completed delta=5 bead=BEAD-CAT-A014-4C01-06
+[DRY-RUN] No files written.

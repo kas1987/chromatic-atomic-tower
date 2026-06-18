@@ -1,0 +1,14 @@
+WARN [.github\workflows\cat-cd-promotion.yml]: no concurrency block (cancel-in-progress recommended)
+WARN [.github\workflows\cat-cd-promotion.yml]: no timeout-minutes on any job
+WARN [.github\workflows\cat-ci.yml]: no explicit permissions block
+WARN [.github\workflows\cat-ci.yml]: no concurrency block (cancel-in-progress recommended)
+WARN [.github\workflows\cat-ci.yml]: no timeout-minutes on any job
+WARN [.github\workflows\cat-github-bridge.yml]: no explicit permissions block
+WARN [.github\workflows\cat-github-bridge.yml]: no concurrency block (cancel-in-progress recommended)
+WARN [.github\workflows\cat-github-bridge.yml]: no timeout-minutes on any job
+WARN [.github\workflows\cat-governance-ci.yml]: no concurrency block (cancel-in-progress recommended)
+WARN [.github\workflows\cat-governance-ci.yml]: no timeout-minutes on any job
+WARN [.github\workflows\cat-loghouse-ci.yml]: no explicit permissions block
+WARN [.github\workflows\cat-loghouse-ci.yml]: no concurrency block (cancel-in-progress recommended)
+WARN [.github\workflows\cat-loghouse-ci.yml]: no timeout-minutes on any job
+cost-guard: all 6 workflow(s) passed.

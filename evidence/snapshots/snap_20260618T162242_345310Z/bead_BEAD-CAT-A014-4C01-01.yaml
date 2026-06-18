@@ -1,0 +1,89 @@
+bead_id: BEAD-CAT-A014-4C01-01
+mission_id: MP-CAT-A014-4C01
+title: "State Transition Engine \u2014 Validation and Tests"
+status: active
+agent_role: Builder
+autonomy_level: L3
+objective: Validate and harden cat_transition.py with formal transition rules YAML,
+  comprehensive tests, and a state_transition.schema.json schema.
+allowed_paths:
+- scripts/cat_transition.py
+- schemas/state_transition.schema.json
+- state/transition_rules.yaml
+- tests/test_cat_transition.py
+- docs/state_transition_engine.md
+forbidden_paths:
+- .env
+- secrets/**
+- evidence/logs/**
+dependencies: []
+tool_budget:
+  search: 2
+  read: 8
+  write: 6
+  execute: 4
+  max_runtime_minutes: 30
+confidence:
+  minimum: 80
+  current: 83
+  objective_clarity: 88
+  scope_clarity: 85
+  evidence_quality: 80
+  reversibility: 92
+  tool_fit: 85
+  risk_awareness: 82
+  testability: 88
+risk_level: medium
+reversibility: high
+stop_conditions:
+- cat_transition.py imports break existing callers.
+- Test coverage requires touching files outside allowed_paths.
+- Confidence drops below minimum.
+stop_on_forbidden_path: true
+definition_of_done:
+- Valid transitions enforced; invalid transitions fail with nonzero exit.
+- Dry-run mode works.
+- state_transition.schema.json exists and documents the structure.
+- tests/test_cat_transition.py passes.
+- evidence/reports/state-transition-test-output.txt written.
+- docs/state_transition_engine.md documents usage.
+validation:
+- type: unit_tests
+  command: python -m pytest -q tests/test_cat_transition.py
+  evidence_path: evidence/reports/state-transition-test-output.txt
+  required: true
+- type: repo_check
+  command: python scripts/cat_check_repo.py
+  evidence_path: evidence/reports/cat_check_go001.txt
+  required: true
+- type: validate_all
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/validate_go001.txt
+  required: true
+required_output:
+- summary
+- files_changed
+- validation_result
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-A014-4C01-02
+  notes:
+  - Run pytest for test_cat_transition before marking done.
+last_updated: '2026-06-18T16:22:18+00:00'
+transition_history:
+- timestamp: '2026-06-18T16:22:17+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A014-4C01-01
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'BEAD-01 kickoff: state transition engine validation'
+  evidence: ''
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A014-4C01-01.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T162217_993826Z

@@ -178,13 +178,38 @@ def _run_loghouse_self(strict: bool) -> int:
     return result.returncode
 
 
+def _validate_against_schema(dispatch: dict) -> list[str]:
+    """Validate dispatch packet against go_dispatch_packet.schema.json. Returns errors."""
+    schema_path = ROOT / 'schemas' / 'go_dispatch_packet.schema.json'
+    try:
+        import jsonschema
+        schema = json.loads(schema_path.read_text(encoding='utf-8'))
+        errors = list(jsonschema.Draft202012Validator(schema).iter_errors(dispatch))
+        return [str(e.message) for e in errors]
+    except ImportError:
+        return ["jsonschema not installed — cannot validate schema"]
+    except Exception as exc:
+        return [f"schema validation error: {exc}"]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description='Resolve GO into the next CAT dispatch packet.')
     parser.add_argument('--json', action='store_true', help='Print JSON instead of Markdown.')
+    parser.add_argument('--format', choices=['json', 'markdown'], default=None,
+                        help='Output format: json or markdown (default: markdown).')
+    parser.add_argument('--check-schema', action='store_true',
+                        help='Validate dispatch packet against go_dispatch_packet.schema.json.')
     parser.add_argument('--skip-align-check', action='store_true', help='Skip alignment gate (operator only).')
     parser.add_argument('--allow-queued', action='store_true', help='Allow queued BEAD dispatch (kickoff only).')
     parser.add_argument('--skip-loghouse', action='store_true', help='Skip LOGHOUSE self-monitor (operator only).')
     args = parser.parse_args()
+
+    # --format json is an alias for --json; --check-schema implies skip-align and skip-loghouse
+    if args.format == 'json':
+        args.json = True
+    if args.check_schema:
+        args.skip_align_check = True
+        args.skip_loghouse = True
 
     tower = load_yaml(ROOT / 'state/TOWER_STATE.yaml')
     sprint = tower.get('active_sprint', 'SPRINT-000')
@@ -234,6 +259,15 @@ def main() -> int:
         print(json.dumps(dispatch, indent=2))
     else:
         print_markdown(dispatch)
+
+    if args.check_schema:
+        errors = _validate_against_schema(dispatch)
+        if errors:
+            print('\nSCHEMA FAIL:')
+            for e in errors:
+                print(f'  - {e}')
+            return 1
+        print(f'\nSCHEMA PASS: dispatch packet validates against go_dispatch_packet.schema.json')
 
     if not is_ready:
         return 1

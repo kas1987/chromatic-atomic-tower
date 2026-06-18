@@ -1,0 +1,161 @@
+mission_id: MP-CAT-A014-4C01
+title: Complete CAT GO Automation Control Loop
+level: M3
+status: learned
+owner: Kris Sayresmith
+priority: 1
+risk_level: high
+reversibility: high
+autonomy_level: L3
+confidence_minimum: 78
+created: '2026-06-18'
+last_updated: '2026-06-18'
+id_convention:
+  scheme: MP-<repo>-<tier><NNN>-<cx>C<oo>
+  type: MP
+  repo: CAT
+  priority_tier: A
+  global_mission_number: '014'
+  complexity: 4
+  relative_execution_order: '01'
+objective: >-
+  Convert chromatic-atomic-tower from a governed dispatch kernel into a full
+  autonomous-but-controlled mission execution control loop with state transitions,
+  evidence enforcement, GitHub bridge, cost guardrails, and agent score updates.
+background: >-
+  The repo has strong governance, mission/BEAD discipline, a GO resolver, and CI,
+  but lacks formal dispatch packet schema validation, a queryable evidence manifest
+  index, a cost guardrail script, a PR guard script, and a scorecard mutation script.
+  Without these, agents can be dispatched but cannot safely complete, verify, close,
+  or learn from work without full manual oversight.
+scope:
+  in:
+    - Validate and harden cat_transition.py with tests (BEAD-01)
+    - Add evidence_manifest.schema.json + evidence/manifest.yaml + cat_closeout.py tests (BEAD-02)
+    - Build cat_evidence_index.py for queryable evidence manifest (BEAD-03)
+    - Implement cat_cost_guard.py + verify validate-cat.yml hardening (BEAD-04)
+    - Add PR/issue templates + cat_pr_guard.py (BEAD-05)
+    - Implement cat_score_agent.py + dry-run mode (BEAD-06)
+    - Upgrade cat_resolve_go.py to emit schema-validated dispatch packets (BEAD-07)
+  out:
+    - Fully unsupervised cloud agent execution without human approval
+    - Billing API integration
+    - Production deployment to external infrastructure
+    - AI API calls in GitHub Actions
+dependencies:
+  - MP-CAT-A013-4C01
+allowed_paths:
+  - missions/active/MP-CAT-A014-4C01_GO_AUTOMATION.yaml
+  - beads/active/BEAD-CAT-A014-4C01-*.yaml
+  - scripts/cat_transition.py
+  - scripts/cat_closeout.py
+  - scripts/cat_evidence_index.py
+  - scripts/cat_cost_guard.py
+  - scripts/cat_pr_guard.py
+  - scripts/cat_score_agent.py
+  - scripts/cat_resolve_go.py
+  - schemas/go_dispatch_packet.schema.json
+  - schemas/state_transition.schema.json
+  - schemas/evidence_manifest.schema.json
+  - schemas/agent_scorecard.schema.json
+  - evidence/manifest.yaml
+  - evidence/reports/**
+  - .github/workflows/validate-cat.yml
+  - .github/PULL_REQUEST_TEMPLATE.md
+  - .github/ISSUE_TEMPLATE/**
+  - agents/scorecards/**
+  - tests/test_cat_transition.py
+  - tests/test_cat_closeout.py
+  - tests/test_cat_evidence_index.py
+  - tests/test_cat_cost_guard.py
+  - tests/test_cat_pr_guard.py
+  - tests/test_cat_score_agent.py
+  - tests/test_cat_resolve_go.py
+  - docs/state_transition_engine.md
+  - docs/bead_closeout_engine.md
+  - docs/evidence_index.md
+  - docs/github_actions_guardrails.md
+  - docs/github_bridge.md
+  - docs/agent_scorecards.md
+  - docs/go_dispatch_packet.md
+  - docs/pdr/PDR-CAT-GO-AUTOMATION.md
+  - checklists/GO_AUTOMATION_READINESS_CHECKLIST.md
+  - prompts/CLAUDE_GO_AUTOMATION_IMPLEMENTER.md
+  - docs/reference/HANDOFF_TO_AGENTS.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+acceptance_criteria:
+  - cat_resolve_go.py --format json --check-schema passes.
+  - State transition engine has tests that cover valid and invalid transitions.
+  - Missing evidence blocks closeout with nonzero exit.
+  - cat_cost_guard.py --check passes with no failures on all workflows.
+  - validate-cat.yml has permissions, concurrency cancellation, and timeout-minutes.
+  - PULL_REQUEST_TEMPLATE.md enforces Mission ID and BEAD ID.
+  - evidence/manifest.yaml is populated with sha256 artifact hashes.
+  - cat_score_agent.py --dry-run --sample runs without error.
+  - python -m pytest -q passes for all new test files.
+  - python scripts/cat_validate.py --all passes.
+beads:
+  - bead_id: BEAD-CAT-A014-4C01-01
+    title: State Transition Engine — Validation and Tests
+    status: queued
+  - bead_id: BEAD-CAT-A014-4C01-02
+    title: BEAD Closeout Enforcement — Evidence Manifest Schema and Tests
+    status: queued
+  - bead_id: BEAD-CAT-A014-4C01-03
+    title: Evidence Manifest Index — Build and Validate
+    status: queued
+  - bead_id: BEAD-CAT-A014-4C01-04
+    title: GitHub Actions Cost Guard — Full Implementation and Tests
+    status: queued
+  - bead_id: BEAD-CAT-A014-4C01-05
+    title: GitHub PR and Issue Bridge — Templates and Guard
+    status: queued
+  - bead_id: BEAD-CAT-A014-4C01-06
+    title: Agent Scorecard Mutation — Script and Tests
+    status: queued
+  - bead_id: BEAD-CAT-A014-4C01-07
+    title: GO Resolver Dispatch Packet Standard — Schema Validation and Tests
+    status: queued
+required_validation:
+  - type: tests
+    command: python -m pytest -q tests/test_cat_transition.py tests/test_cat_closeout.py tests/test_cat_evidence_index.py tests/test_cat_cost_guard.py tests/test_cat_pr_guard.py tests/test_cat_score_agent.py tests/test_cat_resolve_go.py
+    evidence_path: evidence/reports/MP-CAT-A014-4C01_test_report.txt
+    required: true
+  - type: schema
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/MP-CAT-A014-4C01_validation.txt
+    required: true
+  - type: cost_guard
+    command: python scripts/cat_cost_guard.py --check
+    evidence_path: evidence/reports/MP-CAT-A014-4C01_cost_guard.txt
+    required: true
+rollback:
+  required: true
+  plan: >-
+    Remove scripts/cat_cost_guard.py, scripts/cat_pr_guard.py, scripts/cat_score_agent.py,
+    scripts/cat_evidence_index.py; revert cat_transition.py, cat_closeout.py, cat_resolve_go.py
+    to prior state; remove new test files and docs; revert evidence/manifest.yaml.
+human_gate:
+  required: true
+  approver: Auditor
+tool_budget:
+  search: 4
+  read: 30
+  write: 25
+  execute: 20
+  max_runtime_minutes: 180
+evidence_requirements:
+  - schema_validation
+  - test_suite_pass
+  - cost_guard_pass
+  - pr_guard_pass
+  - go_dispatch_schema_pass
+notes:
+  - Sequential BEAD execution; each depends on the prior.
+  - No AI API calls in GitHub Actions — cost guard enforces this.
+  - Human approval required before merging to master.
