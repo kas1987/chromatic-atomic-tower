@@ -20,5 +20,5 @@ current_constraints:
 - Opus invoked at most once per ticket (final review only).
 - No GitHub Mutation = No Mission + BEAD Trace.
 next_command: python scripts/cat_resolve_go.py
-sprint_goal: "CAT Portable Project Adapter \u2014 .cat folder spec, schemas, generator\
+sprint_goal: "CAT Portable Project Adapter — .cat folder spec, schemas, generator\
   \ script, and validation wiring."
