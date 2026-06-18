@@ -44,9 +44,10 @@ Last reconciled: 2026-06-18 (Sprint 011 / post-A011).
 **GO-mode driver — now two-tier.** `scripts/cat_go.py` is the **read-only spine**
 (evaluates all 7 stages → `go_run_record`; A011 → 7/7). `scripts/cat_go_run.py`
 is the **active orchestrator** (G-1a): it picks the next actionable stage and,
-under `--execute --confirm`, advances it by delegating to audited scripts
-(`cat_sprint_closeout.py`) — default dry-run, flag-based human gate, never
-mutates state directly.
+under `--execute`, advances it by delegating to audited scripts
+(`cat_sprint_closeout.py`) — default dry-run, never mutates state directly. The
+mission-close gate stays enforced but is **approved by an agent** (the
+`gate_approver_agent`, default Auditor) rather than a human — see §6.
 
 ---
 
@@ -102,6 +103,15 @@ Self-heal path: `scripts/cat_self_heal.py`.
 - No Registry Entry = No Commit
 - *(+ No Reconciled Registry = No New Sprint — CAT extension)*
 
+**Gate approver — agent, not human.** The `human_gate_if_required` guard
+(`scripts/cat_transition.py`) stays enforced, but approval is now recorded by
+the configured **`gate_approver_agent`** (`gates/state/transition_rules.yaml`,
+default **Auditor**) instead of a human. The Auditor is independent of the
+Builder/Orchestrator that perform the work, preserving separation of duties; a
+misconfigured approver (not a registered role) **fails** the gate — keeping
+"No Gate = No Promotion" intact without a human in the loop. PR-governance
+gates (`gates/github/`) are unchanged.
+
 ---
 
 ## 7. Design Principles
@@ -140,8 +150,8 @@ Ordered by leverage. Each becomes a mission or BEAD when scheduled.
 ### Recently closed
 
 - **G-1a — active GO-mode orchestrator** — `scripts/cat_go_run.py` picks the
-  next actionable stage and advances it under `--execute --confirm` by
-  delegating to `cat_sprint_closeout.py`; default dry-run, flag-based human
+  next actionable stage and advances it under `--execute` by
+  delegating to `cat_sprint_closeout.py`; default dry-run, agent-approved gate
   gate, no direct state mutation.
 - **G-2 — intent envelope schema** — `schemas/intent_envelope.schema.json`
   normalizes pipeline stage 1 (Intent), validated via `cat_validate --all`.
