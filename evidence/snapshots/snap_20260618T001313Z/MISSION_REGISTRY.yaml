@@ -1,5 +1,5 @@
 version: 0.1.0
-last_updated: '2026-06-18T00:13:13+00:00'
+last_updated: '2026-06-18T00:13:11+00:00'
 active_mission_id: MP-CAT-005
 selection_policy:
   priority_order:
@@ -103,10 +103,10 @@ missions:
   reversibility: high
   autonomy_level: L3
   confidence: 80
-  current_bead_id: null
+  current_bead_id: BEAD-CAT-005-003
   path: missions/active/MP-CAT-005_MULTI_MODEL_HARNESS_MVP.yaml
   created: '2026-06-17'
-  last_updated: '2026-06-18T00:13:13+00:00'
+  last_updated: '2026-06-18T00:13:11+00:00'
 - mission_id: MP-CAT-A007-4C01
   title: LOGHOUSE Log Intelligence and Architecture Drift MVP
   level: M4
