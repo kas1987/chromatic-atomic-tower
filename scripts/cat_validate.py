@@ -12,7 +12,15 @@ from cat_branch_hygiene import find_root_hygiene_issues, load_root_allowlist
 VALIDATION_TARGETS = [
     ('mission registry', ROOT / 'missions/registry/MISSION_REGISTRY.yaml', ROOT / 'schemas/mission_registry.schema.json'),
     ('agent registry', ROOT / 'agents/registry/AGENT_REGISTRY.yaml', ROOT / 'schemas/agent.schema.json'),
+    ('agent scorecard', ROOT / 'agents/registry/AGENT_SCORECARD.yaml', ROOT / 'schemas/agent_scorecard.schema.json'),
     ('tower state', ROOT / 'state/TOWER_STATE.yaml', ROOT / 'schemas/tower_state.schema.json'),
+    ('intent envelope example', ROOT / 'tests/fixtures/intent/intent_envelope_example.json', ROOT / 'schemas/intent_envelope.schema.json'),
+    ('handoff packet example', ROOT / 'tests/fixtures/handoff/handoff_packet_example.json', ROOT / 'schemas/handoff_packet.schema.json'),
+    ('tool registry', ROOT / 'agents/registry/TOOL_REGISTRY.yaml', ROOT / 'schemas/tool_registry.schema.json'),
+    ('database tool plane example', ROOT / 'tests/fixtures/toolplanes/database_example.json', ROOT / 'schemas/tool_plane_database.schema.json'),
+    ('comms tool plane example', ROOT / 'tests/fixtures/toolplanes/comms_example.json', ROOT / 'schemas/tool_plane_comms.schema.json'),
+    ('adapter config example', ROOT / 'tests/fixtures/adapter/valid_config.json', ROOT / 'schemas/cat_adapter_config.schema.json'),
+    ('adapter state example', ROOT / 'tests/fixtures/adapter/valid_state.json', ROOT / 'schemas/cat_adapter_state.schema.json'),
 ]
 
 MISSION_PATTERNS = [
@@ -261,6 +269,9 @@ def main() -> int:
         elif file_path.name == 'TOWER_STATE.yaml':
             schema = ROOT / 'schemas/tower_state.schema.json'
             kind = 'tower state'
+        elif file_path.name == 'AGENT_SCORECARD.yaml':
+            schema = ROOT / 'schemas/agent_scorecard.schema.json'
+            kind = 'agent scorecard'
         else:
             print('Could not infer schema for file.')
             return 2

@@ -1,5 +1,5 @@
 version: 0.1.0
-last_updated: '2026-06-18T02:51:29+00:00'
+last_updated: '2026-06-18T14:37:39+00:00'
 active_mission_id: ''
 selection_policy:
   priority_order:
@@ -190,7 +190,7 @@ missions:
 - mission_id: MP-CAT-A011-4C01
   title: Agent Scorecard Automation
   level: M3
-  status: draft
+  status: closed
   priority: 3
   priority_tier: A
   complexity_order: 4C01
@@ -200,13 +200,13 @@ missions:
   autonomy_level: L2
   confidence: 80
   current_bead_id: ''
-  path: missions/backlog/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
+  path: missions/archived/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml
   created: '2026-06-18'
-  last_updated: '2026-06-18'
+  last_updated: '2026-06-18T04:05:08+00:00'
 - mission_id: MP-CAT-A012-4C01
   title: CAT Portable Project Adapter
   level: M3
-  status: draft
+  status: closed
   priority: 4
   priority_tier: A
   complexity_order: 4C01
@@ -214,8 +214,24 @@ missions:
   risk_level: medium
   reversibility: medium
   autonomy_level: L2
-  confidence: 80
+  confidence: 82
   current_bead_id: ''
-  path: missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
+  path: missions/archived/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
   created: '2026-06-18'
-  last_updated: '2026-06-18'
+  last_updated: '2026-06-18T14:37:39+00:00'
+- mission_id: MP-CAT-A013-4C01
+  title: Tool-Plane Scaffolding (Database + Calendar/Email)
+  level: M3
+  status: closed
+  priority: 3
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L2
+  confidence: 82
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A013-4C01_TOOL_PLANE_SCAFFOLDING.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T05:29:41+00:00'

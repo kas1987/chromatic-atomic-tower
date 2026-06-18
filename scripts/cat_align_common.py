@@ -20,6 +20,7 @@ MISSION_GLOB_PATTERNS = [
 ]
 
 BEAD_GLOB_PATTERNS = [
+    'beads/queued/*.yaml',
     'beads/active/*.yaml',
     'beads/completed/*.yaml',
     'beads/failed/*.yaml',

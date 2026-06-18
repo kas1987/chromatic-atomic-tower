@@ -1,0 +1,9 @@
+{
+  "adapter_version": "1.0",
+  "cat_mission_id": "MP-CAT-A012-4C01",
+  "repo_name": "my-project",
+  "sync_mode": "read_only",
+  "cat_repo_url": "https://github.com/kas1987/chromatic-atomic-tower",
+  "validation_rules": ["bead.schema.json"],
+  "allowed_paths": ["src/**", "tests/**"]
+}

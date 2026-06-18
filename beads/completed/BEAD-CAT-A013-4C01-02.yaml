@@ -1,0 +1,63 @@
+bead_id: BEAD-CAT-A013-4C01-02
+mission_id: MP-CAT-A013-4C01
+title: Calendar/Email tool-plane schema + adapter interface
+status: completed
+agent_role: Builder
+autonomy_level: L2
+objective: "Define schemas/tool_plane_comms.schema.json (a validated descriptor for\
+  \ the Calendar/Email \"comms\" tool plane) and scripts/adapters/comms_adapter.py\
+  \ \u2014 a READ-ONLY adapter interface stub with no live credentials, sends, or\
+  \ network I/O."
+allowed_paths:
+- schemas/tool_plane_comms.schema.json
+- scripts/adapters/comms_adapter.py
+- tests/test_tool_plane_comms.py
+- tests/fixtures/toolplanes/comms_example.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+dependencies:
+- BEAD-CAT-A013-4C01-01
+tool_budget:
+  search: 1
+  read: 5
+  write: 4
+  execute: 2
+  max_runtime_minutes: 25
+confidence:
+  minimum: 80
+  current: 83
+  objective_clarity: 87
+  scope_clarity: 85
+  evidence_quality: 80
+  reversibility: 92
+  tool_fit: 85
+  risk_awareness: 82
+  testability: 85
+risk_level: low
+reversibility: high
+stop_conditions:
+- Need to touch a file outside allowed_paths.
+- Need a secret, credential, or live send/connection.
+- Tests fail.
+definition_of_done:
+- schemas/tool_plane_comms.schema.json created and validates a fixture example.
+- scripts/adapters/comms_adapter.py provides a read-only interface stub (no sends/I/O).
+- tests/test_tool_plane_comms.py passes.
+validation:
+- type: tests
+  command: python -m pytest -q tests/test_tool_plane_comms.py
+  evidence_path: evidence/toolplanes/BEAD-CAT-A013-4C01-02_tests.md
+  required: true
+required_output:
+- comms_tool_plane_schema
+- comms_adapter_stub
+- test_suite
+handoff:
+  next_bead_id: BEAD-CAT-A013-4C01-03
+  notes: []
+last_updated: '2026-06-18T05:29:40+00:00'

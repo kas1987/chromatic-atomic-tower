@@ -2,17 +2,17 @@
 
 # CAT Sprint State
 
-_Generated: 2026-06-18T02:51:29+00:00_
+_Generated: 2026-06-18T14:37:39+00:00_
 
 | Field | Value |
 |---|---|
-| Active Sprint | SPRINT-010 |
+| Active Sprint | SPRINT-012 |
 | Tower Status | sprint_idle |
 | Active Mission | — |
 | Active BEAD | — |
 | Mission Status | — |
 | GO Mode | enabled |
-| Sprint Goal | Connect GitHub branches, PRs, commits, and changed files to Mission Packs and BEADs. |
+| Sprint Goal | CAT Portable Project Adapter — .cat folder spec, schemas, generator script, and validation wiring. |
 
 ## Canonical Sources
 

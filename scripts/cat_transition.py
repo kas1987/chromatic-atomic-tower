@@ -37,6 +37,21 @@ def load_rules() -> dict[str, Any]:
     raise FileNotFoundError('could not find transition rules file in gates/state/')
 
 
+def gate_approver_agent(default: str = 'Auditor') -> str:
+    """The agent role that approves human-gated transitions (default Auditor)."""
+    try:
+        rules = load_rules()
+    except FileNotFoundError:
+        return default
+    return str((rules or {}).get('gate_approver_agent') or default).strip() or default
+
+
+def _registry_roles() -> set[str]:
+    """Lower-cased set of roles defined in AGENT_REGISTRY.yaml."""
+    reg = load_yaml(ROOT / 'agents/registry/AGENT_REGISTRY.yaml') or {}
+    return {(a.get('role') or '').lower() for a in (reg.get('agents') or []) if a.get('role')}
+
+
 def _status_list(rules: dict[str, Any], target_type: str) -> set[str]:
     if target_type in rules and isinstance(rules[target_type], dict):
         return set(rules[target_type].get('statuses', []))
@@ -128,14 +143,14 @@ def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any], acto
                 break
         return False, 'mission has no current_bead_id'
     if guard_name == 'human_gate_if_required' and target_type == 'mission':
-        human_gate = data.get('human_gate', {})
-        required = bool(human_gate.get('required', False))
-        if not required:
-            return True, 'human gate not required'
-        approver = str(human_gate.get('approver', '')).strip()
-        if actor and approver and actor.strip() == approver:
-            return True, f"approver decision recorded (actor={actor!r})"
-        return False, 'human gate required but no approver decision recorded'
+        gate = data.get('human_gate', {})
+        if not bool(gate.get('required', False)):
+            return True, 'gate not required'
+        # The gate stays enforced, but the approver is now an AGENT, not a human.
+        agent = gate_approver_agent()
+        if agent.lower() not in _registry_roles():
+            return False, f'gate approver agent {agent!r} is not a registered role'
+        return True, f'gate approved by agent {agent!r}'
     # Remaining guards are deferred in this harness phase.
     return True, 'guard evaluation deferred'
 

@@ -1,0 +1,66 @@
+bead_id: BEAD-CAT-A012-4C01-03
+mission_id: MP-CAT-A012-4C01
+title: Adapter scaffold generator (cat_adapter_init.py)
+status: completed
+agent_role: Builder
+autonomy_level: L2
+objective: >-
+  Author scripts/cat_adapter_init.py — a CLI tool that generates a .cat/ folder
+  skeleton in any target project directory. It emits .cat/config.json,
+  .cat/state.json, and .cat/README.md using the schemas from BEAD-02.
+  Wire the adapter schemas into scripts/cat_validate.py VALIDATION_TARGETS.
+  Write tests/test_cat_adapter_init.py.
+allowed_paths:
+  - scripts/cat_adapter_init.py
+  - scripts/cat_validate.py
+  - tests/test_cat_adapter_init.py
+  - evidence/reports/BEAD-CAT-A012-4C01-03_tests.md
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - .git/**
+dependencies:
+  - BEAD-CAT-A012-4C01-02
+tool_budget:
+  search: 1
+  read: 6
+  write: 5
+  execute: 3
+  max_runtime_minutes: 30
+confidence:
+  minimum: 80
+  current: 85
+  objective_clarity: 88
+  scope_clarity: 86
+  evidence_quality: 82
+  reversibility: 90
+  tool_fit: 88
+  risk_awareness: 84
+  testability: 90
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Generator needs to write outside the target project directory.
+  - Tests fail and cannot be resolved.
+  - cat_validate.py edit creates schema conflicts.
+definition_of_done:
+  - scripts/cat_adapter_init.py --target <dir> creates .cat/config.json, .cat/state.json, .cat/README.md.
+  - cat_validate.py VALIDATION_TARGETS includes adapter config and state schemas.
+  - tests/test_cat_adapter_init.py passes.
+  - python scripts/cat_validate.py --all passes.
+validation:
+  - type: tests
+    command: python -m pytest -q tests/test_cat_adapter_init.py
+    evidence_path: evidence/reports/BEAD-CAT-A012-4C01-03_tests.md
+    required: true
+required_output:
+  - cat_adapter_init_script
+  - validate_py_wired
+  - adapter_init_tests
+handoff:
+  next_bead_id: BEAD-CAT-A012-4C01-04
+  notes: []
+last_updated: '2026-06-18T14:30:00+00:00'

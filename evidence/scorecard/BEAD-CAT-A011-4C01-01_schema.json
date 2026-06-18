@@ -1,0 +1,42 @@
+{
+  "bead_id": "BEAD-CAT-A011-4C01-01",
+  "mission_id": "MP-CAT-A011-4C01",
+  "generated_at": "2026-06-18T06:00:00+00:00",
+  "validation_type": "schema",
+  "status": "passed",
+  "artifacts": [
+    {
+      "path": "schemas/agent_scorecard.schema.json",
+      "action": "created",
+      "validates": "agents/registry/AGENT_SCORECARD.yaml"
+    },
+    {
+      "path": "agents/registry/AGENT_SCORECARD.yaml",
+      "action": "upgraded",
+      "from_version": "0.0.0",
+      "to_version": "1.0.0",
+      "changes": ["added history field per agent"]
+    },
+    {
+      "path": "agents/scorecards/README.md",
+      "action": "created"
+    },
+    {
+      "path": "tests/fixtures/scorecards/valid_scorecard.yaml",
+      "action": "created",
+      "schema_result": "pass"
+    },
+    {
+      "path": "tests/fixtures/scorecards/invalid_scorecard.yaml",
+      "action": "created",
+      "schema_result": "fail (expected)",
+      "errors": 2
+    }
+  ],
+  "schema_validation": {
+    "AGENT_SCORECARD.yaml": "pass",
+    "valid_scorecard.yaml": "pass",
+    "invalid_scorecard.yaml": "fail (expected — score>100, invalid trust level)"
+  },
+  "cat_validate_all": "pass"
+}

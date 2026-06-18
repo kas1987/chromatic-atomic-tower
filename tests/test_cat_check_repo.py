@@ -38,10 +38,22 @@ def test_stray_root_file_is_detected():
         stray.unlink(missing_ok=True)
 
 
-def test_ignored_entries_are_not_flagged():
-    # Cache/VCS entries are gitignored and must never be reported as stray.
-    assert ".git" in cat_check_repo.IGNORED_ROOT_ENTRIES
-    assert ".pytest_cache" in cat_check_repo.IGNORED_ROOT_ENTRIES
+def test_ignored_entries_are_not_flagged(tmp_path):
+    # Behavioral: gitignored caches/secrets must never be reported as stray,
+    # while a genuinely unknown entry must be. Exercises IGNORED_ROOT_ENTRIES
+    # and the IGNORED_ROOT_PATTERNS globs (.env, .env.*, *.pem).
+    (tmp_path / "README.md").write_text("allowed", encoding="utf-8")
+    (tmp_path / ".env").write_text("SECRET=1", encoding="utf-8")
+    (tmp_path / ".env.local").write_text("SECRET=2", encoding="utf-8")
+    (tmp_path / "app_key.pem").write_text("pem", encoding="utf-8")
+    (tmp_path / ".github_app_token_cache").write_text("{}", encoding="utf-8")
+    (tmp_path / "zz_unknown_stray.md").write_text("stray", encoding="utf-8")
+
+    flagged = cat_check_repo.find_stray_root_entries(tmp_path)
+
+    assert "zz_unknown_stray.md" in flagged
+    for ignored in (".env", ".env.local", "app_key.pem", ".github_app_token_cache", "README.md"):
+        assert ignored not in flagged, f"{ignored} should not be flagged as stray"
 
 
 def test_allowlists_cover_required_files():

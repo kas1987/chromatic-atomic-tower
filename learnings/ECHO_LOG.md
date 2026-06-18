@@ -32,10 +32,10 @@ The Echo Log records what the system should remember next time.
 - **Post-closeout tests must use `beads/completed/`.** Hardcoded `beads/active/` paths fail after transition engine moves contracts.
 - **Next sprint:** `MP-CAT-A011-4C01` Agent Scorecard Automation — expand backlog scaffold before GO.
 
-## Sprint 010 PR audit / CI fix (2026-06-18)
+## Sprint 012 / MP-CAT-A012-4C01 (2026-06-18)
 
-- **`active/` cleanout is mandatory before PR.** Transition engine does not remove `beads/active/` or `missions/active/` copies on closeout. Leaving them causes `MISSION_ID_COLLISION`; add explicit delete to pre-PR checklist.
-- **CI workflow BEAD paths must be updated at closeout.** Workflow `--bead` args written during execution point to `beads/active/`; update to `beads/completed/` as part of sprint closeout, not separately.
-- **YAML `path:` values must use forward slashes.** Backslash paths (Windows-authored) break Linux CI `Path.exists()`. Five entries were latent since A005 — new `cat_registry_audit.py` surfaced them first.
-- **GitHub reply API requires PR number in path.** `POST /pulls/comments/{id}/replies` (no PR number) returns 404 silently. Correct path: `/pulls/{pull_number}/comments/{id}/replies`.
-- **`or []` over `.get(key, [])` for nullable YAML.** The default arg is ignored when the key exists with value `null`.
+- **`BEAD_GLOB_PATTERNS` must include `beads/queued/`.** GO pipeline plan_decompose was blind to queued BEADs; add the folder to the front of `cat_align_common.py` `BEAD_GLOB_PATTERNS` whenever a new lifecycle folder is introduced.
+- **`beads: []` in mission contracts.** Never put BEAD IDs in the `beads:` array — schema expects objects; IDs live in separate BEAD YAML files.
+- **Reconciliation target requires sprint-close update.** Add the closed mission to `required_missions` and clear `canonical_active_mission_id` in `LIVE_REPO_ALIGNMENT_TARGET.yaml`; failing this breaks `test_reconciliation_passes` and `test_registry_audit_passes`.
+- **Closeout backslash bug.** `cat_sprint_closeout.py` writes `missions\archived\...` (backslash) on Windows; fix with `path.as_posix()` before writing path into the registry YAML. Low-severity but should be patched.
+- **Next sprint:** Tower is `sprint_idle` — no backlog missions remain. G-8 (live DB/comms integration) requires a new security-gated mission kickoff.
