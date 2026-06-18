@@ -129,6 +129,8 @@ def _score_beads_on_closeout(mission_beads: list, *, dry_run: bool) -> None:
     for bead_id, status, bead_path in mission_beads:
         bead_data = load_yaml(bead_path) if isinstance(bead_path, Path) and bead_path.exists() else {}
         role = ((bead_data or {}).get('agent_role') or 'Builder')
+        if status == 'archived':
+            continue
         result = 'completed' if status == 'completed' else 'failed'
         mode = '--dry-run' if dry_run else '--execute'
         cmd = [

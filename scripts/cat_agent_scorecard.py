@@ -84,6 +84,12 @@ def cmd_score_bead(args: argparse.Namespace) -> int:
 
     event = 'bead_completed' if args.result == 'completed' else 'bead_failed'
     delta = SCORE_DELTA[event]
+
+    increment_path = ROOT / 'agents/scorecards' / f'{args.bead}_{args.role}_{event}.yaml'
+    if not args.dry_run and increment_path.exists():
+        print(f'score-bead [{args.role}] {args.bead}: already scored ({event}); skipping')
+        return 0
+
     old_score = agent.get('score', 0)
     new_score = _clamp_score(old_score + delta, floor)
 
@@ -108,7 +114,6 @@ def cmd_score_bead(args: argparse.Namespace) -> int:
     data['last_updated'] = _utc_now()
     _save_scorecard(data)
 
-    increment_path = ROOT / 'agents/scorecards' / f'{args.bead}_{args.role}_{event}.yaml'
     increment_path.parent.mkdir(parents=True, exist_ok=True)
     with increment_path.open('w', encoding='utf-8') as fh:
         yaml.safe_dump(history_entry | {'role': args.role}, fh, sort_keys=False)
