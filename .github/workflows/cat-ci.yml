@@ -38,7 +38,7 @@ jobs:
           python scripts/cat_pr_check.py --changed-files /tmp/changed_files.txt
 
       - name: Tests
-        run: pytest -q
+        run: pytest --cov=scripts --cov-report=term-missing --cov-report=xml -q
 
       - name: CAT CI report
         if: always()
@@ -53,3 +53,4 @@ jobs:
             evidence/ci/reports/
             evidence/ci/summaries/
             evidence/test-results/
+            coverage.xml
