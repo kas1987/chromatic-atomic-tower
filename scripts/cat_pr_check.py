@@ -93,8 +93,24 @@ def main() -> int:
     args = parser.parse_args()
     mission_id = args.mission or os.getenv('CAT_MISSION', '')
     bead_id = args.bead or os.getenv('CAT_BEAD', '')
+    explicitly_set = bool(mission_id or bead_id)
+    if not mission_id and not bead_id:
+        mission_id, bead_id = _detect_active_ids()
+    elif bead_id and not mission_id:
+        bead_data, _ = load_bead(bead_id)
+        if bead_data:
+            mission_id = bead_data.get('mission_id', '')
     if not mission_id or not bead_id:
-        print('PR scope check: --mission/--bead not set and CAT_MISSION/CAT_BEAD not set — skipping.', file=sys.stderr)
+        if explicitly_set:
+            # Caller provided an ID that couldn't be resolved — let check_scope
+            # report the failure rather than silently skipping.
+            result = check_scope(mission_id, bead_id, load_changed_files(args.changed_files))
+            if args.json:
+                print(json.dumps(result, indent=2))
+            else:
+                print_markdown(result)
+            return 1
+        print('PR scope check: no active mission/bead in args, env, or TOWER_STATE — skipping.', file=sys.stderr)
         return 0
     result = check_scope(mission_id, bead_id, load_changed_files(args.changed_files))
     if args.json:

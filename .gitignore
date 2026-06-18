@@ -7,6 +7,9 @@ pytest-cache-files-*/
 .env
 .env.*
 !.env.example
+*.pem
+.github_app_token_cache
+.beads/
 evidence/logs/*.log
 evidence/test-results/*.xml
 evidence/reports/*CLOSEOUT-EXAMPLE*

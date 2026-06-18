@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import sys
 
 _scripts_path = str(Path(__file__).resolve().parents[1] / 'scripts')
@@ -194,7 +195,8 @@ def test_bead_all_new_tier_formats_with_new_mission():
 # resolve_root_hygiene_mode
 # ===========================================================================
 
-def test_resolve_mode_none_defaults_to_enforce():
+def test_resolve_mode_none_defaults_to_enforce(monkeypatch):
+    monkeypatch.delenv('CAT_ROOT_HYGIENE_MODE', raising=False)
     assert resolve_root_hygiene_mode(None) == 'enforce'
 
 

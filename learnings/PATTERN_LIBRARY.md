@@ -89,6 +89,14 @@ After BEAD closeout, contracts move from `beads/active/` to `beads/completed/`. 
 
 The `mission.schema.json` `beads` field is `array of objects` — it is NOT used to list BEAD IDs. Use `beads: []` in every mission contract. BEAD contracts live as separate YAML files in `beads/queued/`, `beads/active/`, etc. Writing string IDs like `beads: [BEAD-CAT-A012-4C01-01]` fails schema validation.
 
+## Pattern: Snapshot metadata — per-entity keyed map from day one
+
+Snapshot `metadata.json` must store a per-file map `{"contracts": {"bead_X.yaml": "original/relative/path"}}`, not a single `"contract_path"` string. A single string breaks when: (a) two entities are snapshotted in one dir, (b) rollback needs the original folder for a non-move transition, (c) fast transitions reuse the same second-resolution directory. Use microsecond-precision snap IDs (`%Y%m%dT%H%M%S_%f`) to prevent directory collisions.
+
+## Anti-pattern: Env var not cleared in tests
+
+Any test that calls a function reading an env var must call `monkeypatch.delenv('<VAR>', raising=False)`. `CAT_ROOT_HYGIENE_MODE=warn` in the CI workflow caused `test_resolve_mode_none_defaults_to_enforce` to fail in CI while passing locally. Apply this pattern to all env-reading functions.
+
 ## Pattern: Closeout sequence — close before doc work
 
 `MISSION_BEADS_COMPLETE_MISSION_OPEN` fires the moment all BEADs reach a terminal state, immediately breaking freshness + reconciliation tests. Run `cat_sprint_closeout.py --execute` as the very last action, not before evidence/doc BEADs complete.

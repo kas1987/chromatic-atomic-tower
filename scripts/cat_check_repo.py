@@ -66,7 +66,7 @@ ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {
 # Transient / VCS / cache entries that are gitignored and not governed by the manifest.
 IGNORED_ROOT_ENTRIES = {
     '.git', '.venv', '__pycache__', '.pytest_cache', '.claude', '.DS_Store',
-    '.github_app_token_cache',
+    '.github_app_token_cache', '.beads',
 }
 
 # Gitignored glob patterns for secrets/credentials at the root (keep in sync with
