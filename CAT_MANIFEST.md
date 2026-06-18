@@ -82,6 +82,7 @@ checker's `IGNORED_ROOT_ENTRIES` / `IGNORED_ROOT_PATTERNS`.
 | `.env`, `.env.*` | Local secrets/config consumed by `scripts/gh_app_token.sh` (`.env.example` is the tracked template) | no (gitignored) |
 | `*.pem` | GitHub App private keys | no (gitignored) |
 | `.github_app_token_cache` | Cached GitHub App installation token written by `scripts/gh_app_token.sh` | no (gitignored) |
+| `.beads/` | Local bd (beads) database — transient execution state, never committed | no (gitignored) |
 
 
 ## 4. Canonical directories
