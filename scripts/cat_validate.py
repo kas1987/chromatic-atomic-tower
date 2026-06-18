@@ -41,7 +41,7 @@ NEW_MISSION_ID_RE = re.compile(r'^MP-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}$')
 LEGACY_MISSION_ID_RE = re.compile(r'^MP-CAT-([0-9]{3})$')
 EXAMPLE_MISSION_ID_RE = re.compile(r'^MP-CAT-EXAMPLE-[A-Z0-9-]+$')
 
-NEW_BEAD_ID_RE = re.compile(r'^(BD|BEAD)-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}$')
+NEW_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}$')
 LEGACY_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[0-9]{3}-[0-9]{3}$')
 LEGACY_BEAD_EXAMPLE_RE = re.compile(r'^BEAD-CAT-(EXAMPLE-[0-9]+|[0-9]{3}-CLOSEOUT-EXAMPLE)$')
 
