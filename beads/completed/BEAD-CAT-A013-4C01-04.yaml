@@ -1,0 +1,60 @@
+bead_id: BEAD-CAT-A013-4C01-04
+mission_id: MP-CAT-A013-4C01
+title: Conformance + docs + closeout evidence
+status: completed
+agent_role: Scribe
+autonomy_level: L2
+objective: Mark conformance gap G-7 closed in CHROMATIC_ATOMIC_HARNESS_CONFORMANCE.md
+  (Tool Layer rows Database + Calendar/Email -> implemented), add a tool-plane reference
+  doc, and produce the mission closeout evidence reports.
+allowed_paths:
+- docs/architecture/CHROMATIC_ATOMIC_HARNESS_CONFORMANCE.md
+- docs/architecture/TOOL_PLANES.md
+- evidence/toolplanes/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+dependencies:
+- BEAD-CAT-A013-4C01-03
+tool_budget:
+  search: 2
+  read: 8
+  write: 5
+  execute: 2
+  max_runtime_minutes: 25
+confidence:
+  minimum: 80
+  current: 85
+  objective_clarity: 88
+  scope_clarity: 86
+  evidence_quality: 82
+  reversibility: 95
+  tool_fit: 86
+  risk_awareness: 82
+  testability: 80
+risk_level: low
+reversibility: high
+stop_conditions:
+- Need to touch a file outside allowed_paths.
+- Conformance claims not backed by merged code.
+definition_of_done:
+- Conformance map G-7 marked closed; Tool Layer rows updated.
+- docs/architecture/TOOL_PLANES.md created.
+- Closeout evidence reports produced under evidence/toolplanes/.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/toolplanes/A013_closeout.md
+  required: true
+required_output:
+- conformance_update
+- tool_planes_doc
+- closeout_evidence
+handoff:
+  next_bead_id: null
+  notes: []
+last_updated: '2026-06-18T05:29:40+00:00'

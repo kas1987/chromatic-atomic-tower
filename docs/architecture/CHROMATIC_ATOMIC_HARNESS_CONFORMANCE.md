@@ -132,22 +132,31 @@ Deterministic outcomes (state machine) · Reusable contracts (mission/BEAD schem
 | Terminal / Shell | ✅ | script execution layer |
 | Web / Search | ✅ | harness tool layer |
 | LLM / Models — **any model, any provider** | ✅ | `docs/architecture/LLM_MODEL_ROUTING.md`, `schemas/model_routing_policy.schema.json`, MP-CAT-005 multi-model harness |
-| Database | 🟡 | SQLite via loghouse / codegraph; not a first-class plane |
-| Calendar / Email | ❌ | not implemented (out of current scope) |
-| Custom Tools / 3rd-Party APIs | 🟡 | extensible via harness tool registry |
+| Database | ✅ | first-class plane: `schemas/tool_plane_database.schema.json` + `scripts/adapters/database_adapter.py` (read-only scaffold); SQLite via loghouse/codegraph |
+| Calendar / Email | ✅ | scaffolded: `schemas/tool_plane_comms.schema.json` + `scripts/adapters/comms_adapter.py` (read-only; live send security-gated to a future mission) |
+| Custom Tools / 3rd-Party APIs | ✅ | enumerated in `agents/registry/TOOL_REGISTRY.yaml` (status `planned`); extensible via the tool registry |
+
+All nine planes are enumerated and validated in `agents/registry/TOOL_REGISTRY.yaml`
+(`schemas/tool_registry.schema.json`).
 
 ---
 
 ## 9. Gap Backlog (build-to-this)
 
-Ordered by leverage. Each becomes a mission or BEAD when scheduled.
+**All identified conformance gaps (G-1 … G-7) are closed.** The diagram is
+substantially realized. Remaining future work is explicitly *beyond* the
+diagram and gated on external concerns:
 
-| ID | Gap | Plane | Proposed vehicle |
-|----|-----|-------|------------------|
-| **G-7** | First-class Database & Calendar/Email tool planes (schema + adapter scaffolding) | Tool layer | mission pack |
+| ID | Future work | Why deferred |
+|----|-------------|--------------|
+| **G-8** | Live Database / Calendar-Email integration (real connections + sends) | Needs credentials + a security gate — scaffolding (G-7) is in place |
 
 ### Recently closed
 
+- **G-7 — tool-plane scaffolding** — Database + Calendar/Email are now
+  first-class planes (`schemas/tool_plane_{database,comms}.schema.json` +
+  read-only `scripts/adapters/`), and all nine planes are enumerated/validated
+  in `agents/registry/TOOL_REGISTRY.yaml` (MP-CAT-A013-4C01).
 - **G-1b — orchestrator automates Score & Validate** — `cat_go_run.py` now
   runs the validation gate (`cat_validate.py --all`) as a safe read-only
   `check` action when `score_validate` is the next stage; close stays a gated

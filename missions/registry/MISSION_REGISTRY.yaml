@@ -1,5 +1,5 @@
 version: 0.1.0
-last_updated: '2026-06-18T04:13:31+00:00'
+last_updated: '2026-06-18T05:29:41+00:00'
 active_mission_id: ''
 selection_policy:
   priority_order:
@@ -219,3 +219,19 @@ missions:
   path: missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
   created: '2026-06-18'
   last_updated: '2026-06-18'
+- mission_id: MP-CAT-A013-4C01
+  title: Tool-Plane Scaffolding (Database + Calendar/Email)
+  level: M3
+  status: closed
+  priority: 3
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: medium
+  reversibility: high
+  autonomy_level: L2
+  confidence: 82
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A013-4C01_TOOL_PLANE_SCAFFOLDING.yaml
+  created: '2026-06-18'
+  last_updated: '2026-06-18T05:29:41+00:00'

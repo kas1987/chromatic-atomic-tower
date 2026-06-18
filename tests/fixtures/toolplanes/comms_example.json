@@ -1,0 +1,9 @@
+{
+  "plane": "comms",
+  "channels": ["email", "calendar"],
+  "capabilities": ["read", "list"],
+  "default_mode": "read_only",
+  "provider_ref": "owner_mailbox",
+  "allowed_senders": ["cat-bot@chromatic.local"],
+  "forbidden_operations": ["bulk_send"]
+}
