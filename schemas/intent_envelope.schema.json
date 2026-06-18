@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/intent_envelope.schema.json",
+  "title": "CAT Intent Envelope",
+  "description": "Normalized capture of a user/system goal entering the Chromatic Atomic Tower pipeline at stage 1 (Intent).",
+  "type": "object",
+  "required": ["intent_id", "timestamp", "source", "raw_text"],
+  "additionalProperties": false,
+  "properties": {
+    "intent_id": {
+      "type": "string",
+      "description": "Unique intent identifier, e.g. INT-CAT-0001.",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "ISO-8601 UTC timestamp when the intent was captured."
+    },
+    "source": {
+      "type": "string",
+      "description": "Origin of the intent.",
+      "enum": ["user", "issue", "schedule", "agent"]
+    },
+    "raw_text": {
+      "type": "string",
+      "description": "Original goal or trigger text, unmodified.",
+      "minLength": 1
+    },
+    "parsed_goal": {
+      "type": "string",
+      "description": "Normalized one-line goal derived from raw_text."
+    },
+    "constraints": {
+      "type": "array",
+      "description": "Optional list of constraints or guard-rails for this intent.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "priority": {
+      "type": "integer",
+      "description": "Priority level from 1 (lowest) to 5 (highest).",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "proposed_mission_id": {
+      "type": ["string", "null"],
+      "description": "Mission ID proposed for this intent, or null if not yet assigned."
+    },
+    "trigger": {
+      "type": "string",
+      "description": "What initiated the intent (e.g. a specific event, cron, or user action)."
+    }
+  }
+}

@@ -22,10 +22,10 @@ fi
 
 # Use cached token if still valid (expire 5 min early for safety)
 if [[ "$*" != *"--force"* && -f "$CACHE" ]]; then
-  expires=$(python3 -c "import json; d=json.load(open('$CACHE')); print(int(d['expires_at']))" 2>/dev/null || echo 0)
+  expires=$(python3 -c "import json, sys; d=json.load(open(sys.argv[1])); print(int(d['expires_at']))" "$CACHE" 2>/dev/null || echo 0)
   now=$(date +%s)
   if [[ $now -lt $(( expires - 300 )) ]]; then
-    python3 -c "import json; print(json.load(open('$CACHE'))['token'])"
+    python3 -c "import json, sys; print(json.load(open(sys.argv[1]))['token'])" "$CACHE"
     exit 0
   fi
 fi
@@ -37,11 +37,15 @@ if [[ -z "$token" ]]; then
   exit 1
 fi
 
-# Cache with 1-hour expiry
-python3 -c "
-import json, time
-with open('$CACHE', 'w') as f:
-    json.dump({'token': '$token', 'expires_at': time.time() + 3600}, f)
-"
+# Cache with 1-hour expiry. The cache holds a live credential — create it with
+# owner-only permissions (umask) and tighten existing files defensively.
+( umask 077
+  python3 -c "
+import json, sys, time
+with open(sys.argv[2], 'w') as f:
+    json.dump({'token': sys.argv[1], 'expires_at': time.time() + 3600}, f)
+" "$token" "$CACHE"
+)
+chmod 600 "$CACHE" 2>/dev/null || true
 
 echo "$token"

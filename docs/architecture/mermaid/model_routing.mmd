@@ -1,0 +1,13 @@
+flowchart TB
+    M[Mission Pack] --> C[Complexity Classifier]
+    C -->|M1/C1 Simple| L1[local_fast minimax]
+    C -->|M2/C2 Structured| L2[local_coding kimi]
+    C -->|M3/C3 Complex| L3[strong_coding_reasoning claude-sonnet]
+    C -->|M4/C4 Atomic| F[frontier_reasoning claude-opus + Human Gate]
+    L1 --> V[Validation]
+    L2 --> V
+    L3 --> V
+    F --> V
+    V -->|Pass| E[Evidence Bundle]
+    V -->|Fail| FB[Fallback or Escalation]
+    FB --> C

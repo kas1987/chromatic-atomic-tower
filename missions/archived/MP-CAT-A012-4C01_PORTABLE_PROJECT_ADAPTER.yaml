@@ -1,0 +1,106 @@
+mission_id: MP-CAT-A012-4C01
+title: CAT Portable Project Adapter
+level: M3
+status: closed
+owner: Human Owner
+priority: 4
+priority_tier: A
+complexity_order: 4C01
+risk_level: medium
+reversibility: medium
+autonomy_level: L2
+confidence: 82
+confidence_minimum: 80
+created: '2026-06-18'
+last_updated: '2026-06-18T14:37:39+00:00'
+id_convention:
+  scheme: MP-<repo>-<tier><NNN>-<cx>C<oo>
+  type: MP
+  repo: CAT
+  priority_tier: A
+  global_mission_number: '012'
+  complexity: 4
+  relative_execution_order: '01'
+objective: Allow any repo to adopt CAT through a lightweight .cat adapter folder that
+  syncs state and validation rules back to CAT.
+background: Scaffolded from Sprint 004 donor package (MP-CAT-008 Portable Adapter).
+  Multi-Model Harness already shipped as MP-CAT-005; this mission covers portable
+  project adapter work.
+scope:
+  in:
+  - .cat adapter folder specification (design doc + schema)
+  - cat_adapter_config and cat_adapter_state JSON schemas
+  - Adapter scaffold generator script (cat_adapter_init.py)
+  - Validation rule wiring (cat_validate.py targets)
+  - Tests for schemas and generator
+  out:
+  - Production deployment
+  - Cross-repo automatic mutation
+  - Secret handling
+  - Live state sync daemon
+allowed_paths:
+- missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
+- beads/**
+- docs/**
+- schemas/**
+- scripts/**
+- tests/**
+- evidence/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+dependencies:
+- MP-CAT-A009-4C01
+acceptance_criteria:
+- Spec doc defines .cat folder structure, fields, and sync protocol.
+- cat_adapter_config.schema.json and cat_adapter_state.schema.json validate fixture
+  examples.
+- cat_adapter_init.py generates a .cat/ folder skeleton in a target directory.
+- cat_validate.py includes adapter schemas in VALIDATION_TARGETS.
+- All new tests pass.
+success_metrics:
+- Mission contract validates against schema.
+- Test suite passes with no failures.
+required_validation:
+- type: schema
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/MP-CAT-A012-4C01_validation.md
+  required: true
+rollback:
+  required: true
+  plan: Remove new schema/script/test files and revert cat_validate.py change.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 4
+  read: 15
+  write: 12
+  execute: 8
+  max_runtime_minutes: 90
+beads: []
+evidence_requirements:
+- mission_scaffold
+- schema_validation
+- test_suite
+notes:
+- 'Activation unblocked: MP-CAT-A009-4C01 is closed.'
+- Gate approved by Auditor agent (transition_rules.yaml gate_approver_agent).
+transition_history:
+- timestamp: '2026-06-18T14:37:39+00:00'
+  target_type: mission
+  target_id: MP-CAT-A012-4C01
+  from_status: in_progress
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: "Sprint closeout \u2014 all BEADs terminal"
+  evidence: evidence/reports/sprint_closeout.md
+  actor: Auditor
+  message: direct closeout via cat_sprint_closeout.py
+  contract_path: missions\backlog\MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

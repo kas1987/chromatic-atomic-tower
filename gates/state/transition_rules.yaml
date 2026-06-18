@@ -21,10 +21,18 @@ guards:
   evidence_present: Required evidence artifacts for the unit exist on disk.
   validation_passed: All required validations for the unit returned success.
   review_gate_pass: Review gate recorded an approve decision (see gates/review).
-  human_gate_if_required: If human_gate.required is true, an approver decision is recorded.
+  human_gate_if_required: If human_gate.required is true, the approval is recorded by the designated approver agent (gate_approver_agent) rather than a human.
   escalation_ack: A human owner has acknowledged the escalation.
   closeout_complete: Closeout report + learning log recorded (see CLOSEOUT_CHECKLIST).
   rollback_plan_present: Mission rollback.plan is defined and executable.
+
+# ---------------------------------------------------------------------------
+# Gate approver agent — the gate stays enforced, but the approver is an AGENT
+# (not a human). Auditor is the default: independent of the Builder/Orchestrator
+# that perform the work, preserving separation of duties. Must be a role in
+# agents/registry/AGENT_REGISTRY.yaml or the gate fails (misconfiguration).
+# ---------------------------------------------------------------------------
+gate_approver_agent: Auditor
 
 # ---------------------------------------------------------------------------
 # Mission lifecycle — states from mission.schema.json:

@@ -1,0 +1,21 @@
+{
+  "bead_id": "BEAD-CAT-A011-4C01-02",
+  "mission_id": "MP-CAT-A011-4C01",
+  "generated_at": "2026-06-18T06:30:00+00:00",
+  "validation_type": "tests",
+  "status": "passed",
+  "test_file": "tests/test_agent_scorecard.py",
+  "test_count": 18,
+  "passed": 18,
+  "failed": 0,
+  "artifacts": ["scripts/cat_agent_scorecard.py"],
+  "subcommands_implemented": ["score-bead", "penalize", "promote", "demote", "report"],
+  "scoring_formula": {
+    "bead_completed": "+5",
+    "bead_failed": "-10",
+    "incident": "-15",
+    "floor": 40,
+    "promote_threshold": 85,
+    "demote_threshold": 55
+  }
+}

@@ -1,0 +1,87 @@
+bead_id: BEAD-CAT-A006-4C01-02
+mission_id: MP-CAT-A006-4C01
+title: Create mission packet completeness model
+status: active
+agent_role: Orchestrator
+autonomy_level: L2
+objective: Add mission pack traceability and completeness methodology so M1-M4 missions
+  map every objective to BEADs, evidence, and gates, captured in an assertion-evidence
+  map template and a harness closeout checklist.
+allowed_paths:
+- evidence/templates/ASSERTION_EVIDENCE_MAP.yaml
+- schemas/assertion_evidence_map.schema.json
+- checklists/HARNESS_MISSION_CLOSEOUT_CHECKLIST.md
+forbidden_paths:
+- .env
+- .env.*
+- .venv/**
+- secrets/**
+- credentials/**
+- infra/prod/**
+- external_repos/**
+dependencies:
+- BEAD-CAT-A006-4C01-01
+assertions:
+- completeness
+- control_validation
+- evidence_sufficiency
+tool_budget:
+  search: 2
+  read: 8
+  write: 6
+  execute: 2
+  max_runtime_minutes: 30
+confidence:
+  minimum: 70
+  current: 80
+  objective_clarity: 86
+  scope_clarity: 85
+  evidence_quality: 76
+  reversibility: 95
+  tool_fit: 84
+  risk_awareness: 80
+  testability: 78
+risk_level: low
+reversibility: high
+stop_conditions:
+- Required input mission pack missing.
+- Requested path outside allowed_paths.
+- Validation failure that cannot be fixed within this BEAD scope.
+- Need for secret, credential, destructive action, or production access.
+definition_of_done:
+- Assertion-evidence map template exists and validates against its schema.
+- Harness mission closeout checklist exists.
+- cat_validate_harness_alignment.py recognizes the required template.
+- Evidence output location is identified.
+validation:
+- type: harness_alignment
+  command: python scripts/cat_validate_harness_alignment.py --root .
+  evidence_path: evidence/reports/BEAD-CAT-A006-4C01-02_completeness.md
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Orchestrator
+  reviewer: Human Owner
+  notes: "Completeness traceability model \u2014 human M4 review required."
+last_updated: '2026-06-18T01:32:22+00:00'
+transition_history:
+- timestamp: '2026-06-18T01:32:22+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-02
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: A006 backlog completion
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013222Z

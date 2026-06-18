@@ -1,0 +1,142 @@
+bead_id: BEAD-CAT-A006-4C01-08
+mission_id: MP-CAT-A006-4C01
+title: Add Mermaid docs and learning closeout
+status: reviewed
+agent_role: Scribe
+autonomy_level: L2
+objective: Add Mermaid architecture diagrams (mission pipeline, gates, agents, routing,
+  CI/CD ladder), the orchestrator/auditor/builder prompts, and the learning/decision-log
+  artifacts so the architecture is reviewable from diagrams alone and reusable as
+  patterns.
+allowed_paths:
+- docs/architecture/CAT_MISSION_PIPELINE_MERMAID.md
+- docs/architecture/FILES_RESOURCES_TOOLS_AGENTS_SKILLS_MAP.md
+- docs/architecture/LLM_MODEL_ROUTING.md
+- docs/architecture/mermaid/**
+- prompts/**
+- learnings/**
+forbidden_paths:
+- .env
+- .env.*
+- .venv/**
+- secrets/**
+- credentials/**
+- infra/prod/**
+- external_repos/**
+dependencies:
+- BEAD-CAT-A006-4C01-05
+- BEAD-CAT-A006-4C01-07
+assertions:
+- presentation_and_disclosure
+- completeness
+- evidence_sufficiency
+tool_budget:
+  search: 2
+  read: 10
+  write: 12
+  execute: 3
+  max_runtime_minutes: 40
+confidence:
+  minimum: 70
+  current: 80
+  objective_clarity: 85
+  scope_clarity: 84
+  evidence_quality: 76
+  reversibility: 95
+  tool_fit: 84
+  risk_awareness: 78
+  testability: 80
+risk_level: low
+reversibility: high
+stop_conditions:
+- Required input mission pack missing.
+- Requested path outside allowed_paths.
+- Mermaid validation fails and cannot be fixed within this BEAD scope.
+- Need for secret, credential, destructive action, or production access.
+definition_of_done:
+- Mermaid diagrams exist and are validly fenced.
+- Files/resources/tools/agents/skills map and LLM routing doc exist.
+- Orchestrator/auditor/builder prompts and learning artifacts exist.
+- cat_validate_mermaid.py passes.
+- Evidence output location is identified.
+validation:
+- type: mermaid
+  command: python scripts/cat_validate_mermaid.py --root .
+  evidence_path: evidence/reports/BEAD-CAT-A006-4C01-08_mermaid_docs.md
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Scribe
+  reviewer: Human Owner
+  notes: "Diagrams and learning closeout \u2014 Kimi-eligible drafting, Opus review;\
+    \ human M4 review required."
+last_updated: '2026-06-18T01:32:38+00:00'
+transition_history:
+- timestamp: '2026-06-18T01:32:37+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-08
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: A006 backlog completion
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-08.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013237Z
+- timestamp: '2026-06-18T01:32:38+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-08
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: BEAD complete
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-08.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260618T013238Z
+- timestamp: '2026-06-18T01:32:38+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-08
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Harness validation passed
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-08.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013238Z
+- timestamp: '2026-06-18T01:32:38+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A006-4C01-08
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: DoD satisfied
+  evidence: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+  actor: Builder
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A006-4C01-08.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260618T013238Z

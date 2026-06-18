@@ -10,7 +10,7 @@ except ModuleNotFoundError:
 FORBIDDEN_DEFAULTS = ['.env', '.env.*', 'secrets/**', 'infra/prod/**', 'production/**', 'deploy/**']
 
 def load_bead(bead_id: str) -> tuple[dict | None, Path | None]:
-    for base in ['beads/active', 'beads/examples', 'beads/completed']:
+    for base in ['beads/active', 'beads/examples', 'beads/completed', 'beads/failed']:
         for path in sorted((ROOT / base).glob('*.yaml')):
             data = load_yaml(path)
             if data.get('bead_id') == bead_id:
@@ -94,7 +94,7 @@ def main() -> int:
     mission_id = args.mission or os.getenv('CAT_MISSION', '')
     bead_id = args.bead or os.getenv('CAT_BEAD', '')
     if not mission_id or not bead_id:
-        print('PR scope check: --mission/--bead not provided and CAT_MISSION/CAT_BEAD not set — skipping.', file=sys.stderr)
+        print('PR scope check: --mission/--bead not set and CAT_MISSION/CAT_BEAD not set — skipping.', file=sys.stderr)
         return 0
     result = check_scope(mission_id, bead_id, load_changed_files(args.changed_files))
     if args.json:

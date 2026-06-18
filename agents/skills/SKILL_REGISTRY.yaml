@@ -1,0 +1,45 @@
+skill_registry_id: CAT-SKILL-REGISTRY-001
+version: 1
+skills:
+  - skill_id: mission_decomposition
+    owner_agent: orchestrator
+    purpose: Convert mission objectives into atomic BEADs with acceptance criteria and validation.
+    evidence_required:
+      - bead_list
+      - objective_to_bead_trace
+  - skill_id: repo_context_scouting
+    owner_agent: scout
+    purpose: Inspect repo structure, schemas, scripts, docs, and state before planning.
+    evidence_required:
+      - context_snapshot
+      - dependency_notes
+  - skill_id: scoped_execution
+    owner_agent: builder
+    purpose: Execute one BEAD inside allowed paths with tool budget awareness.
+    evidence_required:
+      - changed_files
+      - execution_log
+  - skill_id: governance_review
+    owner_agent: auditor
+    purpose: Validate mission, BEAD, evidence, gates, and approval controls.
+    evidence_required:
+      - gate_result
+      - exception_log
+  - skill_id: evidence_capture
+    owner_agent: scribe
+    purpose: Build evidence bundles and closeout records.
+    evidence_required:
+      - evidence_bundle_index
+      - final_report
+  - skill_id: model_routing
+    owner_agent: orchestrator
+    purpose: Route mission to appropriate model/provider/agent based on complexity and risk.
+    evidence_required:
+      - routing_decision
+      - fallback_rationale
+  - skill_id: security_tripwire
+    owner_agent: security
+    purpose: Stop unsafe, secret-bearing, destructive, or unauthorized operations.
+    evidence_required:
+      - security_review
+      - stop_or_continue_decision

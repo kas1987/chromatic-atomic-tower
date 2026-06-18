@@ -1,0 +1,67 @@
+[loghouse:self] Loading CAT operational signals via cat_adapterà
+[loghouse:self] Loaded 76 raw signals from CAT logs
+[loghouse:self] Normalized: 76 envelopes, 0 deploy events, 0 rejected
+[loghouse:self] Correlated into 1 window(s)
+[loghouse:self] Rules produced 0 raw finding(s)
+[findings] Emitted 0 finding(s) to C:\Users\kas41\AppData\Local\Temp\loghouse
+[dispatch] Emitted 0 dispatch item(s) to C:\Users\kas41\AppData\Local\Temp\loghouse
+[loghouse:self] Complete: 0 finding(s) (0 critical), 0 dispatch item(s)
+# CAT GO Dispatch Packet
+
+Status: ready
+Reason: highest-priority approved mission and active BEAD selected
+
+Mission: MP-CAT-A009-4C01 - Repo Alignment and Mission Packet Reconciliation
+BEAD: BEAD-CAT-A009-4C01-04 - Validate GO resolver, CI, and evidence reports
+Agent Role: Reviewer
+Autonomy: L3
+Confidence: 88 / minimum 82 (high)
+Risk: medium
+Reversibility: high
+
+## Allowed Paths
+- missions/**
+- beads/**
+- state/**
+- docs/**
+- scripts/**
+- tests/**
+- playbooks/**
+- checklists/**
+- gates/**
+- schemas/**
+- evidence/reconciliation/**
+- evidence/reports/**
+- evidence/test-results/**
+
+## Forbidden Paths
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+- .git/**
+
+## Tool Budget
+- search: 1
+- read: 10
+- write: 8
+- execute: 12
+- max_runtime_minutes: 60
+
+## Definition of Done
+- All validation commands pass.
+- Reconciliation report exists under evidence/reconciliation/.
+- GO resolver returns BEAD-CAT-A009-4C01-01 or next queued BEAD.
+
+## Validation
+- registry_audit: `python scripts/cat_registry_audit.py --registry missions/registry/MISSION_REGISTRY.yaml` -> evidence/reconciliation/reconciliation_report.md
+- reconciliation: `python scripts/cat_reconcile.py --target docs/reconciliation/LIVE_REPO_ALIGNMENT_TARGET.yaml --write-report` -> evidence/reconciliation/reconciliation_report.json
+- alignment: `python scripts/cat_align_check.py --strict` -> evidence/reports/MP-CAT-A009-4C01_alignment_check.md
+- tests: `pytest -q` -> evidence/test-results/MP-CAT-A009-4C01_tests.txt
+
+## Stop Conditions
+- Registry audit fails after remediation attempts.
+- Reconciliation check fails.
+- GO resolver cannot identify next legal BEAD.
+- Need to mutate secrets or production config.

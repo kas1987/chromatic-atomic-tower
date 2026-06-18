@@ -8,12 +8,11 @@ on:
 jobs:
   cat-ci:
     runs-on: ubuntu-latest
-    env:
-      CAT_ROOT_HYGIENE_MODE: warn
-      CAT_HYGIENE_KILL_SWITCH: "0"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -26,8 +25,8 @@ jobs:
       - name: Repo structure check
         run: python scripts/cat_check_repo.py
 
-      - name: Root hygiene validation
-        run: python scripts/cat_root_hygiene_strict.py
+      - name: Root hygiene validation (builder mode)
+        run: python scripts/cat_root_hygiene_strict.py --mode warn
 
       - name: Tower status
         run: python scripts/cat_status.py

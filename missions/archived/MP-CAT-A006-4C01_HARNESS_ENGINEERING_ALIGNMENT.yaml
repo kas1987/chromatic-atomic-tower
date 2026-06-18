@@ -1,0 +1,176 @@
+mission_id: MP-CAT-A006-4C01
+title: Harness Engineering Audit Alignment and Autonomous Governance Upgrade
+level: M4
+status: closed
+owner: Human Owner
+priority: 2
+risk_level: high
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 70
+created: "2026-06-17"
+last_updated: "2026-06-17"
+id_convention:
+  scheme: "MP-<repo>-<tier><NNN>-<cx>C<oo>"
+  type: MP (Mission Pack)
+  repo: CAT (Chromatic Atomic Tower)
+  priority_tier: A
+  priority_tier_frozen_at_creation: true
+  global_mission_number: "006"
+  complexity: 4
+  relative_execution_order: "01"
+  note: >-
+    Priority tier is frozen at creation and never renamed; live priority is the
+    mutable `priority` field. See docs/operations/CAT_ID_NAMING_CONVENTION.md.
+objective: >-
+  Extend Chromatic Atomic Tower from a control tower into an audit-grade Harness
+  Engineering operating system where every mission is scoped, decomposed, dispatched,
+  evidenced, validated, governed, scored, closed, and learned from. MP-CAT-A006-4C01 adds
+  the explicit audit methodology layer on top of the existing kernel: assertions,
+  completeness, substantive validation, tests of controls, evidence hierarchy,
+  complexity-aware model routing, CI/CD gates, and promotion controls.
+background: >-
+  Sourced from the external harness_engineering_pack (originally authored as MP-CAT-001
+  against a Sprint 000 snapshot). The repo has since shipped Sprints 000-005, so the
+  pack was renumbered and its artifacts rewritten to the live CAT mission and BEAD
+  schemas. It is also the first mission to adopt the Type-Repo-Priority-Complexity ID
+  convention (MP-CAT-A006-4C01); shipped missions MP-CAT-000..005 keep their legacy IDs.
+  Overlapping concerns (model routing, agent roles, gates) EXTEND the existing kernel
+  rather than duplicate it: complexity routing folds into agents/model_routes.yaml; role
+  audit content folds into agents/roles/*.md; assertion gate contracts live as flat YAML
+  alongside the existing per-stage gate directories.
+scope:
+  in:
+    - Audit-grade Harness Engineering methodology documentation.
+    - Harness assertion library and assertion-to-evidence mapping.
+    - Completeness, substantive validation, control validation, promotion, and release gate contracts.
+    - Skill registry and complexity-aware (M1-M4 / C1-C4) model routing folded into existing routing.
+    - Agent role audit responsibilities folded into existing agents/roles/*.md.
+    - CI governance workflow and CI/CD promotion workflow tied to evidence + confidence.
+    - Validation scripts and pytest coverage for the new contracts.
+    - Mermaid charts for mission pipeline, gates, agents, routing, and CI/CD ladder.
+    - Type-Repo-Priority-Complexity ID naming convention documentation.
+  out:
+    - Production deployment.
+    - Secrets or credential handling.
+    - Cross-repository mutation.
+    - Replacing or rewriting the existing Sprint 000-005 kernel.
+    - Renaming shipped MP-CAT-000..005 missions or their beads.
+    - Auto-merge of governance changes without human M4 approval.
+allowed_paths:
+  - missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml
+  - missions/registry/MISSION_REGISTRY.yaml
+  - beads/active/BEAD-CAT-A006-4C01-*.yaml
+  - docs/architecture/**
+  - docs/operations/**
+  - agents/roles/**
+  - agents/skills/**
+  - agents/model_routes.yaml
+  - gates/**
+  - evidence/templates/**
+  - schemas/gate_result.schema.json
+  - schemas/assertion_evidence_map.schema.json
+  - schemas/model_routing_policy.schema.json
+  - schemas/skill_registry.schema.json
+  - scripts/cat_validate_harness_alignment.py
+  - scripts/cat_validate_mermaid.py
+  - scripts/cat_score_confidence.py
+  - scripts/cat_generate_evidence_bundle.py
+  - tests/test_harness_alignment_contracts.py
+  - playbooks/**
+  - checklists/**
+  - prompts/**
+  - learnings/**
+  - .github/workflows/cat-governance-ci.yml
+  - .github/workflows/cat-cd-promotion.yml
+  - .github/pull_request_template_harness.md
+  - Makefile
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies:
+  - MP-CAT-000
+  - MP-CAT-005
+acceptance_criteria:
+  - "completeness: all mission objectives map to one or more BEAD-CAT-A006-4C01 files."
+  - "control_validation: gate contracts block closeout or promotion when evidence is missing."
+  - "substantive_validation: validation scripts and pytest tests execute successfully."
+  - "classification: M1-M4 complexity and C1-C4 routing map to the model routing policy."
+  - "presentation_and_disclosure: Mermaid charts document pipeline, gates, agents, routing, and CI/CD flow."
+  - "All eight BEAD-CAT-A006-4C01 files validate against the CAT BEAD schema."
+success_metrics:
+  - cat_validate.py --all passes with the eight MP-CAT-A006-4C01 BEADs and new schemas present.
+  - cat_validate_harness_alignment.py --root . passes.
+  - cat_validate_mermaid.py --root . passes.
+  - pytest -q passes including test_harness_alignment_contracts.py.
+  - Confidence score >= 90 for auto-proceed or >= 70 for human-approved proceed.
+required_validation:
+  - type: schema_validation
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/reports/MP-CAT-A006-4C01_schema_validation.md
+    required: true
+  - type: harness_alignment
+    command: python scripts/cat_validate_harness_alignment.py --root .
+    evidence_path: evidence/reports/MP-CAT-A006-4C01_validation_report.json
+    required: true
+  - type: mermaid
+    command: python scripts/cat_validate_mermaid.py --root .
+    evidence_path: evidence/reports/MP-CAT-A006-4C01_mermaid.md
+    required: true
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/MP-CAT-A006-4C01_tests.txt
+    required: true
+rollback:
+  required: true
+  plan: >-
+    Remove missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml, the eight
+    beads/active/BEAD-CAT-A006-4C01-*.yaml files, the new gates/*.yaml contracts, the four
+    new schemas, the four new scripts, tests/test_harness_alignment_contracts.py, the two
+    new .github workflows, and revert the MISSION_REGISTRY.yaml entry plus the additive
+    blocks folded into agents/model_routes.yaml and agents/roles/*.md.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 8
+  read: 60
+  write: 70
+  execute: 20
+  max_runtime_minutes: 180
+beads:
+  - bead_id: BEAD-CAT-A006-4C01-01
+    title: Define Harness assertions and gate contracts
+  - bead_id: BEAD-CAT-A006-4C01-02
+    title: Create mission packet completeness model
+  - bead_id: BEAD-CAT-A006-4C01-03
+    title: Build evidence fabric and exception logging model
+  - bead_id: BEAD-CAT-A006-4C01-04
+    title: Add skills registry and complexity-aware model routing
+  - bead_id: BEAD-CAT-A006-4C01-05
+    title: Add governance playbooks and checklists
+  - bead_id: BEAD-CAT-A006-4C01-06
+    title: Add CI governance validation workflow
+  - bead_id: BEAD-CAT-A006-4C01-07
+    title: Add CI/CD promotion workflow and confidence score
+  - bead_id: BEAD-CAT-A006-4C01-08
+    title: Add Mermaid docs and learning closeout
+evidence_requirements:
+  - assertion_library_and_gate_contracts
+  - mission_completeness_model
+  - evidence_bundle_and_exception_log
+  - skills_registry_and_model_routing
+  - governance_playbooks_and_checklists
+  - ci_governance_workflow
+  - ci_cd_promotion_workflow_and_confidence_score
+  - mermaid_docs_and_learning_record
+notes:
+  - Renumbered from pack MP-CAT-001 to avoid collision with the shipped State Transition Engine.
+  - First mission under the Type-Repo-Priority-Complexity ID convention; legacy IDs unchanged.
+  - Overlaps EXTEND the kernel; no parallel agents/model_routing/ dir and no *_AGENT.md duplicates.
+  - M4 governance change ΓÇö requires recorded Human Owner approval before merge.

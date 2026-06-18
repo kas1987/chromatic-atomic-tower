@@ -1,0 +1,62 @@
+gates:
+  - gate_id: completeness_gate
+    assertion: completeness
+    purpose: Verify all required mission inputs, fields, BEADs, dependencies, evidence, and validations are present.
+    minimum_score: 90
+    required_evidence:
+      - mission_pack
+      - bead_register
+      - assertion_evidence_map
+      - validation_plan
+    fail_action:
+      - block_closeout
+      - create_remediation_bead
+      - escalate_if_m3_or_m4
+  - gate_id: substantive_validation_gate
+    assertion: substantive_validation
+    purpose: Verify direct evidence proves the mission output works.
+    minimum_score: 90
+    required_evidence:
+      - test_results
+      - validation_report
+      - diff_review
+      - runtime_or_schema_check
+    fail_action:
+      - block_promotion
+      - create_fix_bead
+      - reduce_confidence_score
+  - gate_id: control_validation_gate
+    assertion: control_validation
+    purpose: Verify CAT governance controls operated correctly.
+    minimum_score: 90
+    required_evidence:
+      - gate_results
+      - allowed_path_check
+      - mission_and_bead_linkage
+      - audit_log
+    fail_action:
+      - block_merge
+      - require_auditor_review
+  - gate_id: evidence_sufficiency_gate
+    assertion: evidence_sufficiency
+    purpose: Verify evidence is strong enough for mission risk.
+    minimum_score: 85
+    required_evidence:
+      - evidence_bundle_index
+      - exception_log
+      - confidence_score
+    fail_action:
+      - block_closeout
+      - request_additional_evidence
+  - gate_id: promotion_gate
+    assertion: promotion_readiness
+    purpose: Verify mission can merge, release, or continue downstream.
+    minimum_score: 90
+    required_evidence:
+      - passing_ci
+      - confidence_score
+      - reviewer_approval
+      - release_notes_if_applicable
+    fail_action:
+      - block_promotion
+      - require_human_review

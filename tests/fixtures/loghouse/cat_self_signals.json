@@ -1,0 +1,78 @@
+[
+  {
+    "_comment": "bead_transition — BEAD entered in_progress (recent, no rule fires)",
+    "signal_type": "bead_transition",
+    "service": "cat",
+    "env": "local",
+    "ts": "2026-06-18T00:00:00+00:00",
+    "message": "BEAD BEAD-CAT-A007-4C01-02 transitioned active → in_progress",
+    "severity": "info",
+    "commit_sha": "a6aec4f",
+    "deploy_id": "SPRINT-008",
+    "attrs": {
+      "entity_id": "BEAD-CAT-A007-4C01-02",
+      "entity_type": "bead",
+      "from_state": "active",
+      "to_state": "in_progress",
+      "event": "start"
+    }
+  },
+  {
+    "_comment": "closeout allowed — happy path",
+    "signal_type": "closeout",
+    "service": "cat",
+    "env": "local",
+    "ts": "2026-06-18T01:00:00+00:00",
+    "message": "closeout allowed for BEAD-CAT-A007-4C01-01: evidence complete",
+    "severity": "info",
+    "commit_sha": "a6aec4f",
+    "deploy_id": "SPRINT-008",
+    "attrs": {
+      "target_id": "BEAD-CAT-A007-4C01-01",
+      "target_type": "bead",
+      "allowed": true,
+      "reason": "evidence complete",
+      "actor": "Human Owner",
+      "errors": []
+    }
+  },
+  {
+    "_comment": "go_decision allowed — happy path",
+    "signal_type": "go_decision",
+    "service": "cat",
+    "env": "local",
+    "ts": "2026-06-18T01:05:00+00:00",
+    "message": "GO allowed (drift_count=0)",
+    "severity": "info",
+    "commit_sha": "a6aec4f",
+    "deploy_id": "SPRINT-008",
+    "attrs": {
+      "allowed": true,
+      "drift_count": 0,
+      "drifts": [],
+      "sprint": "SPRINT-008"
+    }
+  },
+  {
+    "_comment": "agent_run — confidence above threshold, no finding",
+    "signal_type": "agent_run",
+    "service": "cat",
+    "env": "local",
+    "ts": "2026-06-18T01:10:00+00:00",
+    "message": "agent run [BEAD-CAT-A007-4C01-01]: normalizer extended, tests passing",
+    "severity": "info",
+    "commit_sha": "a6aec4f",
+    "deploy_id": "SPRINT-008",
+    "attrs": {
+      "task_id": "BEAD-CAT-A007-4C01-01",
+      "model": "claude-sonnet-4-6",
+      "role": "worker",
+      "confidence_score": 85.0,
+      "risk_level": "medium",
+      "tools_used": 12,
+      "files_touched": ["scripts/loghouse/normalize.py"],
+      "result": "normalizer extended, tests passing",
+      "validation": "pytest -q passed"
+    }
+  }
+]

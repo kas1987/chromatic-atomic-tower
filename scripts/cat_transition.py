@@ -37,6 +37,21 @@ def load_rules() -> dict[str, Any]:
     raise FileNotFoundError('could not find transition rules file in gates/state/')
 
 
+def gate_approver_agent(default: str = 'Auditor') -> str:
+    """The agent role that approves human-gated transitions (default Auditor)."""
+    try:
+        rules = load_rules()
+    except FileNotFoundError:
+        return default
+    return str((rules or {}).get('gate_approver_agent') or default).strip() or default
+
+
+def _registry_roles() -> set[str]:
+    """Lower-cased set of roles defined in AGENT_REGISTRY.yaml."""
+    reg = load_yaml(ROOT / 'agents/registry/AGENT_REGISTRY.yaml') or {}
+    return {(a.get('role') or '').lower() for a in (reg.get('agents') or []) if a.get('role')}
+
+
 def _status_list(rules: dict[str, Any], target_type: str) -> set[str]:
     if target_type in rules and isinstance(rules[target_type], dict):
         return set(rules[target_type].get('statuses', []))
@@ -108,7 +123,7 @@ def evidence_required(rules: dict[str, Any], target_type: str, from_status: str 
     return False
 
 
-def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any]) -> tuple[bool, str]:
+def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any], actor: str = '') -> tuple[bool, str]:
     if guard_name == 'none':
         return True, 'no precondition'
     if guard_name == 'active_bead_present' and target_type == 'mission':
@@ -128,11 +143,14 @@ def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any]) -> t
                 break
         return False, 'mission has no current_bead_id'
     if guard_name == 'human_gate_if_required' and target_type == 'mission':
-        human_gate = data.get('human_gate', {})
-        required = bool(human_gate.get('required', False))
-        if not required:
-            return True, 'human gate not required'
-        return False, 'human gate required but no approver decision recorded'
+        gate = data.get('human_gate', {})
+        if not bool(gate.get('required', False)):
+            return True, 'gate not required'
+        # The gate stays enforced, but the approver is now an AGENT, not a human.
+        agent = gate_approver_agent()
+        if agent.lower() not in _registry_roles():
+            return False, f'gate approver agent {agent!r} is not a registered role'
+        return True, f'gate approved by agent {agent!r}'
     # Remaining guards are deferred in this harness phase.
     return True, 'guard evaluation deferred'
 
@@ -208,7 +226,7 @@ def update_registry_current_bead(mission_id: str, bead_id: str, to_status: str) 
             if to_status in {'queued', 'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}:
                 mission['current_bead_id'] = bead_id
             elif mission.get('current_bead_id') == bead_id and to_status in {'completed', 'failed', 'archived'}:
-                mission['current_bead_id'] = None
+                mission['current_bead_id'] = ''
             mission['last_updated'] = utc_now()
             updated = True
             break
@@ -230,7 +248,7 @@ def update_tower_state(target_type: str, target_id: str, to_status: str, data: d
             tower['active_mission_id'] = data.get('mission_id')
     elif target_type == 'bead' and to_status in {'completed', 'failed', 'archived'}:
         if tower.get('active_bead_id') == target_id:
-            tower['active_bead_id'] = None
+            tower['active_bead_id'] = ''
     write_yaml(TOWER_STATE_PATH, tower)
 
 
@@ -317,7 +335,7 @@ def apply_transition(
         allowed = False
         message = f'evidence is required for {target_type} transition to {to_status}'
 
-    guard_ok, guard_msg = evaluate_guard(guard, target_type, data)
+    guard_ok, guard_msg = evaluate_guard(guard, target_type, data, actor)
     if allowed and not guard_ok:
         allowed = False
         message = f'guard {guard} failed: {guard_msg}'

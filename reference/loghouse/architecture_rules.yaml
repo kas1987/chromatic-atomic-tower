@@ -1,0 +1,63 @@
+# LOGHOUSE Architecture Rules
+# Each rule validates against schemas/architecture_rule.schema.json
+# decision: allowed | forbidden
+# severity: p0 (critical) | p1 (high) | p2 (medium) | p3 (low)
+
+rules:
+  - rule_id: RULE-001
+    source: frontend
+    target: payments-api
+    edge_type: runtime
+    decision: allowed
+    severity: p2
+    rationale: >-
+      Frontend is the authorised caller of the payments API.
+      This edge is expected and intentional.
+
+  - rule_id: RULE-002
+    source: frontend
+    target: database
+    edge_type: runtime
+    decision: forbidden
+    severity: p0
+    rationale: >-
+      Frontend must never directly access the database.
+      All data access must go through the payments-api or another backend service.
+
+  - rule_id: RULE-003
+    source: payments-api
+    target: database
+    edge_type: runtime
+    decision: allowed
+    severity: p2
+    rationale: >-
+      Payments API is the authorised data-access layer for the database.
+
+  - rule_id: RULE-004
+    source: analytics
+    target: database
+    edge_type: runtime
+    decision: allowed
+    severity: p3
+    rationale: >-
+      Analytics service is permitted to read the database for reporting.
+
+  - rule_id: RULE-005
+    source: analytics
+    target: payments-api
+    edge_type: runtime
+    decision: forbidden
+    severity: p1
+    rationale: >-
+      Analytics must not call the payments API directly; it should use
+      the read replica or data warehouse pipeline instead.
+
+  - rule_id: RULE-006
+    source: audit-log
+    target: payments-api
+    edge_type: runtime
+    decision: forbidden
+    severity: p0
+    rationale: >-
+      The audit-log service is a write-only sink and must not call back
+      into payment flows to prevent audit-trail tampering.

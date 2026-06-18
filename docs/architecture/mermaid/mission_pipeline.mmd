@@ -1,0 +1,17 @@
+flowchart LR
+    I[Intent] --> MP[Mission Pack]
+    MP --> P[Plan and Decompose]
+    P --> B[BEAD Queue]
+    B --> D[Dispatch]
+    D --> E[Execute]
+    E --> M[Magnets Observe and Collect]
+    M --> V[Score and Validate]
+    V --> C{Confidence Gate}
+    C -->|90-100 Auto-Proceed| N[Next BEAD]
+    C -->|70-89 Proceed| R[Reviewer Proceed]
+    C -->|50-69 Self-Heal| H[Remediation BEAD]
+    C -->|0-49 Escalate| X[Human Replan]
+    N --> B
+    H --> B
+    R --> L[Learn and Close]
+    X --> MP

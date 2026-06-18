@@ -1,0 +1,10 @@
+mission_id: MP-CAT-A006-4C01
+exceptions:
+  - exception_id: EX-MP-CAT-A006-4C01-000
+    status: placeholder
+    severity: none
+    title: No exception recorded yet.
+    description: Replace this placeholder when a real exception is identified.
+    related_assertion: none
+    related_bead: none
+    disposition: remove_before_closeout

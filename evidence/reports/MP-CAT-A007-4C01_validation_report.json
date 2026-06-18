@@ -1,0 +1,66 @@
+{
+  "mission_id": "MP-CAT-A007-4C01",
+  "validator": "cat_validate_loghouse.py",
+  "generated_at": "2026-06-18T01:24:32Z",
+  "overall": "PASS",
+  "checks": [
+    {
+      "check": "schemas",
+      "ok": true,
+      "details": [
+        "PASS schema exists and parses: telemetry_envelope.schema.json",
+        "PASS schema exists and parses: finding.schema.json",
+        "PASS schema exists and parses: dependency_edge.schema.json",
+        "PASS schema exists and parses: deploy_event.schema.json",
+        "PASS schema exists and parses: dispatch_queue_item.schema.json",
+        "PASS schema exists and parses: architecture_rule.schema.json",
+        "PASS schema exists and parses: drift_report.schema.json"
+      ]
+    },
+    {
+      "check": "module_imports",
+      "ok": true,
+      "details": [
+        "PASS module imports: scripts.loghouse.normalize",
+        "PASS module imports: scripts.loghouse.correlate",
+        "PASS module imports: scripts.loghouse.rules",
+        "PASS module imports: scripts.loghouse.findings",
+        "PASS module imports: scripts.loghouse.dispatch",
+        "PASS module imports: scripts.loghouse.drift"
+      ]
+    },
+    {
+      "check": "fixtures",
+      "ok": true,
+      "details": [
+        "PASS fixture exists: tests/fixtures/loghouse/raw_signals.json",
+        "PASS fixture exists: tests/fixtures/loghouse/dependency_edges.json",
+        "PASS fixture exists: tests/fixtures/loghouse/expected_normalized.json"
+      ]
+    },
+    {
+      "check": "normalize",
+      "ok": true,
+      "details": [
+        "PASS normalize: 4 envelope(s), 1 deploy event(s), 0 rejected"
+      ]
+    },
+    {
+      "check": "engine_findings_and_dispatch",
+      "ok": true,
+      "details": [
+        "PASS engine findings: 3 finding(s), all have evidence",
+        "PASS engine dispatch: 3 dispatch item(s)"
+      ],
+      "finding_count": 3,
+      "dispatch_count": 3
+    },
+    {
+      "check": "drift_report",
+      "ok": true,
+      "details": [
+        "PASS drift report validates: blocked=1, intentional=2"
+      ]
+    }
+  ]
+}

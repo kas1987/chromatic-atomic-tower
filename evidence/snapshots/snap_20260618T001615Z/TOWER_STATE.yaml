@@ -1,0 +1,22 @@
+version: 0.1.0
+state_id: TOWER-STATE-005
+status: sprint_005_active
+active_sprint: SPRINT-005
+active_mission_id: MP-CAT-005
+active_bead_id: BEAD-CAT-005-005
+go_mode: enabled
+last_updated: '2026-06-18T00:16:13+00:00'
+operator: Human Owner
+control_planes:
+  mission: active
+  execution: state_transition_engine_available
+  evidence: evidence_gate_available
+  learning: multi_model_harness
+  governance: tower_guard_available
+current_constraints:
+- Workers touch only ticket-listed paths.
+- Max 2 retries per worker task.
+- No worker patch merged without Human Owner approval.
+- Opus invoked at most once per ticket (final review only).
+next_command: python scripts/cat_resolve_go.py
+sprint_goal: Prove one end-to-end budget-aware multi-model task loop.

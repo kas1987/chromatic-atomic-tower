@@ -1,0 +1,86 @@
+{
+  "report_id": "CAT-RECONCILIATION-A009",
+  "generated_at": "2026-06-18T02:45:18.900252Z",
+  "status": "passed",
+  "active_mission_id": "",
+  "next_mission_id": "MP-CAT-A010-4C01",
+  "checks": [
+    {
+      "name": "active_mission_matches_target",
+      "passed": true,
+      "details": "'' vs ''"
+    },
+    {
+      "name": "mission_MP-CAT-000_status",
+      "passed": true,
+      "details": "closed vs closed"
+    },
+    {
+      "name": "mission_MP-CAT-001_status",
+      "passed": true,
+      "details": "closed vs closed"
+    },
+    {
+      "name": "mission_MP-CAT-002_status",
+      "passed": true,
+      "details": "closed vs closed"
+    },
+    {
+      "name": "mission_MP-CAT-003_status",
+      "passed": true,
+      "details": "learned vs learned"
+    },
+    {
+      "name": "mission_MP-CAT-004_status",
+      "passed": true,
+      "details": "learned vs learned"
+    },
+    {
+      "name": "mission_MP-CAT-005_status",
+      "passed": true,
+      "details": "closed vs closed"
+    },
+    {
+      "name": "mission_MP-CAT-A006-4C01_status",
+      "passed": true,
+      "details": "closed vs closed"
+    },
+    {
+      "name": "mission_MP-CAT-A007-4C01_status",
+      "passed": true,
+      "details": "closed vs closed"
+    },
+    {
+      "name": "mission_MP-CAT-A008-4C01_status",
+      "passed": true,
+      "details": "learned vs learned"
+    },
+    {
+      "name": "mission_MP-CAT-A009-4C01_status",
+      "passed": true,
+      "details": "closed vs closed"
+    },
+    {
+      "name": "roadmap_contains_Repo Alignment and Mission Packe",
+      "passed": true,
+      "details": "Repo Alignment and Mission Packet Reconciliation"
+    },
+    {
+      "name": "roadmap_contains_GitHub Bridge + PR Governance",
+      "passed": true,
+      "details": "GitHub Bridge + PR Governance"
+    },
+    {
+      "name": "roadmap_contains_Agent Scorecard Automation",
+      "passed": true,
+      "details": "Agent Scorecard Automation"
+    },
+    {
+      "name": "roadmap_contains_CAT Portable Project Adapter",
+      "passed": true,
+      "details": "CAT Portable Project Adapter"
+    }
+  ],
+  "missing": [],
+  "recommendations": []
+}

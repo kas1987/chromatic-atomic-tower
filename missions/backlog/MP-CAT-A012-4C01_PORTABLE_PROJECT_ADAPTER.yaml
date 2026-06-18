@@ -1,0 +1,82 @@
+mission_id: MP-CAT-A012-4C01
+title: CAT Portable Project Adapter
+level: M3
+status: draft
+owner: Human Owner
+priority: 4
+risk_level: medium
+reversibility: medium
+autonomy_level: L2
+confidence_minimum: 80
+created: "2026-06-18"
+last_updated: "2026-06-18"
+id_convention:
+  scheme: "MP-<repo>-<tier><NNN>-<cx>C<oo>"
+  type: MP
+  repo: CAT
+  priority_tier: A
+  global_mission_number: "012"
+  complexity: 4
+  relative_execution_order: "01"
+objective: >-
+  Allow any repo to adopt CAT through a lightweight .cat adapter folder that
+  syncs state and validation rules back to CAT.
+background: >-
+  Scaffolded from Sprint 004 donor package (MP-CAT-008 Portable Adapter).
+  Multi-Model Harness already shipped as MP-CAT-005; this mission covers
+  portable project adapter work.
+scope:
+  in:
+    - .cat adapter folder specification
+    - State sync protocol design
+    - Validation rule export/import
+    - Adapter scaffold generator
+  out:
+    - Production deployment
+    - Cross-repo automatic mutation
+    - Secret handling
+allowed_paths:
+  - missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
+  - beads/**
+  - docs/**
+  - schemas/**
+  - scripts/**
+  - tests/**
+  - evidence/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+dependencies:
+  - MP-CAT-A009-4C01
+acceptance_criteria:
+  - Mission Pack expanded before activation.
+  - BEADs created before dispatch.
+  - Evidence requirements defined.
+  - Human gates identified before execution.
+success_metrics:
+  - Mission contract validates against schema.
+required_validation:
+  - type: schema
+    command: python scripts/cat_validate.py --file missions/backlog/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml
+    evidence_path: evidence/reports/MP-CAT-A012-4C01_scaffold.md
+    required: true
+rollback:
+  required: true
+  plan: Remove backlog mission file and registry entry.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 2
+  read: 10
+  write: 6
+  execute: 4
+  max_runtime_minutes: 60
+beads: []
+evidence_requirements:
+  - mission_scaffold
+notes:
+  - Activation blocked until MP-CAT-A009-4C01 is closed.

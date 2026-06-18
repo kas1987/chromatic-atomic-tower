@@ -17,3 +17,7 @@ Schema files:
 - `evidence.schema.json`
 - `mission_log.schema.json`
 - `tower_state.schema.json`
+- `telemetry_envelope.schema.json` (LOGHOUSE)
+- `finding.schema.json` (LOGHOUSE)
+- `dependency_edge.schema.json` (LOGHOUSE)
+- `deploy_event.schema.json` (LOGHOUSE)

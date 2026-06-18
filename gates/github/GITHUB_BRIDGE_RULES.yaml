@@ -1,0 +1,39 @@
+version: 0.1.0
+gate_id: GATE-GITHUB-BRIDGE-001
+title: GitHub Bridge + PR Governance Rules
+core_rule: No GitHub Mutation = No Mission + BEAD Trace
+required_identifiers:
+  legacy_mission_id_pattern: '^MP-CAT-[0-9]{3}$'
+  legacy_bead_id_pattern: '^BEAD-CAT-[0-9]{3}-[0-9]{3}$'
+  new_mission_id_pattern: '^MP-CAT-[SABC][0-9]{3}-[0-9]C[0-9]{2}$'
+  new_bead_id_pattern: '^BEAD-CAT-[SABC][0-9]{3}-[0-9]C[0-9]{2}-[0-9]{2}$'
+branch_policy:
+  legacy_pattern: '^(feat|fix|docs|chore|test|refactor|governance)/mp-cat-[0-9]{3}-bead-cat-[0-9]{3}-[0-9]{3}-[a-z0-9-]+$'
+  new_pattern: '^(feat|fix|docs|chore|test|refactor|governance)/mp-cat-[sabc][0-9]{3}-[0-9]c[0-9]{2}-bead-cat-[sabc][0-9]{3}-[0-9]c[0-9]{2}-[0-9]{2}-[a-z0-9-]+$'
+  legacy_examples:
+    - feat/mp-cat-005-bead-cat-005-001-github-contract
+  new_examples:
+    - feat/mp-cat-a010-4c01-bead-cat-a010-4c01-01-github-contract
+pr_title_policy:
+  legacy_pattern: '^\[MP-CAT-[0-9]{3}\]\[BEAD-CAT-[0-9]{3}-[0-9]{3}\] .+'
+  new_pattern: '^\[MP-CAT-[SABC][0-9]{3}-[0-9]C[0-9]{2}\]\[BEAD-CAT-[SABC][0-9]{3}-[0-9]C[0-9]{2}-[0-9]{2}\] .+'
+  legacy_example: '[MP-CAT-005][BEAD-CAT-005-001] Define GitHub governance contract'
+  new_example: '[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract'
+commit_policy:
+  required_tokens:
+    - '[MP-CAT-...]'
+    - '[BEAD-CAT-...]'
+changed_file_policy:
+  require_allowed_path_match: true
+  forbid_unlisted_paths: true
+  fail_on_forbidden_path: true
+evidence_policy:
+  closeout_requires_evidence_bundle: true
+  pr_requires_validation_summary: true
+  artifact_root: evidence/github/reports
+human_gate_required_for:
+  - repository settings
+  - branch protection changes
+  - secret scanning configuration changes
+  - deployment workflow activation
+  - production environment mutation

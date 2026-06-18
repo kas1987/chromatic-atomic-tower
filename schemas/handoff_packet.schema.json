@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/handoff_packet.schema.json",
+  "title": "CAT Handoff Packet",
+  "description": "Structured dispatch packet passed when one CAT agent hands work to another.",
+  "type": "object",
+  "required": ["packet_id", "timestamp", "from_role", "to_role", "bead_id"],
+  "additionalProperties": false,
+  "properties": {
+    "packet_id": {
+      "type": "string",
+      "description": "Unique handoff packet identifier, e.g. HOP-CAT-A011-01"
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "ISO-8601 UTC timestamp of the handoff"
+    },
+    "from_role": {
+      "type": "string",
+      "description": "Role of the agent handing off work",
+      "enum": ["Orchestrator", "Scout", "Builder", "Reviewer", "Auditor", "Scribe", "Security"]
+    },
+    "to_role": {
+      "type": "string",
+      "description": "Role of the agent receiving work",
+      "enum": ["Orchestrator", "Scout", "Builder", "Reviewer", "Auditor", "Scribe", "Security"]
+    },
+    "bead_id": {
+      "type": "string",
+      "description": "BEAD identifier this handoff is associated with"
+    },
+    "mission_id": {
+      "type": "string",
+      "description": "Mission pack identifier, e.g. MP-CAT-A011-4C01"
+    },
+    "context_paths": {
+      "type": "array",
+      "description": "File paths the receiving agent needs to read",
+      "items": {
+        "type": "string"
+      }
+    },
+    "continuity": {
+      "type": "object",
+      "description": "State continuity information for the receiving agent",
+      "additionalProperties": false,
+      "properties": {
+        "prior_state": {
+          "type": "string",
+          "description": "Summary of work completed before this handoff"
+        },
+        "next_action": {
+          "type": "string",
+          "description": "First action the receiving agent should take"
+        }
+      }
+    },
+    "allowed_paths": {
+      "type": "array",
+      "description": "Paths the receiving agent is permitted to access",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tool_budget": {
+      "type": "object",
+      "description": "Maximum tool call counts for the receiving agent",
+      "additionalProperties": false,
+      "properties": {
+        "search": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "read": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "write": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "execute": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "reviewer": {
+      "type": "string",
+      "description": "Role or identifier of the agent designated to review this handoff"
+    }
+  }
+}

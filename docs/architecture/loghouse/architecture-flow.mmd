@@ -1,0 +1,45 @@
+graph TD
+    subgraph Ingestion
+        A[Raw Signals<br/>raw_signals.json] -->|normalize_batch| B[Telemetry Envelopes]
+        A -->|normalize_deploy_event| C[Deploy Events]
+        D[Dependency Edges<br/>dependency_edges.json] --> E{Drift Detector}
+    end
+
+    subgraph Correlation
+        B -->|correlate| F[Correlation Windows<br/>keyed by service + deploy_id]
+        C -->|attach to window| F
+    end
+
+    subgraph Rules Engine
+        F -->|evaluate_windows| G[rule_error_spike_after_deploy]
+        F -->|evaluate_windows| H[rule_exception_explosion]
+        D -->|rule_forbidden_dependency_edge| I[Forbidden Edge Rule]
+        E -->|classify_edge| J[Drift Classification<br/>intentional / blocked / accidental / unknown]
+    end
+
+    subgraph Findings Engine
+        G --> K[Raw Finding Dict]
+        H --> K
+        I --> K
+        J -->|blocked edges| K
+        K -->|build_finding + schema validate| L[findings.json]
+        K -->|_render_markdown| M[findings.md]
+    end
+
+    subgraph Dispatch
+        L -->|build_dispatch_item| N[dispatch_queue.json]
+        N -->|agent_role routing| O{CAT Agent Roles}
+        O --> P[AUDITOR]
+        O --> Q[BUILDER]
+        O --> R[REVIEWER]
+        O --> S[ORCHESTRATOR]
+    end
+
+    subgraph Drift Report
+        J --> T[drift_report.json<br/>schema-validated]
+    end
+
+    subgraph Agent Observability
+        U[Agent Run Trace] -->|trace_to_envelopes| B
+        U -->|detect_agent_drift| K
+    end

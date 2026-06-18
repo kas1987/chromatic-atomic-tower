@@ -1,0 +1,56 @@
+name: CAT Governance CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - main
+      - mp-cat-*
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate CAT governance and Harness contracts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: CAT repo health
+        run: python scripts/cat_check_repo.py
+
+      - name: CAT schema validation
+        run: python scripts/cat_validate.py --all
+
+      - name: Harness alignment validation
+        run: python scripts/cat_validate_harness_alignment.py --root .
+
+      - name: Mermaid validation
+        run: python scripts/cat_validate_mermaid.py --root .
+
+      - name: Tests
+        run: pytest -q
+
+      - name: Generate evidence bundle skeleton
+        if: always()
+        run: python scripts/cat_generate_evidence_bundle.py --root . --mission MP-CAT-A006-4C01
+
+      - name: Upload evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mp-cat-a006-4c01-evidence
+          path: evidence/

@@ -1,0 +1,86 @@
+bead_id: BEAD-CAT-A009-4C01-04
+mission_id: MP-CAT-A009-4C01
+title: Validate GO resolver, CI, and evidence reports
+status: queued
+agent_role: Reviewer
+autonomy_level: L3
+objective: >-
+  Run registry audit, reconciliation check, roadmap sync, alignment check,
+  and full test suite; write evidence reports.
+allowed_paths:
+  - missions/**
+  - beads/**
+  - state/**
+  - docs/**
+  - scripts/**
+  - tests/**
+  - playbooks/**
+  - checklists/**
+  - gates/**
+  - schemas/**
+  - evidence/reconciliation/**
+  - evidence/reports/**
+  - evidence/test-results/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - .git/**
+dependencies:
+  - BEAD-CAT-A009-4C01-03
+tool_budget:
+  search: 1
+  read: 10
+  write: 8
+  execute: 12
+  max_runtime_minutes: 60
+confidence:
+  minimum: 82
+  current: 88
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 86
+  reversibility: 92
+  tool_fit: 88
+  risk_awareness: 88
+  testability: 90
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - Registry audit fails after remediation attempts.
+  - Reconciliation check fails.
+  - GO resolver cannot identify next legal BEAD.
+  - Need to mutate secrets or production config.
+definition_of_done:
+  - All validation commands pass.
+  - Reconciliation report exists under evidence/reconciliation/.
+  - GO resolver returns BEAD-CAT-A009-4C01-01 or next queued BEAD.
+validation:
+  - type: registry_audit
+    command: python scripts/cat_registry_audit.py --registry missions/registry/MISSION_REGISTRY.yaml
+    evidence_path: evidence/reconciliation/reconciliation_report.md
+    required: true
+  - type: reconciliation
+    command: python scripts/cat_reconcile.py --target docs/reconciliation/LIVE_REPO_ALIGNMENT_TARGET.yaml --write-report
+    evidence_path: evidence/reconciliation/reconciliation_report.json
+    required: true
+  - type: alignment
+    command: python scripts/cat_align_check.py --strict
+    evidence_path: evidence/reports/MP-CAT-A009-4C01_alignment_check.md
+    required: true
+  - type: tests
+    command: pytest -q
+    evidence_path: evidence/test-results/MP-CAT-A009-4C01_tests.txt
+    required: true
+required_output:
+  - validation_summary
+  - evidence_paths
+  - next_recommended_action
+handoff:
+  from: Scribe
+  to: Reviewer
+  reviewer: Human Owner
+  next_bead_id: null
+last_updated: "2026-06-18"

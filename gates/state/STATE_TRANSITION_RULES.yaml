@@ -1,6 +1,10 @@
 version: 0.1.0
-last_updated: '2026-06-17'
-source_of_truth: gates/state/STATE_TRANSITION_RULES.yaml
+last_updated: '2026-06-18'
+deprecated: true
+superseded_by: gates/state/transition_rules.yaml
+note: >-
+  DEPRECATED — use gates/state/transition_rules.yaml. Retained for historical tests only.
+source_of_truth: gates/state/transition_rules.yaml
 principles:
 - No lifecycle transition without a valid current state.
 - No completion transition without evidence.

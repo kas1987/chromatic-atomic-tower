@@ -1,11 +1,11 @@
 version: 0.1.0
-state_id: TOWER-STATE-005
-status: sprint_005_active
-active_sprint: SPRINT-005
-active_mission_id: MP-CAT-005
-active_bead_id: BEAD-CAT-005-002
+state_id: TOWER-STATE-011
+status: sprint_idle
+active_sprint: SPRINT-012
+active_mission_id: ''
+active_bead_id: ''
 go_mode: enabled
-last_updated: '2026-06-17T22:05:51+00:00'
+last_updated: '2026-06-18T14:37:39+00:00'
 operator: Human Owner
 control_planes:
   mission: active
@@ -18,5 +18,7 @@ current_constraints:
 - Max 2 retries per worker task.
 - No worker patch merged without Human Owner approval.
 - Opus invoked at most once per ticket (final review only).
+- No GitHub Mutation = No Mission + BEAD Trace.
 next_command: python scripts/cat_resolve_go.py
-sprint_goal: Prove one end-to-end budget-aware multi-model task loop.
+sprint_goal: "CAT Portable Project Adapter — .cat folder spec, schemas, generator\
+  \ script, and validation wiring."
