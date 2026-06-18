@@ -43,6 +43,14 @@ def main() -> int:
         report_path = root / 'evidence' / 'reports' / f'{args.mission}_validation_report.json'
         if report_path.exists():
             report = json.loads(report_path.read_text(encoding='utf-8'))
+            report_status = report.get('status', '')
+            if report_status == 'draft':
+                print(
+                    f'ERROR: validation report is still in draft state: {report_path}. '
+                    'Update status to "final" with authoritative gate scores before promotion.',
+                    flush=True,
+                )
+                return 1
             components = report.get('gate_scores', {})
             if not components:
                 print(f'ERROR: validation report exists but contains no gate_scores: {report_path}', flush=True)
