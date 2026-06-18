@@ -1,11 +1,11 @@
 version: 0.1.0
 state_id: TOWER-STATE-011
 status: sprint_idle
-active_sprint: SPRINT-011
+active_sprint: SPRINT-012
 active_mission_id: ''
 active_bead_id: ''
 go_mode: enabled
-last_updated: '2026-06-18T05:29:41+00:00'
+last_updated: '2026-06-18T14:37:39+00:00'
 operator: Human Owner
 control_planes:
   mission: active
@@ -20,5 +20,5 @@ current_constraints:
 - Opus invoked at most once per ticket (final review only).
 - No GitHub Mutation = No Mission + BEAD Trace.
 next_command: python scripts/cat_resolve_go.py
-sprint_goal: "Automate agent scorecard maintenance \u2014 schema, scoring engine,\
-  \ tool-budget tracker, and closeout integration."
+sprint_goal: "CAT Portable Project Adapter \u2014 .cat folder spec, schemas, generator\
+  \ script, and validation wiring."

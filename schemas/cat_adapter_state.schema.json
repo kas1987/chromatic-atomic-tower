@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/cat_adapter_state.schema.json",
+  "title": "CAT Portable Adapter State Snapshot",
+  "description": "Live state snapshot written by the host project after each BEAD transition.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["snapshot_timestamp", "cat_mission_id", "mission_status", "active_bead_id", "last_sync"],
+  "properties": {
+    "snapshot_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp when this snapshot was taken."
+    },
+    "cat_mission_id": {
+      "type": "string",
+      "pattern": "^MP-[A-Z]+-[A-Z0-9]+-[0-9A-Z]+$",
+      "description": "CAT mission ID (must match config.json)."
+    },
+    "mission_status": {
+      "type": "string",
+      "enum": [
+        "draft", "approved", "in_progress", "validating",
+        "reviewed", "completed", "closed", "learned",
+        "blocked", "escalated", "rolled_back", "abandoned", "incident"
+      ],
+      "description": "Current mission status."
+    },
+    "active_bead_id": {
+      "type": ["string", "null"],
+      "description": "Currently active BEAD ID, or null if none."
+    },
+    "last_sync": {
+      "type": ["string", "null"],
+      "description": "ISO-8601 timestamp of last CAT tooling read, or null."
+    },
+    "bead_statuses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["queued", "active", "in_progress", "validating", "reviewed", "completed", "failed", "archived"]
+      },
+      "description": "Map of bead_id to status for all known BEADs."
+    }
+  }
+}

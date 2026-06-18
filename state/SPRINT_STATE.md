@@ -2,17 +2,17 @@
 
 # CAT Sprint State
 
-_Generated: 2026-06-18T05:29:41+00:00_
+_Generated: 2026-06-18T14:37:39+00:00_
 
 | Field | Value |
 |---|---|
-| Active Sprint | SPRINT-011 |
+| Active Sprint | SPRINT-012 |
 | Tower Status | sprint_idle |
 | Active Mission | — |
 | Active BEAD | — |
 | Mission Status | — |
 | GO Mode | enabled |
-| Sprint Goal | Automate agent scorecard maintenance — schema, scoring engine, tool-budget tracker, and closeout integration. |
+| Sprint Goal | CAT Portable Project Adapter — .cat folder spec, schemas, generator script, and validation wiring. |
 
 ## Canonical Sources
 

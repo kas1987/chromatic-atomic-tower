@@ -12,7 +12,7 @@ Each diagram component is marked:
 - 🟡 **Partial** — pieces exist but are not unified, complete, or wired end-to-end.
 - ❌ **Missing** — no implementation yet.
 
-Last reconciled: 2026-06-18 (Sprint 011 / post-A011).
+Last reconciled: 2026-06-18 (Sprint 012 / post-A012).
 
 ---
 
@@ -153,6 +153,12 @@ diagram and gated on external concerns:
 
 ### Recently closed
 
+- **MP-CAT-A012 — CAT Portable Project Adapter** — any repo can now adopt CAT
+  governance by adding a `.cat/` folder. Spec: `docs/architecture/CAT_PORTABLE_ADAPTER.md`.
+  Schemas: `schemas/cat_adapter_{config,state}.schema.json` (Draft 2020-12,
+  `additionalProperties:false`). Generator: `scripts/cat_adapter_init.py`
+  (`--target`, `--update-state`, `--export-schemas`, `--dry-run`). Wired into
+  `cat_validate.py` VALIDATION_TARGETS; 32 new tests (15 schema + 17 generator).
 - **G-7 — tool-plane scaffolding** — Database + Calendar/Email are now
   first-class planes (`schemas/tool_plane_{database,comms}.schema.json` +
   read-only `scripts/adapters/`), and all nine planes are enumerated/validated

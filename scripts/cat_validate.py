@@ -19,6 +19,8 @@ VALIDATION_TARGETS = [
     ('tool registry', ROOT / 'agents/registry/TOOL_REGISTRY.yaml', ROOT / 'schemas/tool_registry.schema.json'),
     ('database tool plane example', ROOT / 'tests/fixtures/toolplanes/database_example.json', ROOT / 'schemas/tool_plane_database.schema.json'),
     ('comms tool plane example', ROOT / 'tests/fixtures/toolplanes/comms_example.json', ROOT / 'schemas/tool_plane_comms.schema.json'),
+    ('adapter config example', ROOT / 'tests/fixtures/adapter/valid_config.json', ROOT / 'schemas/cat_adapter_config.schema.json'),
+    ('adapter state example', ROOT / 'tests/fixtures/adapter/valid_state.json', ROOT / 'schemas/cat_adapter_state.schema.json'),
 ]
 
 MISSION_PATTERNS = [
