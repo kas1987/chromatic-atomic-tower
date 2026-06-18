@@ -41,11 +41,12 @@ Last reconciled: 2026-06-18 (Sprint 011 / post-A011).
 | 6 | **Score & Validate** | ✅ | `scripts/cat_score_confidence.py`, `scripts/cat_validate.py`, `gates/` |
 | 7 | **Continue / Close** | ✅ | `scripts/cat_transition.py`, `scripts/cat_closeout.py`, `scripts/cat_sprint_closeout.py` |
 
-**Gap (G-1).** Each stage has an implementation, but there is **no single
-GO-mode driver** that sequences Intent→…→Close as one auditable pipeline run.
-Today the sequencing is performed by the operator and the harness. A unified
-`cat_go.py` orchestrator (emitting one run record spanning all 7 stages) is the
-primary missing piece for true "GO-mode."
+**Gap (G-1) — spine landed, orchestration pending.** `scripts/cat_go.py` now
+provides the **read-only GO-mode spine**: for a mission it evaluates all 7
+stages and emits one `go_run_record` (see `python scripts/cat_go.py --mission
+MP-CAT-A011-4C01` → 7/7 satisfied). What remains is the *active* orchestrator
+that advances a mission stage-by-stage (mutating state with confidence-gate +
+human-gate checks) rather than only reporting status. Tracked as **G-1a**.
 
 ---
 
@@ -133,7 +134,7 @@ Ordered by leverage. Each becomes a mission or BEAD when scheduled.
 
 | ID | Gap | Plane | Proposed vehicle |
 |----|-----|-------|------------------|
-| **G-1** | No unified GO-mode pipeline driver (Intent→Close as one run record) | Pipeline | New mission: *GO-Mode Orchestrator* |
+| **G-1a** | Active GO-mode orchestrator that *advances* a mission stage-by-stage (state mutation + confidence/human gates), beyond the read-only spine | Pipeline | New mission: *GO-Mode Orchestrator* |
 | **G-2** | Intent stage lacks a normalized intent envelope schema | Input | BEAD under G-1 |
 | **G-3** | Handoff has no structured packet schema (manual `.md` queue) | Orchestrator | `schemas/handoff_packet.schema.json` + wiring |
 | **G-4** | No single bundled "Mission Package" artifact per GO run | Orchestrator | BEAD under G-1 |
@@ -141,6 +142,8 @@ Ordered by leverage. Each becomes a mission or BEAD when scheduled.
 
 ### Recently closed
 
+- **G-1 spine — GO-mode pipeline status driver** — `scripts/cat_go.py`
+  evaluates all 7 stages read-only and emits a `go_run_record` (Sprint 011).
 - **G-5 — Scorecard parity in CI** — `scorecard_parity` check added to
   `scripts/cat_ci.py` `CHECKS`; the gate now fails if any registry role is
   untracked (Sprint 011).
