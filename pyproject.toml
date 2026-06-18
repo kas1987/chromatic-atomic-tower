@@ -5,7 +5,9 @@ description = "Mission-first, BEAD-first, evidence-first control tower for auton
 requires-python = ">=3.11"
 dependencies = [
   "PyYAML>=6.0",
-  "jsonschema>=4.0"
+  "jsonschema>=4.0",
+  "PyJWT>=2.0",
+  "cryptography>=3.4"
 ]
 
 [tool.pytest.ini_options]
