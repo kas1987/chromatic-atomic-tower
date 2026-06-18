@@ -8,16 +8,14 @@ both adapters.
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts" / "adapters"))
+import comms_adapter as ca
+import database_adapter as da
 
-import comms_adapter as ca  # noqa: E402
-import database_adapter as da  # noqa: E402
+ROOT = Path(__file__).resolve().parents[1]
 
 DB_EXAMPLE = json.loads(
     (ROOT / "tests" / "fixtures" / "toolplanes" / "database_example.json").read_text(encoding="utf-8")
