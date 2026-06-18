@@ -66,7 +66,7 @@ forbidden_paths:
 - .git/**
 - agents/registry/AGENT_REGISTRY.yaml
 acceptance_criteria:
-- schema/agent_scorecard.schema.json validates per bead BEAD schema.
+- schemas/agent_scorecard.schema.json validates per bead BEAD schema.
 - AGENT_SCORECARD.yaml upgraded to v1.0.0 with history list.
 - cat_agent_scorecard.py score-bead / promote / demote / penalize / report commands
   functional.

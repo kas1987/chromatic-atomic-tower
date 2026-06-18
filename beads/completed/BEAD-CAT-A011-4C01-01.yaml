@@ -54,7 +54,7 @@ definition_of_done:
 - Evidence JSON produced at evidence/scorecard/BEAD-CAT-A011-4C01-01_schema.json.
 validation:
 - type: schema
-  command: python scripts/cat_validate.py --file schemas/agent_scorecard.schema.json
+  command: python scripts/cat_validate.py --file agents/registry/AGENT_SCORECARD.yaml
   evidence_path: evidence/scorecard/BEAD-CAT-A011-4C01-01_schema.json
   required: true
 - type: tests

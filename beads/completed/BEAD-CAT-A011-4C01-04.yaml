@@ -5,9 +5,9 @@ status: completed
 agent_role: Builder
 autonomy_level: L2
 objective: "Integrate cat_agent_scorecard.py score-bead call into cat_sprint_closeout.py\
-  \ so each BEAD closeout automatically records a scorecard delta. Write the docs/agent_scorecard_spec.md\
-  \ specification. Run the full test suite (226+ \u2192 230+ expected). Produce mission-level\
-  \ evidence report."
+  \ so scorecard deltas are recorded at mission closeout (batch, after all BEADs are\
+  \ terminal). Write the docs/agent_scorecard_spec.md specification. Run the full\
+  \ test suite (226+ \u2192 230+ expected). Produce mission-level evidence report."
 allowed_paths:
 - scripts/cat_sprint_closeout.py
 - docs/agent_scorecard_spec.md

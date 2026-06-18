@@ -64,8 +64,8 @@ required_output:
 - scoring_engine_script
 - test_suite
 handoff:
-  from: Builder
-  to: Reviewer
+  from: Orchestrator
+  to: Builder
   reviewer: Human Owner
   next_bead_id: BEAD-CAT-A011-4C01-03
 last_updated: '2026-06-18T04:04:49+00:00'
