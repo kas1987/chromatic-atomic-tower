@@ -18,8 +18,8 @@ SCRIPTS_PATH = ROOT_PATH / 'scripts'
 if str(SCRIPTS_PATH) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_PATH))
 
-import scripts.cat_transition as cat_transition
-from scripts.cat_transition import (
+import cat_transition
+from cat_transition import (
     _status_list,
     _terminal_statuses,
     _transition_allowed_with_rule,
@@ -334,7 +334,7 @@ class TestEvaluateGuard:
         reg_path.write_text(yaml.safe_dump(registry), encoding='utf-8')
 
         bead_file = guarded_root / 'beads' / 'active' / 'BEAD-TEST-001.yaml'
-        bead_file.write_text(yaml.safe_dump({'bead_id': 'BEAD-TEST-001', 'status': 'active'}))
+        bead_file.write_text(yaml.safe_dump({'bead_id': 'BEAD-TEST-001', 'status': 'active'}), encoding='utf-8')
 
         allowed, msg = evaluate_guard('active_bead_present', 'mission', {'mission_id': 'MP-TEST-001'})
         assert allowed is True
@@ -346,7 +346,7 @@ class TestEvaluateGuard:
         reg_path.write_text(yaml.safe_dump(registry), encoding='utf-8')
 
         bead_file = guarded_root / 'beads' / 'completed' / 'BEAD-DONE-001.yaml'
-        bead_file.write_text(yaml.safe_dump({'bead_id': 'BEAD-DONE-001', 'status': 'completed'}))
+        bead_file.write_text(yaml.safe_dump({'bead_id': 'BEAD-DONE-001', 'status': 'completed'}), encoding='utf-8')
 
         allowed, msg = evaluate_guard('active_bead_present', 'mission', {'mission_id': 'MP-TEST-001'})
         assert allowed is True
@@ -416,33 +416,33 @@ class TestGateApproverAgent:
 
     def test_reads_agent_from_rules(self, tmp_path, monkeypatch):
         rules_path = tmp_path / 'transition_rules.yaml'
-        rules_path.write_text(yaml.safe_dump({'gate_approver_agent': 'Orchestrator'}))
+        rules_path.write_text(yaml.safe_dump({'gate_approver_agent': 'Orchestrator'}), encoding='utf-8')
         monkeypatch.setattr(cat_transition, 'RULES_PATHS', [rules_path])
         assert gate_approver_agent() == 'Orchestrator'
 
     def test_empty_agent_falls_back_to_default(self, tmp_path, monkeypatch):
         rules_path = tmp_path / 'transition_rules.yaml'
-        rules_path.write_text(yaml.safe_dump({'gate_approver_agent': ''}))
+        rules_path.write_text(yaml.safe_dump({'gate_approver_agent': ''}), encoding='utf-8')
         monkeypatch.setattr(cat_transition, 'RULES_PATHS', [rules_path])
         assert gate_approver_agent() == 'Auditor'
 
     def test_null_agent_falls_back_to_default(self, tmp_path, monkeypatch):
         rules_path = tmp_path / 'transition_rules.yaml'
-        rules_path.write_text(yaml.safe_dump({'gate_approver_agent': None}))
+        rules_path.write_text(yaml.safe_dump({'gate_approver_agent': None}), encoding='utf-8')
         monkeypatch.setattr(cat_transition, 'RULES_PATHS', [rules_path])
         assert gate_approver_agent() == 'Auditor'
 
     def test_whitespace_agent_falls_back_to_default(self, tmp_path, monkeypatch):
         rules_path = tmp_path / 'transition_rules.yaml'
-        rules_path.write_text('gate_approver_agent: "   "\n')
+        rules_path.write_text('gate_approver_agent: "   "\n', encoding='utf-8')
         monkeypatch.setattr(cat_transition, 'RULES_PATHS', [rules_path])
         assert gate_approver_agent() == 'Auditor'
 
     def test_first_existing_rules_path_wins(self, tmp_path, monkeypatch):
         path_a = tmp_path / 'a.yaml'
         path_b = tmp_path / 'b.yaml'
-        path_a.write_text(yaml.safe_dump({'gate_approver_agent': 'RoleA'}))
-        path_b.write_text(yaml.safe_dump({'gate_approver_agent': 'RoleB'}))
+        path_a.write_text(yaml.safe_dump({'gate_approver_agent': 'RoleA'}), encoding='utf-8')
+        path_b.write_text(yaml.safe_dump({'gate_approver_agent': 'RoleB'}), encoding='utf-8')
         monkeypatch.setattr(cat_transition, 'RULES_PATHS', [path_a, path_b])
         assert gate_approver_agent() == 'RoleA'
 
@@ -536,7 +536,7 @@ class TestMaybeMoveContract:
     def _make_contract(self, parent: Path, name: str = 'contract.yaml') -> Path:
         parent.mkdir(parents=True, exist_ok=True)
         p = parent / name
-        p.write_text('status: active\n')
+        p.write_text('status: active\n', encoding='utf-8')
         return p
 
     # --- mission terminal statuses ---
@@ -624,7 +624,7 @@ class TestMaybeMoveContract:
         dest_dir = tmp_path / 'missions' / 'archived'
         dest_dir.mkdir(parents=True)
         src = dest_dir / 'MP-007.yaml'
-        src.write_text('status: closed\n')
+        src.write_text('status: closed\n', encoding='utf-8')
         dest = maybe_move_contract(src, 'mission', 'closed')
         assert dest == src
         assert dest.exists()

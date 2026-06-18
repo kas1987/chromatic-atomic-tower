@@ -1,8 +1,5 @@
 from pathlib import Path
 import sys
-import os
-
-import pytest
 
 _scripts_path = str(Path(__file__).resolve().parents[1] / 'scripts')
 if _scripts_path not in sys.path:
