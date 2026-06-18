@@ -32,7 +32,7 @@ def main() -> int:
     print(json.dumps(bundle, indent=2))
 
     if not args.dry_run:
-        out = root / 'evidence' / 'reports' / f'{args.mission}_validation_report.json'
+        out = root / 'evidence' / 'reports' / f'{args.mission}_bundle_skeleton.json'
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(bundle, indent=2) + '\n', encoding='utf-8')
     return 0

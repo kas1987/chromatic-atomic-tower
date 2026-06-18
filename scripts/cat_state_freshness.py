@@ -76,8 +76,9 @@ def check_freshness(root: Path = ROOT) -> FreshnessResult:
         )
 
     # Check 3: Tower active_bead_id matches registry current_bead_id
-    tower_bead = tower.get('active_bead_id')
-    registry_bead = active_entry.get('current_bead_id') if active_entry else None
+    # Normalize: treat None, '', and missing key all as "no active bead"
+    tower_bead = tower.get('active_bead_id') or None
+    registry_bead = (active_entry.get('current_bead_id') if active_entry else None) or None
 
     if tower_bead == registry_bead:
         result.ok.append(f'active_bead_id matches: {tower_bead}')
