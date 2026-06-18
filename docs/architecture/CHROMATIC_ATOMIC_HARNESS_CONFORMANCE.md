@@ -25,7 +25,7 @@ Last reconciled: 2026-06-18 (Sprint 011 / post-A011).
 | **BEADs** — atomic execution units | ✅ | `beads/`, `schemas/bead.schema.json`, `scripts/cat_new_bead.py` |
 | **Agent Layer** — Orchestrator, Scout, Builder, Reviewer, Auditor, Scribe, Security | ✅ | `agents/registry/AGENT_REGISTRY.yaml` (7 roles), `agents/roles/*.md` (7 role files), `agents/registry/AGENT_SCORECARD.yaml` (7 roles, parity-enforced) |
 | **Evidence Fabric** — logs, diffs, tests, metrics, artifacts, lessons | ✅ | `evidence/`, `scripts/cat_evidence.py`, `scripts/cat_generate_evidence_bundle.py` |
-| **Input** — intent, repo state, backlog, constraints | 🟡 | `scripts/cat_issue_intake.py` (issue → intent). No single normalized intent envelope. |
+| **Input** — intent, repo state, backlog, constraints | ✅ | `scripts/cat_issue_intake.py` (issue → intent); `schemas/intent_envelope.schema.json` (normalized intent envelope) |
 
 ---
 
@@ -33,7 +33,7 @@ Last reconciled: 2026-06-18 (Sprint 011 / post-A011).
 
 | # | Stage | Status | Implementation |
 |---|-------|--------|----------------|
-| 1 | **Intent** | 🟡 | `scripts/cat_issue_intake.py` |
+| 1 | **Intent** | ✅ | `scripts/cat_issue_intake.py`; normalized envelope `schemas/intent_envelope.schema.json` |
 | 2 | **Mission Pack** | ✅ | `scripts/cat_new_mission.py`, `scripts/cat_resolve_go.py` |
 | 3 | **Plan & Decompose** | ✅ | `scripts/cat_new_bead.py` |
 | 4 | **Execute** | ✅ | `scripts/harness_run.py` (one loop iteration) |
@@ -41,12 +41,12 @@ Last reconciled: 2026-06-18 (Sprint 011 / post-A011).
 | 6 | **Score & Validate** | ✅ | `scripts/cat_score_confidence.py`, `scripts/cat_validate.py`, `gates/` |
 | 7 | **Continue / Close** | ✅ | `scripts/cat_transition.py`, `scripts/cat_closeout.py`, `scripts/cat_sprint_closeout.py` |
 
-**Gap (G-1) — spine landed, orchestration pending.** `scripts/cat_go.py` now
-provides the **read-only GO-mode spine**: for a mission it evaluates all 7
-stages and emits one `go_run_record` (see `python scripts/cat_go.py --mission
-MP-CAT-A011-4C01` → 7/7 satisfied). What remains is the *active* orchestrator
-that advances a mission stage-by-stage (mutating state with confidence-gate +
-human-gate checks) rather than only reporting status. Tracked as **G-1a**.
+**GO-mode driver — now two-tier.** `scripts/cat_go.py` is the **read-only spine**
+(evaluates all 7 stages → `go_run_record`; A011 → 7/7). `scripts/cat_go_run.py`
+is the **active orchestrator** (G-1a): it picks the next actionable stage and,
+under `--execute --confirm`, advances it by delegating to audited scripts
+(`cat_sprint_closeout.py`) — default dry-run, flag-based human gate, never
+mutates state directly.
 
 ---
 
@@ -70,9 +70,9 @@ human-gate checks) rather than only reporting status. Tracked as **G-1a**.
 | **Evaluate** — confidence/risk/quality/cost scores | ✅ | `scripts/cat_score_confidence.py` |
 | **Recommend** — best next BEAD, alternate path, rollback | 🟡 | `scripts/cat_resolve_go.py` (GO decision); rollback/alternate-path surfacing partial |
 | **Report** — executive summary, findings, evidence bundle | ✅ | `scripts/cat_generate_evidence_bundle.py`, `evidence/reports/` |
-| **Handoff** — dispatch packet, context package, continuity | 🟡 | `state/AGENT_HANDOFF_QUEUE.md` (manual queue); no structured handoff packet schema |
+| **Handoff** — dispatch packet, context package, continuity | ✅ | `schemas/handoff_packet.schema.json` (structured packet: roles, context_paths, continuity, tool_budget); `state/AGENT_HANDOFF_QUEUE.md` queue |
 | **Queue** — next tasks added to backlog with priority | ✅ | `missions/backlog/`, dispatch queue |
-| Outputs: Final Report · Mission Package · Next Steps · Audit Log | 🟡 | Evidence reports + transition/closeout logs cover most; no single bundled "mission package" artifact per GO run |
+| Outputs: Final Report · Mission Package · Next Steps · Audit Log | ✅ | `scripts/cat_mission_package.py` (+ `schemas/mission_package.schema.json`) bundles the review-ready package per mission; transition/closeout JSONL = audit log |
 
 ---
 
@@ -134,13 +134,21 @@ Ordered by leverage. Each becomes a mission or BEAD when scheduled.
 
 | ID | Gap | Plane | Proposed vehicle |
 |----|-----|-------|------------------|
-| **G-1a** | Active GO-mode orchestrator that *advances* a mission stage-by-stage (state mutation + confidence/human gates), beyond the read-only spine | Pipeline | New mission: *GO-Mode Orchestrator* |
-| **G-2** | Intent stage lacks a normalized intent envelope schema | Input | BEAD under G-1 |
-| **G-3** | Handoff has no structured packet schema (manual `.md` queue) | Orchestrator | `schemas/handoff_packet.schema.json` + wiring |
-| **G-4** | No single bundled "Mission Package" artifact per GO run | Orchestrator | BEAD under G-1 |
+| **G-1b** | Orchestrator automates more stages than close (e.g. dispatch, validate) by delegating to audited scripts | Pipeline | extend `cat_go_run.py` |
+| **G-7** | First-class Database & Calendar/Email tool planes | Tool layer | future mission |
 
 ### Recently closed
 
+- **G-1a — active GO-mode orchestrator** — `scripts/cat_go_run.py` picks the
+  next actionable stage and advances it under `--execute --confirm` by
+  delegating to `cat_sprint_closeout.py`; default dry-run, flag-based human
+  gate, no direct state mutation.
+- **G-2 — intent envelope schema** — `schemas/intent_envelope.schema.json`
+  normalizes pipeline stage 1 (Intent), validated via `cat_validate --all`.
+- **G-3 — handoff packet schema** — `schemas/handoff_packet.schema.json`
+  structures the Orchestrator-layer Handoff (roles, context, continuity, budget).
+- **G-4 — mission package artifact** — `scripts/cat_mission_package.py` +
+  `schemas/mission_package.schema.json` produce the review-ready bundle per mission.
 - **G-1 spine — GO-mode pipeline status driver** — `scripts/cat_go.py`
   evaluates all 7 stages read-only and emits a `go_run_record` (Sprint 011).
 - **G-6 — control-plane docs** — `CONTROL_PLANES.md` expanded from stub to a
