@@ -1,27 +1,24 @@
 {
   "version": "0.1.0",
-  "generated_at": "2026-06-17T21:53:09.210361+00:00",
+  "generated_at": "2026-06-18T01:10:36.997553+00:00",
   "root": "C:\\.01_CAT",
-  "status": "fail",
+  "status": "pass",
   "checks": [
     {
-      "name": "state_freshness",
-      "status": "fail",
+      "name": "state_alignment",
+      "status": "pass",
       "ok": [
-        "active_mission_id matches: MP-CAT-004",
-        "active mission file exists: missions\\active\\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml",
-        "active BEAD file exists: beads\\active\\BEAD-CAT-004-004.yaml"
+        "active_mission_id empty in tower and registry",
+        "no active BEAD (bead_id empty)"
       ],
-      "issues": [
-        "active_bead_id mismatch: tower='BEAD-CAT-004-004' registry=None",
-        "active BEAD BEAD-CAT-004-004 has status='archived', expected \"active\""
-      ]
+      "issues": [],
+      "drift": []
     },
     {
       "name": "branch_root_hygiene",
       "status": "pass",
       "ok": [
-        "branch is hygienic: fix/test-isolation-health-2026-06-17",
+        "branch is hygienic: mp-cat-007-log-intelligence",
         "root entries satisfy hygiene allowlist"
       ],
       "issues": []

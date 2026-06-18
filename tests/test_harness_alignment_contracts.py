@@ -5,7 +5,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 
-MISSION = 'missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml'
+MISSION = 'missions/archived/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml'
 
 
 def load_yaml(rel):

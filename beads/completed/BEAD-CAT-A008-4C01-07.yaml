@@ -1,0 +1,60 @@
+bead_id: BEAD-CAT-A008-4C01-07
+mission_id: MP-CAT-A008-4C01
+title: Operator playbooks and collision runbook
+status: completed
+agent_role: Scribe
+autonomy_level: L2
+objective: 'Deliver BEAD 07: Operator playbooks and collision runbook.'
+allowed_paths:
+- playbooks/STATE_ALIGNMENT_PLAYBOOK.md
+- playbooks/SPRINT_CLOSEOUT_PLAYBOOK.md
+- playbooks/GO_MODE_PLAYBOOK.md
+- docs/operations/V2_ALIGNMENT_GUARDS.md
+- evidence/reports/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- infra/prod/**
+dependencies:
+- BEAD-CAT-A008-4C01-06
+tool_budget:
+  search: 2
+  read: 15
+  write: 12
+  execute: 6
+  max_runtime_minutes: 60
+confidence:
+  minimum: 70
+  current: 85
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 80
+  reversibility: 95
+  tool_fit: 88
+  risk_awareness: 82
+  testability: 85
+risk_level: low
+reversibility: high
+stop_conditions:
+- Required path outside allowed_paths.
+- Confidence below minimum.
+definition_of_done:
+- Operator playbooks and collision runbook complete.
+- Validation passes.
+- Evidence recorded.
+validation:
+- type: self_review
+  command: manual
+  evidence_path: evidence/reports/MP-CAT-A008-4C01_bead_07.md
+  required: true
+required_output:
+- updated_files
+- validation_output
+- next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Scribe
+  reviewer: Human Owner
+last_updated: '2026-06-18'

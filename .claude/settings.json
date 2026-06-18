@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /c/Users/kas41/.claude/hooks/usage-tracker.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c '/c/Users/kas41/.claude/bin/usage-sync.sh --quiet --recent 2 >/dev/null 2>&1 &'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

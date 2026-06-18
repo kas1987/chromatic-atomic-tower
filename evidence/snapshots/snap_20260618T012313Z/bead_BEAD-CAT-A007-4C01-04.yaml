@@ -1,0 +1,74 @@
+bead_id: BEAD-CAT-A007-4C01-04
+mission_id: MP-CAT-A007-4C01
+title: Build findings engine, rules, and dispatch writer
+status: queued
+agent_role: Builder
+autonomy_level: L2
+objective: >-
+  Implement the LOGHOUSE findings engine on top of the correlation core: a deterministic
+  rule set (error-spike-after-deploy, forbidden-dependency-edge, exception-explosion), a
+  finding generator that emits schema-valid JSON and a Markdown report, and a dispatch
+  writer that converts findings into agent-routable dispatch_queue_item records. Provide a
+  cat_loghouse.py CLI entrypoint that runs normalize -> correlate -> rules -> findings ->
+  dispatch over an input fixture directory.
+allowed_paths:
+  - scripts/loghouse/rules.py
+  - scripts/loghouse/findings.py
+  - scripts/loghouse/dispatch.py
+  - scripts/loghouse/__init__.py
+  - scripts/cat_loghouse.py
+  - tests/test_loghouse_rules.py
+  - tests/fixtures/loghouse/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - .venv/**
+  - secrets/**
+  - credentials/**
+  - infra/prod/**
+  - external_repos/**
+dependencies:
+  - BEAD-CAT-A007-4C01-03
+tool_budget:
+  search: 3
+  read: 16
+  write: 14
+  execute: 8
+  max_runtime_minutes: 75
+confidence:
+  minimum: 70
+  current: 79
+  objective_clarity: 85
+  scope_clarity: 82
+  evidence_quality: 78
+  reversibility: 90
+  tool_fit: 84
+  risk_awareness: 80
+  testability: 88
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - Correlation core (BEAD-03) output contract unavailable.
+  - Requested path outside allowed_paths.
+  - A rule would emit a finding without at least one evidence item.
+  - Need for secret, credential, destructive action, or production access.
+definition_of_done:
+  - rules.py implements the three deterministic rules, each attaching at least one evidence item per finding.
+  - findings.py emits finding.schema.json-valid JSON and a Markdown report.
+  - dispatch.py emits dispatch_queue_item.schema.json-valid records with owner, evidence reference, acceptance criteria, and stop condition.
+  - cat_loghouse.py runs the full pipeline over a fixture directory and writes findings plus dispatch items.
+  - tests/test_loghouse_rules.py asserts a golden finding and dispatch item from fixtures and passes.
+validation:
+  - type: tests
+    command: pytest -q tests/test_loghouse_rules.py
+    evidence_path: evidence/test-results/MP-CAT-A007-4C01_tests.txt
+    required: true
+required_output:
+  - updated_files
+  - validation_output
+  - next_recommended_bead
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+  notes: Findings are advisory and evidence-backed; no auto-remediation or auto-PR. Goldens are the acceptance anchor.

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cat.local/schemas/deploy_event.schema.json",
+  "title": "Deploy Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "deploy_id",
+    "service",
+    "commit_sha",
+    "actor",
+    "started_at",
+    "completed_at",
+    "status"
+  ],
+  "properties": {
+    "deploy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "service": {
+      "type": "string",
+      "minLength": 1
+    },
+    "commit_sha": {
+      "type": "string",
+      "minLength": 7
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["started", "succeeded", "failed", "rolled_back"]
+    }
+  }
+}
