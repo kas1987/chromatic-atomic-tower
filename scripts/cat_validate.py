@@ -262,6 +262,9 @@ def main() -> int:
         elif file_path.name == 'TOWER_STATE.yaml':
             schema = ROOT / 'schemas/tower_state.schema.json'
             kind = 'tower state'
+        elif file_path.name == 'AGENT_SCORECARD.yaml':
+            schema = ROOT / 'schemas/agent_scorecard.schema.json'
+            kind = 'agent scorecard'
         else:
             print('Could not infer schema for file.')
             return 2

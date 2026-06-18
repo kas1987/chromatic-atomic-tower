@@ -66,6 +66,10 @@ required_output:
 - closeout_integration
 - scorecard_spec_doc
 - final_evidence_report
+notes:
+- Scorecard updates fire at sprint closeout (batch), not at individual BEAD completions.
+  This is intentional per the human-gate requirement — all trust-level changes require
+  Human Owner approval before writing.
 handoff:
   from: Builder
   to: Human Owner
