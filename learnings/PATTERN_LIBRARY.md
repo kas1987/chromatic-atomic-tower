@@ -76,3 +76,15 @@ New root-level PDR or sprint plan files must be added to **both** `scripts/cat_c
 ## Pattern: Test paths follow BEAD lifecycle folder
 
 After BEAD closeout, contracts move from `beads/active/` to `beads/completed/`. Tests and validation examples that hardcode `beads/active/` paths will fail post-closeout. Reference `beads/completed/` for archived sprint fixtures or resolve path dynamically.
+
+## Anti-pattern: Backslash paths in cross-platform YAML
+
+YAML `path:` values written on Windows with backslashes (`missions\archived\...`) are valid strings but break `Path(p).exists()` on Linux CI runners. New path-resolution scripts will surface latent entries that survived previous CI because nothing read them. Fix: (1) always write forward slashes for repo-relative paths; (2) add `p.replace('\\', '/')` normalization in any code that resolves YAML paths on disk.
+
+## Anti-pattern: `active/` directories not emptied before closeout PR
+
+The transition engine writes contracts to `beads/active/` and `missions/active/` during execution and their `completed/`/`archived/` counterparts on closeout, but does **not** delete the `active/` copy automatically. Leaving stale files in `active/` causes `MISSION_ID_COLLISION` in `cat_align_check.py` and fails `test_live_repo_is_fresh`. Explicitly remove stale `active/` files as the final pre-PR step for any sprint closeout.
+
+## Anti-pattern: `dict.get(key, [])` for nullable YAML fields
+
+`dict.get(key, default)` returns the default only when the key is **absent**. If a YAML file sets the key explicitly to `null`, `.get()` returns `None` — not the default — which causes `TypeError` when iterated. Always use `(data.get(key) or [])` for any field that may be null-set in YAML.

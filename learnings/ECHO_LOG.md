@@ -31,3 +31,11 @@ The Echo Log records what the system should remember next time.
 - **GitHub Bridge validators need dual ID regex.** Legacy `[MP-CAT-###]` and A-tier `[MP-CAT-A010-4C01]` patterns must both pass; donor-only legacy regex breaks new-work policy.
 - **Post-closeout tests must use `beads/completed/`.** Hardcoded `beads/active/` paths fail after transition engine moves contracts.
 - **Next sprint:** `MP-CAT-A011-4C01` Agent Scorecard Automation — expand backlog scaffold before GO.
+
+## Sprint 010 PR audit / CI fix (2026-06-18)
+
+- **`active/` cleanout is mandatory before PR.** Transition engine does not remove `beads/active/` or `missions/active/` copies on closeout. Leaving them causes `MISSION_ID_COLLISION`; add explicit delete to pre-PR checklist.
+- **CI workflow BEAD paths must be updated at closeout.** Workflow `--bead` args written during execution point to `beads/active/`; update to `beads/completed/` as part of sprint closeout, not separately.
+- **YAML `path:` values must use forward slashes.** Backslash paths (Windows-authored) break Linux CI `Path.exists()`. Five entries were latent since A005 — new `cat_registry_audit.py` surfaced them first.
+- **GitHub reply API requires PR number in path.** `POST /pulls/comments/{id}/replies` (no PR number) returns 404 silently. Correct path: `/pulls/{pull_number}/comments/{id}/replies`.
+- **`or []` over `.get(key, [])` for nullable YAML.** The default arg is ignored when the key exists with value `null`.
