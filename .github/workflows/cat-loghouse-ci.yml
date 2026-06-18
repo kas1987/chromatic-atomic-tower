@@ -1,0 +1,71 @@
+name: LOGHOUSE CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  loghouse-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── Schema + governance validation ──────────────────────────────────
+      - name: CAT governance validation
+        run: python scripts/cat_validate.py --all
+
+      # ── LOGHOUSE engine over fixtures ────────────────────────────────────
+      - name: LOGHOUSE engine (pipeline smoke test)
+        run: |
+          python scripts/cat_loghouse.py \
+            --input tests/fixtures/loghouse \
+            --output /tmp/loghouse_ci_output
+
+      # ── Pytest suites ────────────────────────────────────────────────────
+      - name: LOGHOUSE pytest suites
+        run: |
+          pytest -q \
+            tests/test_loghouse_schemas.py \
+            tests/test_loghouse_engine.py \
+            tests/test_loghouse_rules.py \
+            tests/test_loghouse_drift.py
+
+      # ── Full test suite ───────────────────────────────────────────────────
+      - name: Full pytest suite
+        run: pytest -q
+
+      # ── Drift gate ────────────────────────────────────────────────────────
+      # Fails the build if any P0/P1 architecture-rule violation is present
+      # in the standard fixture set.  The gate script exits non-zero when it
+      # detects a blocked edge at severity p0 or p1.
+      - name: Drift gate (P0/P1 forbidden-edge check)
+        run: python scripts/loghouse/drift_gate.py --rules reference/loghouse/architecture_rules.yaml --edges tests/fixtures/loghouse/dependency_edges.json --fail-on p0,p1
+
+      # The clean fixture must pass the gate (no forbidden edges at P0/P1).
+      - name: Drift gate (clean fixture — must pass)
+        run: python scripts/loghouse/drift_gate.py --rules reference/loghouse/architecture_rules.yaml --edges tests/fixtures/loghouse/dependency_edges_clean.json --fail-on p0,p1
+
+      # ── LOGHOUSE alignment validator ─────────────────────────────────────
+      - name: LOGHOUSE alignment validator
+        run: python scripts/cat_validate_loghouse.py --root .
+
+      # ── Upload evidence ───────────────────────────────────────────────────
+      - name: Upload LOGHOUSE evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: loghouse-ci-evidence
+          path: |
+            evidence/reports/MP-CAT-A007-4C01_*.json
+            evidence/reports/MP-CAT-A007-4C01_*.md
+            /tmp/loghouse_ci_output/

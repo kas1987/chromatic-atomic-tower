@@ -1,0 +1,108 @@
+# LOGHOUSE Vector Pipeline Configuration (local/MVP template)
+# Maps raw log files and JSON events to the telemetry_envelope schema.
+# Replace placeholder paths before production use.
+
+sources:
+  raw_logs:
+    type: file
+    include:
+      - /tmp/loghouse/raw/*.log
+      - /tmp/loghouse/raw/*.jsonl
+    line_delimiter: "\n"
+    read_from: beginning
+
+  raw_events:
+    type: file
+    include:
+      - /tmp/loghouse/raw/*.json
+    line_delimiter: "\n"
+    read_from: beginning
+
+transforms:
+  parse_json:
+    type: remap
+    inputs: [raw_logs, raw_events]
+    source: |
+      # Parse JSON if raw string
+      if is_string(.) {
+        ., err = parse_json(string!(.message))
+        if err != null {
+          .parse_error = err
+        }
+      }
+
+  enrich_loghouse_attrs:
+    type: remap
+    inputs: [parse_json]
+    source: |
+      # Map to telemetry_envelope required fields
+      # service
+      if !exists(.service) {
+        .service = get_env_var!("LOGHOUSE_SERVICE") ?? "unknown-service"
+      }
+      # env
+      if !exists(.env) {
+        .env = get_env_var!("LOGHOUSE_ENV") ?? "dev"
+      }
+      # signal_type
+      if !exists(.signal_type) {
+        .signal_type = "log"
+      }
+      # ts — use existing timestamp field or current time
+      if !exists(.ts) {
+        if exists(.timestamp) {
+          .ts = .timestamp
+        } else if exists(.time) {
+          .ts = .time
+        } else {
+          .ts = now()
+        }
+      }
+      # commit_sha
+      if !exists(.commit_sha) {
+        .commit_sha = get_env_var!("COMMIT_SHA") ?? "0000000"
+      }
+      # deploy_id
+      if !exists(.deploy_id) {
+        .deploy_id = get_env_var!("DEPLOY_ID") ?? "deploy-local"
+      }
+      # severity normalisation
+      if !exists(.severity) {
+        if exists(.level) {
+          .severity = downcase(string!(.level))
+        } else {
+          .severity = "info"
+        }
+      }
+      # message fallback
+      if !exists(.message) {
+        if exists(.msg) {
+          .message = .msg
+        } else {
+          .message = "no message"
+        }
+      }
+      # attrs — carry remaining fields
+      if !exists(.attrs) {
+        .attrs = {}
+      }
+
+  filter_valid:
+    type: filter
+    inputs: [enrich_loghouse_attrs]
+    condition: |
+      exists(.service) && exists(.env) && exists(.signal_type) && exists(.ts) && exists(.commit_sha) && exists(.deploy_id)
+
+sinks:
+  loghouse_output:
+    type: file
+    inputs: [filter_valid]
+    path: /tmp/loghouse/vector-output-%Y-%m-%d.jsonl
+    encoding:
+      codec: json
+
+  loghouse_debug:
+    type: console
+    inputs: [filter_valid]
+    encoding:
+      codec: json

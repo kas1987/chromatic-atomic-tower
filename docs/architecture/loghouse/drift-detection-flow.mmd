@@ -1,0 +1,29 @@
+flowchart TD
+    A[dependency_edges.json] --> B[load_architecture_rules<br/>architecture_rules.yaml]
+    A --> C[classify_edge loop]
+    B --> C
+
+    C --> D{Rule match?}
+
+    D -->|rule found, decision=allowed| E[intentional]
+    D -->|rule found, decision=forbidden| F[blocked]
+    D -->|no rule, edge.allowed=False| G[accidental]
+    D -->|no rule, edge.allowed=True| H[unknown]
+
+    F --> I[rule_forbidden_dependency_edge]
+    I --> J[Raw Finding Dict<br/>category=drift, evidence=edge]
+    J --> K[emit_findings<br/>findings.json]
+    K --> L[emit_dispatch<br/>dispatch_queue.json]
+
+    E --> M[Drift Report Summary]
+    F --> M
+    G --> M
+    H --> M
+
+    M --> N[drift_report.json<br/>schema-validated]
+
+    subgraph CI Drift Gate
+        N --> O{Any blocked edge<br/>at P0 or P1?}
+        O -->|yes| P[drift_gate.py exits 1<br/>BUILD FAILS]
+        O -->|no| Q[drift_gate.py exits 0<br/>BUILD PASSES]
+    end

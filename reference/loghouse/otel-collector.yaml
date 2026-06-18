@@ -1,0 +1,99 @@
+# LOGHOUSE OpenTelemetry Collector Configuration (local/MVP template)
+# Enriches required LOGHOUSE attributes on every signal.
+# Replace placeholder endpoints before production use.
+
+extensions:
+  health_check:
+    endpoint: "0.0.0.0:13133"
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+      http:
+        endpoint: "0.0.0.0:4318"
+
+  filelog:
+    include:
+      - /var/log/services/*.log
+    start_at: beginning
+    operators:
+      - type: json_parser
+        timestamp:
+          parse_from: attributes.ts
+          layout: "%Y-%m-%dT%H:%M:%SZ"
+
+processors:
+  # Inject required LOGHOUSE attributes if not present at source
+  resource:
+    attributes:
+      - action: insert
+        key: service.name
+        value: "unknown-service"
+        from_attribute: service.name
+      - action: insert
+        key: deployment.environment
+        value: "dev"
+        from_attribute: deployment.environment
+      - action: insert
+        key: loghouse.commit_sha
+        value: "${COMMIT_SHA:-0000000}"
+      - action: insert
+        key: loghouse.deploy_id
+        value: "${DEPLOY_ID:-deploy-local}"
+      - action: insert
+        key: loghouse.signal_type
+        value: "log"
+
+  # Rename to LOGHOUSE envelope fields
+  attributes:
+    actions:
+      - action: upsert
+        key: service
+        from_attribute: service.name
+      - action: upsert
+        key: env
+        from_attribute: deployment.environment
+      - action: upsert
+        key: commit_sha
+        from_attribute: loghouse.commit_sha
+      - action: upsert
+        key: deploy_id
+        from_attribute: loghouse.deploy_id
+      - action: upsert
+        key: signal_type
+        from_attribute: loghouse.signal_type
+
+  batch:
+    timeout: 5s
+    send_batch_size: 512
+
+exporters:
+  # Local file exporter — no secrets required
+  file:
+    path: /tmp/loghouse/otel-output.jsonl
+    rotation:
+      max_megabytes: 50
+      max_days: 7
+      max_backups: 3
+
+  # Debug exporter for local development
+  debug:
+    verbosity: normal
+
+service:
+  extensions: [health_check]
+  pipelines:
+    logs:
+      receivers: [otlp, filelog]
+      processors: [resource, attributes, batch]
+      exporters: [file, debug]
+    metrics:
+      receivers: [otlp]
+      processors: [resource, attributes, batch]
+      exporters: [file, debug]
+    traces:
+      receivers: [otlp]
+      processors: [resource, attributes, batch]
+      exporters: [file, debug]
