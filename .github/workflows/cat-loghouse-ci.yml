@@ -92,3 +92,4 @@ jobs:
             evidence/reports/MP-CAT-A007-4C01_*.json
             evidence/reports/MP-CAT-A007-4C01_*.md
             /tmp/loghouse_ci_output/
+          retention-days: 14
