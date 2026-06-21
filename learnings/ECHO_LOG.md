@@ -46,3 +46,10 @@ The Echo Log records what the system should remember next time.
 - **`sprint_idle` skip in enforcement scripts is by design.** Governance PRs (retros, conformance, structural fixes) are legitimate during idle state; fail-closed would block them. Document skip reason explicitly in the stderr message.
 - **Stale mission files cause `MISSION_ID_COLLISION`.** Before merging any PR touching `missions/`, run `pytest tests/test_state_freshness.py -k test_live_repo_is_fresh` locally.
 - **YAML list items should be indented 2 spaces under their key**, not at the same level — the at-level form is valid per spec but flagged by Copilot as invalid.
+
+## Sprint 013 / coverage-80pct spike (2026-06-18)
+
+- **Dual-namespace test imports corrupt real files.** Any test that mixes `import cat_foo as mod` with `from scripts.cat_foo import func` risks patching the wrong namespace and writing to real repo state. CI caught it as a repeating `scorecard_parity` failure. Enforce single-namespace pattern in PR review.
+- **`.coverage` must be in root allowlist.** First coverage PR will always hit `schema_validation FAIL` unless `.coverage` is added to `gates/hygiene/root_allowlist.yaml` `ignored_entries` upfront. Make this part of the "add pytest-cov" checklist.
+- **Coverage target 80 % reached — do not let it regress.** `pyproject.toml` `--cov-fail-under=55` is a stale floor; update to `80` to protect the new baseline.
+- **Rollback integration tests still missing** — carried from Sprint 013. Next test sprint should prioritise this.

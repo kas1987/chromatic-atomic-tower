@@ -33,8 +33,8 @@ omit = [
 [tool.coverage.report]
 show_missing = true
 skip_covered = false
-# Floor below the current measured coverage; raise as coverage improves.
-fail_under = 55
+# Floor raised to match measured coverage (2026-06-18 spike: 80.20%).
+fail_under = 80
 exclude_lines = [
   "pragma: no cover",
   "if __name__ == .__main__.:",

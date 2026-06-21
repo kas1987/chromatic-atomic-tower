@@ -30,6 +30,21 @@ Learning: Schema validation should be run as a post-write assertion inside the t
 
 ---
 
+## INC-003
+
+Date: 2026-06-18
+Mission: test/coverage-80pct (PR #45)
+BEAD: N/A (test-only spike)
+Agent: Claude Code (Sonnet 4.6)
+Trigger: Extended test `test_record_writes_and_prints` used a mixed import strategy — `import cat_score_agent as csa` (to monkeypatch) + `from scripts.cat_score_agent import main` (to call) — creating two distinct `sys.modules` entries for the same source file.
+What happened: `monkeypatch.setattr(csa, 'SCORECARD_PATH', tmp_path/...)` patched the `cat_score_agent` namespace. But `main()` was imported from `scripts.cat_score_agent` and read its globals from that separate namespace, where `SCORECARD_PATH` was still the real path. On every pytest run, `TestRole` was written to `agents/registry/AGENT_SCORECARD.yaml`, causing `scorecard_parity` to fail for all tests that ran after it — 5 CI failures on PR #45.
+Files affected: `agents/registry/AGENT_SCORECARD.yaml` (corrupted per run), `agents/scorecards/BEAD-TEST-001_TestRole_bead_completed.yaml` (stray artefact).
+Immediate containment: `git checkout -- agents/registry/AGENT_SCORECARD.yaml`; delete stray scorecard yaml; fix test to call `csa.main()` instead of `main()`.
+Recovery recommendation: Never mix `import mod` with `from scripts.mod import func` in the same test file. Use a single namespace exclusively.
+Learning: See Anti-pattern: Dual-module import namespace in PATTERN_LIBRARY.md.
+
+---
+
 ## Incident template
 
 ```md
