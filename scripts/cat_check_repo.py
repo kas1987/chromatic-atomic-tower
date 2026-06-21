@@ -59,7 +59,7 @@ ALLOWED_ROOT_FILES = {
 }
 
 ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {
-    '.github', '.vscode', '.agent', 'tests', 'ci', '.codex',
+    '.github', '.vscode', '.agent', '.agents', 'tests', 'ci', '.codex',
 }
 
 # Transient / VCS / cache entries that are gitignored and not governed by the manifest.
