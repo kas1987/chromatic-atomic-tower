@@ -1,5 +1,5 @@
 version: 1.0.0
-last_updated: '2026-06-18T14:37:41+00:00'
+last_updated: '2026-06-21T11:28:30+00:00'
 score_policy:
   starting_score: 70
   promote_threshold: 85
@@ -29,7 +29,7 @@ agents:
   completed_beads: 9
   failed_beads: 0
   incidents: 0
-  current_trust: provisional
+  current_trust: trusted
   history:
   - timestamp: '2026-06-18T04:05:55+00:00'
     event: bead_completed
@@ -67,6 +67,11 @@ agents:
     event: bead_completed
     delta: 5
     bead_id: BEAD-CAT-A012-4C01-03
+  - timestamp: '2026-06-21T11:28:30+00:00'
+    event: promotion
+    delta: 0
+    bead_id: OPERATOR-HYGIENE-2026-06-21
+    note: 'Manual promotion: score 100.0, threshold 85, operator-plane human gate'
 - role: Reviewer
   score: 70
   completed_beads: 0
