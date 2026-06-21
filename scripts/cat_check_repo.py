@@ -13,7 +13,7 @@ REQUIRED_FILES = [
     'CAT_MANIFEST.md',
     'CAT_PRINCIPLES.md',
     'CAT_ROADMAP.md',
-    'SPRINT_000_PLAN.md',
+    'docs/operations/SPRINT_000_PLAN.md',
     'QUICKSTART.md',
     'AGENTS.md',
     'CHROMATIC_TREES.md',
@@ -46,9 +46,6 @@ ALLOWED_ROOT_FILES = {
     'CAT_ROADMAP.md', 'CHANGELOG.md', 'GOVERNANCE.md', 'CONTRIBUTING.md',
     'SECURITY.md', 'QUICKSTART.md', 'VERSION', 'CHROMATIC_TREES.worktree.json',
     'pyproject.toml', '.editorconfig', '.env.example', '.gitignore',
-    # sprint plans at root (backward-compat; sprint 000+ ship these here)
-    'SPRINT_000_PLAN.md', 'SPRINT_001_PLAN.md', 'SPRINT_002_PLAN.md', 'SPRINT_003_PLAN.md',
-    'SPRINT_009_PLAN.md', 'SPRINT_010_PLAN.md', 'SPRINT_011_PLAN.md',
     # PDR design records (one per sprint)
     'PDR_CAT_001_STATE_TRANSITION_ENGINE.md',
     'PDR_CAT_002_EVIDENCE_GATE_CLOSEOUT_ENGINE.md',

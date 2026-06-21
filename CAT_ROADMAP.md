@@ -13,12 +13,16 @@
 - Sprint 008: Mission/BEAD State Alignment and Collision Governance (`MP-CAT-A008-4C01`)
 - Sprint 009: Repo Alignment and Mission Packet Reconciliation (`MP-CAT-A009-4C01`)
 - Sprint 010: GitHub Bridge + PR Governance (`MP-CAT-A010-4C01`)
+- Sprint 011: Agent Scorecard Automation (`MP-CAT-A011-4C01`)
+- Sprint 012: CAT Portable Project Adapter (`MP-CAT-A012-4C01`)
+- Sprint 013: Tool Plane Scaffolding (`MP-CAT-A013-4C01`)
+- Sprint 014: GO Automation Control Loop (`MP-CAT-A014-4C01`)
 
 ## Current
 
-- Tower idle — no active mission. Next legal sprint: `MP-CAT-A011-4C01`.
+- Tower idle — no active mission. Next legal sprint: `MP-CAT-A015-4C01`.
 
 ## Next Candidates
 
-- Sprint 011: Agent Scorecard Automation (`MP-CAT-A011-4C01`)
-- Sprint 012: CAT Portable Project Adapter (`MP-CAT-A012-4C01`)
+- Sprint 015: Evidence Archival Automation (`MP-CAT-A015-4C01`)
+- Sprint 016: CAT Harness Certification & Templates (`MP-CAT-A016-4C01`)
