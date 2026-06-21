@@ -1,7 +1,7 @@
 bead_id: BEAD-CAT-A015-4C01-03
 mission_id: MP-CAT-A015-4C01
 title: Wire archival check into cat_check_repo.py
-status: active
+status: completed
 agent_role: Builder
 autonomy_level: L2
 objective: Integrate cat_archive_evidence.py --status into cat_check_repo.py validation

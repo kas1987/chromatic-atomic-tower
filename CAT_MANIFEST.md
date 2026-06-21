@@ -104,6 +104,24 @@ checker's `IGNORED_ROOT_ENTRIES` / `IGNORED_ROOT_PATTERNS`.
 | `checklists/` | Review Plane | Human and agent checklists |
 | `reference/` | Reference Plane | Source images and supporting artifacts |
 
+### 4.1 Evidence archival lifecycle
+
+Evidence in `evidence/` older than 90 days is eligible for archival to `evidence/archive/YYYY/QN/` (by year and quarter).
+
+**Exempt from archival:**
+- `agents/scorecards/` — Agent trust history, permanent retention
+- `learnings/` — Decision logs, incident records, permanent retention
+- `evidence/gate_results/` — Confidence/review/promotion gates, audit trail, permanent retention
+- `evidence/bundles/` — Evidence contracts, permanent retention
+
+**Archival automation:**
+- `python scripts/cat_archive_evidence.py status` — report eligible evidence
+- `python scripts/cat_archive_evidence.py dry-run` — preview archival
+- `python scripts/cat_archive_evidence.py run` — execute archival
+- `python scripts/cat_check_repo.py` — non-blocking warning if stale evidence exists
+
+All archival operations produce records conforming to `schemas/archive.schema.json` and are logged to `evidence/logs/archival_*.jsonl`.
+
 ## 5. No orphan work rule
 
 No change may be made unless it can identify:

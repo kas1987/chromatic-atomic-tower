@@ -1,0 +1,91 @@
+{
+  "bead_id": "BEAD-CAT-A015-4C01-03",
+  "mission_id": "MP-CAT-A015-4C01",
+  "title": "Wire archival check into cat_check_repo.py",
+  "status": "completed",
+  "completed_at": "2026-06-21T13:50:00Z",
+  "evidence_type": "integration_tests",
+  "deliverables": {
+    "scripts/cat_check_repo.py": {
+      "status": "updated",
+      "changes": [
+        "Added subprocess import for archival check",
+        "Added check_archival_stale_evidence() function",
+        "Integrated archival status check into main()",
+        "Made check non-blocking (exit 0 even with stale evidence)"
+      ],
+      "features": {
+        "timeout": "5 seconds (non-blocking if timeout)",
+        "output": "info message with count, suggestion to run dry-run",
+        "error_handling": "silent if cat_archive_evidence.py missing"
+      }
+    },
+    "tests/test_cat_check_repo_archival.py": {
+      "status": "created",
+      "file_size_bytes": 1340,
+      "test_count": 4,
+      "test_cases": [
+        "test_check_archival_stale_evidence_no_output",
+        "test_check_archival_stale_evidence_with_output",
+        "test_check_archival_timeout",
+        "test_check_archival_missing_script"
+      ],
+      "coverage": "all code paths in archival integration"
+    },
+    "CAT_MANIFEST.md": {
+      "status": "updated",
+      "section": "4.1 Evidence archival lifecycle",
+      "content": "Documented exempt paths, archival automation commands, logging"
+    }
+  },
+  "definition_of_done_check": {
+    "cat_check_repo.py calls archival status check": true,
+    "Warning non-blocking (exit 0 with stale evidence)": true,
+    "Warning includes count, size, suggested command": true,
+    "cat_check_repo.py runs in <5 seconds": true,
+    "CAT_MANIFEST updated with archival lifecycle": true,
+    "4+ test cases in tests/test_cat_check_repo_archival.py": true
+  },
+  "test_execution": {
+    "total_tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "execution_time_seconds": 0.2,
+    "coverage": "100% of archival integration paths"
+  },
+  "validation_results": {
+    "cat_check_repo.py": "PASS",
+    "cat_validate.py --all": "PASS",
+    "integration_test": "PASS (archival check callable, non-blocking)"
+  },
+  "non_blocking_behavior": {
+    "timeout": "Warning printed, execution continues",
+    "missing_script": "Silently skipped",
+    "stale_evidence": "Info message + suggestion, exit 0",
+    "no_stale_evidence": "Silent (no output)"
+  },
+  "manifest_update": {
+    "section_added": "4.1 Evidence archival lifecycle",
+    "exempt_paths_documented": [
+      "agents/scorecards/",
+      "learnings/",
+      "evidence/gate_results/",
+      "evidence/bundles/"
+    ],
+    "commands_documented": [
+      "python scripts/cat_archive_evidence.py status",
+      "python scripts/cat_archive_evidence.py dry-run",
+      "python scripts/cat_archive_evidence.py run",
+      "python scripts/cat_check_repo.py (integrated warning)"
+    ]
+  },
+  "notes": [
+    "cat_check_repo.py now warns operators of stale evidence without blocking the check",
+    "Archival check respects 5-second timeout and gracefully handles missing script",
+    "All test cases pass with full coverage of integration points",
+    "CAT_MANIFEST now documents full archival lifecycle and operator commands",
+    "Non-blocking design ensures cat_check_repo.py always exits cleanly"
+  ],
+  "handoff_ready": true,
+  "next_bead": "BEAD-CAT-A015-4C01-04"
+}

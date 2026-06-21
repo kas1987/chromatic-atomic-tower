@@ -1,7 +1,7 @@
 bead_id: BEAD-CAT-A015-4C01-04
 mission_id: MP-CAT-A015-4C01
 title: Run pilot archive cycle + documentation
-status: queued
+status: active
 agent_role: Scribe
 autonomy_level: L2
 objective: Execute full pilot archival cycle. Run cat_archive_evidence.py --run to

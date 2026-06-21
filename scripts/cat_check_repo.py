@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import fnmatch
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -96,6 +97,27 @@ def find_stray_root_entries(root: Path = ROOT) -> list[str]:
     return stray
 
 
+def check_archival_stale_evidence() -> None:
+    """Check for stale evidence via cat_archive_evidence.py --status (non-blocking)."""
+    try:
+        result = subprocess.run(
+            ['python', str(ROOT / 'scripts/cat_archive_evidence.py'), 'status', '--older-than', '90'],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if result.returncode == 0:
+            if 'No evidence older than' not in result.stdout:
+                print('ℹ️ Evidence archival: stale evidence detected')
+                print(result.stdout)
+                print("💡 Run 'python scripts/cat_archive_evidence.py dry-run' to preview archival")
+    except subprocess.TimeoutExpired:
+        print('⚠️ Evidence archival check timed out (>5s), skipping')
+    except FileNotFoundError:
+        pass
+
+
 def main() -> int:
     missing: list[str] = []
     for item in REQUIRED_FILES:
@@ -117,6 +139,9 @@ def main() -> int:
             for item in stray:
                 print(f'  - {item}')
         return 1
+
+    check_archival_stale_evidence()
+    return 0
 
     print('CAT repo check passed.')
     print(f'Required files checked: {len(REQUIRED_FILES)}')
