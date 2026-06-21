@@ -1,0 +1,3 @@
+{"ts":"2026-06-21T13:45:00Z","item":"Execute BEAD-CAT-A015-4C01-03: Wire archival check into cat_check_repo.py (Builder role) — integrate cat_archive_evidence.py --status call, non-blocking warning, update CAT_MANIFEST, 4+ test cases","source":"next-steps-card"}
+{"ts":"2026-06-21T13:45:00Z","item":"Execute BEAD-CAT-A015-4C01-04: Run pilot archive cycle + documentation (Scribe role) — execute full archival, validate integrity, write user guide, produce mission final report","source":"next-steps-card"}
+{"ts":"2026-06-21T13:45:00Z","item":"Transition Sprint A015 to mission closeout — mark BEAD-04 complete, archive mission, update learnings log, celebrate","source":"next-steps-card"}
