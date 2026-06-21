@@ -14,3 +14,5 @@
 {"ts": "2026-06-18T16:39:09.215292+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-012", "commit_sha": "d905bc1"}
 {"ts": "2026-06-21T11:52:25.141890+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-015", "commit_sha": "05ab945"}
 {"ts": "2026-06-21T12:04:15.222347+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-015", "commit_sha": "05ab945"}
+{"ts": "2026-06-21T12:07:48.350409+00:00", "allowed": false, "drift_count": 1, "drifts": ["DRIFT REGISTRY_CONTRACT_STATUS_MISMATCH"], "sprint": "SPRINT-015", "commit_sha": "1d8dbf9"}
+{"ts": "2026-06-21T12:08:01.502831+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-015", "commit_sha": "1d8dbf9"}
