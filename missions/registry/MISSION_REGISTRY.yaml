@@ -261,7 +261,7 @@ missions:
   reversibility: high
   autonomy_level: L2
   confidence: 80
-  current_bead_id: BEAD-CAT-A015-4C01-02
+  current_bead_id: BEAD-CAT-A015-4C01-03
   path: missions/active/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
   created: '2026-06-21'
   last_updated: '2026-06-21T12:00:00+00:00'
