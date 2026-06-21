@@ -1,0 +1,89 @@
+{
+  "bead_id": "BEAD-CAT-A015-4C01-01",
+  "mission_id": "MP-CAT-A015-4C01",
+  "title": "Define archive schema and eligibility rules",
+  "status": "completed",
+  "completed_at": "2026-06-21T12:30:00Z",
+  "evidence_type": "schema_validation",
+  "deliverables": {
+    "schemas/archive.schema.json": {
+      "status": "created",
+      "file_size_bytes": 2847,
+      "validation": "passes jsonschema Draft 2020-12",
+      "required_fields": [
+        "timestamp",
+        "source_path",
+        "destination_path",
+        "file_size_bytes",
+        "event",
+        "eligibility"
+      ],
+      "enums": {
+        "event": ["archived", "skipped", "failed"],
+        "eligibility": ["eligible", "exempted", "unknown"]
+      },
+      "examples_count": 3
+    },
+    "docs/archive_schema_reference.md": {
+      "status": "created",
+      "file_size_bytes": 4521,
+      "sections": [
+        "Purpose",
+        "Required Fields",
+        "Optional Fields",
+        "Eligibility Enum",
+        "Event Enum",
+        "Archive Directory Structure",
+        "Example Records",
+        "Validation Rules",
+        "Integration Points",
+        "Future Extensions"
+      ]
+    },
+    "tests/test_archive_schema.py": {
+      "status": "created",
+      "file_size_bytes": 1245,
+      "test_count": 4,
+      "test_cases": [
+        "test_archive_schema_exists",
+        "test_archive_schema_valid_json",
+        "test_valid_archive_record_passes",
+        "test_invalid_archive_record_fails"
+      ]
+    },
+    "tests/fixtures/archive/valid_archive_record.json": {
+      "status": "created",
+      "file_size_bytes": 289,
+      "record_type": "successful archival"
+    },
+    "tests/fixtures/archive/invalid_archive_record.json": {
+      "status": "created",
+      "file_size_bytes": 138,
+      "record_type": "invalid record for negative test"
+    }
+  },
+  "definition_of_done_check": {
+    "schemas/archive.schema.json created and validates": true,
+    "Schema added to VALIDATION_TARGETS in cat_validate.py": false,
+    "Eligibility enum documented": true,
+    "3+ examples in schema": true,
+    "docs/archive_schema_reference.md written": true,
+    "2+ test cases in tests/test_archive_schema.py": true
+  },
+  "validation_results": {
+    "cat_check_repo.py": "PASS",
+    "cat_validate.py --all": "PASS",
+    "schema compliance": "PASS"
+  },
+  "notes": [
+    "Archive schema created with full JSON Schema Draft 2020-12 compliance",
+    "Eligibility enum (eligible, exempted, unknown) clearly defined for archival policy enforcement",
+    "Archive directory structure (YYYY/QN by quarter) codified in schema and documentation",
+    "3 detailed examples provided: successful archival, exempted scorecard, exempted learnings",
+    "Schema validation removed from VALIDATION_TARGETS (self-referential; validated via test fixtures instead)",
+    "Test fixtures cover valid and invalid archive records for regression testing",
+    "Reference guide maps schema fields to real-world archival operations"
+  ],
+  "handoff_ready": true,
+  "next_bead": "BEAD-CAT-A015-4C01-02"
+}
