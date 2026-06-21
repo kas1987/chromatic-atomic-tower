@@ -1,7 +1,7 @@
 bead_id: BEAD-CAT-A015-4C01-02
 mission_id: MP-CAT-A015-4C01
 title: Implement archival engine CLI
-status: queued
+status: active
 agent_role: Builder
 autonomy_level: L2
 objective: Build scripts/cat_archive_evidence.py with subcommands status, dry-run, run.

@@ -254,14 +254,14 @@ missions:
 - mission_id: MP-CAT-A015-4C01
   title: Evidence Archival Automation
   level: M3
-  status: approved
+  status: in_progress
   priority: 2
   owner: Human Owner
   risk_level: medium
   reversibility: high
   autonomy_level: L2
   confidence: 80
-  current_bead_id: BEAD-CAT-A015-4C01-01
+  current_bead_id: BEAD-CAT-A015-4C01-02
   path: missions/active/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
   created: '2026-06-21'
   last_updated: '2026-06-21T12:00:00+00:00'
