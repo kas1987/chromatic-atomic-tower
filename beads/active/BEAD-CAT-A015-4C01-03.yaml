@@ -1,0 +1,70 @@
+bead_id: BEAD-CAT-A015-4C01-03
+mission_id: MP-CAT-A015-4C01
+title: Wire archival check into cat_check_repo.py
+status: queued
+agent_role: Builder
+autonomy_level: L2
+objective: Integrate cat_archive_evidence.py --status into cat_check_repo.py validation
+  flow. Report stale evidence (non-blocking warning). Update CAT_MANIFEST with archival guidance.
+allowed_paths:
+  - scripts/cat_check_repo.py
+  - CAT_MANIFEST.md
+  - docs/operator_guide.md
+  - evidence/archival/BEAD-CAT-A015-4C01-03_tests.json
+  - tests/test_cat_check_repo_archival.py
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - agents/registry/AGENT_SCORECARD.yaml
+  - learnings/**
+dependencies:
+  - BEAD-CAT-A015-4C01-02
+tool_budget:
+  search: 2
+  read: 5
+  write: 3
+  execute: 1
+  max_runtime_minutes: 15
+confidence:
+  minimum: 80
+  current: 84
+  objective_clarity: 85
+  scope_clarity: 83
+  evidence_quality: 82
+  reversibility: 84
+  tool_fit: 83
+  risk_awareness: 81
+  testability: 82
+risk_level: low
+reversibility: high
+stop_conditions:
+  - cat_check_repo.py integration blocks repo check on stale evidence
+  - Integration takes >5 seconds
+  - CAT_MANIFEST not updated
+definition_of_done:
+  - cat_check_repo.py calls archival status check
+  - Warning non-blocking (exit 0 with stale evidence)
+  - Warning includes count, size, suggested command
+  - cat_check_repo.py runs in <5 seconds
+  - CAT_MANIFEST updated with archival lifecycle
+  - 4+ test cases in tests/test_cat_check_repo_archival.py
+validation:
+  - type: tests
+    command: python -m pytest -q tests/test_cat_check_repo_archival.py
+    evidence_path: evidence/archival/BEAD-CAT-A015-4C01-03_tests.json
+    required: true
+  - type: integration
+    command: python scripts/cat_check_repo.py
+    evidence_path: evidence/archival/BEAD-CAT-A015-4C01-03_integration.json
+    required: true
+required_output:
+  - check_repo_integration
+  - manifest_update
+  - warning_messages
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A015-4C01-04
+last_updated: '2026-06-21T12:00:00+00:00'

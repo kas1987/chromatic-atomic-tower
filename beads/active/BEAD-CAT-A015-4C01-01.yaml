@@ -1,0 +1,64 @@
+bead_id: BEAD-CAT-A015-4C01-01
+mission_id: MP-CAT-A015-4C01
+title: Define archive schema and eligibility rules
+status: active
+agent_role: Architect
+autonomy_level: L2
+objective: Create schemas/archive.schema.json to validate archival records. Document
+  eligibility rules (what archives, what exempts). Define archive path structure YYYY/QN.
+allowed_paths:
+  - schemas/archive.schema.json
+  - docs/archive_schema_reference.md
+  - tests/test_archive_schema.py
+  - tests/fixtures/archive/valid_archive_record.json
+  - evidence/archival/BEAD-CAT-A015-4C01-01_schema.json
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - agents/registry/AGENT_SCORECARD.yaml
+  - learnings/**
+dependencies: []
+tool_budget:
+  search: 2
+  read: 4
+  write: 3
+  execute: 1
+  max_runtime_minutes: 15
+confidence:
+  minimum: 80
+  current: 90
+  objective_clarity: 90
+  scope_clarity: 88
+  evidence_quality: 85
+  reversibility: 90
+  tool_fit: 88
+  risk_awareness: 85
+  testability: 88
+risk_level: low
+reversibility: high
+stop_conditions:
+  - Schema cannot validate via jsonschema
+  - Archive schema not integrable into cat_validate.py
+definition_of_done:
+  - schemas/archive.schema.json created and validates
+  - Schema added to VALIDATION_TARGETS in cat_validate.py
+  - Eligibility enum documented
+  - 3+ examples in schema
+  - docs/archive_schema_reference.md written
+  - 2+ test cases in tests/test_archive_schema.py
+validation:
+  - type: schema
+    command: python scripts/cat_validate.py --file schemas/archive.schema.json
+    evidence_path: evidence/archival/BEAD-CAT-A015-4C01-01_schema.json
+    required: true
+required_output:
+  - archive_schema
+  - eligibility_rules
+  - schema_documentation
+handoff:
+  from: Orchestrator
+  to: Architect
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A015-4C01-02
+last_updated: '2026-06-21T12:00:00+00:00'

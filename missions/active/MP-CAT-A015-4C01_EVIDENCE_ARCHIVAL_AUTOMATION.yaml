@@ -1,0 +1,130 @@
+mission_id: MP-CAT-A015-4C01
+title: Evidence Archival Automation
+level: M3
+status: approved
+owner: Human Owner
+priority: 2
+risk_level: medium
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 80
+created: '2026-06-21'
+last_updated: '2026-06-21T12:00:00+00:00'
+id_convention:
+  scheme: MP-<repo>-<tier><NNN>-<cx>C<oo>
+  type: MP
+  repo: CAT
+  priority_tier: A
+  global_mission_number: '015'
+  complexity: 4
+  relative_execution_order: '01'
+objective: >
+  Automate evidence archival based on 90-day retention policy. Implement CLI
+  (cat_archive_evidence.py with status/dry-run/run subcommands), wire warning into
+  cat_check_repo.py (non-blocking), and execute pilot cycle to archive evidence
+  from sprints A010 and earlier.
+background: >
+  The Evidence Plane accumulates unbounded records across 15 sprints (~200 MB).
+  Operators struggle to find signal in noise. The Evidence Archival Policy (Phase 3)
+  codifies governance; A015 builds automation. Archive remains in git for audit
+  trail; scorecard and learnings exempted (high-signal, permanent).
+scope:
+  in:
+    - Archive schema (schemas/archive.schema.json)
+    - Archival CLI (scripts/cat_archive_evidence.py)
+    - Integration into cat_check_repo.py (non-blocking warning)
+    - Pilot cycle - archive evidence >90 days to evidence/archive/YYYY/QN/
+    - User documentation (docs/evidence_archival_guide.md)
+    - Full integration tests
+  out:
+    - Production automated cron archival (defer to A016)
+    - Automatic purge (retain indefinitely in git)
+    - Breaking changes to scorecard or learnings
+    - External storage
+dependencies:
+  - MP-CAT-A014-4C01
+allowed_paths:
+  - missions/active/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
+  - beads/active/BEAD-CAT-A015-4C01-*.yaml
+  - schemas/archive.schema.json
+  - scripts/cat_archive_evidence.py
+  - scripts/cat_check_repo.py
+  - evidence/archive/**
+  - evidence/archival/**
+  - docs/evidence_archival_guide.md
+  - tests/test_cat_archive_evidence.py
+  - tests/test_cat_check_repo_archival.py
+  - tests/fixtures/archive/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - agents/registry/AGENT_SCORECARD.yaml
+  - learnings/**
+acceptance_criteria:
+  - schemas/archive.schema.json created and validates
+  - scripts/cat_archive_evidence.py implements status, dry-run, run, --older-than DAYS
+  - All evidence >90 days moves to evidence/archive/YYYY/QN/
+  - cat_check_repo.py warns on stale unarchived evidence (non-blocking)
+  - Scorecard and learnings remain in active directories
+  - Archive directory tracked in git (not gitignored)
+  - All tests pass (255+ expected)
+  - docs/evidence_archival_guide.md written
+  - Pilot cycle executes cleanly
+success_metrics:
+  - Evidence clone time reduced 15-20%
+  - All validation gates pass
+  - Archive grows predictably (≤5 MB/month)
+  - Zero operator workflow breakage
+tool_budget:
+  search: 10
+  read: 20
+  write: 15
+  execute: 10
+  max_runtime_minutes: 60
+  claude-sonnet: 90000
+  claude-opus: 0
+  local-ollama: unlimited
+beads:
+  - bead_id: BEAD-CAT-A015-4C01-01
+    title: Define archive schema and eligibility rules
+    status: queued
+  - bead_id: BEAD-CAT-A015-4C01-02
+    title: Implement archival engine CLI
+    status: queued
+  - bead_id: BEAD-CAT-A015-4C01-03
+    title: Wire archival check into cat_check_repo.py
+    status: queued
+  - bead_id: BEAD-CAT-A015-4C01-04
+    title: Run pilot archive cycle + documentation
+    status: queued
+evidence_requirements:
+  - archive_schema_validation
+  - archival_engine_tests
+  - integration_tests
+  - pilot_cycle_report
+required_validation:
+  - type: schema
+    command: python scripts/cat_validate.py --all
+    evidence_path: evidence/archival/A015_schema_validation.json
+    required: true
+  - type: tests
+    command: python -m pytest -q
+    evidence_path: evidence/archival/A015_test_report.json
+    required: true
+  - type: check
+    command: python scripts/cat_check_repo.py
+    evidence_path: evidence/archival/A015_check_report.json
+    required: true
+rollback:
+  required: true
+  plan: Remove scripts/cat_archive_evidence.py, schemas/archive.schema.json, docs/evidence_archival_guide.md; revert scripts/cat_check_repo.py to pre-integration state; remove evidence/archive/ directory.
+human_gate:
+  required: false
+  approver: Human Owner
+  trigger: null
+notes:
+  - Direct SWOT recommendation addressing evidence plane unbounded growth
+  - Closes policy-to-automation loop; archive remains in git for audit trail
+  - Optional defer closeout-hook integration to A016 if timeline pressure emerges

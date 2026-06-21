@@ -1,0 +1,68 @@
+bead_id: BEAD-CAT-A015-4C01-02
+mission_id: MP-CAT-A015-4C01
+title: Implement archival engine CLI
+status: queued
+agent_role: Builder
+autonomy_level: L2
+objective: Build scripts/cat_archive_evidence.py with subcommands status, dry-run, run.
+  Support --older-than DAYS override. Default dry-run. Log all operations to evidence/logs/archival_*.jsonl.
+allowed_paths:
+  - scripts/cat_archive_evidence.py
+  - evidence/archival/BEAD-CAT-A015-4C01-02_tests.json
+  - tests/test_cat_archive_evidence.py
+  - tests/fixtures/archive/**
+  - evidence/logs/archival_*.jsonl
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - agents/registry/AGENT_SCORECARD.yaml
+  - learnings/**
+dependencies:
+  - BEAD-CAT-A015-4C01-01
+tool_budget:
+  search: 3
+  read: 6
+  write: 5
+  execute: 2
+  max_runtime_minutes: 20
+confidence:
+  minimum: 80
+  current: 85
+  objective_clarity: 85
+  scope_clarity: 84
+  evidence_quality: 82
+  reversibility: 85
+  tool_fit: 83
+  risk_awareness: 82
+  testability: 84
+risk_level: medium
+reversibility: high
+stop_conditions:
+  - CLI does not implement all subcommands
+  - Dry-run produces side effects
+  - Archive paths don't conform to schema
+  - Forbidden paths touched
+definition_of_done:
+  - scripts/cat_archive_evidence.py implements status, dry-run, run
+  - --older-than DAYS flag works
+  - All operations logged to evidence/logs/archival_*.jsonl
+  - Archive records conform to schema
+  - Scorecard and learnings paths rejected
+  - Archive directory created with YYYY/QN structure
+  - 8+ test cases in tests/test_cat_archive_evidence.py
+validation:
+  - type: tests
+    command: python -m pytest -q tests/test_cat_archive_evidence.py
+    evidence_path: evidence/archival/BEAD-CAT-A015-4C01-02_tests.json
+    required: true
+required_output:
+  - archive_engine_cli
+  - operation_logs
+  - test_coverage
+handoff:
+  from: Orchestrator
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A015-4C01-03
+last_updated: '2026-06-21T12:00:00+00:00'
