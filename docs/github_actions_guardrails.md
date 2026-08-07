@@ -97,4 +97,13 @@ jobs:
 
 ## Integration
 
-`cat_cost_guard.py` is called in CI via `validate-cat.yml` to ensure no new workflows bypass cost controls.
+`cat_cost_guard.py` is wired into the required `validate` job in `.github/workflows/validate-cat.yml`.
+
+It runs as an early step after dependency install and before `cat_check_repo.py`:
+
+```yaml
+- run: python scripts/cat_cost_guard.py --check
+- run: python scripts/cat_check_repo.py
+```
+
+Any new workflow under `.github/workflows/` that violates FAILURE rules (unapproved schedule, risky runner without exception) fails this required check and blocks the PR.

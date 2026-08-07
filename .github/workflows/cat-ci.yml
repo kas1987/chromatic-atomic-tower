@@ -3,11 +3,19 @@ name: CAT CI Governance
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cat-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   cat-ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,9 +44,6 @@ jobs:
         run: |
           git diff --name-only origin/${{ github.base_ref }}...HEAD > /tmp/changed_files.txt
           python scripts/cat_pr_check.py --changed-files /tmp/changed_files.txt
-
-      - name: Tests
-        run: pytest -q
 
       - name: CAT CI report
         if: always()

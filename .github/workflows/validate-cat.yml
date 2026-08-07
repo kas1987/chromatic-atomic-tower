@@ -15,7 +15,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       CAT_ROOT_HYGIENE_MODE: warn
       CAT_HYGIENE_KILL_SWITCH: "0"
@@ -25,6 +25,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r requirements.txt
+      - run: python scripts/cat_cost_guard.py --check
       - run: python scripts/cat_check_repo.py
       - run: python scripts/cat_root_hygiene_strict.py
       - run: python scripts/cat_resolve_go.py
