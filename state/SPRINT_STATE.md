@@ -2,17 +2,17 @@
 
 # CAT Sprint State
 
-_Generated: 2026-06-18T14:37:39+00:00_
+_Generated: 2026-08-03T14:10:10+00:00_
 
 | Field | Value |
 |---|---|
-| Active Sprint | SPRINT-012 |
+| Active Sprint | SPRINT-017 |
 | Tower Status | sprint_idle |
 | Active Mission | — |
 | Active BEAD | — |
 | Mission Status | — |
 | GO Mode | enabled |
-| Sprint Goal | CAT Portable Project Adapter — .cat folder spec, schemas, generator script, and validation wiring. |
+| Sprint Goal | Establish the public ANNA harness contract and safe local scaffold. |
 
 ## Canonical Sources
 

@@ -1,0 +1,37 @@
+evidence_id: EB-CAT-A018-4C01-01
+mission_id: MP-CAT-A018-4C01
+bead_id: BEAD-CAT-A018-4C01-01
+target_type: bead
+type: implementation
+summary: Guarded dry-run action planner, schema, documentation, and synthetic tests
+  implemented; 43 ANNA tests and boundary checks pass; no execution or I/O occurs.
+validation_result: passed
+required_artifacts:
+- path: C:\.101_ANNA\schemas\action_request.schema.json
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\tools\action_runner.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\tests\test_action_runner.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\docs\GUARDED_ACTIONS.md
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+supporting_artifacts: []
+metrics:
+  required_artifacts: 4
+created_by: Codex
+created_at: '2026-08-03T14:17:49Z'
+learning_note: Keep operator controls declarative and action-free until a new human-gated
+  mission explicitly authorizes execution.
+closeout_ready: true

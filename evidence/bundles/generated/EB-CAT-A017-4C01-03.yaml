@@ -1,0 +1,37 @@
+evidence_id: EB-CAT-A017-4C01-03
+mission_id: MP-CAT-A017-4C01
+bead_id: BEAD-CAT-A017-4C01-03
+target_type: bead
+type: implementation
+summary: Generic deterministic control-plane bridge implemented; 31 ANNA tests, boundary
+  gate, CAT contracts, and action-free CLI checks pass.
+validation_result: passed
+required_artifacts:
+- path: C:\.101_ANNA\schemas\control_plane_event.schema.json
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\tools\control_plane_bridge.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\tests\test_control_plane_bridge.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\docs\CONTROL_PLANE_BRIDGE.md
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+supporting_artifacts: []
+metrics:
+  required_artifacts: 4
+created_by: Codex
+created_at: '2026-08-03T14:08:32Z'
+learning_note: Keep provenance structural and emit observe-only events until a separate
+  human-gated action contract exists.
+closeout_ready: true

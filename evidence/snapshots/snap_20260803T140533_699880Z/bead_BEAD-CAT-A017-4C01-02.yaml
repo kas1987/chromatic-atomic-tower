@@ -1,0 +1,94 @@
+bead_id: BEAD-CAT-A017-4C01-02
+mission_id: MP-CAT-A017-4C01
+title: Define read-only DataAnn adapter contract
+status: active
+agent_role: Architect-Builder
+autonomy_level: L2
+objective: Define and test a public-safe, read-only adapter contract for inspecting
+  explicitly permitted DataAnn metadata without reading or mutating private scenario
+  content.
+allowed_paths:
+- C:/.101_ANNA/schemas/dataann_adapter.schema.json
+- C:/.101_ANNA/tools/dataann_adapter.py
+- C:/.101_ANNA/tests/test_dataann_adapter.py
+- C:/.101_ANNA/docs/DATAANN_READ_ONLY_ADAPTER.md
+- missions/registry/MISSION_REGISTRY.yaml
+- state/TOWER_STATE.yaml
+forbidden_paths:
+- .env
+- secrets/**
+- C:/.10_DataAnn/_PerGPT/da-accounting-tasks/**
+- C:/.10_DataAnn/_RealWorld/**
+- C:/.10_DataAnn/_Gemini Files/**
+- C:/.10_DataAnn/07_LOGS_AND_AUDIT/**
+- C:/.10_DataAnn/_PerGPT/da-accounting-tasks/submissions/**
+- C:/.00_Governance/**
+- C:/.01_CAT/**
+dependencies:
+- BEAD-CAT-A017-4C01-01
+tool_budget:
+  search: 4
+  read: 12
+  write: 8
+  execute: 4
+  max_runtime_minutes: 45
+confidence:
+  minimum: 85
+  current: 90
+  objective_clarity: 92
+  scope_clarity: 92
+  evidence_quality: 85
+  reversibility: 92
+  tool_fit: 90
+  risk_awareness: 95
+  testability: 90
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Need to touch file outside allowed_paths.
+- Need secret or credential.
+- Confidence drops below minimum.
+- Validation cannot be run.
+definition_of_done:
+- The adapter schema requires read-only mode and explicit path policy.
+- Path validation rejects absolute paths, traversal, private scenario roots, logs,
+  and credentials.
+- No adapter operation writes to the target root or reads private content by default.
+- Synthetic fixture tests pass without touching C:/.10_DataAnn.
+- Documentation states the public/private boundary and future human gate requirement.
+validation:
+- type: self_review
+  command: python -m pytest -q tests/test_dataann_adapter.py
+  evidence_path: evidence/reports/BEAD-CAT-A017-4C01-02_adapter_tests.md
+  required: true
+- type: schema
+  command: python scripts/cat_validate.py --file beads/active/BEAD-CAT-A017-4C01-02_DEFINE_READ_ONLY_DATAANN_ADAPTER_CONTRACT.yaml
+  evidence_path: evidence/reports/BEAD-CAT-A017-4C01-02_bead_validation.md
+  required: true
+required_output:
+- summary
+- files_changed
+- validation_result
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-A017-4C01-03
+  notes:
+  - Add CAT/Chromatic bridge contracts only after this adapter policy is validated.
+last_updated: '2026-08-03T14:03:12+00:00'
+transition_history:
+- timestamp: '2026-08-03T14:03:12+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A017-4C01-02
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Dispatch read-only DataAnn adapter contract slice
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A017-4C01-02_DEFINE_READ_ONLY_DATAANN_ADAPTER_CONTRACT.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260803T140312_367288Z

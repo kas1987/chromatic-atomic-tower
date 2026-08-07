@@ -1,5 +1,5 @@
 version: 1.0.0
-last_updated: '2026-06-21T11:28:30+00:00'
+last_updated: '2026-08-03T14:10:11+00:00'
 score_policy:
   starting_score: 70
   promote_threshold: 85
@@ -26,7 +26,7 @@ agents:
     bead_id: BEAD-CAT-A012-4C01-01
 - role: Builder
   score: 100.0
-  completed_beads: 9
+  completed_beads: 12
   failed_beads: 0
   incidents: 0
   current_trust: trusted
@@ -67,6 +67,18 @@ agents:
     event: bead_completed
     delta: 5
     bead_id: BEAD-CAT-A012-4C01-03
+  - timestamp: '2026-08-03T14:10:10+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A017-4C01-01
+  - timestamp: '2026-08-03T14:10:10+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A017-4C01-02
+  - timestamp: '2026-08-03T14:10:11+00:00'
+    event: bead_completed
+    delta: 5
+    bead_id: BEAD-CAT-A017-4C01-03
   - timestamp: '2026-06-21T11:28:30+00:00'
     event: promotion
     delta: 0
