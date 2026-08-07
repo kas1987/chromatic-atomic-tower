@@ -33,10 +33,8 @@ def test_valid_archive_record_passes():
     """Valid archive record must pass validation."""
     with open(VALID_FIXTURE) as f:
         record = json.load(f)
-    with open(SCHEMA_PATH) as f:
-        schema = json.load(f)
 
-    errors = validate_with_schema(record, schema)
+    errors = validate_with_schema(record, SCHEMA_PATH)
     assert not errors, f"Valid record failed: {errors}"
 
 
@@ -44,10 +42,8 @@ def test_invalid_archive_record_fails():
     """Invalid archive record must fail validation."""
     with open(INVALID_FIXTURE) as f:
         record = json.load(f)
-    with open(SCHEMA_PATH) as f:
-        schema = json.load(f)
 
-    errors = validate_with_schema(record, schema)
+    errors = validate_with_schema(record, SCHEMA_PATH)
     assert errors, "Invalid record should have failed validation"
 
 

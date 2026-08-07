@@ -1,11 +1,6 @@
 version: 0.1.0
-<<<<<<< HEAD
 last_updated: '2026-06-21T12:00:00+00:00'
 active_mission_id: MP-CAT-A015-4C01
-=======
-last_updated: '2026-08-03T14:18:29+00:00'
-active_mission_id: ''
->>>>>>> 1261460 (chore(mission): close out Anna CAT missions A017 and A018)
 selection_policy:
   priority_order:
   - approved

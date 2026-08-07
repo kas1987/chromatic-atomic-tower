@@ -110,7 +110,7 @@ def test_archive_destination_format(tmp_path):
 
     dest = cae.archive_destination(test_file)
     assert 'archive' in str(dest)
-    assert '/Q' in str(dest)  # Contains quarter marker
+    assert '/Q' in dest.as_posix()  # Contains quarter marker
     assert 'test.json' in str(dest)
 
 

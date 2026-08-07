@@ -18,7 +18,24 @@
     }
   },
   {
-    "_comment": "closeout allowed — happy path",
+    "_comment": "bead_transition — BEAD completed (not stuck)",
+    "signal_type": "bead_transition",
+    "service": "cat",
+    "env": "local",
+    "ts": "2026-06-18T01:30:00+00:00",
+    "message": "BEAD BEAD-CAT-A007-4C01-02 transitioned in_progress → completed",
+    "severity": "info",
+    "commit_sha": "a6aec4f",
+    "deploy_id": "SPRINT-008",
+    "attrs": {
+      "entity_id": "BEAD-CAT-A007-4C01-02",
+      "entity_type": "bead",
+      "from_state": "in_progress",
+      "to_state": "completed",
+      "event": "complete"
+    }
+  },
+  {
     "signal_type": "closeout",
     "service": "cat",
     "env": "local",
