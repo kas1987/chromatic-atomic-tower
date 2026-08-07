@@ -8,6 +8,43 @@ except ModuleNotFoundError:
     from scripts.common import ROOT, load_yaml, rel
 
 FORBIDDEN_DEFAULTS = ['.env', '.env.*', 'secrets/**', 'infra/prod/**', 'production/**', 'deploy/**']
+CLOSEOUT_PATH_PREFIXES = [
+    'agents/',
+    'beads/completed/',
+    'docs/',
+    'evidence/',
+    'gates/',
+    'learnings/',
+    'missions/',
+    'reference/',
+    'state/',
+    'tests/',
+]
+
+
+def is_mission_closeout_pr(changed_files: list[str]) -> bool:
+    has_archived_mission = any(path.startswith('missions/archived/') for path in changed_files)
+    has_completed_bead = any(path.startswith('beads/completed/') for path in changed_files)
+    return has_archived_mission and has_completed_bead
+
+
+def check_closeout_scope(changed_files: list[str]) -> dict:
+    failures: list[str] = []
+    for file_path in changed_files:
+        normalized = file_path.replace('\\', '/')
+        if any(matches(pattern, normalized) for pattern in FORBIDDEN_DEFAULTS):
+            failures.append(f'forbidden path changed: {file_path}')
+        elif not any(normalized.startswith(prefix) for prefix in CLOSEOUT_PATH_PREFIXES):
+            failures.append(f'outside closeout paths: {file_path}')
+    return {
+        'status': 'failed' if failures else 'passed',
+        'mission_id': 'mission-closeout',
+        'bead_id': 'operator-plane',
+        'changed_files': changed_files,
+        'allowed_paths': CLOSEOUT_PATH_PREFIXES,
+        'forbidden_paths': FORBIDDEN_DEFAULTS,
+        'failures': failures,
+    }
 
 def load_bead(bead_id: str) -> tuple[dict | None, Path | None]:
     for base in ['beads/active', 'beads/examples', 'beads/completed', 'beads/failed']:
@@ -91,6 +128,14 @@ def main() -> int:
     parser.add_argument('--changed-files', help='Path to newline-delimited changed files list.')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args()
+    changed_files = load_changed_files(args.changed_files)
+    if is_mission_closeout_pr(changed_files):
+        result = check_closeout_scope(changed_files)
+        if args.json:
+            print(json.dumps(result, indent=2))
+        else:
+            print_markdown(result)
+        return 0 if result['status'] == 'passed' else 1
     mission_id = args.mission or os.getenv('CAT_MISSION', '')
     bead_id = args.bead or os.getenv('CAT_BEAD', '')
     explicitly_set = bool(mission_id or bead_id)
@@ -104,7 +149,7 @@ def main() -> int:
         if explicitly_set:
             # Caller provided an ID that couldn't be resolved — let check_scope
             # report the failure rather than silently skipping.
-            result = check_scope(mission_id, bead_id, load_changed_files(args.changed_files))
+            result = check_scope(mission_id, bead_id, changed_files)
             if args.json:
                 print(json.dumps(result, indent=2))
             else:
@@ -112,7 +157,7 @@ def main() -> int:
             return 1
         print('PR scope check: no active mission/bead in args, env, or TOWER_STATE — skipping.', file=sys.stderr)
         return 0
-    result = check_scope(mission_id, bead_id, load_changed_files(args.changed_files))
+    result = check_scope(mission_id, bead_id, changed_files)
     if args.json:
         print(json.dumps(result, indent=2))
     else:
