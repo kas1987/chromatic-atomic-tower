@@ -1,0 +1,152 @@
+mission_id: MP-CAT-A018-4C01
+title: ANNA Guarded Operator Actions
+level: M3
+status: in_progress
+owner: Human Owner
+priority: 2
+risk_level: high
+reversibility: medium
+autonomy_level: L3
+confidence_minimum: 80
+created: '2026-08-03'
+last_updated: '2026-08-03T14:17:40+00:00'
+objective: Add a public-safe guarded action planner that validates explicit operator
+  requests and emits dry-run plans without executing commands or mutating repositories.
+background: ANNA needs an operator surface that makes proposed actions auditable while
+  preserving the read-only boundary established by the foundation mission.
+scope:
+  in:
+  - Public action request schema and deterministic validation
+  - Dry-run plan generation with explicit allowlists and human-gate metadata
+  - Synthetic tests and operator documentation
+  out:
+  - Command execution, subprocesses, network access, credentials, or shell interpolation
+  - Writes to DataAnn, CAT, Governance, Chromatic Harness, GitHub, or any external
+    repository
+  - Publication, merge, release, or automatic approval
+allowed_paths:
+- C:/.101_ANNA/schemas/action_request.schema.json
+- C:/.101_ANNA/tools/action_runner.py
+- C:/.101_ANNA/tests/test_action_runner.py
+- C:/.101_ANNA/docs/GUARDED_ACTIONS.md
+- missions/registry/MISSION_REGISTRY.yaml
+- state/TOWER_STATE.yaml
+forbidden_paths:
+- .env
+- secrets/**
+- C:/.10_DataAnn/**
+- C:/.00_Governance/**
+- C:/.01_CAT/**
+- C:/Users/kas41/chromatic-harness-v2/**
+- C:/.101_ANNA/.git/**
+dependencies:
+- MP-CAT-A017-4C01
+acceptance_criteria:
+- The schema requires an explicit action name, target class, reason, dry-run mode,
+  and human gate.
+- The runner rejects unknown actions, unsafe target paths, shell syntax, and non-dry-run
+  requests.
+- Valid input produces deterministic JSON plans and performs no subprocess, network,
+  or filesystem mutation.
+- Tests cover rejection and mutation isolation.
+success_metrics:
+- A clean checkout can validate and plan an action offline.
+- Every emitted plan states that execution is not performed.
+- No external repository or private-root access occurs.
+required_validation:
+- type: self_review
+  command: python -m pytest -q tests/test_action_runner.py
+  evidence_path: evidence/reports/MP-CAT-A018-4C01-01_action_runner.md
+  required: true
+- type: boundary
+  command: python tools/anna_public_boundary.py --check
+  evidence_path: evidence/reports/MP-CAT-A018-4C01-01_boundary.json
+  required: true
+rollback:
+  required: true
+  plan: Remove only the action-planner files from the ANNA worktree; do not alter
+    private or reference repositories.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 2
+  read: 10
+  write: 8
+  execute: 4
+  max_runtime_minutes: 60
+beads:
+- bead_id: BEAD-CAT-A018-4C01-01
+  title: Implement guarded dry-run action planner
+  status: completed
+  path: beads/completed/BEAD-CAT-A018-4C01-01_IMPLEMENT_GUARDED_DRY_RUN_ACTION_PLANNER.yaml
+evidence_requirements:
+- Mission and BEAD validation output
+- Action-runner tests and boundary output
+- Changed-file inventory for the ANNA worktree
+notes: []
+transition_history:
+- timestamp: '2026-08-03T14:15:25+00:00'
+  target_type: mission
+  target_id: MP-CAT-A018-4C01
+  from_status: draft
+  to_status: triaged
+  allowed: true
+  dry_run: false
+  reason: Triage guarded ANNA operator mission
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A018-4C01_ANNA_GUARDED_OPERATOR_ACTIONS.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260803T141525_378139Z
+- timestamp: '2026-08-03T14:15:26+00:00'
+  target_type: mission
+  target_id: MP-CAT-A018-4C01
+  from_status: triaged
+  to_status: approved
+  allowed: true
+  dry_run: false
+  reason: Approve bounded dry-run operator scope
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A018-4C01_ANNA_GUARDED_OPERATOR_ACTIONS.yaml
+  guard: human_gate_if_required
+  guard_ok: true
+  guard_message: gate approved by agent 'Auditor'
+  snapshot: evidence\snapshots\snap_20260803T141526_628814Z
+- timestamp: '2026-08-03T14:16:10+00:00'
+  target_type: mission
+  target_id: MP-CAT-A018-4C01
+  from_status: approved
+  to_status: dispatched
+  allowed: true
+  dry_run: false
+  reason: Dispatch approved ANNA operator slice
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A018-4C01_ANNA_GUARDED_OPERATOR_ACTIONS.yaml
+  guard: active_bead_present
+  guard_ok: true
+  guard_message: current_bead_id=BEAD-CAT-A018-4C01-01 found on disk
+  snapshot: evidence\snapshots\snap_20260803T141610_469079Z
+- timestamp: '2026-08-03T14:17:40+00:00'
+  target_type: mission
+  target_id: MP-CAT-A018-4C01
+  from_status: dispatched
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Implement guarded dry-run action planner
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A018-4C01_ANNA_GUARDED_OPERATOR_ACTIONS.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260803T141740_843374Z

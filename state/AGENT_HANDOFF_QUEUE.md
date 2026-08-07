@@ -2,9 +2,12 @@
 
 # Agent Handoff Queue
 
-_Generated: 2026-06-18T14:37:39+00:00_
+_Generated: 2026-08-07T14:56:27+00:00_
 
-## Status
+## Active
 
-No active mission — tower is in post-sprint idle or awaiting kickoff.
+### BEAD-CAT-A015-4C01-04 — Run pilot archive cycle + documentation
+
+- Agent Role: Scribe
+- Mission: MP-CAT-A015-4C01
 

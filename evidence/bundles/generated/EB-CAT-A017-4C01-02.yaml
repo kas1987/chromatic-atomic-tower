@@ -1,0 +1,37 @@
+evidence_id: EB-CAT-A017-4C01-02
+mission_id: MP-CAT-A017-4C01
+bead_id: BEAD-CAT-A017-4C01-02
+target_type: bead
+type: implementation
+summary: Read-only DataAnn adapter policy, schema, documentation, and synthetic fixture
+  tests implemented; boundary and CLI checks pass without target I/O.
+validation_result: passed
+required_artifacts:
+- path: C:\.101_ANNA\schemas\dataann_adapter.schema.json
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\tools\dataann_adapter.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\tests\test_dataann_adapter.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: C:\.101_ANNA\docs\DATAANN_READ_ONLY_ADAPTER.md
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+supporting_artifacts: []
+metrics:
+  required_artifacts: 4
+created_by: Codex
+created_at: '2026-08-03T14:05:17Z'
+learning_note: Keep adapter operations at policy planning until an explicit human-approved
+  connector contract grants bounded reads.
+closeout_ready: true

@@ -2,17 +2,17 @@
 
 # CAT Sprint State
 
-_Generated: 2026-06-18T14:37:39+00:00_
+_Generated: 2026-08-07T14:56:27+00:00_
 
 | Field | Value |
 |---|---|
-| Active Sprint | SPRINT-012 |
+| Active Sprint | SPRINT-015 |
 | Tower Status | sprint_idle |
-| Active Mission | — |
-| Active BEAD | — |
-| Mission Status | — |
+| Active Mission | MP-CAT-A015-4C01 |
+| Active BEAD | BEAD-CAT-A015-4C01-04 |
+| Mission Status | in_progress |
 | GO Mode | enabled |
-| Sprint Goal | CAT Portable Project Adapter — .cat folder spec, schemas, generator script, and validation wiring. |
+| Sprint Goal | Evidence Archival Automation — automated archival policy, scripts, schema, and integration into cat_check_repo. |
 
 ## Canonical Sources
 

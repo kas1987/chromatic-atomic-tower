@@ -1,0 +1,111 @@
+mission_id: MP-CAT-A017-4C01
+title: ANNA Public Harness Foundation
+level: M3
+status: closed
+owner: Human Owner
+priority: 1
+risk_level: high
+reversibility: medium
+autonomy_level: L3
+confidence_minimum: 85
+created: '2026-08-03'
+last_updated: '2026-08-03T14:10:10+00:00'
+objective: Establish the public ANNA harness contract and a safe local scaffold that
+  can inspect and govern private DataAnn projects without publishing private content.
+background: ANNA is the public control plane for projects, apps, tools, and future
+  DataAnnotation work. It must reuse structural lessons from Governance, CAT, and
+  Chromatic Harness v2 while keeping private DataAnn artifacts and local estate data
+  outside the public repository.
+scope:
+  in:
+  - Public repository contract and synthetic-only boundary
+  - Mission, evidence, and control-plane directory conventions
+  - Deterministic local validation and CI skeleton
+  - Read-only connection contract for future DataAnn adapters
+  out:
+  - Copying DataAnn tasks, submissions, or private prompts
+  - Publishing _RealWorld, _Gemini Files, local logs, or credentials
+  - Automatic cross-repository mutation, merge, or release
+  - Live provider credentials or production deployment
+allowed_paths:
+- missions/active/MP-CAT-A017-4C01_ANNA_PUBLIC_HARNESS_FOUNDATION.yaml
+- beads/active/BEAD-CAT-A017-4C01-01_ESTABLISH_ANNA_PUBLIC_CONTRACT_AND_LOCAL_SCAFFOLD.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- state/TOWER_STATE.yaml
+- external://C:/.101_ANNA/**
+forbidden_paths:
+- .env
+- secrets/**
+- external://C:/.10_DataAnn/_PerGPT/da-accounting-tasks/submissions/**
+- external://C:/.10_DataAnn/_RealWorld/**
+- external://C:/.10_DataAnn/_Gemini Files/**
+- external://C:/.10_DataAnn/07_LOGS_AND_AUDIT/**
+dependencies: []
+acceptance_criteria:
+- ANNA has a public-safe root contract, README, license, ignore rules, and tree map.
+- ANNA has a machine-readable project boundary and deterministic repository smoke
+  test.
+- The contract names DataAnn as a private adapter target without embedding private
+  task content.
+- CI runs the public-boundary and repository smoke checks without network credentials.
+success_metrics:
+- A clean checkout can run the contract gate offline.
+- A fixture containing private/real-world path names is rejected while synthetic fixtures
+  pass.
+- No files under the private DataAnn, _RealWorld, _Gemini Files, or local-log roots
+  are copied into ANNA.
+required_validation:
+- type: self_review
+  command: python -m pytest -q tests/test_repo_contract.py
+  evidence_path: evidence/reports/MP-CAT-A017-4C01-01_contract.md
+  required: true
+- type: content_boundary
+  command: python tools/anna_public_boundary.py --check
+  evidence_path: evidence/reports/MP-CAT-A017-4C01-01_boundary.json
+  required: true
+rollback:
+  required: true
+  plan: Remove only the ANNA scaffold branch/commit; do not alter DataAnn, Governance,
+    CAT, or Chromatic Harness source trees.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 2
+  read: 10
+  write: 8
+  execute: 4
+  max_runtime_minutes: 60
+beads:
+- bead_id: BEAD-CAT-A017-4C01-01
+  title: Establish ANNA public contract and local scaffold
+  status: completed
+  path: beads/completed/BEAD-CAT-A017-4C01-01_ESTABLISH_ANNA_PUBLIC_CONTRACT_AND_LOCAL_SCAFFOLD.yaml
+- bead_id: BEAD-CAT-A017-4C01-02
+  title: Define read-only DataAnn adapter contract
+  status: completed
+  path: beads/completed/BEAD-CAT-A017-4C01-02_DEFINE_READ_ONLY_DATAANN_ADAPTER_CONTRACT.yaml
+- bead_id: BEAD-CAT-A017-4C01-03
+  title: Define generic control-plane bridge contract
+  status: completed
+  path: beads/completed/BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml
+evidence_requirements:
+- Mission and BEAD validation output
+- Public-boundary test output
+- Changed-file inventory for the ANNA worktree
+notes: []
+transition_history:
+- timestamp: '2026-08-03T14:10:10+00:00'
+  target_type: mission
+  target_id: MP-CAT-A017-4C01
+  from_status: approved
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: "Sprint closeout \u2014 all BEADs terminal"
+  evidence: evidence/reports/sprint_closeout.md
+  actor: Human Owner
+  message: direct closeout via cat_sprint_closeout.py
+  contract_path: missions\active\MP-CAT-A017-4C01_ANNA_PUBLIC_HARNESS_FOUNDATION.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

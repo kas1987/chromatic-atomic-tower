@@ -50,6 +50,7 @@ allowed_dirs:
   - checklists
   - reference
   - .agent
+  - .agents
   - .github
   - .vscode
   - tests

@@ -265,3 +265,33 @@ missions:
   path: missions/active/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
   created: '2026-06-21'
   last_updated: '2026-06-21T12:00:00+00:00'
+- mission_id: MP-CAT-A017-4C01
+  title: ANNA Public Harness Foundation
+  level: M3
+  status: closed
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: high
+  reversibility: medium
+  autonomy_level: L3
+  confidence: 88
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A017-4C01_ANNA_PUBLIC_HARNESS_FOUNDATION.yaml
+  created: '2026-08-03'
+  last_updated: '2026-08-03T14:10:10+00:00'
+- mission_id: MP-CAT-A018-4C01
+  title: ANNA Guarded Operator Actions
+  level: M3
+  status: closed
+  priority: 2
+  owner: Human Owner
+  risk_level: high
+  reversibility: medium
+  autonomy_level: L3
+  confidence: 80
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A018-4C01_ANNA_GUARDED_OPERATOR_ACTIONS.yaml
+  created: '2026-08-03'
+  last_updated: '2026-08-03T14:18:29+00:00'

@@ -1,0 +1,139 @@
+bead_id: BEAD-CAT-A017-4C01-03
+mission_id: MP-CAT-A017-4C01
+title: Define generic control-plane bridge contract
+status: reviewed
+agent_role: Architect-Builder
+autonomy_level: L2
+objective: Define and test a generic ANNA control-plane event bridge that records
+  mission and work-item state without importing CAT or Chromatic source content or
+  performing actions.
+allowed_paths:
+- C:/.101_ANNA/schemas/control_plane_event.schema.json
+- C:/.101_ANNA/tools/control_plane_bridge.py
+- C:/.101_ANNA/tests/test_control_plane_bridge.py
+- C:/.101_ANNA/docs/CONTROL_PLANE_BRIDGE.md
+- missions/registry/MISSION_REGISTRY.yaml
+- state/TOWER_STATE.yaml
+forbidden_paths:
+- .env
+- secrets/**
+- C:/.00_Governance/**
+- C:/.01_CAT/**
+- C:/Users/kas41/chromatic-harness-v2/**
+- C:/.10_DataAnn/**
+dependencies:
+- BEAD-CAT-A017-4C01-02
+tool_budget:
+  search: 3
+  read: 10
+  write: 8
+  execute: 4
+  max_runtime_minutes: 40
+confidence:
+  minimum: 85
+  current: 90
+  objective_clarity: 92
+  scope_clarity: 94
+  evidence_quality: 85
+  reversibility: 92
+  tool_fit: 90
+  risk_awareness: 95
+  testability: 92
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Need to touch file outside allowed_paths.
+- Need secret or credential.
+- Confidence drops below minimum.
+- Validation cannot be run.
+definition_of_done:
+- The event schema is public-safe and has no provider-specific payload requirement.
+- The bridge accepts only validated synthetic state records and emits deterministic
+  events.
+- The bridge cannot execute commands, write repositories, or contact CAT/Chromatic/DataAnn.
+- Tests cover deterministic output, invalid state rejection, and mutation isolation.
+- Documentation states structural-only provenance and future human gates.
+validation:
+- type: self_review
+  command: python -m pytest -q tests/test_control_plane_bridge.py
+  evidence_path: evidence/reports/BEAD-CAT-A017-4C01-03_bridge_tests.md
+  required: true
+- type: schema
+  command: python scripts/cat_validate.py --file beads/active/BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml
+  evidence_path: evidence/reports/BEAD-CAT-A017-4C01-03_bead_validation.md
+  required: true
+required_output:
+- summary
+- files_changed
+- validation_result
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-A017-4C01-04
+  notes:
+  - Add a guarded operator CLI only after the bridge remains action-free and deterministic.
+last_updated: '2026-08-03T14:09:04+00:00'
+transition_history:
+- timestamp: '2026-08-03T14:06:47+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A017-4C01-03
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Dispatch generic control-plane bridge contract slice
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260803T140647_605203Z
+- timestamp: '2026-08-03T14:08:59+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A017-4C01-03
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Begin bridge evidence closeout
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260803T140859_437407Z
+- timestamp: '2026-08-03T14:09:01+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A017-4C01-03
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Run bridge tests and boundary checks
+  evidence: evidence/bundles/generated/EB-CAT-A017-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260803T140901_686573Z
+- timestamp: '2026-08-03T14:09:04+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A017-4C01-03
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Bridge evidence passed
+  evidence: evidence/bundles/generated/EB-CAT-A017-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260803T140904_033914Z
