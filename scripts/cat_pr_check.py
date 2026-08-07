@@ -9,6 +9,7 @@ except ModuleNotFoundError:
 
 FORBIDDEN_DEFAULTS = ['.env', '.env.*', 'secrets/**', 'infra/prod/**', 'production/**', 'deploy/**']
 CLOSEOUT_PATH_PREFIXES = [
+    '.github/workflows/',
     'agents/',
     'beads/completed/',
     'docs/',
