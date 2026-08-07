@@ -20,6 +20,8 @@ CLOSEOUT_PATH_PREFIXES = [
     'state/',
     'tests/',
 ]
+# CI tooling that may need updates to gate mission-closeout PRs themselves.
+CLOSEOUT_EXTRA_FILES = {'scripts/cat_pr_check.py'}
 
 
 def is_mission_closeout_pr(changed_files: list[str]) -> bool:
@@ -34,7 +36,9 @@ def check_closeout_scope(changed_files: list[str]) -> dict:
         normalized = file_path.replace('\\', '/')
         if any(matches(pattern, normalized) for pattern in FORBIDDEN_DEFAULTS):
             failures.append(f'forbidden path changed: {file_path}')
-        elif not any(normalized.startswith(prefix) for prefix in CLOSEOUT_PATH_PREFIXES):
+        elif normalized not in CLOSEOUT_EXTRA_FILES and not any(
+            normalized.startswith(prefix) for prefix in CLOSEOUT_PATH_PREFIXES
+        ):
             failures.append(f'outside closeout paths: {file_path}')
     return {
         'status': 'failed' if failures else 'passed',
