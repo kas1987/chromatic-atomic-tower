@@ -30,12 +30,17 @@ validation evidence was recorded.
 
 ## Remote validation
 
-Remote validation is performed after the safe force-with-lease update of PR #48.
-This report is amended with the resulting head SHA, mergeability, and fresh check
-conclusions before mission handoff is considered complete.
+- Safe force-with-lease update: `15a59b9` -> `aa8e6dee6d3884111800f241b452169ebbb0c5fe`
+- PR: https://github.com/kas1987/chromatic-atomic-tower/pull/48
+- State: `OPEN`, `DRAFT`
+- Head: `aa8e6dee6d3884111800f241b452169ebbb0c5fe`
+- Mergeability: `MERGEABLE`, merge state `CLEAN`
+- Fresh checks: `cat-ci`, `github-bridge`, `Validate CAT governance and Harness contracts`,
+  `loghouse-ci` (both runs), and `validate` — all `SUCCESS`
+- No merge was performed; A021’s scope ends at rebase and revalidation.
 
 ## Closeout
 
 A021 is archived with its BEAD completed and the tower returned to canonical
-`sprint_idle` state. PR #48 remains open and unmerged; A021 authorizes rebase and
-revalidation only.
+`sprint_idle` state. PR #48 is mergeable with fresh green checks, remains open and
+draft, and is unmerged; A021 authorizes rebase and revalidation only.
