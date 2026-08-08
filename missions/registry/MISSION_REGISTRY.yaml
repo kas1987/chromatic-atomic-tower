@@ -1,6 +1,6 @@
 version: 0.1.0
-last_updated: '2026-08-08T13:40:25+00:00'
-active_mission_id: MP-CAT-A020-4C01
+last_updated: '2026-08-08T14:08:17+00:00'
+active_mission_id: ''
 selection_policy:
   priority_order:
   - approved
@@ -312,7 +312,7 @@ missions:
 - mission_id: MP-CAT-A020-4C01
   title: CAT Global Authority Kernel and Cross-Repo Contract
   level: M4
-  status: approved
+  status: closed
   priority: 1
   owner: Human Owner
   risk_level: high
@@ -320,6 +320,6 @@ missions:
   autonomy_level: L2
   confidence: 92
   current_bead_id: ''
-  path: missions\active\MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
+  path: missions/archived/MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
   created: '2026-08-08'
-  last_updated: '2026-08-08T13:40:25+00:00'
+  last_updated: '2026-08-08T14:08:17+00:00'

@@ -1,0 +1,143 @@
+bead_id: BEAD-CAT-A020-4C01-02
+mission_id: MP-CAT-A020-4C01
+title: Version portable adapter contract
+status: completed
+priority: 1
+agent_role: Cartographer
+autonomy_level: L2
+objective: Define a versioned portable adapter contract for CAT consumers.
+allowed_paths:
+- docs/architecture/CAT_GLOBAL_AUTHORITY_CONTRACT.md
+- schemas/adapter_config.schema.json
+- schemas/adapter_state.schema.json
+- tests/test_cat_adapter_schemas.py
+- evidence/a020/**
+- evidence/reports/MP-CAT-A020_adapter_*.txt
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies:
+- BEAD-CAT-A020-4C01-01
+tool_budget:
+  search: 8
+  read: 40
+  write: 12
+  execute: 16
+  max_runtime_minutes: 90
+confidence:
+  minimum: 92
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 92
+  reversibility: 95
+  tool_fit: 92
+  risk_awareness: 95
+  testability: 93
+risk_level: high
+reversibility: high
+stop_conditions:
+- A020-01 authority ownership is not unambiguous.
+- Adapter contract grants a consumer write authority over CAT state.
+- Validation cannot run.
+definition_of_done:
+- Adapter version and read/write boundary are explicit and tested.
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_cat_adapter_schemas.py -q
+  evidence_path: evidence/reports/MP-CAT-A020_adapter_validation.txt
+  required: true
+required_output:
+- portable_adapter_contract
+handoff:
+  from: Cartographer
+  to: Sentinel
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A020-4C01-03
+last_updated: '2026-08-08T13:53:08+00:00'
+transition_history:
+- timestamp: '2026-08-08T13:46:56+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-02
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized A020-02 implementation
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T134656_812814Z
+- timestamp: '2026-08-08T13:53:05+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-02
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Begin bounded A020-02 adapter contract implementation
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T135305_574315Z
+- timestamp: '2026-08-08T13:53:06+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-02
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: A020-02 implementation and targeted validation complete
+  evidence: evidence/reports/MP-CAT-A020_adapter_validation.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-02.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T135306_527176Z
+- timestamp: '2026-08-08T13:53:07+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-02
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: A020-02 contract review passed
+  evidence: evidence/reports/MP-CAT-A020_adapter_validation.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-02.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T135307_598406Z
+- timestamp: '2026-08-08T13:53:08+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-02
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: A020-02 definition of done met
+  evidence: evidence/reports/MP-CAT-A020_adapter_validation.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A020-4C01-02.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T135308_517867Z

@@ -1,0 +1,23 @@
+A020 final CAT validation
+Date: 2026-08-08
+Mission: MP-CAT-A020-4C01
+BEAD: BEAD-CAT-A020-4C01-05
+
+Complete A020 contract proof:
+  Command: python -m pytest tests/test_authority_matrix_contract.py tests/test_cat_adapter_schemas.py tests/test_cross_repo_mutation_gate.py tests/test_state_ownership_guard.py -q
+  Result: 38 passed in 1.41s
+
+Repository check:
+  Command: python scripts/cat_check_repo.py
+  Result: PASS root hygiene, mission registry, agent registry, scorecard, and tower state
+
+CAT validation:
+  Command: python scripts/cat_validate.py --all
+  Result: CAT validation passed
+
+Scope proof:
+  - A020-01 authority matrix: one canonical writer per mutable governance fact.
+  - A020-02 adapter: versioned evidence-only consumer boundary.
+  - A020-03 mutation gate: complete trace, explicit paths, approval, validation,
+    evidence, and rollback required; CAT governance paths rejected.
+  - A020-04 ownership guard: canonical-to-derived DAG; conflicting writers rejected.

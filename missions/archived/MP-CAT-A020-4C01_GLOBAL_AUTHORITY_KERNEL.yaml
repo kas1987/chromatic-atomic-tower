@@ -1,7 +1,7 @@
 mission_id: MP-CAT-A020-4C01
 title: CAT Global Authority Kernel and Cross-Repo Contract
 level: M4
-status: approved
+status: closed
 owner: Human Owner
 priority: 1
 risk_level: high
@@ -114,7 +114,7 @@ stop_conditions:
 - Any authority fact has two canonical writers.
 - V2 implementation details must be copied into CAT to proceed.
 - Cross-repo mutation cannot be bounded to explicit paths and evidence.
-last_updated: '2026-08-08T13:37:50+00:00'
+last_updated: '2026-08-08T14:08:17+00:00'
 transition_history:
 - timestamp: '2026-08-08T13:37:50+00:00'
   target_type: mission
@@ -149,3 +149,17 @@ transition_history:
   guard_ok: true
   guard_message: gate approved by agent 'Auditor'
   snapshot: evidence\snapshots\snap_20260808T133750_788541Z
+- timestamp: '2026-08-08T14:08:17+00:00'
+  target_type: mission
+  target_id: MP-CAT-A020-4C01
+  from_status: approved
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: "Sprint closeout \u2014 all BEADs terminal"
+  evidence: evidence/reports/MP-CAT-A020_closeout.md
+  actor: Human Owner
+  message: direct closeout via cat_sprint_closeout.py
+  contract_path: missions\active\MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

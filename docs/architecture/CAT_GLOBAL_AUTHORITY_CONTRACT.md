@@ -1,6 +1,6 @@
 # CAT Global Authority Contract
 
-Status: A020-01 draft contract  
+Status: A020 implementation contract  
 Version: 1.0.0  
 Canonical machine-readable source: schemas/authority_matrix.schema.json
 
@@ -43,6 +43,35 @@ Any future cross-repository mutation must carry:
 
 The mutation gate and generated-state guard are separate later A020 beads.
 This document defines their authority boundary; it does not implement them.
+
+## Portable adapter contract
+
+A CAT consumer uses the versioned schemas `schemas/adapter_config.schema.json`
+and `schemas/adapter_state.schema.json`. Both require
+`contract_version: "1.0.0"` and `execution_mode: "evidence_only"` for the
+configuration contract. A consumer may read the CAT paths explicitly listed
+by its adapter and may write only its own explicitly listed project paths.
+
+The adapter's `cat_authority.write_paths` is required to be an empty array.
+The same invariant is required in returned execution evidence. Therefore an
+adapter can report runtime evidence but cannot claim write authority over the
+CAT mission registry, BEAD lifecycle, evidence requirements, or CAT-derived
+state. Cross-repository mutation, if ever authorized, must use the separate
+A020 mutation-gate contract and carry its own Mission ID, BEAD ID, explicit
+paths, validation result, evidence destination, and rollback reference.
+
+Contract-version policy:
+
+- Consumers must reject versions other than `1.0.0` until an explicit
+  compatibility agreement is published.
+- A future minor version may add optional fields only after schema and
+  migration review; it is not implicitly accepted by version `1.0.0`.
+- A future major version requires a new adapter contract and migration record.
+
+Returned state must identify the CAT mission, active BEAD (or `null`),
+consumer repository, observation time, execution status, evidence path,
+validation command, and validation result. This makes the runtime response
+traceable evidence rather than a second governance state store.
 
 ## Non-authority rules
 

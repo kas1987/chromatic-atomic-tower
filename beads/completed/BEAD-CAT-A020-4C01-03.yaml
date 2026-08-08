@@ -1,0 +1,144 @@
+bead_id: BEAD-CAT-A020-4C01-03
+mission_id: MP-CAT-A020-4C01
+title: Implement cross-repo mutation gate
+status: completed
+priority: 1
+agent_role: Sentinel
+autonomy_level: L2
+objective: Reject cross-repo mutation requests without complete CAT trace and permit
+  only explicit target paths.
+allowed_paths:
+- schemas/cross_repo_mutation.schema.json
+- scripts/cat_cross_repo_gate.py
+- tests/test_cross_repo_mutation_gate.py
+- evidence/a020/**
+- evidence/reports/MP-CAT-A020_mutation_gate_*.txt
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies:
+- BEAD-CAT-A020-4C01-02
+tool_budget:
+  search: 10
+  read: 50
+  write: 20
+  execute: 20
+  max_runtime_minutes: 120
+confidence:
+  minimum: 92
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 92
+  reversibility: 94
+  tool_fit: 92
+  risk_awareness: 97
+  testability: 94
+risk_level: high
+reversibility: high
+stop_conditions:
+- A request can mutate without Mission ID, BEAD ID, or allowed paths.
+- The gate relies on V2 internals.
+- Validation cannot run.
+definition_of_done:
+- Unauthorized mutation is rejected.
+- Authorized bounded mutation produces evidence.
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_cross_repo_mutation_gate.py -q
+  evidence_path: evidence/reports/MP-CAT-A020_mutation_gate_validation.txt
+  required: true
+required_output:
+- mutation_gate
+handoff:
+  from: Sentinel
+  to: Sentinel
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A020-4C01-04
+last_updated: '2026-08-08T13:57:40+00:00'
+transition_history:
+- timestamp: '2026-08-08T13:53:51+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-03
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized A020-03 implementation
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T135351_049282Z
+- timestamp: '2026-08-08T13:57:36+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-03
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Begin bounded A020-03 mutation gate implementation
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T135736_914825Z
+- timestamp: '2026-08-08T13:57:37+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-03
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: A020-03 gate implementation and validation complete
+  evidence: evidence/reports/MP-CAT-A020_mutation_gate_validation.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-03.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T135737_521975Z
+- timestamp: '2026-08-08T13:57:39+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-03
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: A020-03 security and scope review passed
+  evidence: evidence/reports/MP-CAT-A020_mutation_gate_validation.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-03.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T135739_060666Z
+- timestamp: '2026-08-08T13:57:40+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-03
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: A020-03 definition of done met
+  evidence: evidence/reports/MP-CAT-A020_mutation_gate_validation.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A020-4C01-03.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T135740_062907Z
