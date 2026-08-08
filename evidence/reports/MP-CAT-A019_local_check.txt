@@ -1,0 +1,27 @@
+CAT A019 local worktree cleanup validation
+Mission: MP-CAT-A019-4C01
+BEAD: BEAD-CAT-A019-4C01-04
+Role: Janitor
+Timestamp: 2026-08-08T13:07:00Z
+
+Baseline:
+- HEAD: c50b79dd0e49950024cc7e18d60c2f769d1b1ac5
+- Branch: chore/ci-hardening
+- Upstream divergence: ahead 0 / behind 0
+- Worktrees: one; no worktree deletion planned
+- Branches: chore/ci-hardening, feat/mp-cat-a015-pilot-archive, master; all preserved
+- Stashes before cleanup: none
+
+Cleanup:
+- Human-approved selective stash created:
+  d203c0ff8a7eb01f448c1e51542b083d6c063e4b
+- Scope: explicitly selected pre-existing A015 implementation/evidence and
+  A007 validation-report paths only.
+- Current A019 mission/evidence/state artifacts were preserved in place.
+- No reset, git clean, deletion, branch mutation, commit rewrite, merge, or
+  remote mutation occurred.
+
+Validation:
+- python scripts/cat_check_repo.py: PASS (exit 0)
+- Rollback reference: baseline SHA plus selective stash
+- Stop conditions: none

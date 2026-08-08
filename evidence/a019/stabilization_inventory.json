@@ -1,0 +1,46 @@
+{
+  "mission_id": "MP-CAT-A019-4C01",
+  "bead_id": "BEAD-CAT-A019-4C01-01",
+  "captured_at_utc": "2026-08-08T12:31:38.9064785Z",
+  "repository": {
+    "root": "C:/.01_CAT",
+    "remote": "https://github.com/kas1987/chromatic-atomic-tower.git",
+    "branch": "chore/ci-hardening",
+    "upstream": "origin/chore/ci-hardening",
+    "head": "c50b79dd0e49950024cc7e18d60c2f769d1b1ac5",
+    "head_short": "c50b79d",
+    "upstream_divergence": {"ahead": 0, "behind": 0},
+    "last_commit": {
+      "author": "TwistKS",
+      "date": "2026-08-07T16:38:40-04:00",
+      "subject": "chore(ci): harden workflows, add Codex review, consolidate pytest"
+    }
+  },
+  "local_state": {
+    "worktree_count": 1,
+    "worktrees": [
+      {"path": "C:/.01_CAT", "head": "c50b79dd0e49950024cc7e18d60c2f769d1b1ac5", "branch": "chore/ci-hardening"}
+    ],
+    "stash_count": 0,
+    "dirty": true,
+    "tracked_modified_or_deleted_count": 13,
+    "untracked_path_count": 31,
+    "status_evidence": "evidence/a019/local_git_snapshot/status_porcelain_v2.txt",
+    "risk_note": "The checkout contains pre-existing tracked changes and untracked A015/A019 artifacts. No mutation was performed by this BEAD. Do not reset, clean, merge, or rebase without explicit human direction."
+  },
+  "branches": {
+    "local_and_remote_evidence": "evidence/a019/local_git_snapshot/branches.txt",
+    "observed": [
+      {"name": "chore/ci-hardening", "sha": "c50b79d", "upstream": "origin/chore/ci-hardening"},
+      {"name": "feat/mp-cat-a015-pilot-archive", "sha": "6a592cb", "upstream": "origin/feat/mp-cat-a015-pilot-archive"},
+      {"name": "master", "sha": "6a592cb", "upstream": "origin/master"}
+    ]
+  },
+  "validation": {
+    "command": "python scripts/cat_check_repo.py",
+    "exit_code": 0,
+    "result": "pass",
+    "captured_at_utc": "2026-08-08T12:30:00Z"
+  },
+  "mutation_policy": "audit-only; no branch, worktree, stash, tracked file, or remote state was changed"
+}

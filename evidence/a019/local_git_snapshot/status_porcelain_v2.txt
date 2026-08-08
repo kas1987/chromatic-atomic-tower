@@ -1,0 +1,47 @@
+# branch.oid c50b79dd0e49950024cc7e18d60c2f769d1b1ac5
+# branch.head chore/ci-hardening
+# branch.upstream origin/chore/ci-hardening
+# branch.ab +0 -0
+1 .D N... 100644 100644 000000 e7c4a78e05a557c816059aaa4b7f7a08d79985da e7c4a78e05a557c816059aaa4b7f7a08d79985da beads/active/BEAD-CAT-A015-4C01-04.yaml
+1 .M N... 100644 100644 100644 c6991254c1d84d185435170aedb7e0de05963e60 c6991254c1d84d185435170aedb7e0de05963e60 evidence/logs/closeouts.jsonl
+1 .M N... 100644 100644 100644 07973c8f1ae45ce64916f9f0052cca9f28a447db 07973c8f1ae45ce64916f9f0052cca9f28a447db evidence/logs/go_decisions.jsonl
+1 .M N... 100644 100644 100644 ba2a37c51efc9e950720acf10e384eb020d4f451 ba2a37c51efc9e950720acf10e384eb020d4f451 evidence/logs/transitions.jsonl
+1 .M N... 100644 100644 100644 69672b23ad54091aaffa508fca08209b881f8255 69672b23ad54091aaffa508fca08209b881f8255 evidence/reports/MP-CAT-A007-4C01_validation_report.json
+1 .M N... 100644 100644 100644 c3695d60d06026867a2dfb237065626dc6fe5e65 c3695d60d06026867a2dfb237065626dc6fe5e65 evidence/tower/tower_guard_report.json
+1 .M N... 100644 100644 100644 a467ffc43efe875bd65e4e99ce0dff705bdf4f0a a467ffc43efe875bd65e4e99ce0dff705bdf4f0a evidence/tower/tower_guard_report.md
+1 .D N... 100644 100644 000000 84e3b064540f035907282d4a42fe0898192e1763 84e3b064540f035907282d4a42fe0898192e1763 missions/active/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
+1 .M N... 100644 100644 100644 5e3f7e197e2b8ff7553ad2d29e4b244fc069ee2e 5e3f7e197e2b8ff7553ad2d29e4b244fc069ee2e missions/registry/MISSION_REGISTRY.yaml
+1 .M N... 100644 100644 100644 4347e7022a9a959c90899f057b0ee9aaf9eeda62 4347e7022a9a959c90899f057b0ee9aaf9eeda62 scripts/cat_archive_evidence.py
+1 .M N... 100644 100644 100644 3d739b34ac3d2de04951cd1aa1e8d042bf51ab1d 3d739b34ac3d2de04951cd1aa1e8d042bf51ab1d state/AGENT_HANDOFF_QUEUE.md
+1 .M N... 100644 100644 100644 48851d800d30a5bc0cba3d19c5034543bd9aae9d 48851d800d30a5bc0cba3d19c5034543bd9aae9d state/SPRINT_STATE.md
+1 .M N... 100644 100644 100644 1a369d358b6e6e9a3ec45d7bd2630d2de2ea596a 1a369d358b6e6e9a3ec45d7bd2630d2de2ea596a state/TOWER_STATE.yaml
+? beads/active/BEAD-CAT-A019-4C01-01.yaml
+? beads/active/BEAD-CAT-A019-4C01-02.yaml
+? beads/active/BEAD-CAT-A019-4C01-03.yaml
+? beads/active/BEAD-CAT-A019-4C01-04.yaml
+? beads/active/BEAD-CAT-A019-4C01-05.yaml
+? beads/completed/BEAD-CAT-A015-4C01-04.yaml
+? docs/evidence_archival_guide.md
+? evidence/archival/A015_documentation_check.json
+? evidence/archival/A015_final_report.json
+? evidence/archival/A015_pilot_cycle_log.jsonl
+? evidence/bundles/generated/EB-CAT-A015-4C01-04.yaml
+? evidence/bundles/generated/EB-CAT-A015-4C01-MISSION-CLOSE.yaml
+? evidence/logs/archival_2026_08_08_075041.jsonl
+? evidence/logs/archival_2026_08_08_075305.jsonl
+? evidence/logs/archival_2026_08_08_080237.jsonl
+? evidence/reports/BEAD-CAT-A015-4C01-04_closeout_20260808T121002Z.md
+? evidence/reports/MP-CAT-A015-4C01_closeout_20260808T121416Z.md
+? evidence/snapshots/snap_20260808T120931_587796Z/
+? evidence/snapshots/snap_20260808T120941_250048Z/
+? evidence/snapshots/snap_20260808T120949_491680Z/
+? evidence/snapshots/snap_20260808T121002_474008Z/
+? evidence/snapshots/snap_20260808T121349_963793Z/
+? evidence/snapshots/snap_20260808T121403_676653Z/
+? evidence/snapshots/snap_20260808T121416_053444Z/
+? evidence/snapshots/snap_20260808T122310_419943Z/
+? evidence/snapshots/snap_20260808T122321_233459Z/
+? evidence/snapshots/snap_20260808T122332_073345Z/
+? missions/active/MP-CAT-A019-4C01_REPO_STABILIZATION.yaml
+? missions/archived/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
+? tests/test_evidence_archival_integration.py

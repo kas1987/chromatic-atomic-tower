@@ -2,7 +2,7 @@
 
 # CAT Sprint State
 
-_Generated: 2026-08-08T14:51:15+00:00_
+_Generated: 2026-08-08T13:21:03+00:00_
 
 | Field | Value |
 |---|---|
@@ -12,7 +12,7 @@ _Generated: 2026-08-08T14:51:15+00:00_
 | Active BEAD | — |
 | Mission Status | — |
 | GO Mode | enabled |
-| Sprint Goal | Evidence Archival Automation — automated archival policy, scripts, schema, and integration into cat_check_repo. |
+| Sprint Goal | CAT Repository Stabilization and Baseline Reconciliation. |
 
 ## Canonical Sources
 

@@ -1,0 +1,61 @@
+bead_id: BEAD-CAT-A020-4C01-04
+mission_id: MP-CAT-A020-4C01
+title: Implement generated-state ownership guard
+status: queued
+priority: 1
+agent_role: Sentinel
+autonomy_level: L2
+objective: Enforce the one-direction ownership DAG for generated CAT state.
+allowed_paths:
+  - schemas/derived_state_ownership.schema.json
+  - scripts/cat_state_ownership_guard.py
+  - tests/test_state_ownership_guard.py
+  - evidence/a020/**
+  - evidence/reports/MP-CAT-A020_state_guard_*.txt
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - '**/*.key'
+  - agents/registry/AGENT_SCORECARD.yaml
+  - learnings/**
+dependencies:
+  - BEAD-CAT-A020-4C01-03
+tool_budget:
+  search: 10
+  read: 50
+  write: 20
+  execute: 20
+  max_runtime_minutes: 120
+confidence:
+  minimum: 92
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 92
+  reversibility: 94
+  tool_fit: 92
+  risk_awareness: 97
+  testability: 94
+risk_level: high
+reversibility: high
+stop_conditions:
+  - A derived artifact can become a second writer.
+  - Guard silently chooses between conflicting sources.
+  - Validation cannot run.
+definition_of_done:
+  - Ownership DAG is machine-readable and validated.
+  - Conflicting writers are rejected with evidence.
+validation:
+  - type: targeted_test
+    command: python -m pytest tests/test_state_ownership_guard.py -q
+    evidence_path: evidence/reports/MP-CAT-A020_state_guard_validation.txt
+    required: true
+required_output:
+  - state_ownership_guard
+handoff:
+  from: Sentinel
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A020-4C01-05

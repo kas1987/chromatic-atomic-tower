@@ -1,0 +1,61 @@
+bead_id: BEAD-CAT-A020-4C01-02
+mission_id: MP-CAT-A020-4C01
+title: Version portable adapter contract
+status: queued
+priority: 1
+agent_role: Cartographer
+autonomy_level: L2
+objective: Define a versioned portable adapter contract for CAT consumers.
+allowed_paths:
+  - docs/architecture/CAT_GLOBAL_AUTHORITY_CONTRACT.md
+  - schemas/adapter_config.schema.json
+  - schemas/adapter_state.schema.json
+  - tests/test_cat_adapter_schemas.py
+  - evidence/a020/**
+  - evidence/reports/MP-CAT-A020_adapter_*.txt
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - '**/*.key'
+  - agents/registry/AGENT_SCORECARD.yaml
+  - learnings/**
+dependencies:
+  - BEAD-CAT-A020-4C01-01
+tool_budget:
+  search: 8
+  read: 40
+  write: 12
+  execute: 16
+  max_runtime_minutes: 90
+confidence:
+  minimum: 92
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 92
+  reversibility: 95
+  tool_fit: 92
+  risk_awareness: 95
+  testability: 93
+risk_level: high
+reversibility: high
+stop_conditions:
+  - A020-01 authority ownership is not unambiguous.
+  - Adapter contract grants a consumer write authority over CAT state.
+  - Validation cannot run.
+definition_of_done:
+  - Adapter version and read/write boundary are explicit and tested.
+validation:
+  - type: targeted_test
+    command: python -m pytest tests/test_cat_adapter_schemas.py -q
+    evidence_path: evidence/reports/MP-CAT-A020_adapter_validation.txt
+    required: true
+required_output:
+  - portable_adapter_contract
+handoff:
+  from: Cartographer
+  to: Sentinel
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A020-4C01-03

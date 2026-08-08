@@ -1,0 +1,159 @@
+mission_id: MP-CAT-A019-4C01
+title: CAT Repository Stabilization and Baseline Reconciliation
+level: M4
+status: closed
+owner: Human Owner
+priority: 1
+risk_level: high
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 90
+created: '2026-08-08'
+last_updated: '2026-08-08T13:21:02+00:00'
+objective: Establish a clean, auditable CAT repository baseline before any cross-repo
+  authority redesign or implementation.
+background: 'CAT is the proposed global governance kernel. Remote review found PR
+  #47 open with unresolved review threads and prior evidence of state-document drift.'
+scope:
+  in:
+  - Open PR and unresolved review-thread disposition
+  - Local branch, worktree, stash, dirty-state and unpushed-commit inventory
+  - Mission registry, tower state, roadmap and current-state reconciliation
+  - Rollback checkpoint and stabilization signoff
+  out:
+  - Cross-repo authority implementation
+  - Automatic merge or destructive cleanup
+  - Secret or credential mutation
+allowed_paths:
+- missions/active/MP-CAT-A019-4C01_REPO_STABILIZATION.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A019-4C01-*.yaml
+- beads/completed/BEAD-CAT-A019-4C01-*.yaml
+- state/TOWER_STATE.yaml
+- state/SPRINT_STATE.md
+- state/AGENT_HANDOFF_QUEUE.md
+- state/AGENT_HANDOFF_QUEUE.md
+- evidence/a019/**
+- evidence/reports/MP-CAT-A019_*.txt
+- evidence/reports/MP-CAT-A019_*.md
+- docs/operations/MP-CAT-A019/**
+- CAT_ROADMAP.md
+- CHROMATIC_TREES.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies: []
+acceptance_criteria:
+- PR 47 has an evidence-backed merge, close, or supersede disposition.
+- No unresolved P0/P1 review finding remains on any PR selected for merge.
+- Local worktrees, branches, stashes, dirty files, and unpushed commits are inventoried.
+- Canonical mission registry and tower state agree.
+- A rollback SHA/reference is recorded before destructive cleanup.
+- CAT validation and tower-guard evidence is recorded.
+required_validation:
+- type: cat_validate
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/MP-CAT-A019_validate.txt
+  required: true
+- type: tower_guard
+  command: python scripts/cat_tower_guard.py --write-report
+  evidence_path: evidence/reports/MP-CAT-A019_tower_guard.md
+  required: true
+rollback:
+  required: true
+  plan: Restore the recorded baseline SHA/backup branch and revert only A019 cleanup
+    changes.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 8
+  read: 40
+  write: 20
+  execute: 20
+  max_runtime_minutes: 180
+beads:
+- bead_id: BEAD-CAT-A019-4C01-01
+  title: Snapshot remote and local baseline
+  status: queued
+  path: beads/active/BEAD-CAT-A019-4C01-01.yaml
+- bead_id: BEAD-CAT-A019-4C01-02
+  title: Repair or disposition PR 47
+  status: queued
+  path: beads/active/BEAD-CAT-A019-4C01-02.yaml
+- bead_id: BEAD-CAT-A019-4C01-03
+  title: Reconcile canonical CAT state
+  status: queued
+  path: beads/active/BEAD-CAT-A019-4C01-03.yaml
+- bead_id: BEAD-CAT-A019-4C01-04
+  title: Reconcile local worktrees and branches
+  status: queued
+  path: beads/active/BEAD-CAT-A019-4C01-04.yaml
+- bead_id: BEAD-CAT-A019-4C01-05
+  title: Validate and publish stabilization checkpoint
+  status: queued
+  path: beads/active/BEAD-CAT-A019-4C01-05.yaml
+evidence_requirements:
+- PR disposition report
+- Review-thread disposition report
+- Worktree and branch inventory
+- Baseline and rollback SHA
+- CAT validation and tower-guard outputs
+stop_conditions:
+- Any unpushed commit would be destroyed.
+- Any dirty worktree lacks an owner/disposition.
+- A source-of-truth conflict cannot be resolved from governance hierarchy.
+- Required validation cannot run.
+- Human approval is required for a destructive cleanup action.
+transition_history:
+- timestamp: '2026-08-08T12:23:21+00:00'
+  target_type: mission
+  target_id: MP-CAT-A019-4C01
+  from_status: draft
+  to_status: triaged
+  allowed: true
+  dry_run: false
+  reason: CAT A019 packet registered from approved architecture pack
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A019-4C01_REPO_STABILIZATION.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T122321_233459Z
+- timestamp: '2026-08-08T12:23:32+00:00'
+  target_type: mission
+  target_id: MP-CAT-A019-4C01
+  from_status: triaged
+  to_status: approved
+  allowed: true
+  dry_run: false
+  reason: Human Owner approved CAT A019 stabilization mission for dispatch
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A019-4C01_REPO_STABILIZATION.yaml
+  guard: human_gate_if_required
+  guard_ok: true
+  guard_message: gate approved by agent 'Auditor'
+  snapshot: evidence\snapshots\snap_20260808T122332_073345Z
+- timestamp: '2026-08-08T13:21:02+00:00'
+  target_type: mission
+  target_id: MP-CAT-A019-4C01
+  from_status: approved
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: "Sprint closeout \u2014 all BEADs terminal"
+  evidence: evidence/reports/MP-CAT-A019_closeout.json
+  actor: Human Owner
+  message: direct closeout via cat_sprint_closeout.py
+  contract_path: missions\active\MP-CAT-A019-4C01_REPO_STABILIZATION.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

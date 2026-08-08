@@ -1,0 +1,14 @@
+Mission: MP-CAT-A019-4C01
+BEAD: BEAD-CAT-A019-4C01-01
+Captured UTC: 2026-08-08T12:31:38.9064785Z
+Repository root: C:/.01_CAT
+Current branch: chore/ci-hardening
+Upstream: origin/chore/ci-hardening
+HEAD: c50b79dd0e49950024cc7e18d60c2f769d1b1ac5
+HEAD short: c50b79d
+Last commit author: TwistKS
+Last commit date: 2026-08-07T16:38:40-04:00
+Last commit subject: chore(ci): harden workflows, add Codex review, consolidate pytest
+Upstream divergence: ahead 0, behind 0
+Stashes: none reported by git stash list
+Worktrees: one worktree at C:/.01_CAT on refs/heads/chore/ci-hardening

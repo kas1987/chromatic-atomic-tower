@@ -59,3 +59,30 @@ agents:
       - read
       - audit
     role_file: agents/roles/SECURITY.md
+  - role: Sentinel
+    autonomy_level: L2
+    can_dispatch: false
+    can_mutate: false
+    default_tools:
+      - read
+      - validate
+      - github_review
+    role_file: agents/roles/SENTINEL.md
+  - role: Janitor
+    autonomy_level: L2
+    can_dispatch: false
+    can_mutate: true
+    default_tools:
+      - read
+      - validate
+      - local_cleanup
+    role_file: agents/roles/JANITOR.md
+  - role: Cartographer
+    autonomy_level: L2
+    can_dispatch: false
+    can_mutate: false
+    default_tools:
+      - read
+      - search
+      - validate
+    role_file: agents/roles/CARTOGRAPHER.md

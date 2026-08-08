@@ -2,10 +2,10 @@ version: 0.1.0
 state_id: TOWER-STATE-014
 status: sprint_idle
 active_sprint: SPRINT-015
-active_mission_id: ''
+active_mission_id: MP-CAT-A020-4C01
 active_bead_id: ''
 go_mode: enabled
-last_updated: '2026-08-08T14:39:35+00:00'
+last_updated: '2026-08-08T13:40:25+00:00'
 operator: Human Owner
 control_planes:
   mission: active
@@ -20,5 +20,4 @@ current_constraints:
 - Opus invoked at most once per ticket (final review only).
 - No GitHub Mutation = No Mission + BEAD Trace.
 next_command: python scripts/cat_resolve_go.py
-sprint_goal: "Evidence Archival Automation \u2014 automated archival policy, scripts, schema,\
-  \ and integration into cat_check_repo."
+sprint_goal: CAT Repository Stabilization and Baseline Reconciliation.
