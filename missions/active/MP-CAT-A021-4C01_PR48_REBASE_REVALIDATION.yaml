@@ -29,6 +29,8 @@ allowed_paths:
 - state/TOWER_STATE.yaml
 - state/SPRINT_STATE.md
 - state/AGENT_HANDOFF_QUEUE.md
+- missions/active/MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
+- missions/archived/MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
 - learnings/DECISION_LOG.md
 - scripts/cat_pr_check.py
 - tests/test_cat_pr_check_extended.py
