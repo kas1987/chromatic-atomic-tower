@@ -25,6 +25,33 @@ import cat_pr_check
 REAL_BEAD_ID = "BEAD-CAT-A014-4C01-03"
 REAL_MISSION_ID = "MP-CAT-A014-4C01"
 
+A020_CLOSEOUT_FILES = [
+    "CAT_ROADMAP.md",
+    "schemas/adapter_config.schema.json",
+    "schemas/adapter_state.schema.json",
+    "schemas/authority_matrix.schema.json",
+    "schemas/cross_repo_mutation.schema.json",
+    "schemas/derived_state_ownership.schema.json",
+    "scripts/cat_cross_repo_gate.py",
+    "scripts/cat_state_ownership_guard.py",
+]
+
+
+def test_closeout_scope_allows_explicit_a020_contract_files():
+    result = cat_pr_check.check_closeout_scope(A020_CLOSEOUT_FILES)
+
+    assert result["status"] == "passed"
+    assert result["failures"] == []
+
+
+def test_closeout_scope_rejects_unlisted_contract_file():
+    result = cat_pr_check.check_closeout_scope(
+        A020_CLOSEOUT_FILES + ["scripts/unrelated_governance_tool.py"]
+    )
+
+    assert result["status"] == "failed"
+    assert "outside closeout paths: scripts/unrelated_governance_tool.py" in result["failures"]
+
 
 def test_closeout_scope_allows_a015_lifecycle_and_engine_files():
     result = cat_pr_check.check_closeout_scope([
