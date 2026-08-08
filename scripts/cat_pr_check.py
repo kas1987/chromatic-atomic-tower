@@ -21,8 +21,14 @@ CLOSEOUT_PATH_PREFIXES = [
     'state/',
     'tests/',
 ]
-# CI tooling that may need updates to gate mission-closeout PRs themselves.
-CLOSEOUT_EXTRA_FILES = {'scripts/cat_pr_check.py'}
+# CI tooling and explicit lifecycle moves that may need updates to gate
+# mission-closeout PRs themselves. Keep this set narrow: whole directories
+# remain outside closeout scope.
+CLOSEOUT_EXTRA_FILES = {
+    'beads/active/BEAD-CAT-A015-4C01-04.yaml',
+    'scripts/cat_archive_evidence.py',
+    'scripts/cat_pr_check.py',
+}
 
 
 def is_mission_closeout_pr(changed_files: list[str]) -> bool:

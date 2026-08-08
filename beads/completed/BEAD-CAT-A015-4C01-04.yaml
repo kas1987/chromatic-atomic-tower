@@ -1,0 +1,149 @@
+bead_id: BEAD-CAT-A015-4C01-04
+mission_id: MP-CAT-A015-4C01
+title: Run pilot archive cycle + documentation
+status: completed
+agent_role: Scribe
+autonomy_level: L2
+objective: Execute full pilot archival cycle. Run cat_archive_evidence.py --run to
+  archive evidence >90 days (A010 and earlier). Validate integrity. Write user guide.
+  Produce mission final report.
+allowed_paths:
+- evidence/archival/A015_final_report.json
+- evidence/archival/A015_pilot_cycle_log.jsonl
+- evidence/archival/A015_documentation_check.json
+- evidence/archive/**
+- evidence/logs/archival_*.jsonl
+- docs/evidence_archival_guide.md
+- scripts/cat_archive_evidence.py
+- tests/test_evidence_archival_integration.py
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies:
+- BEAD-CAT-A015-4C01-01
+- BEAD-CAT-A015-4C01-02
+- BEAD-CAT-A015-4C01-03
+tool_budget:
+  search: 2
+  read: 4
+  write: 4
+  execute: 3
+  max_runtime_minutes: 20
+confidence:
+  minimum: 80
+  current: 83
+  objective_clarity: 85
+  scope_clarity: 83
+  evidence_quality: 81
+  reversibility: 82
+  tool_fit: 82
+  risk_awareness: 80
+  testability: 81
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Pilot archival fails or corrupts evidence
+- Archived evidence not accessible via git
+- Validation fails after archival
+- User guide incomplete
+definition_of_done:
+- Pilot archival successfully moves evidence >90 days to evidence/archive/YYYY/QN/;
+  if no production candidates exist, the pilot records a zero-candidate no-op and
+  the integration test proves the same move path with an aged fixture.
+- Archived evidence searchable via git log --all
+- All validation passes (cat_check_repo, cat_validate, pytest)
+- docs/evidence_archival_guide.md covers how-to and recovery
+- Mission final report includes start/end time, count archived, size freed
+- All tests pass (255+ expected)
+- No operator workflow breakage
+validation:
+- type: integration
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all
+    && python -m pytest -q
+  evidence_path: evidence/archival/A015_final_report.json
+  required: true
+- type: documentation
+  command: ls -l docs/evidence_archival_guide.md
+  evidence_path: evidence/archival/A015_documentation_check.json
+  required: true
+required_output:
+- archive_pilot_report
+- user_guide
+- validation_evidence
+- pilot_cycle_log
+handoff:
+  from: Orchestrator
+  to: Scribe
+  reviewer: Human Owner
+  next_bead_id: null
+last_updated: '2026-08-08T12:10:02+00:00'
+transition_history:
+- timestamp: '2026-08-08T12:09:31+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A015-4C01-04
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized BEAD closeout after completed evidence archival pilot
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A015-4C01-04.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T120931_587796Z
+- timestamp: '2026-08-08T12:09:41+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A015-4C01-04
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: A015 closeout evidence bundle attached and validation artifacts present
+  evidence: evidence/archival/A015_final_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A015-4C01-04.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T120941_250048Z
+- timestamp: '2026-08-08T12:09:49+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A015-4C01-04
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: 'A015 validation suite passed: cat_check_repo, cat_validate, and 1261 pytest
+    tests'
+  evidence: evidence/archival/A015_final_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A015-4C01-04.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T120949_491680Z
+- timestamp: '2026-08-08T12:10:02+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A015-4C01-04
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized closeout; A015 pilot, documentation, tests, and validation
+    evidence complete
+  evidence: evidence/archival/A015_final_report.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A015-4C01-04.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T121002_474008Z

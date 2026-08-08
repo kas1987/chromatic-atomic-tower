@@ -1,6 +1,6 @@
 version: 0.1.0
-last_updated: '2026-06-21T12:00:00+00:00'
-active_mission_id: MP-CAT-A015-4C01
+last_updated: '2026-08-08T14:39:35+00:00'
+active_mission_id: ''
 selection_policy:
   priority_order:
   - approved
@@ -254,17 +254,17 @@ missions:
 - mission_id: MP-CAT-A015-4C01
   title: Evidence Archival Automation
   level: M3
-  status: in_progress
+  status: closed
   priority: 2
   owner: Human Owner
   risk_level: medium
   reversibility: high
   autonomy_level: L2
   confidence: 80
-  current_bead_id: BEAD-CAT-A015-4C01-04
-  path: missions/active/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
   created: '2026-06-21'
-  last_updated: '2026-06-21T12:00:00+00:00'
+  last_updated: '2026-08-08T14:39:35+00:00'
 - mission_id: MP-CAT-A017-4C01
   title: ANNA Public Harness Foundation
   level: M3

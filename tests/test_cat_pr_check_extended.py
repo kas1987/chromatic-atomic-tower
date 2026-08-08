@@ -26,6 +26,26 @@ REAL_BEAD_ID = "BEAD-CAT-A014-4C01-03"
 REAL_MISSION_ID = "MP-CAT-A014-4C01"
 
 
+def test_closeout_scope_allows_a015_lifecycle_and_engine_files():
+    result = cat_pr_check.check_closeout_scope([
+        "beads/active/BEAD-CAT-A015-4C01-04.yaml",
+        "scripts/cat_archive_evidence.py",
+    ])
+
+    assert result["status"] == "passed"
+    assert result["failures"] == []
+
+
+def test_closeout_scope_rejects_unlisted_a015_automation_file():
+    result = cat_pr_check.check_closeout_scope([
+        "beads/active/BEAD-CAT-A015-4C01-04.yaml",
+        "scripts/unrelated_archival_tool.py",
+    ])
+
+    assert result["status"] == "failed"
+    assert "outside closeout paths: scripts/unrelated_archival_tool.py" in result["failures"]
+
+
 # ===========================================================================
 # TestMatches
 # ===========================================================================
