@@ -1,0 +1,80 @@
+mission_id: MP-CAT-A021-4C01
+title: 'PR #48 Rebase and Revalidation'
+level: M4
+status: approved
+owner: Human Owner
+priority: 1
+risk_level: high
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 90
+created: '2026-08-08'
+last_updated: '2026-08-08T16:20:00+00:00'
+objective: 'Rebase PR #48 onto current master, reconcile only the verified conflicts, and obtain fresh CI evidence.'
+background: 'PR #49 merged A015 closeout state after PR #48 opened, leaving PR #48 conflicting with master and its checks stale.'
+scope:
+  in:
+  - 'Rebase PR #48 onto db92f2e or its current master descendant'
+  - Resolve only the six verified content-conflict files
+  - 'Revalidate PR #48 with fresh local and remote CI evidence'
+  out:
+  - New A020 feature delivery
+  - Changes to external repositories
+  - 'Automatic merge of PR #48'
+allowed_paths:
+- missions/active/MP-CAT-A021-4C01_PR48_REBASE_REVALIDATION.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A021-4C01-01.yaml
+- beads/completed/BEAD-CAT-A021-4C01-01.yaml
+- state/TOWER_STATE.yaml
+- state/SPRINT_STATE.md
+- state/AGENT_HANDOFF_QUEUE.md
+- learnings/DECISION_LOG.md
+- scripts/cat_pr_check.py
+- tests/test_cat_pr_check_extended.py
+- evidence/logs/go_decisions.jsonl
+- evidence/reports/MP-CAT-A021_*.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+dependencies:
+- MP-CAT-A020-4C01
+acceptance_criteria:
+- 'PR #48 is mergeable against current master.'
+- The six identified conflicts are resolved without dropping A015 or A020 canonical state.
+- Fresh CI checks and task-relative tests pass.
+required_validation:
+- type: local
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all && python -m pytest -q
+  evidence_path: evidence/reports/MP-CAT-A021_revalidation.md
+  required: true
+rollback:
+  required: true
+  plan: 'Restore the pre-rebase PR #48 head 15a59b90121bbc3cfa3b231c74d30eb27e448272 and preserve conflict-resolution evidence.'
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 8
+  read: 40
+  write: 15
+  execute: 20
+  max_runtime_minutes: 120
+beads:
+- bead_id: BEAD-CAT-A021-4C01-01
+  title: Rebase and revalidate PR #48
+  status: active
+  path: beads/active/BEAD-CAT-A021-4C01-01.yaml
+evidence_requirements:
+- conflict resolution summary
+- local validation output
+- remote CI status
+stop_conditions:
+- A conflict requires a path outside the declared scope.
+- Canonical A015 or A020 state cannot be preserved without ambiguity.
+- Fresh validation fails.
+- Confidence falls below 90.

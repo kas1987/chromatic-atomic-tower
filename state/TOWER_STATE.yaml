@@ -1,11 +1,11 @@
 version: 0.1.0
 state_id: TOWER-STATE-014
-status: sprint_idle
-active_sprint: SPRINT-015
-active_mission_id: ''
-active_bead_id: ''
+status: sprint_active
+active_sprint: SPRINT-021
+active_mission_id: MP-CAT-A021-4C01
+active_bead_id: BEAD-CAT-A021-4C01-01
 go_mode: enabled
-last_updated: '2026-08-08T14:08:17+00:00'
+last_updated: '2026-08-08T16:20:00+00:00'
 operator: Human Owner
 control_planes:
   mission: active
@@ -20,4 +20,4 @@ current_constraints:
 - Opus invoked at most once per ticket (final review only).
 - No GitHub Mutation = No Mission + BEAD Trace.
 next_command: python scripts/cat_resolve_go.py
-sprint_goal: CAT Repository Stabilization and Baseline Reconciliation.
+sprint_goal: Rebase and revalidate PR #48 against current master without losing A020 authority-contract work.

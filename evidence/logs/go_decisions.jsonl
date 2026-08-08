@@ -40,3 +40,5 @@
 {"ts": "2026-08-08T13:53:52.248895+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-015", "commit_sha": "aae69e5"}
 {"ts": "2026-08-08T13:58:36.639134+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-015", "commit_sha": "aae69e5"}
 {"ts": "2026-08-08T14:03:04.957407+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-015", "commit_sha": "aae69e5"}
+{"ts": "2026-08-08T15:38:50.213840+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-021", "commit_sha": "15a59b9"}
+{"ts": "2026-08-08T15:39:23.843565+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-021", "commit_sha": "15a59b9"}

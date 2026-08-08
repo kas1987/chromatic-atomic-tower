@@ -1,0 +1,73 @@
+bead_id: BEAD-CAT-A021-4C01-01
+mission_id: MP-CAT-A021-4C01
+title: 'Rebase and revalidate PR #48'
+status: active
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: 'Rebase PR #48 onto current master, resolve the six known conflicts, and obtain fresh validation evidence without merging the PR.'
+allowed_paths:
+- missions/active/MP-CAT-A021-4C01_PR48_REBASE_REVALIDATION.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A021-4C01-01.yaml
+- beads/completed/BEAD-CAT-A021-4C01-01.yaml
+- state/TOWER_STATE.yaml
+- state/SPRINT_STATE.md
+- state/AGENT_HANDOFF_QUEUE.md
+- learnings/DECISION_LOG.md
+- scripts/cat_pr_check.py
+- tests/test_cat_pr_check_extended.py
+- evidence/logs/go_decisions.jsonl
+- evidence/reports/MP-CAT-A021_*.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+dependencies:
+- BEAD-CAT-A020-4C01-05
+tool_budget:
+  search: 8
+  read: 40
+  write: 15
+  execute: 20
+  max_runtime_minutes: 120
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 95
+  scope_clarity: 92
+  evidence_quality: 90
+  reversibility: 95
+  tool_fit: 92
+  risk_awareness: 95
+  testability: 93
+risk_level: high
+reversibility: high
+stop_conditions:
+- A conflict requires a path outside allowed_paths.
+- A015 or A020 canonical state cannot be reconciled deterministically.
+- Fresh CI or local validation fails.
+- Confidence drops below 90.
+definition_of_done:
+- 'PR #48 head is rebased onto current master and GitHub reports it mergeable.'
+- All six known conflict files are reconciled with one canonical state.
+- Local validation and fresh remote CI pass.
+- Rebase/revalidation evidence is recorded.
+validation:
+- type: local
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all && python -m pytest -q
+  evidence_path: evidence/reports/MP-CAT-A021_revalidation.md
+  required: true
+required_output:
+- conflict_resolution_summary
+- local_validation
+- remote_ci_status
+handoff:
+  from: Human Owner
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: null
+last_updated: '2026-08-08T16:20:00+00:00'

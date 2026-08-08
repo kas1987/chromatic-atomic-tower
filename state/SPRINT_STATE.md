@@ -2,17 +2,17 @@
 
 # CAT Sprint State
 
-_Generated: 2026-08-08T14:08:18+00:00_
+_Generated: 2026-08-08T16:20:00+00:00_
 
 | Field | Value |
 |---|---|
-| Active Sprint | SPRINT-015 |
-| Tower Status | sprint_idle |
-| Active Mission | — |
-| Active BEAD | — |
-| Mission Status | — |
+| Active Sprint | SPRINT-021 |
+| Tower Status | sprint_active |
+| Active Mission | MP-CAT-A021-4C01 |
+| Active BEAD | BEAD-CAT-A021-4C01-01 |
+| Mission Status | approved |
 | GO Mode | enabled |
-| Sprint Goal | CAT Repository Stabilization and Baseline Reconciliation. |
+| Sprint Goal | Rebase and revalidate PR #48 against current master without losing A020 authority-contract work. |
 
 ## Canonical Sources
 
