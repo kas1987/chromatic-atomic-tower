@@ -1,7 +1,7 @@
 mission_id: MP-CAT-A015-4C01
 title: Evidence Archival Automation
 level: M3
-status: in_progress
+status: closed
 owner: Human Owner
 priority: 2
 risk_level: medium
@@ -9,7 +9,7 @@ reversibility: high
 autonomy_level: L2
 confidence_minimum: 80
 created: '2026-06-21'
-last_updated: '2026-06-21T12:00:00+00:00'
+last_updated: '2026-08-08T14:39:35+00:00'
 id_convention:
   scheme: MP-<repo>-<tier><NNN>-<cx>C<oo>
   type: MP
@@ -128,3 +128,18 @@ notes:
   - Direct SWOT recommendation addressing evidence plane unbounded growth
   - Closes policy-to-automation loop; archive remains in git for audit trail
   - Optional defer closeout-hook integration to A016 if timeline pressure emerges
+transition_history:
+- timestamp: '2026-08-08T14:39:35+00:00'
+  target_type: mission
+  target_id: MP-CAT-A015-4C01
+  from_status: in_progress
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: A015 reconciliation repair — pilot evidence and integration proof verified
+  evidence: evidence/archival/A015_final_report.json
+  actor: Human Owner
+  message: closeout after reconciling terminal BEADs and sprint-idle target
+  contract_path: missions/active/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

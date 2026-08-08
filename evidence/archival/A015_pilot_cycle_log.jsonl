@@ -1,0 +1,1 @@
+{"timestamp":"2026-08-08T14:38:57Z","mission_id":"MP-CAT-A015-4C01","bead_id":"BEAD-CAT-A015-4C01-04","command":"python scripts/cat_archive_evidence.py --older-than 90 --batch-id A015-pilot-20260808 run","production_candidates":0,"archived":0,"source_log":"evidence/logs/archival_2026_08_08_103857.jsonl","result":"zero-candidate no-op"}

@@ -33,6 +33,7 @@ ELIGIBLE_DIRS = {
 
 def classify_eligibility(file_path: str) -> str:
     """Classify if a file is eligible, exempted, or unknown."""
+    file_path = file_path.replace('\\', '/')
     for exempt in EXEMPT_PATHS:
         if exempt in file_path:
             return 'exempted'
@@ -110,7 +111,7 @@ def cmd_status(older_than_days: int = 90) -> None:
     for evidence_file in EVIDENCE_ROOT.rglob('*'):
         if not evidence_file.is_file():
             continue
-        rel_path = str(evidence_file.relative_to(ROOT))
+        rel_path = evidence_file.relative_to(ROOT).as_posix()
         if any(exempt in rel_path for exempt in EXEMPT_PATHS):
             continue
         age = get_file_age_days(evidence_file)
@@ -143,7 +144,7 @@ def cmd_dry_run(older_than_days: int = 90, batch_id: str = '') -> list[dict]:
     for evidence_file in EVIDENCE_ROOT.rglob('*'):
         if not evidence_file.is_file():
             continue
-        rel_path = str(evidence_file.relative_to(ROOT))
+        rel_path = evidence_file.relative_to(ROOT).as_posix()
         eligibility = classify_eligibility(rel_path)
         age = get_file_age_days(evidence_file)
         size = evidence_file.stat().st_size

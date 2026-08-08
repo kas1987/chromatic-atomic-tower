@@ -1,0 +1,31 @@
+{
+  "mission_id": "MP-CAT-A015-4C01",
+  "bead_id": "BEAD-CAT-A015-4C01-04",
+  "status": "complete",
+  "pilot": {
+    "command": "python scripts/cat_archive_evidence.py --older-than 90 --batch-id A015-pilot-20260808 run",
+    "production_candidates": 0,
+    "archived_files": 0,
+    "result": "zero-candidate no-op",
+    "audit_log": "evidence/logs/archival_2026_08_08_103857.jsonl"
+  },
+  "fixture_proof": {
+    "test": "tests/test_evidence_archival_integration.py::test_aged_fixture_moves_and_logs",
+    "result": "passes after Windows path normalization"
+  },
+  "documentation": "docs/evidence_archival_guide.md",
+  "validation": {
+    "focused_tests": "44 passed",
+    "full_suite": "1271 passed, 3 skipped",
+    "registry_audit": "passed",
+    "reconciliation": "passed",
+    "cat_check_repo": "passed",
+    "cat_validate_all": "passed"
+  },
+  "reconciliation": {
+    "target_active_mission_id": "",
+    "registry_active_mission_id": "",
+    "tower_active_mission_id": "",
+    "a015_status": "closed"
+  }
+}
