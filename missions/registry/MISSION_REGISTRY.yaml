@@ -1,6 +1,6 @@
 version: 0.1.0
-last_updated: '2026-08-08T16:20:00+00:00'
-active_mission_id: MP-CAT-A021-4C01
+last_updated: '2026-08-08T16:13:56+00:00'
+active_mission_id: ''
 selection_policy:
   priority_order:
   - approved
@@ -326,14 +326,14 @@ missions:
 - mission_id: MP-CAT-A021-4C01
   title: 'PR #48 Rebase and Revalidation'
   level: M4
-  status: approved
+  status: closed
   priority: 1
   owner: Human Owner
   risk_level: high
   reversibility: high
   autonomy_level: L2
   confidence: 92
-  current_bead_id: BEAD-CAT-A021-4C01-01
-  path: missions/active/MP-CAT-A021-4C01_PR48_REBASE_REVALIDATION.yaml
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A021-4C01_PR48_REBASE_REVALIDATION.yaml
   created: '2026-08-08'
-  last_updated: '2026-08-08T16:20:00+00:00'
+  last_updated: '2026-08-08T16:13:56+00:00'

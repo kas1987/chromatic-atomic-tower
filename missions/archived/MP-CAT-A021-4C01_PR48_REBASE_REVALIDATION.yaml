@@ -1,7 +1,7 @@
 mission_id: MP-CAT-A021-4C01
 title: 'PR #48 Rebase and Revalidation'
 level: M4
-status: approved
+status: closed
 owner: Human Owner
 priority: 1
 risk_level: high
@@ -9,7 +9,7 @@ reversibility: high
 autonomy_level: L2
 confidence_minimum: 90
 created: '2026-08-08'
-last_updated: '2026-08-08T16:20:00+00:00'
+last_updated: '2026-08-08T16:13:56+00:00'
 objective: 'Rebase PR #48 onto current master, reconcile only the verified conflicts, and obtain fresh CI evidence.'
 background: 'PR #49 merged A015 closeout state after PR #48 opened, leaving PR #48 conflicting with master and its checks stale.'
 scope:
@@ -69,8 +69,8 @@ tool_budget:
 beads:
 - bead_id: BEAD-CAT-A021-4C01-01
   title: Rebase and revalidate PR #48
-  status: active
-  path: beads/active/BEAD-CAT-A021-4C01-01.yaml
+  status: completed
+  path: beads/completed/BEAD-CAT-A021-4C01-01.yaml
 evidence_requirements:
 - conflict resolution summary
 - local validation output
