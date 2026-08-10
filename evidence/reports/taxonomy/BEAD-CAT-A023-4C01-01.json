@@ -11,9 +11,11 @@
     "historical_ids_renamed": false
   },
   "exact_head": {
-    "snapshot_sha": "63fde2482fb83bff48c80a6ac36afa1437267969",
-    "binding": "inventory_and_contract_decision_snapshot",
-    "note": "Exact immutable HEAD inspected before this bead's contract files were written; the committed evidence artifact is traceable in the subsequent Git commit."
+    "observed_head_sha": "3a62dc61f865ae5138d6d5a6c88c209f8f3e3748",
+    "artifact_source_head_sha": "3a62dc61f865ae5138d6d5a6c88c209f8f3e3748",
+    "prior_superseded_snapshot_sha": "63fde2482fb83bff48c80a6ac36afa1437267969",
+    "binding": "current_head_validation_snapshot",
+    "note": "Observed and artifact source HEADs identify the immutable repository state read before this evidence refresh. The evidence commit is a descendant and is not the source state evaluated."
   },
   "consumer_inventory": [
     {"path": "missions/registry/MISSION_REGISTRY.yaml", "role": "derived_lookup_and_queue_index", "status": "follow_on"},

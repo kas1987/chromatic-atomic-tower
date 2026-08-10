@@ -51,8 +51,18 @@ PASS
 
 The required self-review inventory was run with the BEAD-specified `rg` query
 and is captured in the companion JSON report. The evidence snapshot is bound to
-the exact immutable HEAD recorded there; the committed artifact remains
-traceable through Git history.
+the exact current HEAD recorded below. The prior pre-contract snapshot remains
+historical context only.
+
+## Exact-head binding
+
+- Observed HEAD: `3a62dc61f865ae5138d6d5a6c88c209f8f3e3748`
+- Artifact source HEAD: `3a62dc61f865ae5138d6d5a6c88c209f8f3e3748`
+- Prior superseded snapshot: `63fde2482fb83bff48c80a6ac36afa1437267969`
+
+The artifact source HEAD is the immutable repository state read before this
+evidence refresh. The evidence commit is a descendant and must not be treated
+as the source state being evaluated.
 
 ## Handoff
 
