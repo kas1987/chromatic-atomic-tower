@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 from pathlib import Path
 
 from cat_align_common import list_bead_ids, list_mission_contract_paths, mission_contract_collisions
+from cat_validate import LEGACY_MISSION_ID_RE
 from common import ROOT
 
 
@@ -16,7 +16,7 @@ def suggest_next_legacy_id(root: Path = ROOT) -> str:
     ids = list_mission_contract_paths(root)
     numbers = []
     for mid in ids:
-        m = re.match(r'^MP-CAT-(\d+)$', mid)
+        m = LEGACY_MISSION_ID_RE.match(mid)
         if m:
             numbers.append(int(m.group(1)))
     next_num = max(numbers, default=0) + 1

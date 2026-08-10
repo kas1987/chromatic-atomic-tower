@@ -6,19 +6,7 @@ import re
 from pathlib import Path
 
 from common import ROOT, load_yaml, write_yaml
-
-NEW_MISSION_ID_RE = re.compile(r'^MP-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}$')
-LEGACY_MISSION_ID_RE = re.compile(r'^MP-CAT-([0-9]{3})$')
-NEW_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}$')
-LEGACY_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[0-9]{3}-[0-9]{3}$')
-NEW_WORK_LEGACY_NUMERIC_CUTOFF = 6
-
-
-def _legacy_mission_number(mission_id: str) -> int | None:
-    match = LEGACY_MISSION_ID_RE.match(mission_id)
-    if not match:
-        return None
-    return int(match.group(1))
+from cat_validate import LEGACY_BEAD_ID_RE, NEW_BEAD_ID_RE, NEW_MISSION_ID_RE, NEW_WORK_LEGACY_NUMERIC_CUTOFF, _legacy_mission_number
 
 
 def _derive_bead_id_from_mission(mission_id: str, seq: str) -> str:

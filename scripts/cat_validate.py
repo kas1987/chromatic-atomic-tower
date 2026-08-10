@@ -4,7 +4,9 @@ from __future__ import annotations
 import argparse
 import os
 import re
+from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 from common import ROOT, load_yaml, rel, validate_with_schema
 from cat_branch_hygiene import find_root_hygiene_issues, load_root_allowlist
@@ -45,15 +47,62 @@ TEMPLATE_PATTERNS = [
     ('bead template', 'beads/templates/*.yaml', ROOT / 'schemas/bead.schema.json'),
 ]
 
-NEW_MISSION_ID_RE = re.compile(r'^MP-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}$')
-LEGACY_MISSION_ID_RE = re.compile(r'^MP-CAT-([0-9]{3})$')
-EXAMPLE_MISSION_ID_RE = re.compile(r'^MP-CAT-EXAMPLE-[A-Z0-9-]+$')
 
-NEW_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}$')
-LEGACY_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[0-9]{3}-[0-9]{3}$')
-LEGACY_BEAD_EXAMPLE_RE = re.compile(r'^BEAD-CAT-(EXAMPLE-[0-9]+|[0-9]{3}-CLOSEOUT-EXAMPLE)$')
+def _digit_count(value: object, default: int) -> int:
+    text = str(value)
+    match = re.search(r'(\d+)', text)
+    if match:
+        return int(match.group(1))
+    words = {'one': 1, 'two': 2, 'three': 3, 'four': 4}
+    return next((count for word, count in words.items() if word in text), default)
 
-NEW_WORK_LEGACY_NUMERIC_CUTOFF = 6
+
+@lru_cache(maxsize=8)
+def taxonomy_patterns(root: Path = ROOT) -> dict[str, Any]:
+    """Build identity patterns and legacy cutover from the canonical YAML contract."""
+    contract = load_yaml(root / 'gates/CAT_ID_TAXONOMY.yaml')
+    mission = contract['identity']['mission']
+    bead = contract['identity']['bead']
+    tokens = mission['tokens']
+    prefix = re.escape(str(tokens['prefix']['value']))
+    repo_value = str(tokens['repo']['value'])
+    repo = re.escape(repo_value)
+    classes = ''.join(str(value) for value in tokens['class']['values'])
+    complexities = ''.join(str(value) for value in tokens['complexity']['values'])
+    number_digits = _digit_count(tokens['number']['format'], 3)
+    order_digits = _digit_count(tokens['order']['format'], 2)
+    sequence_digits = _digit_count(bead['sequence']['format'], 2)
+    marker = re.escape(str(tokens['marker']['value']))
+    mission_pattern = rf'^{prefix}-{repo}-[{classes}][0-9]{{{number_digits}}}-[{complexities}]{marker}[0-9]{{{order_digits}}}$'
+    bead_pattern = rf'^BEAD-{repo}-[{classes}][0-9]{{{number_digits}}}-[{complexities}]{marker}[0-9]{{{order_digits}}}-[0-9]{{{sequence_digits}}}$'
+    legacy_mission_pattern = rf'^{prefix}-{repo}-([0-9]{{{number_digits}}})$'
+    legacy_bead_pattern = rf'^BEAD-{repo}-[0-9]{{{number_digits}}}-[0-9]{{{sequence_digits + 1}}}$'
+    examples = contract['legacy_compatibility']['example_patterns']
+    example_mission = re.compile(str(examples['mission']).replace('<repo>', repo_value))
+    example_beads = [re.compile(str(item).replace('<repo>', repo_value)) for item in examples['bead']]
+    old_range = [int(value) for value in re.findall(r'\d+', str(contract['legacy_compatibility']['old_numeric_missions']))]
+    if not old_range:
+        raise ValueError('taxonomy contract has no old numeric mission range')
+    return {
+        'contract': contract,
+        'mission': re.compile(mission_pattern),
+        'bead': re.compile(bead_pattern),
+        'legacy_mission': re.compile(legacy_mission_pattern),
+        'legacy_bead': re.compile(legacy_bead_pattern),
+        'example_mission': example_mission,
+        'example_bead': example_beads,
+        'legacy_cutoff': max(old_range) + 1,
+    }
+
+
+_TAXONOMY = taxonomy_patterns()
+NEW_MISSION_ID_RE = _TAXONOMY['mission']
+LEGACY_MISSION_ID_RE = _TAXONOMY['legacy_mission']
+EXAMPLE_MISSION_ID_RE = _TAXONOMY['example_mission']
+NEW_BEAD_ID_RE = _TAXONOMY['bead']
+LEGACY_BEAD_ID_RE = _TAXONOMY['legacy_bead']
+LEGACY_BEAD_EXAMPLE_RE = re.compile('|'.join(pattern.pattern[1:-1] for pattern in _TAXONOMY['example_bead']))
+NEW_WORK_LEGACY_NUMERIC_CUTOFF = _TAXONOMY['legacy_cutoff']
 
 
 def _legacy_mission_number(mission_id: str) -> int | None:

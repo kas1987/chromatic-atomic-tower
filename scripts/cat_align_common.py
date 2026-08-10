@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from cat_validate import taxonomy_patterns
 from common import ROOT, load_yaml, rel
 
 MISSION_TERMINAL = frozenset({'closed', 'learned', 'abandoned'})
@@ -70,6 +71,16 @@ def normalize_mission_id(value: object) -> str:
     if value is None or value == '':
         return ''
     return str(value)
+
+
+def id_matches_taxonomy(kind: str, value: str, root: Path = ROOT) -> bool:
+    """Return whether an ID matches the canonical or preserved legacy contract."""
+    patterns = taxonomy_patterns(root)
+    if kind == 'mission':
+        return bool(patterns['mission'].match(value) or patterns['legacy_mission'].match(value) or patterns['example_mission'].match(value))
+    if kind == 'bead':
+        return bool(patterns['bead'].match(value) or patterns['legacy_bead'].match(value) or any(pattern.match(value) for pattern in patterns['example_bead']))
+    raise ValueError(f'unknown taxonomy ID kind: {kind}')
 
 
 def find_bead_contract(bead_id: str, root: Path = ROOT) -> tuple[dict | None, Path | None, str | None]:

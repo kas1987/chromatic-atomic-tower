@@ -1,0 +1,48 @@
+evidence_id: EB-CAT-A023-4C01-06
+mission_id: MP-CAT-A023-4C01
+bead_id: BEAD-CAT-A023-4C01-06
+target_type: bead
+type: closeout
+summary: A023-06 route-decision and lifecycle-event contracts passed deterministic
+  matrix and CAT validation gates.
+validation_result: passed
+required_artifacts:
+- path: schemas/route_decision.schema.json
+  kind: contract
+  required: true
+  description: Versioned fail-closed route decision schema.
+  validation_result: passed
+- path: schemas/lifecycle_event.schema.json
+  kind: contract
+  required: true
+  description: Idempotent head-bound lifecycle event schema.
+  validation_result: passed
+- path: gates/ROUTE_DECISION_POLICY.yaml
+  kind: policy
+  required: true
+  description: Route outcome and effect policy with explicit precedence.
+  validation_result: passed
+- path: tests/test_cat_route_matrix.py
+  kind: test
+  required: true
+  description: Deterministic fail-closed route/event matrix tests.
+  validation_result: passed
+- path: evidence/reports/routing/BEAD-CAT-A023-4C01-06.md
+  kind: evidence_report
+  required: true
+  description: Exact-head implementation and validation evidence.
+  validation_result: passed
+supporting_artifacts: []
+metrics:
+  required_artifacts: 5
+  observed_head_sha: a04570b056c2195072c1048f5605411afdf74db5
+  artifact_head_sha: 9d34d22b8ff9f8c06789b9b2863ef9d1315178d4
+  route_matrix_tests_passed: 17
+  cat_check_repo: PASS
+  cat_validate_all: PASS
+created_by: Human Owner
+created_at: '2026-08-10T15:52:10Z'
+learning_note: Route and lifecycle contracts now fail closed at the pure artifact
+  boundary. Runtime transition integration, self-healing, and provider routing remain
+  deferred.
+closeout_ready: true

@@ -1,0 +1,133 @@
+bead_id: BEAD-CAT-A023-4C01-06
+mission_id: MP-CAT-A023-4C01
+title: Define deterministic route and lifecycle event contracts
+status: in_progress
+priority: 1
+agent_role: Cartographer
+autonomy_level: L2
+objective: Define and test fail-closed route-decision and lifecycle-event contracts
+  as pure, versioned artifacts. Establish the deterministic policy boundary before
+  any transition integration or self-healing execution.
+human_approval:
+  shorthand: ANA v1
+  approved_by: Human Owner
+  approved_action: register_TERRA_route_and_event_contract_recommendation
+  execution_authorization: registration_only
+  go_required_for_execution: true
+allowed_paths:
+- schemas/route_decision.schema.json
+- schemas/lifecycle_event.schema.json
+- gates/ROUTE_DECISION_POLICY.yaml
+- tests/test_cat_route_matrix.py
+- evidence/reports/routing/**
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- scripts/cat_self_heal.py
+- scripts/cat_transition.py
+- missions/**
+- beads/**
+- state/**
+- model/provider configuration
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A023-4C01-01
+tool_budget:
+  search: 30
+  read: 80
+  write: 25
+  execute: 35
+  max_runtime_minutes: 180
+confidence:
+  minimum: 90
+  current: 94
+  objective_clarity: 97
+  scope_clarity: 96
+  evidence_quality: 93
+  reversibility: 98
+  tool_fit: 94
+  risk_awareness: 99
+  testability: 95
+risk_level: high
+reversibility: high
+stop_conditions:
+- A route decision would mutate state or invoke self-healing.
+- Human approval is inferred from an agent review or model output.
+- Current lifecycle state cannot be distinguished from taxonomy classification.
+- Exact observed and artifact HEADs cannot both be recorded.
+- Duplicate events cannot be deterministically identified.
+- A forbidden path, remote mutation, or provider configuration appears.
+- Confidence drops below 90.
+definition_of_done:
+- route_decision.schema.json requires subject type, expected revision, observed HEAD,
+  policy digests, normalized classification, constraints, outcome, and evidence binding.
+- lifecycle_event.schema.json requires event ID, idempotency key, prior revision,
+  applied outcome, policy digest, HEAD, and evidence references.
+- ROUTE_DECISION_POLICY.yaml permits only allow_plan, require_human, or block and
+  only none/dry_run effects.
+- Matrix tests assert stable fail-closed outcomes for stale HEAD, malformed output,
+  exhausted budget, provider outage, conflicting fields, dependency cycle, duplicate
+  delivery, and policy drift.
+- Duplicate delivery returns the original decision without mutation in the contract
+  fixture model.
+- No runtime transition, self-healing, provider, model, mission, BEAD, or remote settings
+  are changed.
+- Evidence records observed_head_sha and artifact_head_sha separately.
+validation:
+- type: test
+  command: python -m pytest tests/test_cat_route_matrix.py -q
+  evidence_path: evidence/reports/routing/BEAD-CAT-A023-4C01-06.md
+  required: true
+- type: command
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/routing/BEAD-CAT-A023-4C01-06.md
+  required: true
+required_output:
+- route_decision_contract
+- lifecycle_event_contract
+- deterministic_route_matrix
+- exact_head_evidence
+handoff:
+  from: Cartographer
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A023-4C01-07
+last_updated: '2026-08-10T15:52:31+00:00'
+transition_history:
+- timestamp: '2026-08-10T15:38:26+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-06
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Activate ANA-approved TERRA route/event contract slice
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-01.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-06.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T153826_194845Z
+- timestamp: '2026-08-10T15:52:31+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-06
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: 'ANA GO closeout: begin audited closeout lifecycle'
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-06.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-06.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T155231_753978Z

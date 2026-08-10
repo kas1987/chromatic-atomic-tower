@@ -61,6 +61,11 @@ legacy_compatibility:
   policy: preserve_and_interpret; never_rename_historical_identifiers
   old_numeric_missions: MP-CAT-000 through MP-CAT-005
   old_numeric_beads: BEAD-CAT-000-* through BEAD-CAT-005-*
+  example_patterns:
+    mission: '^MP-<repo>-EXAMPLE-[A-Z0-9-]+$'
+    bead:
+    - '^BEAD-<repo>-EXAMPLE-[0-9]+$'
+    - '^BEAD-<repo>-[0-9]{3}-CLOSEOUT-EXAMPLE$'
   optional_legacy_fields: [priority_tier, complexity_order]
   interpretation:
     priority_tier: map_to_mission_class_only; never_to_urgency_or_hitl
