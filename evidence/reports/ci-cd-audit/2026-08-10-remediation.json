@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "report_type": "post_remediation_ci_cd_audit",
+  "generated_at": "2026-08-10T10:19:23.8615779-04:00",
+  "repository": "kas1987/chromatic-atomic-tower",
+  "branch": "master",
+  "head_sha": "4f239be1b17eb602b284afa7a1a3f11df58bd9cd",
+  "mission_id": "MP-CAT-A022-4C01",
+  "historical_baseline": {
+    "report": "evidence/reports/ci-cd-audit/2026-08-10.json",
+    "head_sha": "5ca98c47d86c55805917689b70aa3ee97f2426d8",
+    "strict_warning_count": 17
+  },
+  "current": {
+    "local_workflow_count": 8,
+    "cost_guard": {
+      "none": {"failures": 0, "warnings": 0},
+      "balanced": {"failures": 0, "warnings": 0},
+      "strict": {"failures": 0, "warnings": 0}
+    },
+    "full_validation": {"pytest_passed": 1295, "pytest_skipped": 3, "pytest_failed": 0},
+    "live_workflow_count": 11,
+    "live_provenance_gap_count": 3
+  },
+  "grades": {
+    "observability": "B",
+    "transparency": "C",
+    "efficacy": "B",
+    "efficiency": "B",
+    "overall_readiness": "C"
+  },
+  "findings": [
+    {"id": "REMOTE-BRANCH-PROTECTION", "severity": "high", "status": "human_gated"},
+    {"id": "LIVE-WORKFLOW-PROVENANCE", "severity": "medium", "status": "open", "count": 3},
+    {"id": "ENVIRONMENT-HOOK-INSTALLATION", "severity": "low", "status": "not_mutated"}
+  ],
+  "decision": "local_remediation_complete_remote_governance_pending",
+  "evidence_paths": [
+    "evidence/reports/ci-cd-remediation/BEAD-08.json",
+    "evidence/reports/ci-cd-remediation/BEAD-06.json",
+    "evidence/reports/ci-cd-remediation/BEAD-05.json",
+    "docs/operations/GITHUB_BRANCH_PROTECTION_PROPOSAL.md"
+  ]
+}

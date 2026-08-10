@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "mission_id": "MP-CAT-A022-4C01",
+  "bead_id": "BEAD-CAT-A022-4C01-08",
+  "repository": "kas1987/chromatic-atomic-tower",
+  "branch": "master",
+  "head_sha": "4f239be1b17eb602b284afa7a1a3f11df58bd9cd",
+  "validation": {
+    "cat_check_repo": "pass",
+    "cat_validate_all": "pass",
+    "cat_align_strict": "pass",
+    "cat_ci_local": {"passed": 5, "total": 5},
+    "pytest": {"passed": 1295, "skipped": 3, "failed": 0}
+  },
+  "cost_guard": {
+    "historical_strict_warning_count": 17,
+    "current_workflow_count": 8,
+    "none": {"failures": 0, "warnings": 0},
+    "balanced": {"failures": 0, "warnings": 0},
+    "strict": {"failures": 0, "warnings": 0}
+  },
+  "residual_debt": [
+    {
+      "id": "REMOTE-BRANCH-PROTECTION",
+      "severity": "high",
+      "status": "human_gated",
+      "evidence": "evidence/reports/ci-cd-remediation/BEAD-06.json"
+    },
+    {
+      "id": "LIVE-WORKFLOW-PROVENANCE",
+      "severity": "medium",
+      "status": "open",
+      "count": 3,
+      "evidence": "evidence/reports/ci-cd-remediation/BEAD-05.json"
+    },
+    {
+      "id": "ENVIRONMENT-HOOK-INSTALLATION",
+      "severity": "low",
+      "status": "not_mutated",
+      "evidence": "scripts/hooks/pre-push.sh"
+    }
+  ],
+  "closeout": {
+    "mission_status": "closed",
+    "tower_status": "sprint_idle",
+    "active_mission_id": null,
+    "active_bead_id": null,
+    "remote_mutations": false,
+    "hook_mutations": false
+  }
+}
