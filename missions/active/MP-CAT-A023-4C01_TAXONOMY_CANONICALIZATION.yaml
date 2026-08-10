@@ -12,7 +12,7 @@ hitl_mode: approval_required
 autonomy_level: L2
 confidence_minimum: 90
 created: '2026-08-10'
-last_updated: '2026-08-10T14:51:40+00:00'
+last_updated: '2026-08-10T15:18:00+00:00'
 objective: >-
   Establish one versioned machine-readable CAT identity taxonomy, reconcile its
   validators and documentation, and prevent semantic drift without renaming
@@ -49,6 +49,7 @@ allowed_paths:
 - beads/active/BEAD-CAT-A023-4C01-03.yaml
 - beads/active/BEAD-CAT-A023-4C01-04.yaml
 - beads/active/BEAD-CAT-A023-4C01-05.yaml
+- beads/active/BEAD-CAT-A023-4C01-06.yaml
 - beads/completed/BEAD-CAT-A023-4C01-01.yaml
 - beads/completed/BEAD-CAT-A023-4C01-02.yaml
 - beads/completed/BEAD-CAT-A023-4C01-03.yaml
@@ -64,6 +65,11 @@ allowed_paths:
 - scripts/cat_align_common.py
 - tests/test_cat_taxonomy.py
 - tests/test_cat_align_missionid.py
+- schemas/route_decision.schema.json
+- schemas/lifecycle_event.schema.json
+- gates/ROUTE_DECISION_POLICY.yaml
+- tests/test_cat_route_matrix.py
+- evidence/reports/routing/**
 - docs/operations/CAT_ID_NAMING_CONVENTION.md
 - docs/reference/MISSION_COMPLEXITY_MATRIX.md
 - docs/architecture/LLM_MODEL_ROUTING.md
@@ -96,6 +102,9 @@ beads:
   status: queued
 - bead_id: BEAD-CAT-A023-4C01-05
   title: Run taxonomy closeout audit and preserve compatibility evidence
+  status: queued
+- bead_id: BEAD-CAT-A023-4C01-06
+  title: Define deterministic route and lifecycle event contracts
   status: queued
 acceptance_criteria:
 - 'One versioned machine-readable taxonomy contract defines all supported ID forms and token semantics.'
