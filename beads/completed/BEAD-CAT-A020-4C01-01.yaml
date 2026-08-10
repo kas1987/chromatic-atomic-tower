@@ -1,0 +1,149 @@
+bead_id: BEAD-CAT-A020-4C01-01
+mission_id: MP-CAT-A020-4C01
+title: Define canonical authority matrix
+status: completed
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Define the machine-readable authority matrix and its human contract without
+  implementing cross-repo mutation.
+allowed_paths:
+- docs/architecture/CAT_GLOBAL_AUTHORITY_CONTRACT.md
+- schemas/authority_matrix.schema.json
+- tests/test_authority_matrix_contract.py
+- evidence/a020/pre_mortem.md
+- evidence/a020/authority_matrix_validation.json
+- evidence/reports/MP-CAT-A020_authority_matrix_*.txt
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- missions/registry/MISSION_REGISTRY.yaml
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies: []
+tool_budget:
+  search: 8
+  read: 40
+  write: 12
+  execute: 16
+  max_runtime_minutes: 90
+confidence:
+  minimum: 92
+  current: 93
+  objective_clarity: 95
+  scope_clarity: 94
+  evidence_quality: 92
+  reversibility: 95
+  tool_fit: 92
+  risk_awareness: 96
+  testability: 94
+risk_level: high
+reversibility: high
+stop_conditions:
+- A019 closeout cannot be verified.
+- The matrix assigns more than one canonical writer to a fact.
+- V2 topology must be imported to describe the boundary.
+- Validation cannot run.
+definition_of_done:
+- Authority contract names one canonical writer for each mutable fact.
+- JSON schema validates the matrix.
+- Targeted tests prove duplicate writers are rejected.
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_authority_matrix_contract.py -q
+  evidence_path: evidence/reports/MP-CAT-A020_authority_matrix_validation.txt
+  required: true
+required_output:
+- authority_contract
+- authority_matrix_schema
+- targeted_test_evidence
+handoff:
+  from: Auditor
+  to: Cartographer
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A020-4C01-02
+last_updated: '2026-08-08T13:40:25+00:00'
+transition_history:
+- timestamp: '2026-08-08T13:38:06+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-01
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized A020-01 implementation
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-01.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T133806_983285Z
+- timestamp: '2026-08-08T13:40:21+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-01
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Auditor implementing canonical authority matrix
+  evidence: ''
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-01.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T134021_710550Z
+- timestamp: '2026-08-08T13:40:23+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-01
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Authority matrix and targeted proof recorded
+  evidence: evidence/a020/authority_matrix_validation.json
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-01.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T134023_061600Z
+- timestamp: '2026-08-08T13:40:24+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-01
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Human Owner review gate satisfied for bounded A020-01 slice
+  evidence: evidence/reports/MP-CAT-A020_authority_matrix_validation.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A020-4C01-01.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T134024_283230Z
+- timestamp: '2026-08-08T13:40:25+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A020-4C01-01
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: 'A020-01 complete: canonical authority matrix defined and tested'
+  evidence: evidence/a020/authority_matrix_validation.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A020-4C01-01.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T134025_831857Z

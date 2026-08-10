@@ -1,0 +1,28 @@
+A020-02 portable adapter contract validation
+Date: 2026-08-08
+Mission: MP-CAT-A020-4C01
+BEAD: BEAD-CAT-A020-4C01-02
+
+Targeted contract tests:
+  Command: python -m pytest tests/test_cat_adapter_schemas.py -q
+  Result: 7 passed in 0.15s
+
+Repository governance gates:
+  Command: python scripts/cat_check_repo.py
+  Result: PASS root hygiene, mission registry, agent registry, scorecard, and tower state
+
+CAT schema validation:
+  Command: python scripts/cat_validate.py --all
+  Result: CAT validation passed; adapter schemas and A020 mission/BEAD contracts valid
+
+Adversarial checks covered by tests:
+  - non-empty CAT write paths are rejected
+  - unknown contract versions are rejected
+  - absolute and traversal paths are rejected
+  - missing validation evidence is rejected
+
+Implementation boundary:
+  - Consumer contract version is exactly 1.0.0.
+  - Consumer execution mode is evidence_only.
+  - CAT write_paths are structurally constrained to an empty array.
+  - Evidence identifies mission, BEAD, validation command, and result.

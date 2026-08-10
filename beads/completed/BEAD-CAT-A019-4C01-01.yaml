@@ -1,0 +1,147 @@
+bead_id: BEAD-CAT-A019-4C01-01
+mission_id: MP-CAT-A019-4C01
+title: Snapshot remote and local baseline
+status: completed
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Capture exact repository, branch, worktree, stash, dirty-state, PR, thread,
+  and SHA evidence before mutation.
+allowed_paths:
+- evidence/a019/stabilization_inventory.json
+- evidence/a019/baseline_sha.txt
+- evidence/a019/remote_pr_snapshot.json
+- evidence/a019/local_git_snapshot/**
+- evidence/reports/MP-CAT-A019_baseline_*.txt
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies: []
+tool_budget:
+  search: 8
+  read: 40
+  write: 10
+  execute: 12
+  max_runtime_minutes: 60
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 90
+  reversibility: 95
+  tool_fit: 92
+  risk_awareness: 94
+  testability: 90
+risk_level: high
+reversibility: high
+stop_conditions:
+- Destructive ambiguity or missing evidence
+- Unpushed work could be lost
+- Confidence below 90
+definition_of_done:
+- Canonical paths, branches, SHAs, worktrees, stashes, dirty state, PRs, and threads
+  are captured.
+- Evidence is reproducible and no mutation is performed.
+validation:
+- type: inventory
+  command: python scripts/cat_check_repo.py
+  evidence_path: evidence/reports/MP-CAT-A019_baseline_check.txt
+  required: true
+required_output:
+- stabilization_inventory
+- baseline_sha
+- remote_pr_snapshot
+handoff:
+  from: Orchestrator
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A019-4C01-02
+last_updated: '2026-08-08T12:35:11+00:00'
+transition_history:
+- timestamp: '2026-08-08T12:23:10+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-01
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Human Owner registered A019 stabilization packet and authorized first BEAD
+    kickoff
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-01.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T122310_419943Z
+- timestamp: '2026-08-08T12:34:23+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-01
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Auditor began baseline capture
+  evidence: ''
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-01.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T123423_462412Z
+- timestamp: '2026-08-08T12:34:33+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-01
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Baseline evidence captured and validation passed
+  evidence: evidence/reports/MP-CAT-A019_baseline_20260808T123138Z.txt
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-01.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T123433_076208Z
+- timestamp: '2026-08-08T12:34:59+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-01
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Auditor review passed; evidence is reproducible
+  evidence: evidence/reports/MP-CAT-A019_baseline_20260808T123138Z.txt
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-01.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T123459_577223Z
+- timestamp: '2026-08-08T12:35:11+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-01
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized close after baseline evidence and validation
+  evidence: evidence/reports/MP-CAT-A019_baseline_20260808T123138Z.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A019-4C01-01.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T123511_788905Z

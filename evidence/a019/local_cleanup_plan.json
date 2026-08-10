@@ -1,0 +1,26 @@
+{
+  "mission_id": "MP-CAT-A019-4C01",
+  "bead_id": "BEAD-CAT-A019-4C01-04",
+  "role": "Janitor",
+  "human_authorization": "Human Owner requested cleanup of the dirty checkout and PR #47 unblock work in this session.",
+  "rollback_reference": "c50b79dd0e49950024cc7e18d60c2f769d1b1ac5",
+  "cleanup_policy": "reversible selective stash only; no reset, clean, delete, rebase, merge, or remote mutation",
+  "preserve_in_worktree": [
+    "Current A019 mission, bead, role, and evidence artifacts",
+    "A019 execution logs and canonical state/registry updates",
+    "Any unclassified or potentially user-owned change not explicitly listed for stashing"
+  ],
+  "safe_stash_scope": [
+    "Pre-existing A015 implementation artifacts and reports",
+    "Pre-existing A007 validation-report edits",
+    "Pre-existing A015 deleted mission/bead records"
+  ],
+  "safe_stash_command": "git stash push --include-untracked with explicit A015/A007 pathspecs",
+  "stop_if": [
+    "The explicit pathspec would include A019 evidence or governance artifacts",
+    "The stash command reports an error",
+    "Any unpushed commit, branch, worktree, or remote state would be changed"
+  ],
+  "remote_mutation": false,
+  "destructive_cleanup": false
+}

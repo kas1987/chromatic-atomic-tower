@@ -1,0 +1,48 @@
+{
+  "mission_id": "MP-CAT-A019-4C01",
+  "bead_id": "BEAD-CAT-A019-4C01-05",
+  "status": "closed_with_successor_recommendation",
+  "generated_at": "2026-08-08T13:12:00Z",
+  "mission_closed_at": "2026-08-08T13:21:02Z",
+  "confidence": 92,
+  "risk_level": "high",
+  "baseline_sha": "c50b79dd0e49950024cc7e18d60c2f769d1b1ac5",
+  "rollback_stash": "d203c0ff8a7eb01f448c1e51542b083d6c063e4b",
+  "validation": {
+    "cat_validate": "pass",
+    "cat_check_repo": "pass",
+    "tower_guard": "pass"
+  },
+  "beads_completed": [
+    "BEAD-CAT-A019-4C01-01",
+    "BEAD-CAT-A019-4C01-02",
+    "BEAD-CAT-A019-4C01-03",
+    "BEAD-CAT-A019-4C01-04",
+    "BEAD-CAT-A019-4C01-05"
+  ],
+  "pr_47": {
+    "state": "OPEN",
+    "merge_state_status": "BLOCKED",
+    "head_sha": "c50b79dd0e49950024cc7e18d60c2f769d1b1ac5",
+    "failing_required_check": "cat-ci",
+    "passing_checks": [
+      "Validate CAT governance and Harness contracts",
+      "validate",
+      "github-bridge",
+      "codex-review",
+      "loghouse-ci"
+    ],
+    "skipped_checks": [
+      "post-review"
+    ],
+    "unresolved_not_outdated_review_threads": 4,
+    "disposition": "supersede; do not merge as-is"
+  },
+  "remote_mutation": false,
+  "tower_after_closeout": {
+    "status": "sprint_idle",
+    "active_mission_id": "",
+    "active_bead_id": ""
+  },
+  "human_promotion_recommendation": "Create a fresh scoped successor PR, then authorize closure of PR #47 separately."
+}

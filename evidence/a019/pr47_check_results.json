@@ -1,0 +1,50 @@
+{
+  "mission_id": "MP-CAT-A019-4C01",
+  "bead_id": "BEAD-CAT-A019-4C01-02",
+  "captured_at_utc": "2026-08-08T12:54:05.8260237Z",
+  "repository": "kas1987/chromatic-atomic-tower",
+  "pull_request": {
+    "number": 47,
+    "title": "chore(ci): CI hardening, Codex PR review, and governance updates",
+    "state": "OPEN",
+    "is_draft": false,
+    "head_branch": "chore/ci-hardening",
+    "head_sha": "c50b79dd0e49950024cc7e18d60c2f769d1b1ac5",
+    "base_branch": "master",
+    "url": "https://github.com/kas1987/chromatic-atomic-tower/pull/47",
+    "merge_state": "BLOCKED",
+    "review_decision": ""
+  },
+  "checks": {
+    "required_failure": {
+      "name": "cat-ci",
+      "state": "FAILURE",
+      "workflow": "CAT CI Governance",
+      "run_url": "https://github.com/kas1987/chromatic-atomic-tower/actions/runs/31216768203",
+      "job_url": "https://github.com/kas1987/chromatic-atomic-tower/actions/runs/31216768203/job/92992010459",
+      "failure_step": "CAT PR Scope Check",
+      "failure_summary": "17 changed files were rejected as outside the active A015 allowed paths; learnings/DECISION_LOG.md was rejected as a forbidden path."
+    },
+    "successful": [
+      "Validate CAT governance and Harness contracts",
+      "validate",
+      "github-bridge",
+      "codex-review",
+      "loghouse-ci"
+    ],
+    "skipped": ["post-review"]
+  },
+  "review_threads": {
+    "query_method": "GitHub GraphQL reviewThreads read-only query",
+    "total": 4,
+    "unresolved": 4,
+    "outdated": 0,
+    "thread_ids": [3738648278, 3738648319, 3738648345, 3738648368]
+  },
+  "local_validation": {
+    "command": "python scripts/cat_check_repo.py",
+    "exit_code": 0,
+    "result": "pass"
+  },
+  "remote_mutation": "none"
+}

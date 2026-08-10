@@ -1,0 +1,149 @@
+bead_id: BEAD-CAT-A019-4C01-03
+mission_id: MP-CAT-A019-4C01
+title: Reconcile canonical CAT state
+status: completed
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Make mission registry, tower state, generated sprint/current-state docs,
+  and roadmap agree under one directional source-of-truth model.
+allowed_paths:
+- missions/registry/MISSION_REGISTRY.yaml
+- state/TOWER_STATE.yaml
+- state/SPRINT_STATE.md
+- state/AGENT_HANDOFF_QUEUE.md
+- CAT_ROADMAP.md
+- evidence/a019/state_reconciliation.json
+- evidence/reports/MP-CAT-A019_state_*.txt
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies:
+- BEAD-CAT-A019-4C01-01
+- BEAD-CAT-A019-4C01-02
+tool_budget:
+  search: 8
+  read: 40
+  write: 12
+  execute: 16
+  max_runtime_minutes: 90
+confidence:
+  minimum: 90
+  current: 91
+  objective_clarity: 93
+  scope_clarity: 90
+  evidence_quality: 90
+  reversibility: 94
+  tool_fit: 91
+  risk_awareness: 94
+  testability: 90
+risk_level: high
+reversibility: high
+stop_conditions:
+- Canonical source conflict cannot be resolved
+- Derived state would silently overwrite canonical state
+- Validation cannot run
+definition_of_done:
+- Registry and tower state agree.
+- Generated state is regenerated from canonical sources.
+- Any accepted exception is explicitly recorded in evidence.
+validation:
+- type: state
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/MP-CAT-A019_state_validation.txt
+  required: true
+required_output:
+- state_reconciliation
+- updated_derived_state
+handoff:
+  from: Sentinel
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A019-4C01-04
+last_updated: '2026-08-08T13:04:36+00:00'
+transition_history:
+- timestamp: '2026-08-08T12:58:17+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-03
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized continuation of A019
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T125817_131110Z
+- timestamp: '2026-08-08T13:04:30+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-03
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Auditor executing canonical state reconciliation
+  evidence: ''
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T130430_504776Z
+- timestamp: '2026-08-08T13:04:31+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-03
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Canonical state reconciled and validation evidence recorded
+  evidence: evidence/a019/state_reconciliation.json
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-03.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T130431_862941Z
+- timestamp: '2026-08-08T13:04:33+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-03
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Human Owner review gate satisfied by recorded reconciliation evidence
+  evidence: evidence/reports/MP-CAT-A019_state_validation.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-03.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T130433_904284Z
+- timestamp: '2026-08-08T13:04:36+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-03
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: 'A019-03 complete: canonical and derived CAT state reconciled'
+  evidence: evidence/a019/state_reconciliation.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A019-4C01-03.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T130436_355942Z

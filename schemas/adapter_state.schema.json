@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic-atomic-tower.dev/schemas/adapter_state.schema.json",
+  "title": "CAT Portable Adapter Execution Evidence",
+  "description": "Versioned runtime evidence returned by a CAT consumer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "cat_mission_id",
+    "consumer_repo",
+    "observed_at",
+    "execution_status",
+    "active_bead_id",
+    "cat_authority",
+    "evidence"
+  ],
+  "$defs": {
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|/)\\.\\.(?:/|$))[^\\r\\n]+$"
+    }
+  },
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "cat_mission_id": {
+      "type": "string",
+      "pattern": "^MP-CAT-[A-Z0-9]+-[0-9A-Z]+$"
+    },
+    "consumer_repo": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[^\\r\\n]+$"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "execution_status": {
+      "type": "string",
+      "enum": ["requested", "running", "succeeded", "failed", "blocked"]
+    },
+    "active_bead_id": {
+      "type": ["string", "null"],
+      "pattern": "^BEAD-CAT-[A-Z0-9]+-[0-9A-Z]+-[0-9]{2}$"
+    },
+    "cat_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["write_paths"],
+      "properties": {
+        "write_paths": {
+          "type": "array",
+          "maxItems": 0,
+          "description": "Always empty: runtime evidence cannot mutate CAT state."
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "validation_command", "validation_result"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relative_path" },
+        "validation_command": { "type": "string", "minLength": 1 },
+        "validation_result": { "type": "string", "enum": ["pass", "fail"] }
+      }
+    }
+  }
+}

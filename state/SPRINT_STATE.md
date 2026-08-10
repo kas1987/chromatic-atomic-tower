@@ -2,17 +2,17 @@
 
 # CAT Sprint State
 
-_Generated: 2026-08-08T14:51:15+00:00_
+_Generated: 2026-08-08T16:13:56+00:00_
 
 | Field | Value |
 |---|---|
-| Active Sprint | SPRINT-015 |
+| Active Sprint | SPRINT-021 |
 | Tower Status | sprint_idle |
 | Active Mission | — |
 | Active BEAD | — |
 | Mission Status | — |
 | GO Mode | enabled |
-| Sprint Goal | Evidence Archival Automation — automated archival policy, scripts, schema, and integration into cat_check_repo. |
+| Sprint Goal | Rebase and revalidate PR #48 against current master without losing A020 authority-contract work. |
 
 ## Canonical Sources
 

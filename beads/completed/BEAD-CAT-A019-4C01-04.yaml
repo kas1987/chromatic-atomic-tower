@@ -1,0 +1,149 @@
+bead_id: BEAD-CAT-A019-4C01-04
+mission_id: MP-CAT-A019-4C01
+title: Reconcile local worktrees and branches
+status: completed
+priority: 1
+agent_role: Janitor
+autonomy_level: L2
+objective: Classify local worktrees, branches, and stashes, and execute only human-approved
+  safe cleanup.
+allowed_paths:
+- evidence/a019/worktree_disposition.md
+- evidence/a019/branch_disposition.md
+- evidence/a019/cleanup_ledger.md
+- evidence/a019/rollback_record.md
+- evidence/a019/local_cleanup_plan.json
+- evidence/reports/MP-CAT-A019_local_*.txt
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies:
+- BEAD-CAT-A019-4C01-01
+- BEAD-CAT-A019-4C01-02
+tool_budget:
+  search: 8
+  read: 40
+  write: 12
+  execute: 16
+  max_runtime_minutes: 90
+confidence:
+  minimum: 90
+  current: 91
+  objective_clarity: 92
+  scope_clarity: 90
+  evidence_quality: 90
+  reversibility: 94
+  tool_fit: 90
+  risk_awareness: 96
+  testability: 90
+risk_level: high
+reversibility: high
+stop_conditions:
+- Dirty or unpushed work lacks an owner or preservation record
+- Destructive cleanup would be required without human approval
+- A worktree points at a branch planned for deletion
+definition_of_done:
+- Every local worktree, branch, stash, and unpushed commit has a disposition.
+- No destructive cleanup occurs without rollback evidence and human approval.
+validation:
+- type: cleanup_plan
+  command: python scripts/cat_check_repo.py
+  evidence_path: evidence/reports/MP-CAT-A019_local_check.txt
+  required: true
+required_output:
+- worktree_disposition
+- branch_disposition
+- cleanup_ledger
+- rollback_record
+handoff:
+  from: Auditor
+  to: Janitor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A019-4C01-05
+last_updated: '2026-08-08T13:11:37+00:00'
+transition_history:
+- timestamp: '2026-08-08T13:06:18+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-04
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized continuation of A019 local reconciliation
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-04.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T130618_108381Z
+- timestamp: '2026-08-08T13:11:33+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-04
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Janitor executing reversible local disposition
+  evidence: ''
+  actor: Janitor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-04.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T131133_052989Z
+- timestamp: '2026-08-08T13:11:34+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-04
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Worktree and branch dispositions plus rollback evidence recorded
+  evidence: evidence/a019/local_cleanup_plan.json
+  actor: Janitor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-04.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T131134_026656Z
+- timestamp: '2026-08-08T13:11:36+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-04
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Human Owner review gate satisfied; selective stash is reversible
+  evidence: evidence/a019/rollback_record.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-04.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T131136_173567Z
+- timestamp: '2026-08-08T13:11:37+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-04
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: 'A019-04 complete: pre-existing unrelated work preserved in reversible stash'
+  evidence: evidence/reports/MP-CAT-A019_local_check.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A019-4C01-04.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T131137_360871Z

@@ -1,0 +1,177 @@
+bead_id: BEAD-CAT-A019-4C01-02
+mission_id: MP-CAT-A019-4C01
+title: Repair or disposition PR 47
+status: completed
+priority: 1
+agent_role: Sentinel
+autonomy_level: L2
+objective: Resolve the four known review-thread classes, verify required checks, then
+  recommend merge, close, or supersede without auto-merging.
+allowed_paths:
+- evidence/a019/pr_disposition.md
+- evidence/a019/review_thread_disposition.md
+- evidence/a019/pr47_check_results.json
+- evidence/reports/MP-CAT-A019_pr47_*.txt
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies:
+- BEAD-CAT-A019-4C01-01
+tool_budget:
+  search: 8
+  read: 40
+  write: 10
+  execute: 16
+  max_runtime_minutes: 90
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 93
+  scope_clarity: 91
+  evidence_quality: 90
+  reversibility: 92
+  tool_fit: 91
+  risk_awareness: 94
+  testability: 90
+risk_level: high
+reversibility: high
+stop_conditions:
+- CI or review findings cannot be validated
+- Repair requires broadening PR 47 beyond its bounded purpose
+- Automatic merge would be required
+definition_of_done:
+- All four known review-thread classes have evidence-backed dispositions.
+- Required checks are recorded and no automatic merge occurs.
+validation:
+- type: review
+  command: python scripts/cat_check_repo.py
+  evidence_path: evidence/reports/MP-CAT-A019_pr47_check.txt
+  required: true
+required_output:
+- pr_disposition
+- review_thread_disposition
+handoff:
+  from: Auditor
+  to: Sentinel
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A019-4C01-03
+last_updated: '2026-08-08T12:55:40+00:00'
+transition_history:
+- timestamp: '2026-08-08T12:45:41+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-02
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'Human Owner authorized PR #47 disposition and recovery sequencing'
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T124541_188620Z
+- timestamp: '2026-08-08T12:46:43+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-02
+  from_status: active
+  to_status: blocked
+  allowed: true
+  dry_run: false
+  reason: Required assigned role file agents/roles/SENTINEL.md is missing; execution
+    halted
+  evidence: ''
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T124643_844850Z
+- timestamp: '2026-08-08T12:50:07+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-02
+  from_status: blocked
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Human Owner approved Sentinel role contract; blocker removed
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T125007_584856Z
+- timestamp: '2026-08-08T12:55:35+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-02
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: 'Sentinel began PR #47 disposition review'
+  evidence: ''
+  actor: Sentinel
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T125535_798030Z
+- timestamp: '2026-08-08T12:55:36+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-02
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: PR checks, review threads, and disposition evidence captured
+  evidence: evidence/reports/MP-CAT-A019_pr47_check_20260808T125405Z.txt
+  actor: Sentinel
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-02.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T125536_380931Z
+- timestamp: '2026-08-08T12:55:38+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-02
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Sentinel review passed; supersede recommendation is evidence-backed
+  evidence: evidence/reports/MP-CAT-A019_pr47_check_20260808T125405Z.txt
+  actor: Sentinel
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-02.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T125538_143908Z
+- timestamp: '2026-08-08T12:55:40+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-02
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized close with no automatic merge or remote mutation
+  evidence: evidence/reports/MP-CAT-A019_pr47_check_20260808T125405Z.txt
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A019-4C01-02.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T125540_431902Z

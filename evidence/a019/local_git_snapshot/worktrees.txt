@@ -1,0 +1,3 @@
+worktree C:/.01_CAT
+HEAD c50b79dd0e49950024cc7e18d60c2f769d1b1ac5
+branch refs/heads/chore/ci-hardening

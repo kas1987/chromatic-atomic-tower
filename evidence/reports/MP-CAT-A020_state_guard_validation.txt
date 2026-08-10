@@ -1,0 +1,26 @@
+A020-04 generated-state ownership guard validation
+Date: 2026-08-08
+Mission: MP-CAT-A020-4C01
+BEAD: BEAD-CAT-A020-4C01-04
+
+Targeted guard tests:
+  Command: python -m pytest tests/test_state_ownership_guard.py -q
+  Result: 7 passed in 0.15s
+
+Repository gates:
+  Command: python scripts/cat_check_repo.py
+  Result: PASS root hygiene, mission registry, agent registry, scorecard, and tower state
+  Command: python scripts/cat_validate.py --all
+  Result: CAT validation passed
+  Command: python -m json.tool schemas/derived_state_ownership.schema.json
+  Result: PASS
+  Command: python -m py_compile scripts/cat_state_ownership_guard.py
+  Result: PASS
+
+Ownership invariants proven:
+  - Contract version is exactly 1.0.0.
+  - Each canonical fact has one canonical path and writer.
+  - Derived artifacts point only to their containing canonical fact.
+  - Duplicate canonical paths, duplicate facts, path overlap, and writer conflicts
+    are rejected without selecting a winner.
+  - Valid results include canonical and derived path evidence.

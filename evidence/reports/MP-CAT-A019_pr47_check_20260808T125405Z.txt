@@ -1,0 +1,36 @@
+Mission: MP-CAT-A019-4C01
+BEAD: BEAD-CAT-A019-4C01-02
+Role: Sentinel
+Captured UTC: 2026-08-08T12:54:05.8260237Z
+
+RESULT: PASS_WITH_DISPOSITION — PR evidence is validated; supersede recommendation recorded.
+
+PR #47:
+- Open, non-draft, merge state BLOCKED.
+- Head chore/ci-hardening at c50b79dd0e49950024cc7e18d60c2f769d1b1ac5.
+- Base master.
+
+Checks:
+- cat-ci FAILURE at CAT PR Scope Check.
+- Failure cause: 17 changed files outside the stale A015 allowed paths, plus forbidden learnings/DECISION_LOG.md.
+- Validate CAT governance and Harness contracts: PASS.
+- validate: PASS.
+- github-bridge: PASS.
+- codex-review: PASS.
+- loghouse-ci: PASS.
+- post-review: SKIPPED.
+
+Review threads:
+- Four Copilot threads found through GraphQL.
+- All four unresolved; none outdated.
+- Evidence-backed successor dispositions are recorded in evidence/a019/review_thread_disposition.md.
+
+Disposition:
+- Do not merge PR #47 as-is.
+- Recommend superseding it with a fresh mission/BEAD-traced successor PR.
+- Do not close or mutate PR #47 automatically.
+
+Validation:
+- python scripts/cat_check_repo.py: exit 0.
+
+Remote mutation: none.

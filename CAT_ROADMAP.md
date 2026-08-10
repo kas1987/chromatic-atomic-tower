@@ -17,12 +17,13 @@
 - Sprint 012: CAT Portable Project Adapter (`MP-CAT-A012-4C01`)
 - Sprint 013: Tool Plane Scaffolding (`MP-CAT-A013-4C01`)
 - Sprint 014: GO Automation Control Loop (`MP-CAT-A014-4C01`)
+- Sprint 015: Evidence Archival Automation (`MP-CAT-A015-4C01`)
+- Repository Stabilization (`MP-CAT-A019-4C01`)
 
 ## Current
 
-- Tower idle — no active mission. Next legal sprint: `MP-CAT-A015-4C01`.
+- Tower idle — no active mission. Next legal candidate: `MP-CAT-A016-4C01`.
 
 ## Next Candidates
 
-- Sprint 015: Evidence Archival Automation (`MP-CAT-A015-4C01`)
 - Sprint 016: CAT Harness Certification & Templates (`MP-CAT-A016-4C01`)

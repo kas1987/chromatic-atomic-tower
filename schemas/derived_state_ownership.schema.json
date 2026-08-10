@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic-atomic-tower.dev/schemas/derived_state_ownership.schema.json",
+  "title": "CAT Derived State Ownership DAG",
+  "description": "Canonical facts and one-direction generated artifacts with explicit writers.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "facts"],
+  "$defs": {
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|[\\\\/])\\.\\.(?:[\\\\/]|$))[^\\r\\n]+$"
+    },
+    "derived_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "writer", "source_fact"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relative_path" },
+        "writer": { "type": "string", "minLength": 1 },
+        "source_fact": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_\\-]+$"
+        }
+      }
+    },
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fact_id",
+        "canonical_writer",
+        "canonical_path",
+        "derived_artifacts",
+        "consumers"
+      ],
+      "properties": {
+        "fact_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_\\-]+$"
+        },
+        "canonical_writer": { "type": "string", "minLength": 1 },
+        "canonical_path": { "$ref": "#/$defs/relative_path" },
+        "derived_artifacts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/derived_artifact" }
+        },
+        "consumers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "facts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/fact" }
+    }
+  }
+}

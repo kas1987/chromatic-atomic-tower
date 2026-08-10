@@ -1,0 +1,19 @@
+{
+  "mission_id": "MP-CAT-A020-4C01",
+  "bead_id": "BEAD-CAT-A020-4C01-01",
+  "role": "Auditor",
+  "schema": "schemas/authority_matrix.schema.json",
+  "contract": "docs/architecture/CAT_GLOBAL_AUTHORITY_CONTRACT.md",
+  "validation_command": "python -m pytest tests/test_authority_matrix_contract.py -q",
+  "validation_result": {
+    "exit_code": 0,
+    "passed": 3,
+    "failed": 0
+  },
+  "proofs": [
+    "The embedded matrix conforms to the Draft 2020-12 schema.",
+    "Duplicate mutable facts are rejected.",
+    "Non-CAT owners use local-only or runtime-evidence-only policies."
+  ],
+  "remote_mutation": false
+}

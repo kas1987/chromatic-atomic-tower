@@ -1,0 +1,20 @@
+CAT A020-01 authority matrix validation
+Mission: MP-CAT-A020-4C01
+BEAD: BEAD-CAT-A020-4C01-01
+Role: Auditor
+
+Command:
+python -m pytest tests/test_authority_matrix_contract.py -q
+
+Result: PASS
+Tests: 3 passed, 0 failed
+
+Proof:
+- Draft 2020-12 schema validation passed.
+- Duplicate mutable facts are rejected.
+- Runtime and project consumers are not CAT governance writers.
+
+Scope:
+- Authority contract and matrix schema only.
+- No cross-repository mutation gate implemented in this bead.
+- No remote mutation.

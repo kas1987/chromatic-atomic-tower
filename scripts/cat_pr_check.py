@@ -28,6 +28,18 @@ CLOSEOUT_EXTRA_FILES = {
     'beads/active/BEAD-CAT-A015-4C01-04.yaml',
     'scripts/cat_archive_evidence.py',
     'scripts/cat_pr_check.py',
+# Explicit mission deliverables that are valid in a closeout PR but do not fit
+# the generic lifecycle-plane prefixes. Keep this set narrow: adding a whole
+# contract or automation plane would let an unrelated closeout bypass BEAD
+# scope checks.
+    'CAT_ROADMAP.md',
+    'schemas/adapter_config.schema.json',
+    'schemas/adapter_state.schema.json',
+    'schemas/authority_matrix.schema.json',
+    'schemas/cross_repo_mutation.schema.json',
+    'schemas/derived_state_ownership.schema.json',
+    'scripts/cat_cross_repo_gate.py',
+    'scripts/cat_state_ownership_guard.py',
 }
 
 

@@ -1,0 +1,165 @@
+mission_id: MP-CAT-A020-4C01
+title: CAT Global Authority Kernel and Cross-Repo Contract
+level: M4
+status: closed
+owner: Human Owner
+priority: 1
+risk_level: high
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 92
+created: '2026-08-08'
+objective: Make CAT the sole global mission and governance authority while exposing
+  a bounded, portable execution contract to Harness V2 and future repositories.
+background: 'A019 established the CAT repository baseline and dispositioned PR #47
+  for supersession. A020 formalizes the authority boundary before implementation expands
+  across repositories.'
+dependencies:
+- MP-CAT-A019-4C01
+scope:
+  in:
+  - Authority ownership contract
+  - Portable adapter contract and versioning
+  - Cross-repo mutation and evidence gates
+  - Derived-state ownership rules
+  - Contract tests and migration documentation
+  out:
+  - Importing V2 runtime topology into CAT
+  - Rebuilding V2 routing or observability in CAT
+  - Visual control-plane implementation
+  - Automatic merge autonomy
+allowed_paths:
+- missions/active/MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A020-4C01-*.yaml
+- beads/completed/BEAD-CAT-A020-4C01-*.yaml
+- state/TOWER_STATE.yaml
+- state/SPRINT_STATE.md
+- state/AGENT_HANDOFF_QUEUE.md
+- CAT_ROADMAP.md
+- docs/architecture/CAT_GLOBAL_AUTHORITY_CONTRACT.md
+- schemas/authority_matrix.schema.json
+- schemas/cross_repo_mutation.schema.json
+- schemas/derived_state_ownership.schema.json
+- scripts/cat_cross_repo_gate.py
+- scripts/cat_state_ownership_guard.py
+- tests/test_authority_matrix_contract.py
+- tests/test_cross_repo_mutation_gate.py
+- tests/test_state_ownership_guard.py
+- evidence/a020/**
+- evidence/reports/MP-CAT-A020_*.txt
+- evidence/reports/MP-CAT-A020_*.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+acceptance_criteria:
+- Every mutable governance fact has one canonical writer.
+- CAT can govern a V2 execution request without granting V2 global state authority.
+- Project adapters cannot overwrite CAT mission registry state.
+- Cross-repo mutation requires Mission ID, BEAD ID, allowed paths, validation, and
+  evidence.
+- Contract tests cover unauthorized write rejection and authorized execution evidence.
+required_validation:
+- type: cat_validate
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/MP-CAT-A020_validate.txt
+  required: true
+rollback:
+  required: true
+  plan: Revert A020 authority-contract changes and restore the A019 stabilization
+    baseline.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 10
+  read: 50
+  write: 25
+  execute: 25
+  max_runtime_minutes: 180
+beads:
+- bead_id: BEAD-CAT-A020-4C01-01
+  title: Define canonical authority matrix
+  status: queued
+  path: beads/active/BEAD-CAT-A020-4C01-01.yaml
+- bead_id: BEAD-CAT-A020-4C01-02
+  title: Version portable adapter contract
+  status: queued
+  path: beads/active/BEAD-CAT-A020-4C01-02.yaml
+- bead_id: BEAD-CAT-A020-4C01-03
+  title: Implement cross-repo mutation gate
+  status: queued
+  path: beads/active/BEAD-CAT-A020-4C01-03.yaml
+- bead_id: BEAD-CAT-A020-4C01-04
+  title: Implement generated-state ownership guard
+  status: queued
+  path: beads/active/BEAD-CAT-A020-4C01-04.yaml
+- bead_id: BEAD-CAT-A020-4C01-05
+  title: Run CAT-to-V2 contract tests and closeout
+  status: queued
+  path: beads/active/BEAD-CAT-A020-4C01-05.yaml
+evidence_requirements:
+- authority matrix and contract
+- machine-readable schema validation
+- cross-repo boundary proof
+- rollback record
+- CAT validation output
+stop_conditions:
+- A019 is not closed with evidence.
+- Any authority fact has two canonical writers.
+- V2 implementation details must be copied into CAT to proceed.
+- Cross-repo mutation cannot be bounded to explicit paths and evidence.
+last_updated: '2026-08-08T14:08:17+00:00'
+transition_history:
+- timestamp: '2026-08-08T13:37:50+00:00'
+  target_type: mission
+  target_id: MP-CAT-A020-4C01
+  from_status: draft
+  to_status: triaged
+  allowed: true
+  dry_run: false
+  reason: Human Owner registered A020 from the approved architecture pack after A019
+    closeout
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T133750_431412Z
+- timestamp: '2026-08-08T13:37:50+00:00'
+  target_type: mission
+  target_id: MP-CAT-A020-4C01
+  from_status: triaged
+  to_status: approved
+  allowed: true
+  dry_run: false
+  reason: Human Owner approved A020 authority-kernel mission for bounded implementation
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
+  guard: human_gate_if_required
+  guard_ok: true
+  guard_message: gate approved by agent 'Auditor'
+  snapshot: evidence\snapshots\snap_20260808T133750_788541Z
+- timestamp: '2026-08-08T14:08:17+00:00'
+  target_type: mission
+  target_id: MP-CAT-A020-4C01
+  from_status: approved
+  to_status: closed
+  allowed: true
+  dry_run: false
+  reason: "Sprint closeout \u2014 all BEADs terminal"
+  evidence: evidence/reports/MP-CAT-A020_closeout.md
+  actor: Human Owner
+  message: direct closeout via cat_sprint_closeout.py
+  contract_path: missions\active\MP-CAT-A020-4C01_GLOBAL_AUTHORITY_KERNEL.yaml
+  guard: mission_all_beads_terminal
+  guard_ok: true

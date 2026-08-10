@@ -1,0 +1,46 @@
+{
+  "mission_id": "MP-CAT-A019-4C01",
+  "bead_id": "BEAD-CAT-A019-4C01-01",
+  "captured_at_utc": "2026-08-08T12:31:38.9064785Z",
+  "repository": "kas1987/chromatic-atomic-tower",
+  "remote": "https://github.com/kas1987/chromatic-atomic-tower.git",
+  "collection_method": "gh pr list/view and GitHub REST read-only endpoints",
+  "pull_request_inventory": {
+    "total_observed": 47,
+    "open": [47],
+    "merged_ranges": ["1-2", "4-9", "11-32", "34-46"],
+    "closed_not_merged": [3, 10, 33]
+  },
+  "open_pull_requests": [
+    {
+      "number": 47,
+      "title": "chore(ci): CI hardening, Codex PR review, and governance updates",
+      "state": "OPEN",
+      "is_draft": false,
+      "head": {"branch": "chore/ci-hardening", "sha": "c50b79dd0e49950024cc7e18d60c2f769d1b1ac5"},
+      "base": {"branch": "master"},
+      "url": "https://github.com/kas1987/chromatic-atomic-tower/pull/47",
+      "merge_state": "BLOCKED",
+      "review_decision": "",
+      "checks": {
+        "failure": ["cat-ci"],
+        "success": ["github-bridge", "Validate CAT governance and Harness contracts", "codex-review", "loghouse-ci", "validate"],
+        "skipped": ["post-review"]
+      },
+      "review_and_thread_snapshot": {
+        "reviews": 1,
+        "issue_comments": 2,
+        "inline_review_comments": 4,
+        "thread_resolution_state": "not exposed by the REST payload used; treat all four inline comments as requiring disposition until GraphQL confirmation",
+        "notable_findings": [
+          "One test can be environment-dependent when CAT_OLLAMA_ATTESTATION_KEY is set.",
+          "cat_review_coverage.py contains unused imports/constants.",
+          "Claude workflow concurrency key can collapse to claude- for issue events.",
+          "Decision log contains adjacent entries that may conflict about Claude workflow retirement."
+        ],
+        "issue_notices": ["Cursor Bugbot unavailable", "Codex usage limit notice"]
+      }
+    }
+  ],
+  "remote_state_risk": "PR #47 is open and blocked with a failing cat-ci check and four inline review comments requiring disposition. This is recorded for the next stabilization beads; no remote mutation was performed."
+}

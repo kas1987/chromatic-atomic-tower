@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic-atomic-tower.dev/schemas/adapter_config.schema.json",
+  "title": "CAT Portable Adapter Contract Configuration",
+  "description": "Versioned, evidence-only authority boundary for a CAT consumer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "cat_mission_id",
+    "consumer_repo",
+    "execution_mode",
+    "cat_authority",
+    "consumer_authority"
+  ],
+  "$defs": {
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|/)\\.\\.(?:/|$))[^\\r\\n]+$",
+      "description": "Repository-relative path without an absolute or traversal segment."
+    },
+    "path_list": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relative_path" },
+      "uniqueItems": true
+    }
+  },
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Portable adapter contract version; incompatible major versions are rejected."
+    },
+    "cat_mission_id": {
+      "type": "string",
+      "pattern": "^MP-CAT-[A-Z0-9]+-[0-9A-Z]+$"
+    },
+    "consumer_repo": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[^\\r\\n]+$"
+    },
+    "execution_mode": {
+      "type": "string",
+      "const": "evidence_only",
+      "description": "The consumer returns bounded runtime evidence; CAT remains the governance writer."
+    },
+    "cat_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read_paths", "write_paths"],
+      "properties": {
+        "read_paths": { "$ref": "#/$defs/path_list" },
+        "write_paths": {
+          "type": "array",
+          "maxItems": 0,
+          "description": "Always empty: a portable consumer cannot write CAT state."
+        }
+      }
+    },
+    "consumer_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read_paths", "write_paths"],
+      "properties": {
+        "read_paths": { "$ref": "#/$defs/path_list" },
+        "write_paths": { "$ref": "#/$defs/path_list" }
+      }
+    }
+  }
+}

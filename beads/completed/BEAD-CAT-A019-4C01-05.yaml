@@ -1,0 +1,155 @@
+bead_id: BEAD-CAT-A019-4C01-05
+mission_id: MP-CAT-A019-4C01
+title: Validate and publish stabilization checkpoint
+status: completed
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Run validators, record baseline SHA, risk exceptions, rollback proof, and
+  stabilization signoff.
+allowed_paths:
+- evidence/a019/stabilization_signoff.md
+- evidence/a019/baseline_sha.txt
+- evidence/a019/rollback_record.md
+- evidence/reports/MP-CAT-A019_validate.txt
+- evidence/reports/MP-CAT-A019_tower_guard.md
+- evidence/reports/MP-CAT-A019_closeout.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- learnings/**
+dependencies:
+- BEAD-CAT-A019-4C01-01
+- BEAD-CAT-A019-4C01-02
+- BEAD-CAT-A019-4C01-03
+- BEAD-CAT-A019-4C01-04
+tool_budget:
+  search: 8
+  read: 40
+  write: 12
+  execute: 20
+  max_runtime_minutes: 120
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 92
+  reversibility: 94
+  tool_fit: 92
+  risk_awareness: 96
+  testability: 92
+risk_level: high
+reversibility: high
+stop_conditions:
+- Required validation cannot run
+- Rollback proof is missing
+- Any P0/P1 stabilization gate remains unresolved
+definition_of_done:
+- CAT validation and tower-guard outputs pass.
+- Baseline SHA, rollback record, exceptions, and signoff are published.
+- Human Owner receives a promotion recommendation.
+validation:
+- type: cat_validate
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/MP-CAT-A019_validate.txt
+  required: true
+- type: tower_guard
+  command: python scripts/cat_tower_guard.py --write-report
+  evidence_path: evidence/reports/MP-CAT-A019_tower_guard.md
+  required: true
+required_output:
+- stabilization_signoff
+- validation_evidence
+- rollback_evidence
+handoff:
+  from: Janitor
+  to: Human Owner
+  reviewer: Human Owner
+  next_bead_id: null
+last_updated: '2026-08-08T13:18:02+00:00'
+transition_history:
+- timestamp: '2026-08-08T13:12:34+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-05
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: Human Owner authorized final A019 stabilization checkpoint
+  evidence: ''
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-05.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T131234_435962Z
+- timestamp: '2026-08-08T13:17:48+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-05
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Auditor executing final stabilization checkpoint
+  evidence: ''
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-05.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260808T131748_528736Z
+- timestamp: '2026-08-08T13:17:52+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-05
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: CAT and tower-guard evidence published
+  evidence: evidence/reports/MP-CAT-A019_validate.txt
+  actor: Auditor
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-05.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T131752_757296Z
+- timestamp: '2026-08-08T13:17:56+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-05
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Human Owner review gate satisfied; promotion recommendation recorded
+  evidence: evidence/a019/stabilization_signoff.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A019-4C01-05.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T131756_498061Z
+- timestamp: '2026-08-08T13:18:01+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A019-4C01-05
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: 'A019-05 complete: stabilization checkpoint published'
+  evidence: evidence/reports/MP-CAT-A019_closeout.json
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A019-4C01-05.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260808T131801_683532Z
