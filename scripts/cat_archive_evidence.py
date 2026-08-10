@@ -4,7 +4,7 @@
 import argparse
 import json
 import subprocess
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from common import ROOT, load_yaml
@@ -88,7 +88,7 @@ def create_archive_record(
 ) -> dict:
     """Create an archive record conforming to schemas/archive.schema.json."""
     return {
-        'timestamp': datetime.utcnow().isoformat() + 'Z',
+        'timestamp': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
         'source_path': source_path,
         'destination_path': destination_path,
         'file_size_bytes': file_size_bytes,
