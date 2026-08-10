@@ -10,7 +10,7 @@
     "relative_path": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|/)\\.\\.(?:/|$))[^\\r\\n]+$"
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|[\\\\/])\\.\\.(?:[\\\\/]|$))[^\\r\\n]+$"
     },
     "derived_artifact": {
       "type": "object",

@@ -41,8 +41,9 @@ Any future cross-repository mutation must carry:
 5. evidence destination; and
 6. rollback reference.
 
-The mutation gate and generated-state guard are separate later A020 beads.
-This document defines their authority boundary; it does not implement them.
+The mutation gate and generated-state guard are implemented as read-only A020
+reference validators. This document defines their authority boundary; neither
+validator performs the mutation or state generation it evaluates.
 
 ## Portable adapter contract
 

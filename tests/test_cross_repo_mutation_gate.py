@@ -66,6 +66,23 @@ def test_gate_rejects_CAT_governance_paths():
     assert any("CAT-protected" in error for error in result["errors"])
 
 
+def test_gate_rejects_CAT_governance_paths_with_windows_separators():
+    request = valid_request()
+    request["target_paths"] = [r"missions\registry\MISSION_REGISTRY.yaml"]
+    request["allowed_paths"] = [r"missions\**"]
+    result = evaluate_request(request)
+    assert result["allowed"] is False
+    assert any("CAT-protected" in error for error in result["errors"])
+
+
+@pytest.mark.parametrize("evidence_path", ["evidence/../outside.md", r"evidence\..\outside.md"])
+def test_schema_rejects_evidence_path_traversal(evidence_path):
+    request = valid_request()
+    request["evidence_path"] = evidence_path
+    with pytest.raises(ValidationError):
+        validate(instance=request, schema=load_schema())
+
+
 def test_gate_rejects_missing_human_approval():
     request = valid_request()
     request["approved_by"] = ""

@@ -14,6 +14,11 @@ ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = ROOT / "schemas" / "derived_state_ownership.schema.json"
 
 
+def _normalize_path(path: str | None) -> str | None:
+    """Use one separator form for all ownership comparisons and evidence."""
+    return path.replace("\\", "/") if isinstance(path, str) else path
+
+
 def _load_schema() -> dict:
     return json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 
@@ -40,7 +45,7 @@ def validate_ownership(document: dict) -> dict:
     for fact in facts:
         fact_id = fact.get("fact_id")
         writer = fact.get("canonical_writer")
-        canonical_path = fact.get("canonical_path")
+        canonical_path = _normalize_path(fact.get("canonical_path"))
         if fact_id in fact_ids:
             errors.append(f"duplicate fact_id: {fact_id}")
         fact_ids.add(fact_id)
@@ -57,7 +62,7 @@ def validate_ownership(document: dict) -> dict:
 
         for artifact in fact.get("derived_artifacts", []):
             derived_count += 1
-            path = artifact.get("path")
+            path = _normalize_path(artifact.get("path"))
             artifact_writer = artifact.get("writer")
             source_fact = artifact.get("source_fact")
             if source_fact != fact_id:

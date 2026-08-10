@@ -60,7 +60,11 @@ def _semantic_errors(request: dict) -> list[str]:
 
     allowed_paths = request.get("allowed_paths", [])
     for path in request.get("target_paths", []):
-        if any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in CAT_PROTECTED_PREFIXES):
+        normalized_path = path.replace("\\", "/")
+        if any(
+            normalized_path == prefix.rstrip("/") or normalized_path.startswith(prefix)
+            for prefix in CAT_PROTECTED_PREFIXES
+        ):
             errors.append(f"CAT-protected target path is not mutable: {path}")
         if not any(_path_matches(path, pattern) for pattern in allowed_paths):
             errors.append(f"target path is outside declared allowed_paths: {path}")

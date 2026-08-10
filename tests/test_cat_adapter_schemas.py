@@ -3,7 +3,6 @@
 import json
 from pathlib import Path
 
-import jsonschema
 import pytest
 from jsonschema import Draft202012Validator, ValidationError, validate
 

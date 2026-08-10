@@ -4,8 +4,7 @@ import copy
 import json
 from pathlib import Path
 
-import pytest
-from jsonschema import Draft202012Validator, ValidationError, validate
+from jsonschema import Draft202012Validator, validate
 
 from scripts.cat_state_ownership_guard import validate_ownership
 
@@ -107,3 +106,29 @@ def test_guard_rejects_unknown_source_fact_without_choosing_a_writer():
     result = validate_ownership(graph)
     assert result["valid"] is False
     assert any("source_fact" in error for error in result["errors"])
+
+
+def test_guard_rejects_duplicate_derived_path_with_mixed_separators():
+    graph = valid_graph()
+    graph["facts"][0]["derived_artifacts"].append({
+        "path": r"state\SPRINT_STATE.md",
+        "writer": "CAT",
+        "source_fact": "cat_derived_state",
+    })
+    result = validate_ownership(graph)
+    assert result["valid"] is False
+    assert any("duplicate derived path" in error for error in result["errors"])
+
+
+def test_guard_rejects_conflicting_canonical_path_with_mixed_separators():
+    graph = valid_graph()
+    graph["facts"].append({
+        "fact_id": "mixed_separator_path",
+        "canonical_writer": "Harness V2",
+        "canonical_path": r"state\TOWER_STATE.yaml",
+        "derived_artifacts": [],
+        "consumers": ["CAT"],
+    })
+    result = validate_ownership(graph)
+    assert result["valid"] is False
+    assert any("conflicting writers" in error for error in result["errors"])

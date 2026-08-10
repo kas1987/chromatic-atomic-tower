@@ -23,12 +23,12 @@
     "relative_path": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|/)\\.\\.(?:/|$))[^\\r\\n]+$"
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|[\\\\/])\\.\\.(?:[\\\\/]|$))[^\\r\\n]+$"
     },
     "path_pattern": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|/)\\.\\.(?:/|$))[^\\r\\n]+$"
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(^|[\\\\/])\\.\\.(?:[\\\\/]|$))[^\\r\\n]+$"
     }
   },
   "properties": {
@@ -70,8 +70,10 @@
       "minLength": 1
     },
     "evidence_path": {
-      "type": "string",
-      "pattern": "^evidence/[^\\r\\n]+$"
+      "allOf": [
+        { "$ref": "#/$defs/relative_path" },
+        { "type": "string", "pattern": "^evidence/" }
+      ]
     },
     "rollback_reference": {
       "type": "string",
