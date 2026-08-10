@@ -1,0 +1,133 @@
+bead_id: BEAD-CAT-A023-4C01-04
+mission_id: MP-CAT-A023-4C01
+title: Add cross-file identity asymmetry and drift checks
+status: reviewed
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Add deterministic checks that detect mismatched mission identity, BEAD
+  stems, complexity, priority metadata, dependencies, and derived evidence paths.
+allowed_paths:
+- gates/CAT_ID_TAXONOMY.yaml
+- scripts/cat_taxonomy_audit.py
+- tests/test_cat_taxonomy.py
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-04.md
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-04.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A023-4C01-03
+tool_budget:
+  search: 20
+  read: 60
+  write: 25
+  execute: 30
+  max_runtime_minutes: 150
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 90
+  reversibility: 96
+  tool_fit: 92
+  risk_awareness: 96
+  testability: 96
+risk_level: high
+reversibility: high
+stop_conditions:
+- The audit would mutate mission or registry state.
+- A finding cannot identify its source and derived consumer.
+- A forbidden path or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- The audit reports exact source files, identity mismatches, and compatibility exceptions.
+- Synthetic fixtures prove both detection and clean behavior.
+- JSON and Markdown evidence are emitted at exact HEAD.
+validation:
+- type: test
+  command: python -m pytest tests/test_cat_taxonomy.py -q
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-04.md
+  required: true
+required_output:
+- taxonomy_audit
+- asymmetry_tests
+- json_evidence
+handoff:
+  from: Auditor
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A023-4C01-05
+last_updated: '2026-08-10T16:14:22+00:00'
+transition_history:
+- timestamp: '2026-08-10T16:08:17+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-04
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'ANA GO: activate next A023 cross-file identity drift detection slice'
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-04.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T160817_254696Z
+- timestamp: '2026-08-10T16:14:12+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-04
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Auditor proof complete; begin closeout
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-04.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-04.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T161412_826145Z
+- timestamp: '2026-08-10T16:14:17+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-04
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Synthetic tests and full CAT validation passed
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-04.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-04.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T161417_058706Z
+- timestamp: '2026-08-10T16:14:22+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-04
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Human Owner reviewed the audit methodology, findings, and residual classification
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-04.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-04.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T161422_048325Z

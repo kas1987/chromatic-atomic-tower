@@ -1,0 +1,1992 @@
+{
+  "bead_contracts": 114,
+  "compatibility_exceptions": [
+    {
+      "id": "BEAD-CAT-000-001",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-000-001.yaml"
+    },
+    {
+      "id": "BEAD-CAT-000-002",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-000-002.yaml"
+    },
+    {
+      "id": "BEAD-CAT-000-003",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-000-003.yaml"
+    },
+    {
+      "id": "BEAD-CAT-000-004",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-000-004.yaml"
+    },
+    {
+      "id": "BEAD-CAT-001-001",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-001-001.yaml"
+    },
+    {
+      "id": "BEAD-CAT-001-002",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-001-002.yaml"
+    },
+    {
+      "id": "BEAD-CAT-001-003",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-001-003.yaml"
+    },
+    {
+      "id": "BEAD-CAT-001-004",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-001-004.yaml"
+    },
+    {
+      "id": "BEAD-CAT-001-005",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-001-005.yaml"
+    },
+    {
+      "id": "BEAD-CAT-002-001",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-002-001.yaml"
+    },
+    {
+      "id": "BEAD-CAT-002-002",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-002-002.yaml"
+    },
+    {
+      "id": "BEAD-CAT-002-003",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-002-003.yaml"
+    },
+    {
+      "id": "BEAD-CAT-002-004",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-002-004.yaml"
+    },
+    {
+      "id": "BEAD-CAT-002-005",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-002-005.yaml"
+    },
+    {
+      "id": "BEAD-CAT-002-CLOSEOUT-EXAMPLE",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\examples\\BEAD-CAT-002-CLOSEOUT-EXAMPLE.yaml"
+    },
+    {
+      "id": "BEAD-CAT-003-001",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-003-001.yaml"
+    },
+    {
+      "id": "BEAD-CAT-003-002",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-003-002.yaml"
+    },
+    {
+      "id": "BEAD-CAT-003-003",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-003-003.yaml"
+    },
+    {
+      "id": "BEAD-CAT-003-004",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-003-004.yaml"
+    },
+    {
+      "id": "BEAD-CAT-004-001",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-004-001.yaml"
+    },
+    {
+      "id": "BEAD-CAT-004-002",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-004-002.yaml"
+    },
+    {
+      "id": "BEAD-CAT-004-003",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-004-003.yaml"
+    },
+    {
+      "id": "BEAD-CAT-004-004",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-004-004.yaml"
+    },
+    {
+      "id": "BEAD-CAT-005-001",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\failed\\BEAD-CAT-005-001.yaml"
+    },
+    {
+      "id": "BEAD-CAT-005-002",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\completed\\BEAD-CAT-005-002.yaml"
+    },
+    {
+      "id": "BEAD-CAT-005-003",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\completed\\BEAD-CAT-005-003.yaml"
+    },
+    {
+      "id": "BEAD-CAT-005-004",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\completed\\BEAD-CAT-005-004.yaml"
+    },
+    {
+      "id": "BEAD-CAT-005-005",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\completed\\BEAD-CAT-005-005.yaml"
+    },
+    {
+      "id": "BEAD-CAT-EXAMPLE-001",
+      "kind": "bead",
+      "reason": "preserved legacy/example identity",
+      "source": "beads\\examples\\BEAD-CAT-EXAMPLE-001.yaml"
+    },
+    {
+      "id": "MP-CAT-000",
+      "kind": "mission",
+      "reason": "preserved legacy/example identity",
+      "source": "missions\\archived\\MP-CAT-000_ESTABLISH_CORE.yaml"
+    },
+    {
+      "id": "MP-CAT-001",
+      "kind": "mission",
+      "reason": "preserved legacy/example identity",
+      "source": "missions\\archived\\MP-CAT-001_STATE_TRANSITION_ENGINE.yaml"
+    },
+    {
+      "id": "MP-CAT-002",
+      "kind": "mission",
+      "reason": "preserved legacy/example identity",
+      "source": "missions\\archived\\MP-CAT-002_EVIDENCE_GATE_CLOSEOUT_ENGINE.yaml"
+    },
+    {
+      "id": "MP-CAT-003",
+      "kind": "mission",
+      "reason": "preserved legacy/example identity",
+      "source": "missions\\archived\\MP-CAT-003_CI_GOVERNANCE_SELF_HEALING.yaml"
+    },
+    {
+      "id": "MP-CAT-004",
+      "kind": "mission",
+      "reason": "preserved legacy/example identity",
+      "source": "missions\\archived\\MP-CAT-004_V2_ALIGNMENT_GUARDS.yaml"
+    },
+    {
+      "id": "MP-CAT-005",
+      "kind": "mission",
+      "reason": "preserved legacy/example identity",
+      "source": "missions\\archived\\MP-CAT-005_MULTI_MODEL_HARNESS_MVP.yaml"
+    },
+    {
+      "id": "MP-CAT-EXAMPLE-M2",
+      "kind": "mission",
+      "reason": "preserved legacy/example identity",
+      "source": "missions\\examples\\MP-CAT-EXAMPLE-M2.yaml"
+    }
+  ],
+  "contract_id": "CAT-ID-TAXONOMY",
+  "contract_version": "2.0.0",
+  "findings": [
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A009-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A009-4C01_REPO_ALIGNMENT_RECONCILIATION.yaml"
+    },
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A010-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A010-4C01_GITHUB_BRIDGE_PR_GOVERNANCE.yaml"
+    },
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A011-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml"
+    },
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A012-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A012-4C01_PORTABLE_PROJECT_ADAPTER.yaml"
+    },
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A013-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A013-4C01_TOOL_PLANE_SCAFFOLDING.yaml"
+    },
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A014-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A014-4C01_GO_AUTOMATION.yaml"
+    },
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A015-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A015-4C01_EVIDENCE_ARCHIVAL_AUTOMATION.yaml"
+    },
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A017-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A017-4C01_ANNA_PUBLIC_HARNESS_FOUNDATION.yaml"
+    },
+    {
+      "code": "COMPLEXITY_MISMATCH",
+      "consumer": "mission identity",
+      "expected": "M4",
+      "message": "canonical complexity token disagrees with level: MP-CAT-A018-4C01 vs M3",
+      "observed": "M3",
+      "severity": "error",
+      "source": "missions/archived/MP-CAT-A018-4C01_ANNA_GUARDED_OPERATOR_ACTIONS.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-005-002.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-005-003.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-005-004.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-005-005.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-05.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-06.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-07.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-08.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A007-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A007-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A007-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A007-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A007-4C01-05.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A007-4C01-06.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A007-4C01-07.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A007-4C01-08.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-05.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-06.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-07.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-08.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A009-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A009-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A009-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A009-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A010-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A010-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A010-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A010-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A010-4C01-05.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A011-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A011-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A011-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A011-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A012-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A012-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A012-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A012-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A013-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A013-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A013-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A013-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A015-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A015-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A015-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A015-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-01_ESTABLISH_ANNA_PUBLIC_CONTRACT_AND_LOCAL_SCAFFOLD.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-02_DEFINE_READ_ONLY_DATAANN_ADAPTER_CONTRACT.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A018-4C01-01_IMPLEMENT_GUARDED_DRY_RUN_ACTION_PLANNER.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/examples/BEAD-CAT-002-CLOSEOUT-EXAMPLE.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/examples/BEAD-CAT-EXAMPLE-001.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-000-001.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-000-002.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-000-003.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-000-004.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-001-001.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-001-002.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-001-003.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-001-004.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-001-005.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-002-001.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-002-002.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-002-003.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-002-004.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-002-005.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-003-001.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-003-002.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-003-003.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-003-004.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-004-001.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-004-002.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-004-003.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-004-004.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-005-001.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-A014-4C01-01.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-A014-4C01-02.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-A014-4C01-03.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-A014-4C01-04.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-A014-4C01-05.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-A014-4C01-06.yaml"
+    },
+    {
+      "code": "INVALID_PRIORITY",
+      "consumer": "taxonomy contract",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "message": "priority must be an integer from 1 through 5",
+      "observed": null,
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-A014-4C01-07.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/mp_cat_005_schema_validation.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/mp_cat_005_schema_validation.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-005-005.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-01_assertion_gates.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-01_assertion_gates.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-01.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-02_completeness.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-02_completeness.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-02.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-03_evidence_fabric.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-03_evidence_fabric.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-03.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-04_schema.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-04_schema.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-04.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-04_skills_routing.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-04_skills_routing.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-04.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-05_playbooks.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-05_playbooks.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-05.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-06_ci_validation.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-06_ci_validation.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-06.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/test-results/BEAD-CAT-A006-4C01-06_tests.txt",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/test-results/BEAD-CAT-A006-4C01-06_tests.txt",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-06.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-07_promotion.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-07_promotion.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-07.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A006-4C01-08_mermaid_docs.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A006-4C01-08_mermaid_docs.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A006-4C01-08.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A008-4C01_bead_01.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A008-4C01_bead_01.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-01.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A008-4C01_bead_02.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A008-4C01_bead_02.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-02.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A008-4C01_bead_03.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A008-4C01_bead_03.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-03.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A008-4C01_bead_04.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A008-4C01_bead_04.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-04.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A008-4C01_bead_05.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A008-4C01_bead_05.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-05.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A008-4C01_bead_06.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A008-4C01_bead_06.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-06.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A008-4C01_bead_07.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A008-4C01_bead_07.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-07.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A008-4C01_bead_08.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A008-4C01_bead_08.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A008-4C01-08.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/scorecard/BEAD-CAT-A011-4C01-01_tests.json",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/scorecard/BEAD-CAT-A011-4C01-01_tests.json",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A011-4C01-01.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A012-4C01-02_tests.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A012-4C01-02_tests.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A012-4C01-02.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A012-4C01-03_tests.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A012-4C01-03_tests.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A012-4C01-03.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/archival/BEAD-CAT-A015-4C01-03_integration.json",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/archival/BEAD-CAT-A015-4C01-03_integration.json",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A015-4C01-03.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A017-4C01-01_boundary.json",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A017-4C01-01_boundary.json",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-01_ESTABLISH_ANNA_PUBLIC_CONTRACT_AND_LOCAL_SCAFFOLD.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A017-4C01-01_contract.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A017-4C01-01_contract.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-01_ESTABLISH_ANNA_PUBLIC_CONTRACT_AND_LOCAL_SCAFFOLD.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A017-4C01-02_adapter_tests.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A017-4C01-02_adapter_tests.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-02_DEFINE_READ_ONLY_DATAANN_ADAPTER_CONTRACT.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A017-4C01-02_bead_validation.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A017-4C01-02_bead_validation.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-02_DEFINE_READ_ONLY_DATAANN_ADAPTER_CONTRACT.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A017-4C01-03_bead_validation.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A017-4C01-03_bead_validation.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A017-4C01-03_bridge_tests.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A017-4C01-03_bridge_tests.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A017-4C01-03_DEFINE_GENERIC_CONTROL_PLANE_BRIDGE_CONTRACT.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A018-4C01-01_action_runner.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A018-4C01-01_action_runner.md",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A018-4C01-01_IMPLEMENT_GUARDED_DRY_RUN_ACTION_PLANNER.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/BEAD-CAT-A018-4C01-01_boundary.json",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/BEAD-CAT-A018-4C01-01_boundary.json",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A018-4C01-01_IMPLEMENT_GUARDED_DRY_RUN_ACTION_PLANNER.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A019_baseline_check.txt",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A019_baseline_check.txt",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A019-4C01-01.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/MP-CAT-A019_pr47_check.txt",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/MP-CAT-A019_pr47_check.txt",
+      "severity": "error",
+      "source": "beads/completed/BEAD-CAT-A019-4C01-02.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/sprint_001_docs_review.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/sprint_001_docs_review.md",
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-001-004.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/bead_cat_005_001_model_routes.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/bead_cat_005_001_model_routes.md",
+      "severity": "error",
+      "source": "beads/failed/BEAD-CAT-005-001.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md",
+      "severity": "expected",
+      "source": "beads/active/BEAD-CAT-A023-4C01-05.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md",
+      "severity": "expected",
+      "source": "beads/active/BEAD-CAT-A023-4C01-05.yaml"
+    },
+    {
+      "code": "MISSING_EVIDENCE_PATH",
+      "consumer": "evidence/test-results/example_bead_tests.txt",
+      "expected": "existing evidence artifact",
+      "message": "validation evidence path does not exist",
+      "observed": "evidence/test-results/example_bead_tests.txt",
+      "severity": "expected",
+      "source": "beads/examples/BEAD-CAT-EXAMPLE-001.yaml"
+    }
+  ],
+  "mission_contracts": 24,
+  "root": "C:\\.01_CAT",
+  "source_files": 138,
+  "summary": {
+    "compatibility_exceptions": 36,
+    "errors": 133,
+    "expected_pending": 3,
+    "status": "FAIL"
+  }
+}

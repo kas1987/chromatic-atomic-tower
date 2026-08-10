@@ -1,7 +1,7 @@
 version: 0.1.0
-last_updated: '2026-08-10T16:14:47+00:00'
+last_updated: '2026-08-10T16:14:26+00:00'
 active_mission_id: MP-CAT-A023-4C01
-active_bead_id: BEAD-CAT-A023-4C01-05
+active_bead_id: BEAD-CAT-A023-4C01-04
 selection_policy:
   priority_order:
   - approved
@@ -367,7 +367,7 @@ missions:
   hitl_mode: approval_required
   autonomy_level: L2
   confidence: 94
-  current_bead_id: BEAD-CAT-A023-4C01-05
+  current_bead_id: ''
   path: missions/active/MP-CAT-A023-4C01_TAXONOMY_CANONICALIZATION.yaml
   created: '2026-08-10'
-  last_updated: '2026-08-10T16:14:47+00:00'
+  last_updated: '2026-08-10T16:14:26+00:00'

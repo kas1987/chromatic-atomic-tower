@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 from pathlib import Path
+import shutil
+
+import yaml
 
 import pytest
 
 from scripts.cat_align_common import id_matches_taxonomy
 from scripts.cat_validate import NEW_WORK_LEGACY_NUMERIC_CUTOFF, taxonomy_patterns, validate_id_policy
+from scripts.cat_taxonomy_audit import audit_root
 
 
 def test_patterns_are_derived_from_contract():
@@ -43,3 +47,39 @@ def test_contract_cutover_is_not_reimplemented_in_test():
 def test_invalid_ids_are_rejected_by_contract_adapter():
     assert not id_matches_taxonomy('mission', 'MP-CAT-Z023-4C01')
     assert not id_matches_taxonomy('bead', 'BEAD-CAT-A023-4C01-1')
+
+
+def _write_fixture(root: Path, *, bad_stem: bool = False) -> None:
+    (root / 'gates').mkdir(parents=True)
+    shutil.copy(Path('gates/CAT_ID_TAXONOMY.yaml'), root / 'gates/CAT_ID_TAXONOMY.yaml')
+    (root / 'missions/active').mkdir(parents=True)
+    (root / 'beads/active').mkdir(parents=True)
+    (root / 'evidence/reports').mkdir(parents=True)
+    mission = {
+        'mission_id': 'MP-CAT-A023-4C01', 'level': 'M4', 'priority': 1,
+        'mission_class': 'A', 'dependencies': [],
+    }
+    bead = {
+        'bead_id': 'BEAD-CAT-B023-4C01-01' if bad_stem else 'BEAD-CAT-A023-4C01-01',
+        'mission_id': 'MP-CAT-A023-4C01', 'priority': 1, 'dependencies': [],
+        'status': 'active', 'validation': [{'evidence_path': 'evidence/reports/fixture.md'}],
+    }
+    (root / 'missions/active/mission.yaml').write_text(yaml.safe_dump(mission), encoding='utf-8')
+    (root / 'beads/active/bead.yaml').write_text(yaml.safe_dump(bead), encoding='utf-8')
+    (root / 'evidence/reports/fixture.md').write_text('fixture evidence\n', encoding='utf-8')
+
+
+def test_taxonomy_audit_clean_fixture(tmp_path):
+    _write_fixture(tmp_path)
+    result = audit_root(tmp_path)
+    assert result['summary']['status'] == 'PASS'
+    assert result['summary']['errors'] == 0
+
+
+def test_taxonomy_audit_reports_bead_stem_asymmetry(tmp_path):
+    _write_fixture(tmp_path, bad_stem=True)
+    result = audit_root(tmp_path)
+    assert result['summary']['status'] == 'FAIL'
+    finding = next(item for item in result['findings'] if item['code'] == 'BEAD_STEM_MISMATCH')
+    assert finding['source'] == 'beads/active/bead.yaml'
+    assert finding['consumer'] == 'mission_id'

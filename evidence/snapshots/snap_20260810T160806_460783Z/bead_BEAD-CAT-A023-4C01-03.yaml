@@ -1,0 +1,139 @@
+bead_id: BEAD-CAT-A023-4C01-03
+mission_id: MP-CAT-A023-4C01
+title: Reconcile gates, templates, and documentation
+status: reviewed
+priority: 1
+agent_role: Scribe
+autonomy_level: L2
+objective: Reconcile human-facing naming guidance, GitHub/CI gate patterns, templates,
+  and examples to the canonical taxonomy contract.
+allowed_paths:
+- gates/CAT_ID_TAXONOMY.yaml
+- gates/github/GITHUB_BRIDGE_RULES.yaml
+- gates/ci/CI_GOVERNANCE_RULES.yaml
+- docs/operations/CAT_ID_NAMING_CONVENTION.md
+- docs/reference/MISSION_COMPLEXITY_MATRIX.md
+- docs/architecture/LLM_MODEL_ROUTING.md
+- .github/ISSUE_TEMPLATE/bead_task.md
+- .github/pull_request_template.md
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-03.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A023-4C01-02
+tool_budget:
+  search: 20
+  read: 60
+  write: 30
+  execute: 20
+  max_runtime_minutes: 120
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 88
+  reversibility: 96
+  tool_fit: 92
+  risk_awareness: 94
+  testability: 92
+risk_level: medium
+reversibility: high
+stop_conditions:
+- Human and machine contracts cannot be reconciled without an explicit exception.
+- A stale historical example would be rewritten without compatibility evidence.
+- A forbidden path or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- All active naming guidance identifies the same canonical contract.
+- Legacy examples are marked as compatibility examples.
+- Gate patterns no longer silently encode stale semantics.
+- Evidence records all changed consumers.
+validation:
+- type: command
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-03.md
+  required: true
+required_output:
+- reconciled_docs
+- gate_contracts
+- evidence_path
+handoff:
+  from: Scribe
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A023-4C01-04
+last_updated: '2026-08-10T16:08:01+00:00'
+transition_history:
+- timestamp: '2026-08-10T16:04:59+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-03
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'ANA GO: activate next queued A023 documentation and gate reconciliation
+    slice'
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-02.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T160459_426282Z
+- timestamp: '2026-08-10T16:07:51+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-03
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Scribe reconciliation implementation complete; begin closeout
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T160751_792909Z
+- timestamp: '2026-08-10T16:07:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-03
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: CAT repository and taxonomy validation passed
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-03.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T160755_943871Z
+- timestamp: '2026-08-10T16:08:01+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-03
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Human Owner reviewed reconciled docs, gates, and templates
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-03.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T160801_628425Z
