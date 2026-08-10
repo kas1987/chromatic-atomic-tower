@@ -34,10 +34,10 @@ jobs:
     if: always() && (needs.require-m4-approval.result == 'success' || needs.require-m4-approval.result == 'skipped')
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -73,7 +73,7 @@ jobs:
               raise SystemExit(f'Confidence score below promotion threshold: {score} < {minimum}')
 
       - name: Upload promotion evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: promotion-evidence-${{ inputs.mission_id }}
           path: evidence/
