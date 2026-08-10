@@ -2,17 +2,17 @@
 
 # CAT Sprint State
 
-_Generated: 2026-08-08T16:13:56+00:00_
+_Generated: 2026-08-10T16:46:21+00:00_
 
 | Field | Value |
 |---|---|
-| Active Sprint | SPRINT-021 |
-| Tower Status | sprint_idle |
-| Active Mission | — |
+| Active Sprint | SPRINT-024 |
+| Tower Status | sprint_active |
+| Active Mission | MP-CAT-A024-4C01 |
 | Active BEAD | — |
-| Mission Status | — |
+| Mission Status | approved |
 | GO Mode | enabled |
-| Sprint Goal | Rebase and revalidate PR #48 against current master without losing A020 authority-contract work. |
+| Sprint Goal | Remediate A023 historical taxonomy debt without renaming immutable identifiers. |
 
 ## Canonical Sources
 

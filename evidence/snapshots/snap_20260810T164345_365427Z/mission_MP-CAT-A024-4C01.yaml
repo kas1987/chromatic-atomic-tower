@@ -1,7 +1,7 @@
 mission_id: MP-CAT-A024-4C01
 title: CAT Historical Taxonomy Debt Remediation
 level: M4
-status: approved
+status: triaged
 owner: Human Owner
 priority: 1
 mission_class: A
@@ -12,7 +12,7 @@ hitl_mode: approval_required
 autonomy_level: L2
 confidence_minimum: 90
 created: '2026-08-10'
-last_updated: '2026-08-10T16:43:45+00:00'
+last_updated: '2026-08-10T16:43:37+00:00'
 objective: Remediate and explain the historical taxonomy drift recorded by A023 while
   preserving immutable identifiers and leaving CAT with a reviewable, reproducible
   cross-file identity baseline.
@@ -169,19 +169,3 @@ transition_history:
   guard_ok: true
   guard_message: no precondition
   snapshot: evidence\snapshots\snap_20260810T164337_737479Z
-- timestamp: '2026-08-10T16:43:45+00:00'
-  target_type: mission
-  target_id: MP-CAT-A024-4C01
-  from_status: triaged
-  to_status: approved
-  allowed: true
-  dry_run: false
-  reason: 'ANA Plan: Human Owner approved A024 for later GO execution'
-  evidence: evidence/reports/taxonomy/MP-CAT-A024-4C01_registration_20260810.md
-  actor: Human Owner
-  message: transition allowed
-  contract_path: missions\backlog\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
-  guard: human_gate_if_required
-  guard_ok: true
-  guard_message: gate approved by agent 'Auditor'
-  snapshot: evidence\snapshots\snap_20260810T164345_365427Z

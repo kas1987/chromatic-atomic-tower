@@ -1,5 +1,5 @@
-target_id: CAT-SPRINT-015-IDLE-TARGET
-canonical_active_mission_id: ''
+target_id: CAT-SPRINT-024-A024-TARGET
+canonical_active_mission_id: MP-CAT-A024-4C01
 canonical_next_mission_id: ''
 required_missions:
   MP-CAT-000: closed
@@ -20,6 +20,7 @@ required_missions:
   MP-CAT-A015-4C01: closed
   MP-CAT-A017-4C01: closed
   MP-CAT-A018-4C01: closed
+  MP-CAT-A024-4C01: approved
 required_roadmap_terms:
   - Repo Alignment and Mission Packet Reconciliation
   - GitHub Bridge + PR Governance

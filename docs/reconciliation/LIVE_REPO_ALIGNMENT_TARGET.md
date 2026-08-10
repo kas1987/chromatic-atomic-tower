@@ -4,15 +4,15 @@ This document summarizes the target state encoded in `LIVE_REPO_ALIGNMENT_TARGET
 
 ## Active Mission
 
-None (tower is `sprint_idle` post–Sprint 011 closeout).
+`MP-CAT-A024-4C01` — CAT Historical Taxonomy Debt Remediation.
 
 ## Next Mission
 
-`MP-CAT-A012-4C01` — CAT Portable Project Adapter
+None — A024 is the approved active mission; BEAD-01 remains queued until GO.
 
 ## Required Sprint Truth
 
-Sprints 000 through 011 must be represented in `missions/registry/MISSION_REGISTRY.yaml` with their final statuses (`closed` or `learned`). Backlog mission A012 must exist as a draft scaffold.
+Sprints 000 through 023 and their completed missions must remain represented in `missions/registry/MISSION_REGISTRY.yaml`. A024 is the approved active remediation mission for SPRINT-024.
 
 ## Rule
 
