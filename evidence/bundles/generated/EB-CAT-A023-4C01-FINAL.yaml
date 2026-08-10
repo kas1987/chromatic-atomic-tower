@@ -71,6 +71,7 @@ supporting_artifacts: []
 metrics:
   required_artifacts: 12
   observed_head_sha: 3ede694
+  closeout_state_sha: 5d0fbd544702df1bc464caaadc9e5e027ef50889
   beads_completed: 5
   taxonomy_tests_passed: 32
   cat_check_repo: PASS

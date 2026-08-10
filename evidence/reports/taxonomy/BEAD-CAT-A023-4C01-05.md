@@ -6,6 +6,7 @@
 - BEAD: `BEAD-CAT-A023-4C01-05`
 - Role: `Auditor`
 - Implementation/evidence source HEAD: `3ede694`
+- Closeout state commit: `5d0fbd544702df1bc464caaadc9e5e027ef50889`
 - Final lifecycle state target: mission archived, tower `sprint_idle`
 
 ## Fixed and compatible
