@@ -1,0 +1,135 @@
+bead_id: BEAD-CAT-A023-4C01-01
+mission_id: MP-CAT-A023-4C01
+title: Define canonical CAT identity, urgency, and migration contract
+status: reviewed
+priority: 1
+agent_role: Cartographer
+autonomy_level: L2
+objective: Inventory every live CAT identity grammar and define a versioned machine-readable
+  taxonomy contract that separates immutable IDs, urgency, severity, complexity, risk,
+  reversibility, HITL, and external relations.
+allowed_paths:
+- gates/CAT_ID_TAXONOMY.yaml
+- docs/operations/CAT_ID_NAMING_CONVENTION.md
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.md
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.json
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- missions/**
+- beads/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- MP-CAT-A022-4C01
+tool_budget:
+  search: 30
+  read: 80
+  write: 12
+  execute: 20
+  max_runtime_minutes: 120
+confidence:
+  minimum: 90
+  current: 94
+  objective_clarity: 96
+  scope_clarity: 94
+  evidence_quality: 92
+  reversibility: 96
+  tool_fit: 94
+  risk_awareness: 97
+  testability: 92
+risk_level: high
+reversibility: high
+stop_conditions:
+- A canonical writer cannot be identified for an identity fact.
+- Historical identifiers would need to be renamed.
+- A forbidden path, secret, credential, or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- All live ID grammar and semantic consumers are inventoried with file references.
+- gates/CAT_ID_TAXONOMY.yaml defines version, forms, token semantics, relations, and
+  legacy compatibility.
+- Priority is the only urgency axis and documents the existing 1-5 to P0-P4 compatibility
+  map.
+- Severity, complexity, risk, reversibility, and HITL are explicit separate fields
+  with routing roles.
+- S/A/B/C is defined as non-routing mission-class metadata; no agent may infer urgency
+  or HITL from it.
+- The naming document is updated as a thin human-readable projection of the contract.
+- A non-renaming migration map and exact-head evidence report are recorded.
+validation:
+- type: command
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.md
+  required: true
+- type: self_review
+  command: rg -n "mission_id|bead_id|priority_tier|complexity_order|MP-CAT-|BEAD-CAT-"
+    gates scripts schemas docs tests
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.json
+  required: true
+required_output:
+- taxonomy_contract
+- consumer_inventory
+- legacy_compatibility_map
+- urgency_and_routing_semantics
+- exact_head_evidence
+handoff:
+  from: Cartographer
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A023-4C01-02
+last_updated: '2026-08-10T15:37:54+00:00'
+transition_history:
+- timestamp: '2026-08-10T15:37:23+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-01
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Begin evidence-backed closeout progression
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-01.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-01.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T153723_537497Z
+- timestamp: '2026-08-10T15:37:42+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-01
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Validation gates passed for closeout evidence
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-01.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-01.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T153742_543221Z
+- timestamp: '2026-08-10T15:37:54+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-01
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Independent readiness review passed; closeout bundle is valid
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-01.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-01.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T153754_288315Z

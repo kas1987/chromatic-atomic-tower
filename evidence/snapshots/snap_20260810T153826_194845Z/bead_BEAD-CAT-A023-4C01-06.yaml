@@ -1,12 +1,13 @@
 bead_id: BEAD-CAT-A023-4C01-06
 mission_id: MP-CAT-A023-4C01
 title: Define deterministic route and lifecycle event contracts
-status: active
+status: queued
 priority: 1
 agent_role: Cartographer
 autonomy_level: L2
-objective: Define and test fail-closed route-decision and lifecycle-event contracts
-  as pure, versioned artifacts. Establish the deterministic policy boundary before
+objective: >-
+  Define and test fail-closed route-decision and lifecycle-event contracts as
+  pure, versioned artifacts. Establish the deterministic policy boundary before
   any transition integration or self-healing execution.
 human_approval:
   shorthand: ANA v1
@@ -37,22 +38,8 @@ forbidden_paths:
 - GitHub branch protection, secrets, PRs, branches, or repository settings
 dependencies:
 - BEAD-CAT-A023-4C01-01
-tool_budget:
-  search: 30
-  read: 80
-  write: 25
-  execute: 35
-  max_runtime_minutes: 180
-confidence:
-  minimum: 90
-  current: 94
-  objective_clarity: 97
-  scope_clarity: 96
-  evidence_quality: 93
-  reversibility: 98
-  tool_fit: 94
-  risk_awareness: 99
-  testability: 95
+tool_budget: {search: 30, read: 80, write: 25, execute: 35, max_runtime_minutes: 180}
+confidence: {minimum: 90, current: 94, objective_clarity: 97, scope_clarity: 96, evidence_quality: 93, reversibility: 98, tool_fit: 94, risk_awareness: 99, testability: 95}
 risk_level: high
 reversibility: high
 stop_conditions:
@@ -64,19 +51,12 @@ stop_conditions:
 - A forbidden path, remote mutation, or provider configuration appears.
 - Confidence drops below 90.
 definition_of_done:
-- route_decision.schema.json requires subject type, expected revision, observed HEAD,
-  policy digests, normalized classification, constraints, outcome, and evidence binding.
-- lifecycle_event.schema.json requires event ID, idempotency key, prior revision,
-  applied outcome, policy digest, HEAD, and evidence references.
-- ROUTE_DECISION_POLICY.yaml permits only allow_plan, require_human, or block and
-  only none/dry_run effects.
-- Matrix tests assert stable fail-closed outcomes for stale HEAD, malformed output,
-  exhausted budget, provider outage, conflicting fields, dependency cycle, duplicate
-  delivery, and policy drift.
-- Duplicate delivery returns the original decision without mutation in the contract
-  fixture model.
-- No runtime transition, self-healing, provider, model, mission, BEAD, or remote settings
-  are changed.
+- route_decision.schema.json requires subject type, expected revision, observed HEAD, policy digests, normalized classification, constraints, outcome, and evidence binding.
+- lifecycle_event.schema.json requires event ID, idempotency key, prior revision, applied outcome, policy digest, HEAD, and evidence references.
+- ROUTE_DECISION_POLICY.yaml permits only allow_plan, require_human, or block and only none/dry_run effects.
+- Matrix tests assert stable fail-closed outcomes for stale HEAD, malformed output, exhausted budget, provider outage, conflicting fields, dependency cycle, duplicate delivery, and policy drift.
+- Duplicate delivery returns the original decision without mutation in the contract fixture model.
+- No runtime transition, self-healing, provider, model, mission, BEAD, or remote settings are changed.
 - Evidence records observed_head_sha and artifact_head_sha separately.
 validation:
 - type: test
@@ -92,26 +72,5 @@ required_output:
 - lifecycle_event_contract
 - deterministic_route_matrix
 - exact_head_evidence
-handoff:
-  from: Cartographer
-  to: Auditor
-  reviewer: Human Owner
-  next_bead_id: BEAD-CAT-A023-4C01-07
-last_updated: '2026-08-10T15:38:26+00:00'
-transition_history:
-- timestamp: '2026-08-10T15:38:26+00:00'
-  target_type: bead
-  target_id: BEAD-CAT-A023-4C01-06
-  from_status: queued
-  to_status: active
-  allowed: true
-  dry_run: false
-  reason: Activate ANA-approved TERRA route/event contract slice
-  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-01.yaml
-  actor: Human Owner
-  message: transition allowed
-  contract_path: beads\active\BEAD-CAT-A023-4C01-06.yaml
-  guard: none
-  guard_ok: true
-  guard_message: no precondition
-  snapshot: evidence\snapshots\snap_20260810T153826_194845Z
+handoff: {from: Cartographer, to: Auditor, reviewer: Human Owner, next_bead_id: BEAD-CAT-A023-4C01-07}
+last_updated: '2026-08-10T15:18:00+00:00'

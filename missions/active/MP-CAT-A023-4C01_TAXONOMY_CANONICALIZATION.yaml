@@ -12,7 +12,7 @@ hitl_mode: approval_required
 autonomy_level: L2
 confidence_minimum: 90
 created: '2026-08-10'
-last_updated: '2026-08-10T15:18:00+00:00'
+last_updated: '2026-08-10T15:39:00+00:00'
 objective: >-
   Establish one versioned machine-readable CAT identity taxonomy, reconcile its
   validators and documentation, and prevent semantic drift without renaming
@@ -90,7 +90,7 @@ dependencies:
 beads:
 - bead_id: BEAD-CAT-A023-4C01-01
   title: Define canonical CAT identity contract and migration map
-  status: active
+  status: completed
 - bead_id: BEAD-CAT-A023-4C01-02
   title: Make validators and generators consume the taxonomy contract
   status: queued
@@ -105,7 +105,7 @@ beads:
   status: queued
 - bead_id: BEAD-CAT-A023-4C01-06
   title: Define deterministic route and lifecycle event contracts
-  status: queued
+  status: active
 acceptance_criteria:
 - 'One versioned machine-readable taxonomy contract defines all supported ID forms and token semantics.'
 - 'Priority is the sole urgency axis; the contract maps legacy numeric priority to a P0-P4 display without ambiguity.'

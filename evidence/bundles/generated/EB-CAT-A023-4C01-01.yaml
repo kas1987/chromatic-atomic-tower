@@ -1,0 +1,59 @@
+evidence_id: EB-CAT-A023-4C01-01
+mission_id: MP-CAT-A023-4C01
+bead_id: BEAD-CAT-A023-4C01-01
+target_type: bead
+type: closeout
+summary: >-
+  A023-01 taxonomy contract, compatibility map, consumer inventory, and
+  refreshed exact-head evidence passed the CAT validation gates.
+validation_result: passed
+required_artifacts:
+- path: gates/CAT_ID_TAXONOMY.yaml
+  kind: contract
+  required: true
+  description: Versioned CAT taxonomy v2 contract.
+  validation_result: passed
+- path: docs/operations/CAT_ID_NAMING_CONVENTION.md
+  kind: documentation
+  required: true
+  description: Human-readable projection of the taxonomy contract.
+  validation_result: passed
+- path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.md
+  kind: evidence_report
+  required: true
+  description: Refreshed taxonomy evidence with current-head binding.
+  validation_result: passed
+- path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.json
+  kind: evidence_json
+  required: true
+  description: Structured consumer inventory and exact-head evidence.
+  validation_result: passed
+supporting_artifacts:
+- path: scripts/cat_check_repo.py
+  kind: validation_command
+  required: false
+  description: Repository contract and hygiene validation.
+  validation_result: passed
+- path: scripts/cat_validate.py
+  kind: validation_command
+  required: false
+  description: Full CAT contract validation.
+  validation_result: passed
+metrics:
+  closeout_observed_head_sha: 14cf346904e8352313bc7d8fdf634f8c9e082171
+  evidence_observed_head_sha: 3a62dc61f865ae5138d6d5a6c88c209f8f3e3748
+  evidence_artifact_source_head_sha: 3a62dc61f865ae5138d6d5a6c88c209f8f3e3748
+  inventory_lines: 1839
+  cat_check_repo: PASS
+  cat_validate_all: PASS
+created_by: Human Owner
+created_at: '2026-08-10T15:38:00Z'
+learning_note: >-
+  Exact-head evidence must distinguish the repository state observed from the
+  descendant commit that stores the evidence artifact; stale snapshots block
+  closeout until refreshed.
+closeout_ready: true
+notes:
+- Historical identifiers were not renamed.
+- No route, model, provider, transition, self-healing, or remote settings were changed.
+- The next approved route/event contract slice is registered separately as A023-06.
