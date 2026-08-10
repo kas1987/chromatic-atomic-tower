@@ -1,0 +1,46 @@
+bead_id: BEAD-CAT-A023-4C01-04
+mission_id: MP-CAT-A023-4C01
+title: Add cross-file identity asymmetry and drift checks
+status: queued
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Add deterministic checks that detect mismatched mission identity, BEAD stems, complexity, priority metadata, dependencies, and derived evidence paths.
+allowed_paths:
+- gates/CAT_ID_TAXONOMY.yaml
+- scripts/cat_taxonomy_audit.py
+- tests/test_cat_taxonomy.py
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-04.md
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-04.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A023-4C01-03
+tool_budget: {search: 20, read: 60, write: 25, execute: 30, max_runtime_minutes: 150}
+confidence: {minimum: 90, current: 92, objective_clarity: 94, scope_clarity: 92, evidence_quality: 90, reversibility: 96, tool_fit: 92, risk_awareness: 96, testability: 96}
+risk_level: high
+reversibility: high
+stop_conditions:
+- The audit would mutate mission or registry state.
+- A finding cannot identify its source and derived consumer.
+- A forbidden path or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- The audit reports exact source files, identity mismatches, and compatibility exceptions.
+- Synthetic fixtures prove both detection and clean behavior.
+- JSON and Markdown evidence are emitted at exact HEAD.
+validation:
+- type: test
+  command: python -m pytest tests/test_cat_taxonomy.py -q
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-04.md
+  required: true
+required_output: [taxonomy_audit, asymmetry_tests, json_evidence]
+handoff: {from: Auditor, to: Auditor, reviewer: Human Owner, next_bead_id: BEAD-CAT-A023-4C01-05}
+last_updated: '2026-08-10T14:36:00+00:00'

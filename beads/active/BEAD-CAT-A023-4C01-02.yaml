@@ -1,0 +1,49 @@
+bead_id: BEAD-CAT-A023-4C01-02
+mission_id: MP-CAT-A023-4C01
+title: Make validators and generators consume the taxonomy contract
+status: queued
+priority: 1
+agent_role: Builder
+autonomy_level: L2
+objective: Make mission and BEAD validators, ID generators, and alignment helpers consume the canonical taxonomy contract without renaming historical IDs.
+allowed_paths:
+- gates/CAT_ID_TAXONOMY.yaml
+- scripts/cat_validate.py
+- scripts/cat_new_mission.py
+- scripts/cat_new_bead.py
+- scripts/cat_mission_id_check.py
+- scripts/cat_align_common.py
+- tests/test_cat_taxonomy.py
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-02.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A023-4C01-01
+tool_budget: {search: 20, read: 60, write: 30, execute: 30, max_runtime_minutes: 150}
+confidence: {minimum: 90, current: 92, objective_clarity: 94, scope_clarity: 92, evidence_quality: 88, reversibility: 96, tool_fit: 92, risk_awareness: 95, testability: 94}
+risk_level: high
+reversibility: high
+stop_conditions:
+- Contract cannot express legacy compatibility.
+- A validator would require a second canonical grammar.
+- A forbidden path or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- Validators and generators use the contract or a tested adapter.
+- New-format and legacy compatibility tests pass.
+- Evidence records exact HEAD and consumer inventory.
+validation:
+- type: test
+  command: python -m pytest tests/test_cat_taxonomy.py tests/test_cat_align_missionid.py -q
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-02.md
+  required: true
+required_output: [consumer_adapter, compatibility_tests, evidence_path]
+handoff: {from: Builder, to: Scribe, reviewer: Human Owner, next_bead_id: BEAD-CAT-A023-4C01-03}
+last_updated: '2026-08-10T14:36:00+00:00'

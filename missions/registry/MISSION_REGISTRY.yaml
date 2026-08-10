@@ -1,7 +1,7 @@
 version: 0.1.0
-last_updated: '2026-08-10T13:45:49+00:00'
-active_mission_id: ''
-active_bead_id: ''
+last_updated: '2026-08-10T14:36:00+00:00'
+active_mission_id: MP-CAT-A023-4C01
+active_bead_id: BEAD-CAT-A023-4C01-01
 selection_policy:
   priority_order:
   - approved
@@ -354,3 +354,19 @@ missions:
   path: missions/archived/MP-CAT-A022-4C01_CI_CD_REMEDIATION.yaml
   created: '2026-08-10'
   last_updated: '2026-08-10T14:12:52+00:00'
+- mission_id: MP-CAT-A023-4C01
+  title: CAT Taxonomy v2 Canonicalization and Identity Drift Control
+  level: M4
+  status: approved
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: high
+  reversibility: high
+  autonomy_level: L2
+  confidence: 94
+  current_bead_id: BEAD-CAT-A023-4C01-01
+  path: missions/active/MP-CAT-A023-4C01_TAXONOMY_CANONICALIZATION.yaml
+  created: '2026-08-10'
+  last_updated: '2026-08-10T14:36:00+00:00'

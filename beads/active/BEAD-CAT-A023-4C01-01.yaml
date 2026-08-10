@@ -1,0 +1,77 @@
+bead_id: BEAD-CAT-A023-4C01-01
+mission_id: MP-CAT-A023-4C01
+title: Define canonical CAT identity contract and migration map
+status: active
+priority: 1
+agent_role: Cartographer
+autonomy_level: L2
+objective: >-
+  Inventory every live CAT identity grammar and define a versioned machine-readable
+  taxonomy contract that separates immutable IDs from mutable and external relations.
+allowed_paths:
+- gates/CAT_ID_TAXONOMY.yaml
+- docs/operations/CAT_ID_NAMING_CONVENTION.md
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.md
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.json
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- missions/**
+- beads/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- MP-CAT-A022-4C01
+tool_budget:
+  search: 30
+  read: 80
+  write: 12
+  execute: 20
+  max_runtime_minutes: 120
+confidence:
+  minimum: 90
+  current: 94
+  objective_clarity: 96
+  scope_clarity: 94
+  evidence_quality: 92
+  reversibility: 96
+  tool_fit: 94
+  risk_awareness: 97
+  testability: 92
+risk_level: high
+reversibility: high
+stop_conditions:
+- 'A canonical writer cannot be identified for an identity fact.'
+- 'Historical identifiers would need to be renamed.'
+- 'A forbidden path, secret, credential, or remote mutation appears.'
+- 'Confidence drops below 90.'
+definition_of_done:
+- 'All live ID grammar and semantic consumers are inventoried with file references.'
+- 'gates/CAT_ID_TAXONOMY.yaml defines version, forms, token semantics, relations, and legacy compatibility.'
+- 'The naming document is updated as a thin human-readable projection of the contract.'
+- 'A non-renaming migration map and exact-head evidence report are recorded.'
+validation:
+- type: command
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.md
+  required: true
+- type: self_review
+  command: 'rg -n "mission_id|bead_id|priority_tier|complexity_order|MP-CAT-|BEAD-CAT-" gates scripts schemas docs tests'
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-01.json
+  required: true
+required_output:
+- taxonomy_contract
+- consumer_inventory
+- legacy_compatibility_map
+- exact_head_evidence
+handoff:
+  from: Cartographer
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A023-4C01-02
+last_updated: '2026-08-10T14:36:00+00:00'
