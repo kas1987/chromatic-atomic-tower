@@ -62,6 +62,13 @@ def _disposition_for_finding(finding: Finding) -> dict[str, Any]:
             'next_bead': 'BEAD-CAT-A024-4C01-02',
             'rationale': 'Evaluate the archived mission level against the canonical complexity token; preserve the immutable mission ID.',
         }
+    if finding.code == 'INVALID_PRIORITY' and finding.source.startswith('beads/examples/'):
+        return {
+            'disposition': 'compatibility_exception',
+            'owner': 'Human Owner',
+            'next_bead': None,
+            'rationale': 'Example contracts are compatibility scaffolding, not historical execution records; preserve them without changing the example surface.',
+        }
     if finding.code == 'INVALID_PRIORITY':
         return {
             'disposition': 'repairable_metadata',

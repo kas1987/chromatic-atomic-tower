@@ -2,14 +2,9 @@
 
 # Agent Handoff Queue
 
-_Generated: 2026-08-10T17:33:16+00:00_
+_Generated: 2026-08-10T17:38:35+00:00_
 
 ## Next
-
-### BEAD-CAT-A024-4C01-04 — Reconcile taxonomy consumers and regression gates
-
-- Agent Role: Builder
-- Status: queued
 
 ### BEAD-CAT-A024-4C01-05 — Close the taxonomy debt register with exact-head proof
 

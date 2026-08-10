@@ -1,7 +1,7 @@
 version: 0.1.0
-last_updated: '2026-08-10T17:38:21+00:00'
+last_updated: '2026-08-10T17:37:54+00:00'
 active_mission_id: MP-CAT-A024-4C01
-active_bead_id: ''
+active_bead_id: BEAD-CAT-A024-4C01-04
 selection_policy:
   priority_order:
   - approved
@@ -384,7 +384,7 @@ missions:
   hitl_mode: approval_required
   autonomy_level: L2
   confidence: 90
-  current_bead_id: ''
+  current_bead_id: BEAD-CAT-A024-4C01-04
   path: missions\backlog\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
   created: '2026-08-10'
-  last_updated: '2026-08-10T17:38:21+00:00'
+  last_updated: '2026-08-10T17:37:54+00:00'

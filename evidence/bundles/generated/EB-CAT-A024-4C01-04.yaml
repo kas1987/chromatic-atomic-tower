@@ -1,0 +1,51 @@
+evidence_id: EB-CAT-A024-4C01-04
+mission_id: MP-CAT-A024-4C01
+bead_id: BEAD-CAT-A024-4C01-04
+target_type: bead
+type: closeout
+summary: A024-04 reconciled taxonomy audit classification and added regression checks for repaired complexity, priority, and compatibility classes.
+validation_result: passed
+required_artifacts:
+  - path: scripts/cat_taxonomy_audit.py
+    kind: consumer
+    required: true
+    description: Deterministic compatibility classification for preserved examples
+    validation_result: passed
+  - path: tests/test_cat_taxonomy.py
+    kind: regression
+    required: true
+    description: Task-relative A024 repair and compatibility checks
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-04.json
+    kind: evidence
+    required: true
+    description: Post-reconciliation audit and disposition register
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-04.md
+    kind: report
+    required: true
+    description: Consumer reconciliation and regression proof
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-03.json
+    kind: baseline
+    required: true
+    description: A024-03 historical relation repair baseline
+    validation_result: passed
+supporting_artifacts: []
+metrics:
+  observed_head_sha: 5d6b664894ab946f8c49ce33252fc041154061bd
+  implementation_head_sha: a3e0153c443c884b6b63d46d6815ced4e8bd5e5c
+  taxonomy_tests_passed: 35
+  complexity_mismatch_remaining: 0
+  authorized_invalid_priority_remaining: 0
+  example_priority_compatibility_exceptions: 2
+  accepted_historical_evidence_debt: 35
+  audit_errors_after: 37
+  audit_expected_pending_after: 3
+  disposition_coverage: '40/40'
+  compatibility_disposition_coverage: '36/36'
+  immutable_identifiers_changed: 0
+created_by: Human Owner
+created_at: '2026-08-10T17:37:00Z'
+learning_note: Repaired classes need executable checks and preserved examples need explicit compatibility disposition; otherwise a non-green audit cannot distinguish debt from drift.
+closeout_ready: true

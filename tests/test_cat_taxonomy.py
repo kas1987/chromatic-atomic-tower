@@ -83,3 +83,29 @@ def test_taxonomy_audit_reports_bead_stem_asymmetry(tmp_path):
     finding = next(item for item in result['findings'] if item['code'] == 'BEAD_STEM_MISMATCH')
     assert finding['source'] == 'beads/active/bead.yaml'
     assert finding['consumer'] == 'mission_id'
+
+
+def test_a024_repaired_complexity_class_has_no_drift():
+    result = audit_root(Path(__file__).resolve().parents[1])
+    assert not [item for item in result['findings'] if item['code'] == 'COMPLEXITY_MISMATCH']
+
+
+def test_a024_authorized_ledgers_have_numeric_priority():
+    result = audit_root(Path(__file__).resolve().parents[1])
+    invalid_authorized = [
+        item for item in result['findings']
+        if item['code'] == 'INVALID_PRIORITY'
+        and item['source'].startswith(('beads/completed/', 'beads/failed/'))
+    ]
+    assert invalid_authorized == []
+
+
+def test_a024_example_priority_is_explicit_compatibility():
+    result = audit_root(Path(__file__).resolve().parents[1])
+    example_findings = [
+        item for item in result['disposition_register']
+        if item['code'] == 'INVALID_PRIORITY'
+        and item['source'].startswith('beads/examples/')
+    ]
+    assert example_findings
+    assert {item['disposition'] for item in example_findings} == {'compatibility_exception'}
