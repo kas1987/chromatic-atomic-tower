@@ -1,0 +1,193 @@
+mission_id: MP-CAT-A023-4C01
+title: CAT Taxonomy v2 Canonicalization and Identity Drift Control
+level: M4
+status: dispatched
+owner: Human Owner
+priority: 1
+mission_class: A
+severity: high
+risk_level: high
+reversibility: high
+hitl_mode: approval_required
+autonomy_level: L2
+confidence_minimum: 90
+created: '2026-08-10'
+last_updated: '2026-08-10T16:19:52+00:00'
+objective: Establish one versioned machine-readable CAT identity taxonomy, reconcile
+  its validators and documentation, and prevent semantic drift without renaming historical
+  mission or BEAD identifiers.
+background: The current compact IDs are useful join keys, but their meanings are duplicated
+  across Markdown, YAML gates, scripts, schemas, and routing documentation. The audit
+  found legacy/new regex divergence, partially populated derived fields, priority-tier
+  mismatches, and complexity values that disagree with mission levels. A canonical
+  contract is needed before further missions or adapters are added.
+scope:
+  in:
+  - Define the immutable identity grammar and explicit semantic field map.
+  - Make priority the sole urgency axis, with an explicit P0-P4 compatibility map
+    for existing 1-5 values.
+  - Keep severity, complexity, risk, reversibility, and HITL as distinct routing and
+    review inputs.
+  - Treat S/A/B/C as descriptive mission-class metadata, never as an urgency or routing
+    override.
+  - Separate mission identity from PR, branch, status, dependency, and evidence relations.
+  - Reconcile validators, generators, gates, templates, and documentation to one contract.
+  - Add cross-file asymmetry and derived-identity drift checks.
+  - Record legacy compatibility and a non-renaming migration map.
+  out:
+  - Renaming or rewriting historical mission, BEAD, PR, branch, or evidence identifiers.
+  - Changing legacy mission priority values, risk, autonomy, model routing, or provider
+    plans.
+  - Using mission class or compact-ID tokens as a substitute for explicit routing
+    fields.
+  - Remote GitHub settings, PR, branch, secret, MCP, or production mutations.
+  - Adding a second canonical writer for mission state or registry state.
+allowed_paths:
+- missions/active/MP-CAT-A023-4C01_TAXONOMY_CANONICALIZATION.yaml
+- missions/archived/MP-CAT-A023-4C01_TAXONOMY_CANONICALIZATION.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A023-4C01-01.yaml
+- beads/active/BEAD-CAT-A023-4C01-02.yaml
+- beads/active/BEAD-CAT-A023-4C01-03.yaml
+- beads/active/BEAD-CAT-A023-4C01-04.yaml
+- beads/active/BEAD-CAT-A023-4C01-05.yaml
+- beads/active/BEAD-CAT-A023-4C01-06.yaml
+- beads/completed/BEAD-CAT-A023-4C01-01.yaml
+- beads/completed/BEAD-CAT-A023-4C01-02.yaml
+- beads/completed/BEAD-CAT-A023-4C01-03.yaml
+- beads/completed/BEAD-CAT-A023-4C01-04.yaml
+- beads/completed/BEAD-CAT-A023-4C01-05.yaml
+- gates/CAT_ID_TAXONOMY.yaml
+- gates/github/GITHUB_BRIDGE_RULES.yaml
+- gates/ci/CI_GOVERNANCE_RULES.yaml
+- scripts/cat_validate.py
+- scripts/cat_new_mission.py
+- scripts/cat_new_bead.py
+- scripts/cat_mission_id_check.py
+- scripts/cat_align_common.py
+- tests/test_cat_taxonomy.py
+- tests/test_cat_align_missionid.py
+- schemas/route_decision.schema.json
+- schemas/lifecycle_event.schema.json
+- gates/ROUTE_DECISION_POLICY.yaml
+- tests/test_cat_route_matrix.py
+- evidence/reports/routing/**
+- docs/operations/CAT_ID_NAMING_CONVENTION.md
+- docs/reference/MISSION_COMPLEXITY_MATRIX.md
+- docs/architecture/LLM_MODEL_ROUTING.md
+- evidence/reports/taxonomy/**
+- learnings/DECISION_LOG.md
+- state/TOWER_STATE.yaml
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- MP-CAT-A022-4C01
+beads:
+- bead_id: BEAD-CAT-A023-4C01-01
+  title: Define canonical CAT identity contract and migration map
+  status: completed
+- bead_id: BEAD-CAT-A023-4C01-02
+  title: Make validators and generators consume the taxonomy contract
+  status: queued
+- bead_id: BEAD-CAT-A023-4C01-03
+  title: Reconcile gates, templates, and documentation
+  status: queued
+- bead_id: BEAD-CAT-A023-4C01-04
+  title: Add cross-file identity asymmetry and drift checks
+  status: queued
+- bead_id: BEAD-CAT-A023-4C01-05
+  title: Run taxonomy closeout audit and preserve compatibility evidence
+  status: queued
+- bead_id: BEAD-CAT-A023-4C01-06
+  title: Define deterministic route and lifecycle event contracts
+  status: active
+acceptance_criteria:
+- One versioned machine-readable taxonomy contract defines all supported ID forms
+  and token semantics.
+- Priority is the sole urgency axis; the contract maps legacy numeric priority to
+  a P0-P4 display without ambiguity.
+- Severity, complexity, risk, reversibility, and HITL are separately defined and tested
+  as non-interchangeable fields.
+- Mission class is explicitly non-routing metadata unless a future human-approved
+  policy changes that rule.
+- Historical IDs remain valid through an explicit compatibility policy and are not
+  renamed.
+- Validators and generators derive their grammar from the canonical contract or prove
+  synchronized adapters.
+- Mission, BEAD, PR, branch, dependency, and evidence relations are explicit and mechanically
+  joinable.
+- Cross-file asymmetry checks detect stale IDs, duplicate writers, mismatched complexity,
+  and missing relations.
+- The full CAT validation suite passes with a reviewable taxonomy evidence report.
+success_metrics:
+- Zero unexplained taxonomy regex or documentation discrepancies.
+- Zero new missions with missing required identity fields.
+- Historical compatibility remains green without mass file rewrites.
+required_validation:
+- type: local
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/taxonomy/MP-CAT-A023-4C01_validation.md
+  required: true
+- type: test
+  command: python -m pytest tests/test_cat_taxonomy.py tests/test_cat_align_missionid.py
+    -q
+  evidence_path: evidence/reports/taxonomy/MP-CAT-A023-4C01_tests.md
+  required: true
+rollback:
+  required: true
+  plan: Restore the pre-taxonomy contract and adapters while retaining the audit report
+    and compatibility map.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 50
+  read: 140
+  write: 100
+  execute: 80
+  max_runtime_minutes: 360
+evidence_requirements:
+- canonical taxonomy YAML with version and token semantics
+- inventory of all regex, generator, schema, template, and documentation consumers
+- legacy compatibility matrix and non-renaming migration map
+- cross-file asymmetry test output
+- exact-head final validation and closeout report
+notes:
+- A023 registration uses the current MP-CAT-A022-4C01 convention; taxonomy v2 may
+  propose a clearer future format but must not rewrite existing IDs.
+- The compact ID is an immutable join key; PR numbers, branches, HEAD SHAs, status,
+  and dependencies remain separate relations.
+- 'For this mission, priority: 1 remains the existing highest queue value. BEAD-01
+  must define its unambiguous P0-P4 compatibility display before any consumer change.'
+- 'mission_class: A is descriptive metadata only. It must not affect dispatch, model
+  selection, HITL, or promotion gates.'
+stop_conditions:
+- A change requires a forbidden path or remote mutation.
+- The canonical writer for a mutable fact cannot be identified.
+- Legacy compatibility cannot be preserved without mass ID renaming.
+- A taxonomy meaning remains ambiguous after evidence review.
+- Confidence falls below 90.
+transition_history:
+- timestamp: '2026-08-10T16:19:52+00:00'
+  target_type: mission
+  target_id: MP-CAT-A023-4C01
+  from_status: approved
+  to_status: dispatched
+  allowed: true
+  dry_run: false
+  reason: Begin terminal mission closeout with all five A023 beads complete
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-FINAL.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\active\MP-CAT-A023-4C01_TAXONOMY_CANONICALIZATION.yaml
+  guard: active_bead_present
+  guard_ok: true
+  guard_message: current_bead_id=BEAD-CAT-A023-4C01-05 found on disk
+  snapshot: evidence\snapshots\snap_20260810T161952_318342Z

@@ -1954,24 +1954,6 @@
     },
     {
       "code": "MISSING_EVIDENCE_PATH",
-      "consumer": "evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md",
-      "expected": "existing evidence artifact",
-      "message": "validation evidence path does not exist",
-      "observed": "evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md",
-      "severity": "expected",
-      "source": "beads/active/BEAD-CAT-A023-4C01-05.yaml"
-    },
-    {
-      "code": "MISSING_EVIDENCE_PATH",
-      "consumer": "evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md",
-      "expected": "existing evidence artifact",
-      "message": "validation evidence path does not exist",
-      "observed": "evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md",
-      "severity": "expected",
-      "source": "beads/active/BEAD-CAT-A023-4C01-05.yaml"
-    },
-    {
-      "code": "MISSING_EVIDENCE_PATH",
       "consumer": "evidence/test-results/example_bead_tests.txt",
       "expected": "existing evidence artifact",
       "message": "validation evidence path does not exist",
@@ -1986,7 +1968,7 @@
   "summary": {
     "compatibility_exceptions": 36,
     "errors": 133,
-    "expected_pending": 3,
+    "expected_pending": 1,
     "status": "FAIL"
   }
 }

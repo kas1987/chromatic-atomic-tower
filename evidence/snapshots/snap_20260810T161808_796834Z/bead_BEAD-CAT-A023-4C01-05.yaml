@@ -1,0 +1,126 @@
+bead_id: BEAD-CAT-A023-4C01-05
+mission_id: MP-CAT-A023-4C01
+title: Run taxonomy closeout audit and preserve compatibility evidence
+status: validating
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Run the final taxonomy validation, record residual compatibility debt,
+  and close A023 with an immutable evidence trail.
+allowed_paths:
+- missions/active/MP-CAT-A023-4C01_TAXONOMY_CANONICALIZATION.yaml
+- missions/archived/MP-CAT-A023-4C01_TAXONOMY_CANONICALIZATION.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A023-4C01-05.yaml
+- beads/completed/BEAD-CAT-A023-4C01-05.yaml
+- state/TOWER_STATE.yaml
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.json
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A023-4C01-04
+tool_budget:
+  search: 30
+  read: 80
+  write: 30
+  execute: 40
+  max_runtime_minutes: 180
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 96
+  scope_clarity: 94
+  evidence_quality: 92
+  reversibility: 96
+  tool_fit: 92
+  risk_awareness: 97
+  testability: 94
+risk_level: high
+reversibility: high
+stop_conditions:
+- Final identity evidence cannot bind to exact HEAD.
+- Compatibility debt is unexplained or requires forbidden mutation.
+- A forbidden path or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- Full CAT validation and taxonomy tests pass.
+- Final report distinguishes fixed, compatible, and residual drift.
+- A023 is archived with state cleared to sprint_idle.
+validation:
+- type: command
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md
+  required: true
+- type: test
+  command: python -m pytest -q
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-05.md
+  required: true
+required_output:
+- final_validation
+- compatibility_audit
+- residual_debt_register
+handoff:
+  from: Auditor
+  to: Human Owner
+  reviewer: Human Owner
+  next_bead_id: null
+last_updated: '2026-08-10T16:18:02+00:00'
+transition_history:
+- timestamp: '2026-08-10T16:14:47+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-05
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'ANA GO: activate final A023 closeout audit slice'
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-04.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-05.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T161447_732089Z
+- timestamp: '2026-08-10T16:17:55+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-05
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Final closeout evidence assembled
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-05.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-05.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T161755_562430Z
+- timestamp: '2026-08-10T16:18:02+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-05
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Pre-close CAT and taxonomy validation passed; terminal state rerun follows
+    mission close
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-05.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-05.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T161802_511647Z
