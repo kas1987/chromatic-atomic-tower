@@ -1,14 +1,20 @@
 # LLM Model Routing Policy
 
-CAT should route missions by both mission rigor and execution complexity.
-The machine-readable policy lives in `agents/model_routes.yaml` (`complexity_routing`).
+CAT should route work from the independent fields in
+`gates/CAT_ID_TAXONOMY.yaml`. Complexity is a capability hint, while priority,
+risk, severity, reversibility, and HITL determine urgency and control. The
+machine-readable route policy remains in `agents/model_routes.yaml`.
 
 ## Two-axis model
 
 | Axis | Meaning |
 |---|---|
-| M1-M4 | Governance and mission rigor |
-| C1-C4 | Technical execution complexity |
+| priority | Queue urgency and escalation order |
+| severity | Impact and assurance depth |
+| complexity | Effort and uncertainty; model capability hint |
+| risk_level | Safeguards and approval depth |
+| reversibility | Rollback and approval requirements |
+| hitl_mode | Human control boundary |
 
 ## Routing principle
 
@@ -16,12 +22,11 @@ Use the lowest sufficient model and agent path, then escalate when evidence show
 
 ## Routing matrix
 
-| Mission | Complexity | Default route (model class) | Concrete model | Escalation |
-|---|---|---|---|---|
-| M1 | C1 | local_fast | minimax-m3:cloud | Reviewer only if validation fails |
-| M2 | C2 | local_coding | kimi-k2.7-code:cloud | Strong coding model if tests fail twice |
-| M3 | C3 | strong_coding_reasoning | claude-sonnet-4-6 | Frontier model if architecture or risk ambiguity remains |
-| M4 | C4 | frontier_reasoning + human gate | claude-opus-4-8 | Governance council / security / auditor |
+| Contract signal | Default route | Escalation |
+|---|---|---|
+| M1/M2, low risk, review-required or lower HITL | local fast/coding alias | Stronger reviewer when the proof gate fails |
+| M3, or cross-component work | strong reasoning alias | Human review when ambiguity or repeated validation failure remains |
+| M4, high/critical risk, low reversibility, or human-only HITL | strongest approved reviewer plus human gate | Security/governance review; never silent downgrade |
 
 ## Fallback triggers
 
@@ -37,5 +42,7 @@ Use the lowest sufficient model and agent path, then escalate when evidence show
 
 - No model can bypass CAT gates.
 - No model can modify forbidden paths.
-- No model can close a mission without evidence.
+- No model can close a mission without evidence and the required HITL gate.
 - Narrative confidence is not evidence.
+- Mission class, compact complexity text, mission number, PR number, and branch
+  names are not routing authority.

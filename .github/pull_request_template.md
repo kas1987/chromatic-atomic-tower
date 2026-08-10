@@ -2,11 +2,14 @@
 
 ## Mission
 
-Mission ID: <!-- MP-CAT-XXXX-XCXX -->
+Mission ID: <!-- MP-CAT-[SABC]NNN-[1-4]CNN -->
 
 ## BEAD
 
-BEAD ID: <!-- BEAD-CAT-XXXX-XCXX-NN -->
+BEAD ID: <!-- BEAD-CAT-[SABC]NNN-[1-4]CNN-NN -->
+
+Taxonomy source: `gates/CAT_ID_TAXONOMY.yaml`. Historical numeric IDs are
+compatibility-only; new work must use the canonical form.
 
 ## Summary
 
@@ -34,6 +37,12 @@ Evidence path: <!-- evidence/reports/xxx.txt -->
 ## Risk
 
 Risk level: <!-- low / medium / high / critical -->
+
+Priority / P0–P4 display: <!-- stored numeric priority and compatibility display -->
+Severity: <!-- critical / high / medium / low -->
+Complexity: <!-- M1 / M2 / M3 / M4 -->
+Reversibility: <!-- high / medium / low -->
+HITL mode: <!-- none / review_required / approval_required / human_only -->
 
 ## Checklist
 

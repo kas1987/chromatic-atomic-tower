@@ -1,0 +1,64 @@
+evidence_id: EB-CAT-A023-4C01-02
+mission_id: MP-CAT-A023-4C01
+bead_id: BEAD-CAT-A023-4C01-02
+target_type: bead
+type: closeout
+summary: A023-02 taxonomy contract consumer adapter and compatibility gates passed.
+validation_result: passed
+required_artifacts:
+- path: gates/CAT_ID_TAXONOMY.yaml
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: scripts/cat_validate.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: scripts/cat_new_mission.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: scripts/cat_new_bead.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: scripts/cat_mission_id_check.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: scripts/cat_align_common.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: tests/test_cat_taxonomy.py
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+- path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-02.md
+  kind: artifact
+  required: true
+  description: Operator-supplied required artifact
+  validation_result: passed
+supporting_artifacts: []
+metrics:
+  required_artifacts: 8
+  observed_head_sha: b1c3ee25cfaba54bdb589e14b20ba45988339b67
+  implementation_head_sha: 2ad14cff6d91d6b591b3b186945831f660450d0d
+  taxonomy_tests_passed: 30
+  related_compatibility_tests_passed: 121
+  cat_check_repo: PASS
+  cat_validate_all: PASS
+  cat_align_check_strict: PASS
+created_by: Human Owner
+created_at: '2026-08-10T16:03:58Z'
+learning_note: Taxonomy consumers now derive identity rules from the canonical contract;
+  legacy IDs remain accepted without renaming. A023-03 reconciles active guidance,
+  A023-04 adds cross-file drift detection.
+closeout_ready: true

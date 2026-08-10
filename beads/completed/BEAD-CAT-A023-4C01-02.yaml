@@ -1,0 +1,153 @@
+bead_id: BEAD-CAT-A023-4C01-02
+mission_id: MP-CAT-A023-4C01
+title: Make validators and generators consume the taxonomy contract
+status: completed
+priority: 1
+agent_role: Builder
+autonomy_level: L2
+objective: Make mission and BEAD validators, ID generators, and alignment helpers
+  consume the canonical taxonomy contract without renaming historical IDs.
+allowed_paths:
+- gates/CAT_ID_TAXONOMY.yaml
+- scripts/cat_validate.py
+- scripts/cat_new_mission.py
+- scripts/cat_new_bead.py
+- scripts/cat_mission_id_check.py
+- scripts/cat_align_common.py
+- tests/test_cat_taxonomy.py
+- evidence/reports/taxonomy/BEAD-CAT-A023-4C01-02.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A023-4C01-01
+tool_budget:
+  search: 20
+  read: 60
+  write: 30
+  execute: 30
+  max_runtime_minutes: 150
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 94
+  scope_clarity: 92
+  evidence_quality: 88
+  reversibility: 96
+  tool_fit: 92
+  risk_awareness: 95
+  testability: 94
+risk_level: high
+reversibility: high
+stop_conditions:
+- Contract cannot express legacy compatibility.
+- A validator would require a second canonical grammar.
+- A forbidden path or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- Validators and generators use the contract or a tested adapter.
+- New-format and legacy compatibility tests pass.
+- Evidence records exact HEAD and consumer inventory.
+validation:
+- type: test
+  command: python -m pytest tests/test_cat_taxonomy.py tests/test_cat_align_missionid.py
+    -q
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-02.md
+  required: true
+required_output:
+- consumer_adapter
+- compatibility_tests
+- evidence_path
+handoff:
+  from: Builder
+  to: Scribe
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A023-4C01-03
+last_updated: '2026-08-10T16:04:43+00:00'
+transition_history:
+- timestamp: '2026-08-10T15:53:50+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-02
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'ANA GO: activate next queued A023 implementation slice after A023-06 closeout'
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-06.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T155350_246852Z
+- timestamp: '2026-08-10T16:04:30+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-02
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Closeout preparation after implementation proof
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-02.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T160430_125475Z
+- timestamp: '2026-08-10T16:04:34+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-02
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Implementation gates complete; enter validation
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-02.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-02.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T160434_298423Z
+- timestamp: '2026-08-10T16:04:38+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-02
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Human Owner reviewed implementation and exact-head evidence
+  evidence: evidence/bundles/generated/EB-CAT-A023-4C01-02.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A023-4C01-02.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T160438_371415Z
+- timestamp: '2026-08-10T16:04:43+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A023-4C01-02
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: ANA GO approved A023-02 closeout after passing compatibility and CAT gates
+  evidence: evidence\bundles\generated\EB-CAT-A023-4C01-02.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A023-4C01-02.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T160443_222123Z

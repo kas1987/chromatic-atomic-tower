@@ -2,6 +2,7 @@ version: 0.1.0
 gate_id: CI-GOVERNANCE-001
 last_updated: '2026-06-17'
 principle: No CI Pass = No Promotion
+taxonomy_contract: gates/CAT_ID_TAXONOMY.yaml
 required_checks:
 - id: repo_structure
   command: python scripts/cat_check_repo.py
@@ -23,8 +24,12 @@ pr_checks:
   require_bead_id: true
   require_changed_file_scope: true
   block_forbidden_paths: true
-  mission_id_pattern: MP-CAT-[0-9]{3}
-  bead_id_pattern: BEAD-CAT-[0-9]{3}-[0-9]{3}
+  mission_id_patterns:
+    canonical: '^MP-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}$'
+    legacy_compatibility: '^MP-CAT-[0-9]{3}$'
+  bead_id_patterns:
+    canonical: '^BEAD-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}$'
+    legacy_compatibility: '^BEAD-CAT-[0-9]{3}-[0-9]{3}$'
 self_healing:
   default_mode: dry_run
   apply_requires_review: true
