@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-002-005
 mission_id: MP-CAT-002
 title: Relocate durable harness evidence into the evidence plane
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: 'Make harness run evidence durable and governed: relocate the artifacts

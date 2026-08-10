@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A007-4C01-08
 mission_id: MP-CAT-A007-4C01
 title: Add agent observability, Mermaid docs, runbooks, and learning closeout
 status: completed
+priority: 2
 agent_role: Scribe
 autonomy_level: L2
 objective: Close out LOGHOUSE. Add an agent/LLM observability hook that ingests local

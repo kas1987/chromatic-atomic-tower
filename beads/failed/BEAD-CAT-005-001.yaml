@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-005-001
 mission_id: MP-CAT-005
 title: Verify and commit model route config
 status: archived
+priority: 1
 agent_role: Auditor
 autonomy_level: L3
 objective: Verify agents/model_routes.yaml maps all five roles (architecture, specs,

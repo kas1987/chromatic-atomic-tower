@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-005-002
 mission_id: MP-CAT-005
 title: Verify and commit worker prompt template
 status: completed
+priority: 1
 agent_role: Auditor
 autonomy_level: L3
 objective: Verify prompts/WORKER_PROMPT_TEMPLATE.md contains an objective section,

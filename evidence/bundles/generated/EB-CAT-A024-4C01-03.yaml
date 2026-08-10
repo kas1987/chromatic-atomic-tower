@@ -1,0 +1,51 @@
+evidence_id: EB-CAT-A024-4C01-03
+mission_id: MP-CAT-A024-4C01
+bead_id: BEAD-CAT-A024-4C01-03
+target_type: bead
+type: closeout
+summary: A024-03 repaired authorized historical BEAD priorities by parent-mission inheritance and preserved unreconstructable evidence as explicit debt.
+validation_result: passed
+required_artifacts:
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-03.json
+    kind: evidence
+    required: true
+    description: Post-repair exact-head taxonomy audit and residual register
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-03.md
+    kind: report
+    required: true
+    description: Historical priority repair and evidence residual record
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-02.json
+    kind: baseline
+    required: true
+    description: A024-02 post-repair baseline
+    validation_result: passed
+supporting_artifacts:
+  - path: beads/completed
+    kind: repaired_ledgers
+    required: false
+    description: Authorized completed BEAD records with inherited parent priority
+    validation_result: passed
+  - path: beads/failed
+    kind: repaired_ledgers
+    required: false
+    description: Authorized failed BEAD records with inherited parent priority
+    validation_result: passed
+metrics:
+  observed_head_sha: f2843a82b2902469a7694519a85e50e22f92d09d
+  implementation_head_sha: 75247e2add43e2149cdcc6de0e3a5901e684382c
+  authorized_priority_records_before: 87
+  authorized_priority_records_repaired: 87
+  example_priority_records_preserved: 2
+  missing_terminal_evidence_residual: 35
+  audit_errors_after: 37
+  audit_expected_pending_after: 4
+  compatibility_exceptions: 36
+  disposition_coverage: '41/41'
+  compatibility_disposition_coverage: '36/36'
+  immutable_identifiers_changed: 0
+created_by: Human Owner
+created_at: '2026-08-10T17:30:00Z'
+learning_note: Parent-mission priority inheritance repairs safe historical urgency metadata; example records and unavailable evidence remain explicit compatibility/debt rather than being fabricated or silently rewritten.
+closeout_ready: true

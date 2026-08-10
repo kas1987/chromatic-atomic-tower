@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A009-4C01-03
 mission_id: MP-CAT-A009-4C01
 title: Update roadmap, sprint state, changelog, and START_HERE
 status: completed
+priority: 1
 agent_role: Scribe
 autonomy_level: L3
 objective: Make operator-facing docs reflect canonical Sprint 000 through 009 lineage

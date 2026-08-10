@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A010-4C01-04
 mission_id: MP-CAT-A010-4C01
 title: Implement issue intake scaffold
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Convert structured GitHub issue intake data into draft Mission Pack and

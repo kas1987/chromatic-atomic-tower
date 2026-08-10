@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A007-4C01-01
 mission_id: MP-CAT-A007-4C01
 title: Lock LOGHOUSE contracts and architecture docs
 status: completed
+priority: 2
 agent_role: Auditor
 autonomy_level: L2
 objective: Confirm the pre-existing LOGHOUSE Phase-1 schemas (telemetry_envelope,

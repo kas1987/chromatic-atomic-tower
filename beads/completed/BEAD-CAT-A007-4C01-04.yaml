@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A007-4C01-04
 mission_id: MP-CAT-A007-4C01
 title: Build findings engine, rules, and dispatch writer
 status: completed
+priority: 2
 agent_role: Builder
 autonomy_level: L2
 objective: 'Implement the LOGHOUSE findings engine on top of the correlation core:

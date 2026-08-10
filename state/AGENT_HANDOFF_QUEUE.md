@@ -2,14 +2,9 @@
 
 # Agent Handoff Queue
 
-_Generated: 2026-08-10T17:24:51+00:00_
+_Generated: 2026-08-10T17:33:16+00:00_
 
 ## Next
-
-### BEAD-CAT-A024-4C01-03 — Repair historical BEAD and evidence relations
-
-- Agent Role: Builder
-- Status: queued
 
 ### BEAD-CAT-A024-4C01-04 — Reconcile taxonomy consumers and regression gates
 

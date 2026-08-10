@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-001-003
 mission_id: MP-CAT-001
 title: Add transition tests and schema checks
 status: archived
+priority: 1
 agent_role: Reviewer
 autonomy_level: L3
 objective: Add test coverage and schema validation for transition events, denied transitions,

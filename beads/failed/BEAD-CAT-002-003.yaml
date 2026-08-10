@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-002-003
 mission_id: MP-CAT-002
 title: Implement closeout engine integration
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Upgrade cat_closeout.py so closeout validates evidence bundles, writes

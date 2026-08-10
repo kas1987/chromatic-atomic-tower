@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A008-4C01-04
 mission_id: MP-CAT-A008-4C01
 title: GO dispatch gate and transition hardening
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L2
 objective: 'Deliver BEAD 04: GO dispatch gate and transition hardening.'

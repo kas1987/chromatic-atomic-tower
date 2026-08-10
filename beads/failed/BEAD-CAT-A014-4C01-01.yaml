@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A014-4C01-01
 mission_id: MP-CAT-A014-4C01
 title: "State Transition Engine \u2014 Validation and Tests"
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Validate and harden cat_transition.py with formal transition rules YAML,

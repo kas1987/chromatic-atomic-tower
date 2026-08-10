@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A008-4C01-02
 mission_id: MP-CAT-A008-4C01
 title: Extend state freshness and unified align check
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L2
 objective: 'Deliver BEAD 02: Extend state freshness and unified align check.'

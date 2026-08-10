@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-002-001
 mission_id: MP-CAT-002
 title: Define evidence gate rules and bundle schema
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Create the authoritative evidence gate rules and evidence bundle schema

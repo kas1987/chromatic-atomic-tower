@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-005-005
 mission_id: MP-CAT-005
 title: Relocate durable harness evidence into evidence plane
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: "Copy (not move) durable harness evidence from .agent/ into the evidence/\

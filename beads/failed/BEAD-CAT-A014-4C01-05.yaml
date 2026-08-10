@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A014-4C01-05
 mission_id: MP-CAT-A014-4C01
 title: "GitHub PR and Issue Bridge \u2014 Templates and Guard"
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Add or upgrade GitHub PR template and issue templates to enforce Mission

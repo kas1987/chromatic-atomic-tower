@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A013-4C01-02
 mission_id: MP-CAT-A013-4C01
 title: Calendar/Email tool-plane schema + adapter interface
 status: completed
+priority: 3
 agent_role: Builder
 autonomy_level: L2
 objective: "Define schemas/tool_plane_comms.schema.json (a validated descriptor for\

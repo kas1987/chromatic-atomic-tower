@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A014-4C01-04
 mission_id: MP-CAT-A014-4C01
 title: "GitHub Actions Cost Guard \u2014 Full Implementation and Tests"
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Implement cat_cost_guard.py (full, not stub), verify validate-cat.yml is

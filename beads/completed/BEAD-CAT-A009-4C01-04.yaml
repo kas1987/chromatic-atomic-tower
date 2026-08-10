@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A009-4C01-04
 mission_id: MP-CAT-A009-4C01
 title: Validate GO resolver, CI, and evidence reports
 status: completed
+priority: 1
 agent_role: Reviewer
 autonomy_level: L3
 objective: Run registry audit, reconciliation check, roadmap sync, alignment check,

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A014-4C01-06
 mission_id: MP-CAT-A014-4C01
 title: "Agent Scorecard Mutation \u2014 Script and Tests"
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Implement cat_score_agent.py with dry-run mode to record agent execution

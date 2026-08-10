@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A008-4C01-01
 mission_id: MP-CAT-A008-4C01
 title: Mission pack and alignment contract spec
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L2
 objective: 'Deliver BEAD 01: Mission pack and alignment contract spec.'

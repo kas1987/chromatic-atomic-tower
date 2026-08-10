@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A017-4C01-02
 mission_id: MP-CAT-A017-4C01
 title: Define read-only DataAnn adapter contract
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L2
 objective: Define and test a public-safe, read-only adapter contract for inspecting

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A011-4C01-03
 mission_id: MP-CAT-A011-4C01
 title: Implement tool-budget tracker
 status: completed
+priority: 3
 agent_role: Builder
 autonomy_level: L2
 objective: 'Implement scripts/cat_tool_budget_tracker.py that reads a BEAD contract''s

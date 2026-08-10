@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A008-4C01-05
 mission_id: MP-CAT-A008-4C01
 title: Blocking CI integration
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L2
 objective: 'Deliver BEAD 05: Blocking CI integration.'

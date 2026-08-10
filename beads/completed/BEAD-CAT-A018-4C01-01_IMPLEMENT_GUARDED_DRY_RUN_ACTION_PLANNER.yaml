@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A018-4C01-01
 mission_id: MP-CAT-A018-4C01
 title: Implement guarded dry-run action planner
 status: completed
+priority: 2
 agent_role: Builder
 autonomy_level: L2
 objective: Implement and test a deterministic dry-run action planner that rejects

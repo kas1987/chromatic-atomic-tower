@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A006-4C01-05
 mission_id: MP-CAT-A006-4C01
 title: Add governance playbooks and checklists
 status: completed
+priority: 2
 agent_role: Scribe
 autonomy_level: L2
 objective: Create operational playbooks for GO mode, audit harness validation, CI/CD

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-005-003
 mission_id: MP-CAT-005
 title: Record worker patch and test evidence
 status: completed
+priority: 1
 agent_role: Auditor
 autonomy_level: L3
 objective: Confirm scripts/harness_demo.py was generated as the sample worker patch

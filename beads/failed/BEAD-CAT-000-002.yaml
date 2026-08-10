@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-000-002
 mission_id: MP-CAT-000
 title: Validate mission and BEAD schemas
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Run and confirm schema validation for mission registry, active mission,

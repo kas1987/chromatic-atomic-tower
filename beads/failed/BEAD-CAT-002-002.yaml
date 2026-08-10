@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-002-002
 mission_id: MP-CAT-002
 title: Implement evidence bundle CLI
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Implement cat_evidence.py so CAT can create and validate evidence bundles

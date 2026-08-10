@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-001-004
 mission_id: MP-CAT-001
 title: Document operator workflow and closeout evidence
 status: archived
+priority: 1
 agent_role: Scribe
 autonomy_level: L3
 objective: Document the state transition operating model, operator commands, review

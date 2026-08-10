@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A013-4C01-03
 mission_id: MP-CAT-A013-4C01
 title: Governed tool registry + schema
 status: completed
+priority: 3
 agent_role: Builder
 autonomy_level: L2
 objective: Create agents/registry/TOOL_REGISTRY.yaml enumerating every tool plane

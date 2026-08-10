@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A010-4C01-05
 mission_id: MP-CAT-A010-4C01
 title: Wire GitHub Bridge CI and operator docs
 status: completed
+priority: 1
 agent_role: Scribe
 autonomy_level: L3
 objective: Add CI workflow, operator guide, evidence report examples, and final sprint

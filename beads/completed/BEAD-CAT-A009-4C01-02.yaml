@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A009-4C01-02
 mission_id: MP-CAT-A009-4C01
 title: Reconcile mission registry and mission files
 status: completed
+priority: 1
 agent_role: Scribe
 autonomy_level: L3
 objective: Update mission registry and create or align mission packet files for active

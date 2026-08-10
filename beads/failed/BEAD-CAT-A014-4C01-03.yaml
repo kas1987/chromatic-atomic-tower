@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A014-4C01-03
 mission_id: MP-CAT-A014-4C01
 title: "Evidence Manifest Index \u2014 Build and Validate"
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Build cat_evidence_index.py that rebuilds evidence/manifest.yaml from the

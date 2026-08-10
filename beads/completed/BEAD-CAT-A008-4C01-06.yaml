@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A008-4C01-06
 mission_id: MP-CAT-A008-4C01
 title: Sprint state plane automation
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L2
 objective: 'Deliver BEAD 06: Sprint state plane automation.'

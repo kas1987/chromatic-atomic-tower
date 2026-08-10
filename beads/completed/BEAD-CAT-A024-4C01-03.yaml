@@ -1,0 +1,149 @@
+bead_id: BEAD-CAT-A024-4C01-03
+mission_id: MP-CAT-A024-4C01
+title: Repair historical BEAD and evidence relations
+status: completed
+agent_role: Builder
+autonomy_level: L2
+priority: 1
+objective: Repair safe historical BEAD metadata, dependency joins, and evidence references
+  identified by the A024 disposition register.
+allowed_paths:
+- beads/completed/**
+- beads/failed/**
+- beads/active/BEAD-CAT-A024-4C01-03.yaml
+- evidence/reports/taxonomy/**
+- evidence/bundles/generated/**
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A024-4C01-02
+tool_budget:
+  search: 40
+  read: 100
+  write: 50
+  execute: 35
+  max_runtime_minutes: 180
+confidence:
+  minimum: 90
+  current: 90
+  objective_clarity: 94
+  scope_clarity: 86
+  evidence_quality: 90
+  reversibility: 96
+  tool_fit: 88
+  risk_awareness: 98
+  testability: 90
+risk_level: high
+reversibility: high
+stop_conditions:
+- Historical evidence cannot be reconstructed without fabrication.
+- A relation repair would rewrite an immutable identifier.
+- A forbidden path or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- Only disposition-approved relations are changed.
+- Missing or unavailable historical evidence is explicitly retained as debt.
+- Before/after evidence and exact-head proof are recorded.
+validation:
+- type: command
+  command: python scripts/cat_taxonomy_audit.py --json
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-03.md
+  required: true
+required_output:
+- changed_bead_relations
+- residual_unreconstructable_evidence
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-A024-4C01-04
+  notes: Never synthesize evidence for a historical run.
+last_updated: '2026-08-10T17:32:59+00:00'
+transition_history:
+- timestamp: '2026-08-10T17:27:13+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-03
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'Continue A024 remediation: repair historical BEAD priorities and evidence
+    relations'
+  evidence: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-02.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A024-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T172713_081929Z
+- timestamp: '2026-08-10T17:32:32+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-03
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Begin bounded historical relation repair with residual debt register
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A024-4C01-03.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T173232_094529Z
+- timestamp: '2026-08-10T17:32:41+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-03
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Historical priority repair and residual evidence register emitted
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A024-4C01-03.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T173241_673391Z
+- timestamp: '2026-08-10T17:32:49+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-03
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Contract validation passed; Human Owner reviewed explicit residuals
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A024-4C01-03.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T173249_426336Z
+- timestamp: '2026-08-10T17:32:59+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-03
+  from_status: reviewed
+  to_status: completed
+  allowed: true
+  dry_run: false
+  reason: A024-03 historical priority relations repaired; evidence debt retained explicitly
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-03.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\completed\BEAD-CAT-A024-4C01-03.yaml
+  guard: review_gate_pass
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T173259_492406Z

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A009-4C01-01
 mission_id: MP-CAT-A009-4C01
 title: Audit live repo vs package lineage
 status: completed
+priority: 1
 agent_role: Auditor
 autonomy_level: L3
 objective: Audit repository roadmap, mission registry, state files, and package lineage

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A017-4C01-03
 mission_id: MP-CAT-A017-4C01
 title: Define generic control-plane bridge contract
 status: completed
+priority: 1
 agent_role: Builder
 autonomy_level: L2
 objective: Define and test a generic ANNA control-plane event bridge that records

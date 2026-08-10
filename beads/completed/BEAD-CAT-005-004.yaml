@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-005-004
 mission_id: MP-CAT-005
 title: Verify and commit review packet template
 status: completed
+priority: 1
 agent_role: Auditor
 autonomy_level: L3
 objective: 'Verify playbooks/REVIEW_PACKET_TEMPLATE.md defines the final-review packet

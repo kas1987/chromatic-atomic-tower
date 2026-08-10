@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A008-4C01-07
 mission_id: MP-CAT-A008-4C01
 title: Operator playbooks and collision runbook
 status: completed
+priority: 1
 agent_role: Scribe
 autonomy_level: L2
 objective: 'Deliver BEAD 07: Operator playbooks and collision runbook.'

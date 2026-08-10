@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A006-4C01-08
 mission_id: MP-CAT-A006-4C01
 title: Add Mermaid docs and learning closeout
 status: completed
+priority: 2
 agent_role: Scribe
 autonomy_level: L2
 objective: Add Mermaid architecture diagrams (mission pipeline, gates, agents, routing,

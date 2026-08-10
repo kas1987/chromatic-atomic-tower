@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A012-4C01-03
 mission_id: MP-CAT-A012-4C01
 title: Adapter scaffold generator (cat_adapter_init.py)
 status: completed
+priority: 4
 agent_role: Builder
 autonomy_level: L2
 objective: >-

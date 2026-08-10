@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A011-4C01-02
 mission_id: MP-CAT-A011-4C01
 title: Implement trust scoring engine CLI
 status: completed
+priority: 3
 agent_role: Builder
 autonomy_level: L2
 objective: "Implement scripts/cat_agent_scorecard.py with subcommands: score-bead\

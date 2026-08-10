@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A014-4C01-07
 mission_id: MP-CAT-A014-4C01
 title: "GO Resolver Dispatch Packet Standard \u2014 Schema Validation and Tests"
 status: archived
+priority: 1
 agent_role: Builder
 autonomy_level: L3
 objective: Upgrade cat_resolve_go.py to emit output that validates against go_dispatch_packet.schema.json;

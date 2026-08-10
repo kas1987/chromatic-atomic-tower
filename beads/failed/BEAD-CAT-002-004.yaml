@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-002-004
 mission_id: MP-CAT-002
 title: Add tests, operator docs, prompts, and closeout checklist
 status: archived
+priority: 1
 agent_role: Scribe
 autonomy_level: L2
 objective: Complete Sprint 002 documentation, tests, prompt handoffs, checklists,

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A015-4C01-01
 mission_id: MP-CAT-A015-4C01
 title: Define archive schema and eligibility rules
 status: completed
+priority: 2
 agent_role: Architect
 autonomy_level: L2
 objective: Create schemas/archive.schema.json to validate archival records. Document

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A006-4C01-04
 mission_id: MP-CAT-A006-4C01
 title: Add skills registry and complexity-aware model routing
 status: completed
+priority: 2
 agent_role: Orchestrator
 autonomy_level: L2
 objective: Add a machine-readable skill registry and fold complexity-aware (M1-M4

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A011-4C01-01
 mission_id: MP-CAT-A011-4C01
 title: Define agent scorecard schema and upgrade data model
 status: completed
+priority: 3
 agent_role: Builder
 autonomy_level: L2
 objective: Create schemas/agent_scorecard.schema.json defining all scorecard fields

@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A006-4C01-06
 mission_id: MP-CAT-A006-4C01
 title: Add CI governance validation workflow
 status: completed
+priority: 2
 agent_role: Builder
 autonomy_level: L2
 objective: Create the pull-request and push validation workflow that enforces CAT

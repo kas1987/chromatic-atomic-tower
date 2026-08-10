@@ -2,6 +2,7 @@ bead_id: BEAD-CAT-A011-4C01-04
 mission_id: MP-CAT-A011-4C01
 title: Wire scorecard into bead closeout and produce final evidence
 status: completed
+priority: 3
 agent_role: Builder
 autonomy_level: L2
 objective: "Integrate cat_agent_scorecard.py score-bead call into cat_sprint_closeout.py\
