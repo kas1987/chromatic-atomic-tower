@@ -1,0 +1,62 @@
+version: 1.0.0
+policy_id: CAT-ROUTE-DECISION-001
+purpose: Fail-closed review routing contract; planning only, never state mutation.
+allowed_outcomes: [allow_plan, require_human, block]
+allowed_effects: [none, dry_run]
+default:
+  outcome: allow_plan
+  effect: dry_run
+rules:
+  stale_head:
+    when: observed_head_sha != expected_head_sha
+    outcome: block
+    effect: none
+  malformed_output:
+    when: output_valid == false
+    outcome: block
+    effect: none
+  dependency_cycle:
+    when: dependency_cycle_free == false
+    outcome: block
+    effect: none
+  conflicting_fields:
+    when: fields_consistent == false
+    outcome: require_human
+    effect: none
+  policy_drift:
+    when: policy_digest_valid == false
+    outcome: require_human
+    effect: none
+  exhausted_budget:
+    when: budget_available == false
+    outcome: require_human
+    effect: none
+  provider_outage:
+    when: provider_available == false
+    outcome: require_human
+    effect: none
+  duplicate_delivery:
+    when: duplicate_delivery == true
+    outcome: allow_plan
+    effect: none
+    replay: return_original_decision_without_mutation
+  human_gate:
+    when: hitl_mode in [approval_required, human_only]
+    outcome: require_human
+    effect: none
+precedence:
+  - stale_head
+  - malformed_output
+  - dependency_cycle
+  - conflicting_fields
+  - policy_drift
+  - exhausted_budget
+  - provider_outage
+  - duplicate_delivery
+  - human_gate
+invariants:
+  - No outcome authorizes mutation.
+  - Agent or model output is never human approval.
+  - Lifecycle state is distinct from taxonomy classification.
+  - Every decision binds observed and artifact HEAD independently.
+  - Duplicate delivery returns the original decision without mutation.

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/lifecycle_event.schema.json",
+  "title": "CAT Lifecycle Event",
+  "description": "Idempotent, head-bound observation of a lifecycle decision. Effects are limited to no-op or dry-run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "idempotency_key", "subject", "prior_revision", "applied_outcome", "effect", "policy", "head", "evidence_refs", "actor_type"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "event_id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "idempotency_key": {"type": "string", "minLength": 8},
+    "subject": {"$ref": "#/$defs/subject"},
+    "prior_revision": {"type": "string", "minLength": 1},
+    "applied_outcome": {"type": "string", "enum": ["allow_plan", "require_human", "block"]},
+    "effect": {"type": "string", "enum": ["none", "dry_run"]},
+    "policy": {"$ref": "#/$defs/policy"},
+    "head": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed_head_sha", "artifact_head_sha"],
+      "properties": {
+        "observed_head_sha": {"$ref": "#/$defs/sha"},
+        "artifact_head_sha": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "actor_type": {"type": "string", "enum": ["human", "agent", "system"]}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": {"type": "string", "enum": ["mission", "bead", "review", "pull_request"]},
+        "id": {"type": "string", "minLength": 1}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "policy_version", "policy_digest"],
+      "properties": {
+        "policy_id": {"type": "string", "minLength": 1},
+        "policy_version": {"type": "string", "minLength": 1},
+        "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chromatic.local/schemas/route_decision.schema.json",
+  "title": "CAT Route Decision",
+  "description": "Immutable, fail-closed review-routing decision. This contract plans work only; it does not authorize mutation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "subject",
+    "expected_revision",
+    "observed_head_sha",
+    "artifact_head_sha",
+    "lifecycle_state",
+    "classification",
+    "constraints",
+    "policy",
+    "outcome",
+    "effect",
+    "evidence",
+    "rationale"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "decision_id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "subject": {"$ref": "#/$defs/subject"},
+    "expected_revision": {"type": "string", "minLength": 1},
+    "observed_head_sha": {"$ref": "#/$defs/sha"},
+    "artifact_head_sha": {"$ref": "#/$defs/sha"},
+    "lifecycle_state": {
+      "type": "string",
+      "enum": ["draft", "triaged", "approved", "queued", "active", "dispatched", "in_progress", "validating", "reviewed", "completed", "closed", "blocked", "escalated", "rolled_back", "abandoned", "incident", "learned"]
+    },
+    "classification": {"$ref": "#/$defs/classification"},
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["head_match", "output_valid", "budget_available", "provider_available", "fields_consistent", "dependency_cycle_free", "duplicate_delivery"],
+      "properties": {
+        "head_match": {"type": "boolean"},
+        "output_valid": {"type": "boolean"},
+        "budget_available": {"type": "boolean"},
+        "provider_available": {"type": "boolean"},
+        "fields_consistent": {"type": "boolean"},
+        "dependency_cycle_free": {"type": "boolean"},
+        "duplicate_delivery": {"type": "boolean"}
+      }
+    },
+    "policy": {"$ref": "#/$defs/policy"},
+    "outcome": {"type": "string", "enum": ["allow_plan", "require_human", "block"]},
+    "effect": {"type": "string", "enum": ["none", "dry_run"]},
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["refs", "observed_head_sha", "artifact_head_sha"],
+      "properties": {
+        "refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "observed_head_sha": {"$ref": "#/$defs/sha"},
+        "artifact_head_sha": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "rationale": {"type": "string", "minLength": 3}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type": {"type": "string", "enum": ["mission", "bead", "review", "pull_request"]},
+        "id": {"type": "string", "minLength": 1}
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["priority", "severity", "complexity", "risk_level", "hitl_mode"],
+      "properties": {
+        "priority": {"type": "integer", "minimum": 1, "maximum": 5},
+        "severity": {"type": "string", "enum": ["critical", "high", "medium", "low"]},
+        "complexity": {"type": "string", "enum": ["M1", "M2", "M3", "M4"]},
+        "risk_level": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+        "hitl_mode": {"type": "string", "enum": ["none", "review_required", "approval_required", "human_only"]}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "policy_version", "policy_digest"],
+      "properties": {
+        "policy_id": {"type": "string", "minLength": 1},
+        "policy_version": {"type": "string", "minLength": 1},
+        "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}
