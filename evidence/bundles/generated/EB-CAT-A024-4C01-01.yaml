@@ -1,0 +1,63 @@
+evidence_id: EB-CAT-A024-4C01-01
+mission_id: MP-CAT-A024-4C01
+bead_id: BEAD-CAT-A024-4C01-01
+target_type: bead
+type: baseline
+summary: A024-01 reproduced the A023 taxonomy debt baseline and emitted deterministic dispositions for every finding and compatibility exception.
+validation_result: passed
+required_artifacts:
+  - path: scripts/cat_taxonomy_audit.py
+    kind: artifact
+    required: true
+    description: Read-only taxonomy auditor with deterministic disposition rules
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-01.json
+    kind: evidence
+    required: true
+    description: Exact-head machine-readable audit and disposition register
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-01.md
+    kind: report
+    required: true
+    description: Human-readable baseline, disposition rules, and handoff
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A023-4C01-04.json
+    kind: baseline
+    required: true
+    description: A023 source baseline for comparison
+    validation_result: passed
+supporting_artifacts:
+  - path: evidence/reports/taxonomy/MP-CAT-A024-4C01_registration_20260810.md
+    kind: registration
+    required: false
+    description: A024 mission registration and residual-debt rationale
+    validation_result: passed
+metrics:
+  observed_head_sha: 38c0ee608704a4cd210fe628f5fc20c356be54af
+  audit_exit_code: 1
+  audit_status: FAIL
+  source_files: 146
+  mission_contracts: 25
+  bead_contracts: 121
+  audit_errors: 133
+  audit_expected_pending: 7
+  total_findings: 140
+  disposition_coverage: '140/140'
+  compatibility_exceptions: 36
+  compatibility_disposition_coverage: '36/36'
+  pointer_alignment: PASS
+  post_completion_source_files: 144
+  post_completion_mission_contracts: 25
+  post_completion_bead_contracts: 119
+  post_completion_audit_errors: 133
+  post_completion_audit_expected_pending: 6
+  post_completion_total_findings: 139
+  post_completion_disposition_coverage: '139/139'
+  post_completion_compatibility_disposition_coverage: '36/36'
+created_by: Human Owner
+created_at: '2026-08-10T16:55:00Z'
+learning_note: Historical taxonomy debt is now measurable and dispositioned without renaming immutable identifiers or fabricating missing evidence. The audit must remain non-green until repair or explicit acceptance closes each error class.
+closeout_ready: true
+notes:
+  - A024-01 is a baseline/classification slice; it does not remediate the 133 errors.
+  - The audit JSON contains the exhaustive per-finding disposition register.

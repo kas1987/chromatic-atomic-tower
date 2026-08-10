@@ -2,14 +2,9 @@
 
 # Agent Handoff Queue
 
-_Generated: 2026-08-10T16:46:21+00:00_
+_Generated: 2026-08-10T17:17:30+00:00_
 
 ## Next
-
-### BEAD-CAT-A024-4C01-01 — Baseline and classify residual taxonomy debt
-
-- Agent Role: Auditor
-- Status: queued
 
 ### BEAD-CAT-A024-4C01-02 — Repair authoritative mission taxonomy metadata
 

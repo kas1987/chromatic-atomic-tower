@@ -39,6 +39,51 @@ class Finding:
     expected: Any = None
 
 
+def _disposition_for_finding(finding: Finding) -> dict[str, Any]:
+    """Assign a deterministic A024 disposition without changing audit severity."""
+    if finding.severity == 'expected':
+        if finding.source.startswith('beads/examples/'):
+            return {
+                'disposition': 'compatibility_exception',
+                'owner': 'Human Owner',
+                'next_bead': None,
+                'rationale': 'Example-only evidence is compatibility scaffolding, not a historical run artifact.',
+            }
+        return {
+            'disposition': 'expected_in_progress',
+            'owner': 'A024 execution owner',
+            'next_bead': 'BEAD-CAT-A024-4C01-01',
+            'rationale': 'The referenced evidence is expected to be produced by the queued or active A024 work.',
+        }
+    if finding.code == 'COMPLEXITY_MISMATCH':
+        return {
+            'disposition': 'repairable_metadata',
+            'owner': 'Human Owner',
+            'next_bead': 'BEAD-CAT-A024-4C01-02',
+            'rationale': 'Evaluate the archived mission level against the canonical complexity token; preserve the immutable mission ID.',
+        }
+    if finding.code == 'INVALID_PRIORITY':
+        return {
+            'disposition': 'repairable_metadata',
+            'owner': 'Human Owner',
+            'next_bead': 'BEAD-CAT-A024-4C01-03',
+            'rationale': 'Add or reconcile explicit priority metadata without rewriting historical identity or changing past urgency decisions.',
+        }
+    if finding.code == 'MISSING_EVIDENCE_PATH':
+        return {
+            'disposition': 'accepted_historical_debt',
+            'owner': 'Human Owner',
+            'next_bead': 'BEAD-CAT-A024-4C01-03',
+            'rationale': 'The referenced artifact is absent; do not fabricate historical evidence. Recover it or record explicit acceptance.',
+        }
+    return {
+        'disposition': 'escalate_unclassified',
+        'owner': 'Human Owner',
+        'next_bead': None,
+        'rationale': 'No deterministic disposition rule exists; fail closed for human classification.',
+    }
+
+
 def _paths(root: Path, patterns: tuple[str, ...]) -> list[Path]:
     return sorted({path for pattern in patterns for path in root.glob(pattern) if path.is_file()})
 
@@ -195,6 +240,25 @@ def audit_root(root: Path = ROOT) -> dict[str, Any]:
                 emit(findings, 'POINTER_ASYMMETRY', 'error', registry_path, tower_path, f'{field} differs between registry and tower', registry.get(field), tower.get(field))
 
     findings.sort(key=lambda item: (item.severity, item.code, item.source, item.consumer, item.message))
+    disposition_register = []
+    for index, finding in enumerate(findings, start=1):
+        disposition_register.append({
+            'finding_id': f'A024-01-F{index:03d}',
+            'code': finding.code,
+            'severity': finding.severity,
+            'source': finding.source,
+            **_disposition_for_finding(finding),
+        })
+    compatibility_register = [
+        {
+            **item,
+            'disposition': 'compatibility_exception',
+            'owner': 'Human Owner',
+            'next_bead': None,
+            'rationale': 'Historical or example identity is preserved by the taxonomy compatibility contract and must not be renamed.',
+        }
+        for item in sorted(compatibility, key=lambda item: (item['kind'], item['id'], item['source']))
+    ]
     return {
         'contract_id': patterns['contract'].get('contract_id'),
         'contract_version': patterns['contract'].get('version'),
@@ -204,6 +268,8 @@ def audit_root(root: Path = ROOT) -> dict[str, Any]:
         'bead_contracts': len(beads),
         'findings': [asdict(item) for item in findings],
         'compatibility_exceptions': sorted(compatibility, key=lambda item: (item['kind'], item['id'], item['source'])),
+        'disposition_register': disposition_register,
+        'compatibility_disposition_register': compatibility_register,
         'summary': {
             'errors': sum(item.severity == 'error' for item in findings),
             'expected_pending': sum(item.severity == 'expected' for item in findings),

@@ -2,7 +2,7 @@
 
 # CAT Sprint State
 
-_Generated: 2026-08-10T16:46:21+00:00_
+_Generated: 2026-08-10T17:17:30+00:00_
 
 | Field | Value |
 |---|---|
