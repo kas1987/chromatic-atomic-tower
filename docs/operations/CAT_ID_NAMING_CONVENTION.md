@@ -1,59 +1,65 @@
-# CAT ID Naming Convention (Type–Repo–Priority–Complexity)
+# CAT ID Naming Convention and Taxonomy
 
-Adopted with **MP-CAT-A006-4C01**. Applies to **new missions/beads from this point forward only**.
-Shipped missions and beads (`MP-CAT-000`..`MP-CAT-005` and their `BEAD-CAT-00N-*`) keep their
-legacy three-segment IDs and are **not** renamed.
+The machine-readable source of truth is
+[`gates/CAT_ID_TAXONOMY.yaml`](../../gates/CAT_ID_TAXONOMY.yaml), version 2.0.0.
+This document is its human-readable projection. New records use the current
+form; historical identifiers are preserved and are never renamed.
 
 ## Mission ID
 
-```
-MP-<repo>-<tier><NNN>-<cx>C<oo>
+```text
+MP-<repo>-<class><NNN>-<cx>C<oo>
 ```
 
-| Segment | Meaning | Values |
-|---|---|---|
-| `MP` | **Type** — Mission Pack | fixed |
-| `<repo>` | **Repo** | `CAT` (Chromatic Atomic Tower) |
-| `<tier>` | **Priority tier**, frozen at creation | `S` / `A` / `B` / `C` |
-| `<NNN>` | **Global mission number** (3 digits) | `006`, `007`, … |
-| `<cx>` | **Complexity** (mission level) | `4`=M4 (highest) … `1`=M1 (lowest) |
-| `C` | literal complexity marker | fixed |
-| `<oo>` | **Relative execution order** (2 digits) | `01`, `02`, … |
+| Segment | Meaning |
+|---|---|
+| `MP` | Mission Packet type |
+| `<repo>` | Repository/project namespace (`CAT`) |
+| `<class>` | Descriptive mission class at creation (`S`, `A`, `B`, or `C`) |
+| `<NNN>` | Immutable global mission sequence |
+| `<cx>` | Legacy compact complexity display (`4` = M4 through `1` = M1) |
+| `C` | Compact complexity marker |
+| `<oo>` | Execution order or profile code |
 
-Example: `MP-CAT-A006-4C01` = Mission Pack · CAT · A-tier · mission #006 · complexity M4 · order 01.
+Example: `MP-CAT-A006-4C01` means Mission Packet, CAT, class A, mission 006,
+compact M4 display, order/profile 01. `A006` is not a PR number or branch name.
+PR numbers, branches, and exact head SHAs are external relations recorded in
+mission, BEAD, and evidence fields.
 
 ## Bead ID
 
+```text
+BEAD-<repo>-<class><NNN>-<cx>C<oo>-<bb>
 ```
-BEAD-<repo>-<tier><NNN>-<cx>C<oo>-<bb>
-```
 
-Beads inherit the parent mission's stem and add a 2-digit bead sequence `<bb>`.
-Example: `BEAD-CAT-A006-4C01-01` … `-08`.
+BEADs inherit the parent mission stem and append an immutable two-digit
+sequence. Legacy `MP-CAT-NNN` and `BEAD-CAT-NNN-*` forms remain valid.
 
-> The `BEAD-` prefix is retained (not `BD-`) so existing schema regexes
-> (`^BEAD-[A-Z0-9-]+$`) and tooling continue to match without changes.
+## Urgency, impact, effort, and control
 
-## Priority tiers (frozen at creation)
+These are separate dimensions. `priority` is the only urgency axis and remains
+the current numeric storage field; lower numbers are more urgent. For quick
+reads, use the compatibility display `1→P0`, `2→P1`, `3→P2`, `4→P3`, `5→P4`.
+This display map does not rewrite stored records.
 
-Priority is **baked into the ID at creation and never changes**. Live/current priority is the
-mutable `priority` field in the mission file and registry. Reprioritizing a mission updates the
-field, **not** the ID — so identifiers stay stable across reprioritization.
+| Field | Answers | May influence |
+|---|---|---|
+| `priority` | How urgently should this be handled? | Queue order and escalation |
+| `severity` | How bad is failure or a defect? | Assurance depth and attention |
+| `complexity` / `level` | How difficult or uncertain is the work? | Planning and model capability hint |
+| `risk_level` | What is the probability/blast radius? | Safeguards and approval |
+| `reversibility` | How easy is rollback? | Approval and rollback requirements |
+| `hitl_mode` | What human control is required? | Dispatch and promotion gates |
+| `mission_class` | What class was assigned at creation? | None; never routing |
 
-| Tier | Maps to legacy `priority` |
-|---|---|
-| `S` | 1 (critical / active) |
-| `A` | 2 (high) |
-| `B` | 3 (medium) |
-| `C` | 4–5 (low / backlog) |
+Agents must not infer urgency, severity, HITL, authority, or promotion rights
+from `S/A/B/C`, `4C01`, mission number, or a branch/PR label.
 
-## Complexity
+## Compatibility
 
-`<cx>` mirrors the mission `level` field: `M4 → 4`, `M3 → 3`, `M2 → 2`, `M1 → 1`.
-`4` is the highest complexity (atomic / M4), `1` the lowest (basic / M1).
-
-## Compatibility notes
-
-- JSON-schema patterns `^MP-[A-Z0-9-]+$` and `^BEAD-[A-Z0-9-]+$` already accept the new IDs — no schema change required.
-- The registry adds optional `priority_tier` and `complexity_order` fields for convenience; `priority` remains the source of truth for live priority.
-- Scripts that parse the legacy 3-segment `MP-CAT-NNN` form should treat the segment after the repo as an opaque token; do not assume a fixed number of `-`-delimited segments.
+- Existing IDs and numeric priority values are preserved.
+- `priority_tier` and `complexity_order` are legacy/derived fields, not
+  canonical routing truth.
+- Generic schema patterns continue to accept both ID families.
+- Consumer, schema, and registry canonicalization is follow-on work under
+  A023 BEADs 02–05.

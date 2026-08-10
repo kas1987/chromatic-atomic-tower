@@ -1,0 +1,48 @@
+{
+  "mission_id": "MP-CAT-A023-4C01",
+  "bead_id": "BEAD-CAT-A023-4C01-01",
+  "role": "Cartographer",
+  "contract": {
+    "path": "gates/CAT_ID_TAXONOMY.yaml",
+    "version": "2.0.0",
+    "priority_is_only_urgency_axis": true,
+    "priority_display_map": {"1": "P0", "2": "P1", "3": "P2", "4": "P3", "5": "P4"},
+    "non_routing_class": true,
+    "historical_ids_renamed": false
+  },
+  "exact_head": {
+    "snapshot_sha": "63fde2482fb83bff48c80a6ac36afa1437267969",
+    "binding": "inventory_and_contract_decision_snapshot",
+    "note": "Exact immutable HEAD inspected before this bead's contract files were written; the committed evidence artifact is traceable in the subsequent Git commit."
+  },
+  "consumer_inventory": [
+    {"path": "missions/registry/MISSION_REGISTRY.yaml", "role": "derived_lookup_and_queue_index", "status": "follow_on"},
+    {"path": "missions/**", "role": "mission_identity_and_state_writer", "status": "canonical_writer"},
+    {"path": "beads/**", "role": "bead_identity_and_state_writer", "status": "canonical_writer"},
+    {"path": "state/TOWER_STATE.yaml", "role": "derived_active_pointer", "status": "follow_on"},
+    {"path": "scripts/cat_resolve_go.py", "role": "priority_and_state_dispatch", "status": "follow_on"},
+    {"path": "scripts/cat_validate.py", "role": "grammar_and_contract_validation", "status": "follow_on"},
+    {"path": "scripts/cat_pr_check.py", "role": "PR_scope_and_provenance", "status": "follow_on"},
+    {"path": "schemas/**", "role": "generic_shape_validation", "status": "follow_on"},
+    {"path": "docs/**", "role": "human_projection_and_examples", "status": "follow_on"},
+    {"path": "gates/**", "role": "operational_contracts", "status": "contract_wins"},
+    {"path": "evidence/**", "role": "exact_head_provenance", "status": "follow_on"},
+    {"path": "docs/architecture/LLM_MODEL_ROUTING.md", "role": "technical_complexity_reference", "status": "reconcile_separately"}
+  ],
+  "legacy_compatibility": {
+    "forms_preserved": ["MP-CAT-NNN", "BEAD-CAT-NNN-*", "MP-CAT-A<NNN>-<cx>C<oo>", "BEAD-CAT-A<NNN>-<cx>C<oo>-<bb>"],
+    "legacy_fields_preserved": ["priority_tier", "complexity_order"],
+    "rename_policy": "prohibited",
+    "consumer_migration": "deferred_to_A023_02_through_05"
+  },
+  "validation": {
+    "command": "python scripts/cat_check_repo.py && python scripts/cat_validate.py --all",
+    "result": "PASS",
+    "self_review_query": "rg -n \"mission_id|bead_id|priority_tier|complexity_order|MP-CAT-|BEAD-CAT-\" gates scripts schemas docs tests",
+    "self_review_inventory_line_count": 1839
+  },
+  "residuals": [
+    "Historical records and consumers require follow-on canonicalization.",
+    "No routing, model selection, registry, mission, bead, remote, or secret changes were made."
+  ]
+}

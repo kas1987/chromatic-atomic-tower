@@ -1,0 +1,78 @@
+version: 2.0.0
+contract_id: CAT-ID-TAXONOMY
+mission: MP-CAT-A023-4C01
+bead: BEAD-CAT-A023-4C01-01
+status: canonical_contract
+purpose: >-
+  Define stable CAT identity and keep urgency, impact, effort, uncertainty,
+  reversibility, approval, and external-system relations independent.
+
+identity:
+  mission:
+    canonical_form: MP-<repo>-<class><number>-<complexity>C<order>
+    legacy_forms:
+    - MP-<repo>-<number>
+    tokens:
+      prefix: {value: MP, meaning: mission_packet, routing: none}
+      repo: {value: CAT, meaning: repository_project_namespace, routing: namespace_only}
+      class: {values: [S, A, B, C], meaning: mission_class_at_creation, mutable: false, routing: none}
+      number: {format: three_digits, meaning: immutable_global_mission_sequence, mutable: false, routing: none}
+      complexity:
+        values: [1, 2, 3, 4]
+        meaning: legacy_compact_complexity_display
+        mapping: {1: M1, 2: M2, 3: M3, 4: M4}
+        routing: none
+      marker: {value: C, meaning: compact_complexity_marker, routing: none}
+      order: {format: two_digits, meaning: execution_order_or_profile, routing: none}
+  bead:
+    canonical_form: BEAD-<repo>-<class><number>-<complexity>C<order>-<sequence>
+    legacy_forms: [BEAD-<repo>-<number>-<sequence>]
+    inheritance: mission_stem_plus_sequence
+    sequence: {format: two_digits, meaning: immutable_bead_sequence, routing: none}
+
+urgency:
+  canonical_field: priority
+  rule: priority_is_the_only_urgency_axis
+  storage_compatibility:
+    current_numeric_field: {values: [1, 2, 3, 4, 5], meaning: lower_number_is_more_urgent}
+    display_mapping: {1: P0, 2: P1, 3: P2, 4: P3, 5: P4}
+    mapping_note: >-
+      P0-P4 is a compatibility display projection; stored values are not rewritten.
+  routing: queue_order_and_escalation_only
+  forbidden_inference: [mission_class, compact_complexity_token, level, risk_level, severity]
+
+independent_dimensions:
+  mission_class: {values: [S, A, B, C], meaning: descriptive_creation_class_only, routing: none}
+  severity: {values: [critical, high, medium, low], meaning: impact_if_failure, routing: assurance_depth}
+  complexity: {values: [M1, M2, M3, M4], meaning: effort_and_uncertainty, routing: planning_and_model_hint_only}
+  risk_level: {values: [low, medium, high, critical], meaning: probability_and_blast_radius, routing: safeguards_and_approval}
+  reversibility: {values: [high, medium, low], meaning: ease_of_undo, routing: rollback_and_approval}
+  hitl_mode: {values: [none, review_required, approval_required, human_only], meaning: human_control_boundary, routing: dispatch_and_promotion}
+  state: {values: [draft, approved, active, validating, completed, closed, learned, blocked, archived], meaning: lifecycle_state, routing: transitions_only}
+
+external_relations:
+  pr_number: {meaning: GitHub_pull_request_reference, identity: external_relation_not_in_id}
+  branch: {meaning: Git_branch_reference, identity: external_relation_not_in_id}
+  head_sha: {meaning: immutable_evidence_binding_for_observation, required_for: evidence_and_review_artifacts}
+  depends_on: {meaning: explicit_cross_mission_or_cross_bead_dependency, identity: relation_not_in_id}
+  evidence_ref: {meaning: durable_artifact_path_plus_head_sha}
+
+legacy_compatibility:
+  policy: preserve_and_interpret; never_rename_historical_identifiers
+  old_numeric_missions: MP-CAT-000 through MP-CAT-005
+  old_numeric_beads: BEAD-CAT-000-* through BEAD-CAT-005-*
+  optional_legacy_fields: [priority_tier, complexity_order]
+  interpretation:
+    priority_tier: map_to_mission_class_only; never_to_urgency_or_hitl
+    complexity_order: parse_as_legacy_display_only; never_to_risk_or_urgency
+  migration: {new_records: write_canonical_fields, existing_records: read_legacy_project_canonical_view, renaming: prohibited, consumer_updates: separate_follow_on_beads}
+
+consumer_rules:
+  canonical_writer: {identity: mission_or_bead_contract_file, registry: derived_lookup_and_queue_state, tower: derived_active_state, evidence: append_only_head_bound_observation}
+  agents:
+    may_read: [identity, urgency, independent_dimensions, external_relations]
+    may_not_infer: [urgency_from_class, hitl_from_complexity, severity_from_risk, authority_from_id_text]
+  model_router: {may_use: [complexity, risk_level, severity, hitl_mode, budget_state], may_not_use: [mission_class, compact_complexity_token, mission_number]}
+  human_quick_read: 'P<n> | <severity> | <complexity> | <risk> | <hitl_mode>'
+
+non_goals: [rename_existing_ids, change_registry_schema, change_dispatch_behavior, change_remote_settings]
