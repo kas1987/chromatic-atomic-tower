@@ -1,0 +1,219 @@
+mission_id: MP-CAT-A024-4C01
+title: CAT Historical Taxonomy Debt Remediation
+level: M4
+status: in_progress
+owner: Human Owner
+priority: 1
+mission_class: A
+severity: high
+risk_level: high
+reversibility: high
+hitl_mode: approval_required
+autonomy_level: L2
+confidence_minimum: 90
+created: '2026-08-10'
+last_updated: '2026-08-10T17:54:22+00:00'
+objective: Remediate and explain the historical taxonomy drift recorded by A023 while
+  preserving immutable identifiers and leaving CAT with a reviewable, reproducible
+  cross-file identity baseline.
+background: A023 established the canonical taxonomy contract and read-only audit,
+  but its closeout preserved 133 residual audit errors, 36 compatibility exceptions,
+  and one expected example-only pending path. A024 converts that measured debt into
+  a bounded remediation queue instead of silently rewriting historical identifiers.
+scope:
+  in:
+  - Reproduce the A023 residual audit at an exact immutable HEAD.
+  - Classify each residual as repairable drift, documented compatibility, or accepted
+    historical debt.
+  - Repair authoritative mission and BEAD metadata, relations, and evidence references
+    where safe.
+  - Reconcile taxonomy-consuming gates, validators, templates, and documentation only
+    where the audit identifies drift.
+  - Add regression coverage for every repaired finding class and publish before/after
+    metrics.
+  - Produce a final exact-head debt register and follow-up list for any residual that
+    requires a separate human decision.
+  out:
+  - Renaming historical mission, BEAD, PR, branch, or evidence identifiers.
+  - Changing priority, severity, risk, autonomy, model routing, or provider-plan policy
+    without a separate approved mission.
+  - Remote GitHub, MCP, secret, credential, production, branch, or merge mutations.
+  - Broad repository cleanup unrelated to the A023 taxonomy findings.
+  - Replacing the canonical taxonomy contract or creating a second identity writer.
+allowed_paths:
+- missions/backlog/MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+- missions/active/MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+- missions/archived/MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A024-4C01-01.yaml
+- beads/active/BEAD-CAT-A024-4C01-02.yaml
+- beads/active/BEAD-CAT-A024-4C01-03.yaml
+- beads/active/BEAD-CAT-A024-4C01-04.yaml
+- beads/active/BEAD-CAT-A024-4C01-05.yaml
+- beads/completed/BEAD-CAT-A024-4C01-01.yaml
+- beads/completed/BEAD-CAT-A024-4C01-02.yaml
+- beads/completed/BEAD-CAT-A024-4C01-03.yaml
+- beads/completed/BEAD-CAT-A024-4C01-04.yaml
+- beads/completed/BEAD-CAT-A024-4C01-05.yaml
+- gates/CAT_ID_TAXONOMY.yaml
+- scripts/cat_taxonomy_audit.py
+- scripts/cat_validate.py
+- tests/test_cat_taxonomy.py
+- tests/test_cat_align_missionid.py
+- evidence/reports/taxonomy/**
+- evidence/bundles/generated/**
+- docs/reference/**
+- docs/architecture/**
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- MP-CAT-A023-4C01
+beads:
+- bead_id: BEAD-CAT-A024-4C01-01
+  title: Baseline and classify residual taxonomy debt
+  status: queued
+- bead_id: BEAD-CAT-A024-4C01-02
+  title: Repair authoritative mission taxonomy metadata
+  status: queued
+- bead_id: BEAD-CAT-A024-4C01-03
+  title: Repair historical BEAD and evidence relations
+  status: queued
+- bead_id: BEAD-CAT-A024-4C01-04
+  title: Reconcile taxonomy consumers and regression gates
+  status: queued
+- bead_id: BEAD-CAT-A024-4C01-05
+  title: Close the taxonomy debt register with exact-head proof
+  status: queued
+acceptance_criteria:
+- The A023 baseline is reproducible and bound to an immutable HEAD.
+- 'Every residual finding has one of three explicit dispositions: repaired, compatibility,
+  or accepted with owner and rationale.'
+- Historical identifiers remain unchanged and remain joinable across mission, BEAD,
+  PR, branch, dependency, and evidence relations.
+- The audit has no unexplained errors after the repair slices; permitted compatibility
+  findings remain machine-readable.
+- Repaired finding classes have task-relative regression tests and deterministic output.
+- Two consecutive clean audit runs show no unexplained taxonomy drift.
+- Final evidence binds to the final immutable HEAD and leaves the tower in a reconciled
+  terminal state.
+success_metrics:
+- Reduce the A023 baseline of 133 errors to zero unexplained errors.
+- Preserve or explicitly document all 36 compatibility exceptions.
+- Zero newly introduced canonical identity mismatches during the mission.
+- No remote or secret-bearing mutation.
+required_validation:
+- type: command
+  command: python scripts/cat_taxonomy_audit.py --json && python scripts/cat_check_repo.py
+    && python scripts/cat_validate.py --all
+  evidence_path: evidence/reports/taxonomy/MP-CAT-A024-4C01_validation.md
+  required: true
+- type: test
+  command: python -m pytest tests/test_cat_taxonomy.py tests/test_cat_align_missionid.py
+    -q
+  evidence_path: evidence/reports/taxonomy/MP-CAT-A024-4C01_tests.md
+  required: true
+rollback:
+  required: true
+  plan: Revert only the individual metadata, consumer, and evidence-reference repairs
+    while retaining the baseline and disposition register; never rename historical
+    identifiers.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 60
+  read: 160
+  write: 100
+  execute: 80
+  max_runtime_minutes: 360
+evidence_requirements:
+- Immutable A023 baseline and A024 disposition register.
+- Per-slice before/after audit JSON and task-relative tests.
+- Compatibility matrix with owner and rationale for every retained exception.
+- Exact-head final report and generated evidence bundle.
+notes:
+- A024 is a remediation mission, not a taxonomy-v3 redesign.
+- The current compact ID remains an immutable join key; no identifier renaming is
+  permitted.
+- A024 starts in draft after ANA registration. Human approval and GO are separate
+  execution gates.
+stop_conditions:
+- A residual cannot be classified without changing an immutable identifier.
+- A repair would alter routing, priority, severity, risk, autonomy, or provider policy
+  outside this mission.
+- A forbidden path or remote mutation appears.
+- Exact-head evidence cannot be produced.
+- Confidence falls below 90.
+transition_history:
+- timestamp: '2026-08-10T16:43:37+00:00'
+  target_type: mission
+  target_id: MP-CAT-A024-4C01
+  from_status: draft
+  to_status: triaged
+  allowed: true
+  dry_run: false
+  reason: 'ANA Plan: classify and queue the approved remediation plan'
+  evidence: evidence/reports/taxonomy/MP-CAT-A024-4C01_registration_20260810.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\backlog\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T164337_737479Z
+- timestamp: '2026-08-10T16:43:45+00:00'
+  target_type: mission
+  target_id: MP-CAT-A024-4C01
+  from_status: triaged
+  to_status: approved
+  allowed: true
+  dry_run: false
+  reason: 'ANA Plan: Human Owner approved A024 for later GO execution'
+  evidence: evidence/reports/taxonomy/MP-CAT-A024-4C01_registration_20260810.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\backlog\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+  guard: human_gate_if_required
+  guard_ok: true
+  guard_message: gate approved by agent 'Auditor'
+  snapshot: evidence\snapshots\snap_20260810T164345_365427Z
+- timestamp: '2026-08-10T17:54:10+00:00'
+  target_type: mission
+  target_id: MP-CAT-A024-4C01
+  from_status: approved
+  to_status: dispatched
+  allowed: true
+  dry_run: false
+  reason: A024 BEAD queue complete; begin governed mission closeout
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-05.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\backlog\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+  guard: active_bead_present
+  guard_ok: true
+  guard_message: current_bead_id=BEAD-CAT-A024-4C01-05 found on disk
+  snapshot: evidence\snapshots\snap_20260810T175410_524142Z
+- timestamp: '2026-08-10T17:54:22+00:00'
+  target_type: mission
+  target_id: MP-CAT-A024-4C01
+  from_status: dispatched
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Begin final mission closeout execution
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-05.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: missions\backlog\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T175422_151201Z

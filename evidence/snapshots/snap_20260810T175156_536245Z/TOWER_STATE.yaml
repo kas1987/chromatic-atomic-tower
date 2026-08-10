@@ -1,14 +1,14 @@
 version: 0.1.0
 state_id: TOWER-STATE-014
-status: sprint_idle
+status: sprint_active
 active_sprint: SPRINT-024
-active_mission_id: ''
-active_bead_id: ''
+active_mission_id: MP-CAT-A024-4C01
+active_bead_id: BEAD-CAT-A024-4C01-05
 go_mode: enabled
-last_updated: '2026-08-10T17:55:05+00:00'
+last_updated: '2026-08-10T17:51:47+00:00'
 operator: Human Owner
 control_planes:
-  mission: idle
+  mission: active
   execution: state_transition_engine_available
   evidence: evidence_gate_available
   learning: multi_model_harness

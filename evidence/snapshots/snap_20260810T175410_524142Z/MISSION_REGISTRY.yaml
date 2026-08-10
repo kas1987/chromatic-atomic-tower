@@ -1,6 +1,6 @@
 version: 0.1.0
-last_updated: '2026-08-10T17:55:05+00:00'
-active_mission_id: ''
+last_updated: '2026-08-10T17:52:16+00:00'
+active_mission_id: MP-CAT-A024-4C01
 active_bead_id: ''
 selection_policy:
   priority_order:
@@ -374,7 +374,7 @@ missions:
 - mission_id: MP-CAT-A024-4C01
   title: CAT Historical Taxonomy Debt Remediation
   level: M4
-  status: learned
+  status: approved
   priority: 1
   mission_class: A
   severity: high
@@ -384,7 +384,7 @@ missions:
   hitl_mode: approval_required
   autonomy_level: L2
   confidence: 90
-  current_bead_id: ''
-  path: missions\archived\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+  current_bead_id: BEAD-CAT-A024-4C01-05
+  path: missions\backlog\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
   created: '2026-08-10'
-  last_updated: '2026-08-10T17:55:05+00:00'
+  last_updated: '2026-08-10T17:52:16+00:00'

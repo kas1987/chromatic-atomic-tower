@@ -2,12 +2,9 @@
 
 # Agent Handoff Queue
 
-_Generated: 2026-08-10T17:38:35+00:00_
+_Generated: 2026-08-10T17:55:36+00:00_
 
-## Next
+## Status
 
-### BEAD-CAT-A024-4C01-05 — Close the taxonomy debt register with exact-head proof
-
-- Agent Role: Auditor
-- Status: queued
+No active mission — tower is in post-sprint idle or awaiting kickoff.
 

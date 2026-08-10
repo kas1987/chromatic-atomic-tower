@@ -1,0 +1,53 @@
+evidence_id: EB-CAT-A024-4C01-05
+mission_id: MP-CAT-A024-4C01
+bead_id: BEAD-CAT-A024-4C01-05
+target_type: bead
+type: closeout
+summary: A024 final exact-head debt register proves zero unexplained taxonomy drift, preserves compatibility, and records unreconstructable historical evidence as explicit debt.
+validation_result: passed
+required_artifacts:
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-05.json
+    kind: final_audit
+    required: true
+    description: Final machine-readable exact-head audit and disposition register
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-05.md
+    kind: final_report
+    required: true
+    description: Final debt register, determinism proof, and terminal-state record
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-05_full_test_output.txt
+    kind: test_output
+    required: true
+    description: Full repository pytest output
+    validation_result: passed
+  - path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-04.json
+    kind: baseline
+    required: true
+    description: Consumer reconciliation and regression baseline
+    validation_result: passed
+supporting_artifacts: []
+metrics:
+  observed_head_sha: 6f899e6a6584ef5eb9981f1ac06ebf5a04dbf817
+  full_tests_passed: 1330
+  full_test_duration_seconds: 160.62
+  audit_run_count: 2
+  audit_hash_equal: true
+  audit_sha256: E40B215447B9C7D8C351DD3508B080F7F61CA419586B1BD99B05EE379149F199
+  audit_disposition_coverage: '38/38'
+  audit_expected_pending: 1
+  final_mission_status: learned
+  final_sprint_status: sprint_idle
+  final_active_mission_id: ''
+  final_active_bead_id: ''
+  registry_audit: PASS
+  strict_alignment: PASS
+  accepted_historical_evidence_debt: 35
+  example_priority_compatibility_exceptions: 2
+  example_pending_compatibility_exceptions: 1
+  unexplained_residuals: 0
+  immutable_identifiers_changed: 0
+created_by: Human Owner
+created_at: '2026-08-10T17:50:00Z'
+learning_note: A mission can be audit-clean without pretending historical evidence exists; deterministic classification, preserved compatibility, and zero unexplained repair drift are the survivable closeout contract.
+closeout_ready: true
