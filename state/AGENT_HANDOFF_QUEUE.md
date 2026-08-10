@@ -2,14 +2,9 @@
 
 # Agent Handoff Queue
 
-_Generated: 2026-08-10T17:17:30+00:00_
+_Generated: 2026-08-10T17:24:51+00:00_
 
 ## Next
-
-### BEAD-CAT-A024-4C01-02 — Repair authoritative mission taxonomy metadata
-
-- Agent Role: Builder
-- Status: queued
 
 ### BEAD-CAT-A024-4C01-03 — Repair historical BEAD and evidence relations
 

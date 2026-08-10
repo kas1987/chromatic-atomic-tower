@@ -1,0 +1,131 @@
+bead_id: BEAD-CAT-A024-4C01-02
+mission_id: MP-CAT-A024-4C01
+title: Repair authoritative mission taxonomy metadata
+status: reviewed
+agent_role: Builder
+autonomy_level: L2
+priority: 1
+objective: Correct repairable mission-level taxonomy fields and relations identified
+  by the approved A024 disposition register without renaming mission IDs.
+allowed_paths:
+- missions/archived/**
+- missions/active/MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
+- evidence/reports/taxonomy/**
+- evidence/bundles/generated/**
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A024-4C01-01
+tool_budget:
+  search: 30
+  read: 80
+  write: 40
+  execute: 30
+  max_runtime_minutes: 150
+confidence:
+  minimum: 90
+  current: 90
+  objective_clarity: 94
+  scope_clarity: 88
+  evidence_quality: 90
+  reversibility: 96
+  tool_fit: 88
+  risk_awareness: 97
+  testability: 90
+risk_level: high
+reversibility: high
+stop_conditions:
+- Repair requires renaming an immutable identifier.
+- Mission semantics are ambiguous after reviewing the contract.
+- A forbidden path or remote mutation appears.
+- Confidence drops below 90.
+definition_of_done:
+- Only disposition-approved mission fields are changed.
+- A before/after audit proves the repair.
+- Exact-head evidence is recorded.
+validation:
+- type: command
+  command: python scripts/cat_taxonomy_audit.py --json
+  evidence_path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-02.md
+  required: true
+required_output:
+- changed_mission_contracts
+- validation_result
+- evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-A024-4C01-03
+  notes: Preserve compatibility exceptions not approved for repair.
+last_updated: '2026-08-10T17:24:30+00:00'
+transition_history:
+- timestamp: '2026-08-10T17:21:13+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-02
+  from_status: queued
+  to_status: active
+  allowed: true
+  dry_run: false
+  reason: 'Continue A024 remediation: repair approved mission taxonomy metadata'
+  evidence: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-01.md
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A024-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T172113_080611Z
+- timestamp: '2026-08-10T17:24:17+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-02
+  from_status: active
+  to_status: in_progress
+  allowed: true
+  dry_run: false
+  reason: Begin bounded mission metadata repair after proof-plan review
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-02.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A024-4C01-02.yaml
+  guard: none
+  guard_ok: true
+  guard_message: no precondition
+  snapshot: evidence\snapshots\snap_20260810T172417_339408Z
+- timestamp: '2026-08-10T17:24:23+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-02
+  from_status: in_progress
+  to_status: validating
+  allowed: true
+  dry_run: false
+  reason: Implementation and evidence emitted; run closeout validation
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-02.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A024-4C01-02.yaml
+  guard: evidence_present
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T172423_674977Z
+- timestamp: '2026-08-10T17:24:30+00:00'
+  target_type: bead
+  target_id: BEAD-CAT-A024-4C01-02
+  from_status: validating
+  to_status: reviewed
+  allowed: true
+  dry_run: false
+  reason: Targeted tests and contract gates pass; Human Owner review recorded
+  evidence: evidence/bundles/generated/EB-CAT-A024-4C01-02.yaml
+  actor: Human Owner
+  message: transition allowed
+  contract_path: beads\active\BEAD-CAT-A024-4C01-02.yaml
+  guard: validation_passed
+  guard_ok: true
+  guard_message: guard evaluation deferred
+  snapshot: evidence\snapshots\snap_20260810T172430_958755Z
