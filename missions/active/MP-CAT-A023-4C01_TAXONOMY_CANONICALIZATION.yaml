@@ -4,14 +4,15 @@ level: M4
 status: approved
 owner: Human Owner
 priority: 1
-priority_tier: A
-complexity_order: 4C01
+mission_class: A
+severity: high
 risk_level: high
 reversibility: high
+hitl_mode: approval_required
 autonomy_level: L2
 confidence_minimum: 90
 created: '2026-08-10'
-last_updated: '2026-08-10T14:36:00+00:00'
+last_updated: '2026-08-10T14:51:40+00:00'
 objective: >-
   Establish one versioned machine-readable CAT identity taxonomy, reconcile its
   validators and documentation, and prevent semantic drift without renaming
@@ -26,13 +27,17 @@ background: >-
 scope:
   in:
   - 'Define the immutable identity grammar and explicit semantic field map.'
+  - 'Make priority the sole urgency axis, with an explicit P0-P4 compatibility map for existing 1-5 values.'
+  - 'Keep severity, complexity, risk, reversibility, and HITL as distinct routing and review inputs.'
+  - 'Treat S/A/B/C as descriptive mission-class metadata, never as an urgency or routing override.'
   - 'Separate mission identity from PR, branch, status, dependency, and evidence relations.'
   - 'Reconcile validators, generators, gates, templates, and documentation to one contract.'
   - 'Add cross-file asymmetry and derived-identity drift checks.'
   - 'Record legacy compatibility and a non-renaming migration map.'
   out:
   - 'Renaming or rewriting historical mission, BEAD, PR, branch, or evidence identifiers.'
-  - 'Changing mission priority, risk, autonomy, model routing, or provider plans.'
+  - 'Changing legacy mission priority values, risk, autonomy, model routing, or provider plans.'
+  - 'Using mission class or compact-ID tokens as a substitute for explicit routing fields.'
   - 'Remote GitHub settings, PR, branch, secret, MCP, or production mutations.'
   - 'Adding a second canonical writer for mission state or registry state.'
 allowed_paths:
@@ -94,6 +99,9 @@ beads:
   status: queued
 acceptance_criteria:
 - 'One versioned machine-readable taxonomy contract defines all supported ID forms and token semantics.'
+- 'Priority is the sole urgency axis; the contract maps legacy numeric priority to a P0-P4 display without ambiguity.'
+- 'Severity, complexity, risk, reversibility, and HITL are separately defined and tested as non-interchangeable fields.'
+- 'Mission class is explicitly non-routing metadata unless a future human-approved policy changes that rule.'
 - 'Historical IDs remain valid through an explicit compatibility policy and are not renamed.'
 - 'Validators and generators derive their grammar from the canonical contract or prove synchronized adapters.'
 - 'Mission, BEAD, PR, branch, dependency, and evidence relations are explicit and mechanically joinable.'
@@ -133,6 +141,8 @@ evidence_requirements:
 notes:
 - 'A023 registration uses the current MP-CAT-A022-4C01 convention; taxonomy v2 may propose a clearer future format but must not rewrite existing IDs.'
 - 'The compact ID is an immutable join key; PR numbers, branches, HEAD SHAs, status, and dependencies remain separate relations.'
+- 'For this mission, priority: 1 remains the existing highest queue value. BEAD-01 must define its unambiguous P0-P4 compatibility display before any consumer change.'
+- 'mission_class: A is descriptive metadata only. It must not affect dispatch, model selection, HITL, or promotion gates.'
 stop_conditions:
 - 'A change requires a forbidden path or remote mutation.'
 - 'The canonical writer for a mutable fact cannot be identified.'

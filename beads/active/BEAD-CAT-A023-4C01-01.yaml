@@ -1,13 +1,14 @@
 bead_id: BEAD-CAT-A023-4C01-01
 mission_id: MP-CAT-A023-4C01
-title: Define canonical CAT identity contract and migration map
+title: Define canonical CAT identity, urgency, and migration contract
 status: active
 priority: 1
 agent_role: Cartographer
 autonomy_level: L2
 objective: >-
   Inventory every live CAT identity grammar and define a versioned machine-readable
-  taxonomy contract that separates immutable IDs from mutable and external relations.
+  taxonomy contract that separates immutable IDs, urgency, severity, complexity,
+  risk, reversibility, HITL, and external relations.
 allowed_paths:
 - gates/CAT_ID_TAXONOMY.yaml
 - docs/operations/CAT_ID_NAMING_CONVENTION.md
@@ -53,6 +54,9 @@ stop_conditions:
 definition_of_done:
 - 'All live ID grammar and semantic consumers are inventoried with file references.'
 - 'gates/CAT_ID_TAXONOMY.yaml defines version, forms, token semantics, relations, and legacy compatibility.'
+- 'Priority is the only urgency axis and documents the existing 1-5 to P0-P4 compatibility map.'
+- 'Severity, complexity, risk, reversibility, and HITL are explicit separate fields with routing roles.'
+- 'S/A/B/C is defined as non-routing mission-class metadata; no agent may infer urgency or HITL from it.'
 - 'The naming document is updated as a thin human-readable projection of the contract.'
 - 'A non-renaming migration map and exact-head evidence report are recorded.'
 validation:
@@ -68,10 +72,11 @@ required_output:
 - taxonomy_contract
 - consumer_inventory
 - legacy_compatibility_map
+- urgency_and_routing_semantics
 - exact_head_evidence
 handoff:
   from: Cartographer
   to: Builder
   reviewer: Human Owner
   next_bead_id: BEAD-CAT-A023-4C01-02
-last_updated: '2026-08-10T14:36:00+00:00'
+last_updated: '2026-08-10T14:51:40+00:00'

@@ -1,5 +1,5 @@
 version: 0.1.0
-last_updated: '2026-08-10T14:36:00+00:00'
+last_updated: '2026-08-10T14:51:40+00:00'
 active_mission_id: MP-CAT-A023-4C01
 active_bead_id: BEAD-CAT-A023-4C01-01
 selection_policy:
@@ -359,14 +359,15 @@ missions:
   level: M4
   status: approved
   priority: 1
-  priority_tier: A
-  complexity_order: 4C01
+  mission_class: A
+  severity: high
   owner: Human Owner
   risk_level: high
   reversibility: high
+  hitl_mode: approval_required
   autonomy_level: L2
   confidence: 94
   current_bead_id: BEAD-CAT-A023-4C01-01
   path: missions/active/MP-CAT-A023-4C01_TAXONOMY_CANONICALIZATION.yaml
   created: '2026-08-10'
-  last_updated: '2026-08-10T14:36:00+00:00'
+  last_updated: '2026-08-10T14:51:40+00:00'
