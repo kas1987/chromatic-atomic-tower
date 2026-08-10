@@ -1,0 +1,209 @@
+{
+  "default_branch": "master",
+  "generated_at": "2026-08-10T14:04:36.329762+00:00",
+  "head_sha": "47d253a5e56311f50b30dbd7cff595140c0638d1",
+  "live_inventory_error": null,
+  "live_workflows": [
+    {
+      "name": "CAT CI/CD Promotion Gate",
+      "path": ".github/workflows/cat-cd-promotion.yml",
+      "state": "active"
+    },
+    {
+      "name": "CAT CI Governance",
+      "path": ".github/workflows/cat-ci.yml",
+      "state": "active"
+    },
+    {
+      "name": "CAT GitHub Bridge",
+      "path": ".github/workflows/cat-github-bridge.yml",
+      "state": "active"
+    },
+    {
+      "name": "CAT Governance CI",
+      "path": ".github/workflows/cat-governance-ci.yml",
+      "state": "active"
+    },
+    {
+      "name": "LOGHOUSE CI",
+      "path": ".github/workflows/cat-loghouse-ci.yml",
+      "state": "active"
+    },
+    {
+      "name": "Claude Code Review",
+      "path": ".github/workflows/claude-code-review.yml",
+      "state": "active"
+    },
+    {
+      "name": "Claude Code",
+      "path": ".github/workflows/claude.yml",
+      "state": "active"
+    },
+    {
+      "name": "Codex Review",
+      "path": ".github/workflows/codex-review.yml",
+      "state": "active"
+    },
+    {
+      "name": "Validate CAT",
+      "path": ".github/workflows/validate-cat.yml",
+      "state": "active"
+    },
+    {
+      "name": "Copilot",
+      "path": "dynamic/agents/copilot-pull-request-reviewer",
+      "state": "active"
+    },
+    {
+      "name": "Dependency Graph",
+      "path": "dynamic/dependabot/update-graph",
+      "state": "active"
+    }
+  ],
+  "local_workflows": [
+    {
+      "concurrency_declared": true,
+      "job_count": 2,
+      "name": "CAT CI/CD Promotion Gate",
+      "path": ".github/workflows/cat-cd-promotion.yml",
+      "permissions_declared": true,
+      "source_sha": "936d21540070eed2fd3656df064eae64a75f2a7b",
+      "timeout_jobs": [
+        "promotion-gate",
+        "require-m4-approval"
+      ],
+      "triggers": [
+        "workflow_dispatch"
+      ]
+    },
+    {
+      "concurrency_declared": true,
+      "job_count": 1,
+      "name": "CAT CI Governance",
+      "path": ".github/workflows/cat-ci.yml",
+      "permissions_declared": true,
+      "source_sha": "6c766b0cbd5c5789cc62fc99df0aefa3fb7f2671",
+      "timeout_jobs": [
+        "cat-ci"
+      ],
+      "triggers": [
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "concurrency_declared": true,
+      "job_count": 1,
+      "name": "CAT GitHub Bridge",
+      "path": ".github/workflows/cat-github-bridge.yml",
+      "permissions_declared": true,
+      "source_sha": "5dfd0579dd8c3f4f60b0e228d8c9fdb5b74f217d",
+      "timeout_jobs": [
+        "github-bridge"
+      ],
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ]
+    },
+    {
+      "concurrency_declared": true,
+      "job_count": 1,
+      "name": "CAT Governance CI",
+      "path": ".github/workflows/cat-governance-ci.yml",
+      "permissions_declared": true,
+      "source_sha": "4bb7bac835ddbee1ae0e89da10892cd073601f65",
+      "timeout_jobs": [
+        "validate"
+      ],
+      "triggers": [
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "concurrency_declared": true,
+      "job_count": 1,
+      "name": "LOGHOUSE CI",
+      "path": ".github/workflows/cat-loghouse-ci.yml",
+      "permissions_declared": true,
+      "source_sha": "d3d71afce435b951aa8011ffc0147dc88c7f6582",
+      "timeout_jobs": [
+        "loghouse-ci"
+      ],
+      "triggers": [
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "concurrency_declared": true,
+      "job_count": 1,
+      "name": "Claude Code Review",
+      "path": ".github/workflows/claude-code-review.yml",
+      "permissions_declared": true,
+      "source_sha": "9c32aa3388e29314ae25912e7a3fdeed4841170b",
+      "timeout_jobs": [
+        "claude-review"
+      ],
+      "triggers": [
+        "workflow_dispatch"
+      ]
+    },
+    {
+      "concurrency_declared": true,
+      "job_count": 1,
+      "name": "Claude Code",
+      "path": ".github/workflows/claude.yml",
+      "permissions_declared": true,
+      "source_sha": "97814d4cd2dd92f19f1334cd927cd51f61836146",
+      "timeout_jobs": [
+        "claude"
+      ],
+      "triggers": [
+        "issue_comment",
+        "issues",
+        "pull_request_review",
+        "pull_request_review_comment"
+      ]
+    },
+    {
+      "concurrency_declared": true,
+      "job_count": 1,
+      "name": "Validate CAT",
+      "path": ".github/workflows/validate-cat.yml",
+      "permissions_declared": true,
+      "source_sha": "7fc38f7ee46ffd192fd11b3ec752a2ad83f3bbf3",
+      "timeout_jobs": [
+        "validate"
+      ],
+      "triggers": [
+        "pull_request",
+        "push"
+      ]
+    }
+  ],
+  "provenance_gaps": [
+    {
+      "name": "Codex Review",
+      "path": ".github/workflows/codex-review.yml",
+      "state": "active"
+    },
+    {
+      "name": "Copilot",
+      "path": "dynamic/agents/copilot-pull-request-reviewer",
+      "state": "active"
+    },
+    {
+      "name": "Dependency Graph",
+      "path": "dynamic/dependabot/update-graph",
+      "state": "active"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "summary": {
+    "live_count": 11,
+    "local_count": 8,
+    "provenance_gap_count": 3
+  }
+}

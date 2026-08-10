@@ -39,3 +39,10 @@ def test_push_trigger_includes_master():
     triggers = wf.get("on", wf.get(True, {})) or {}
     branches = (triggers.get("push") or {}).get("branches") or []
     assert "master" in branches, "push trigger must include master"
+
+
+def test_validate_workflow_invokes_cost_guard_and_uploads_evidence():
+    text = open(WORKFLOW, encoding="utf-8").read()
+    assert "cat_cost_guard.py --check --tier balanced" in text
+    assert "cat_cost_guard.py --check --tier strict" in text
+    assert "evidence/reports/ci-cd-remediation/" in text

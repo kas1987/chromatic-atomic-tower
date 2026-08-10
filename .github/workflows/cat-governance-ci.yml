@@ -5,16 +5,20 @@ on:
   push:
     branches:
       - master
-      - main
       - mp-cat-*
 
 permissions:
   contents: read
 
+concurrency:
+  group: cat-governance-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     name: Validate CAT governance and Harness contracts
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -35,23 +39,23 @@ jobs:
       - name: CAT schema validation
         run: python scripts/cat_validate.py --all
 
-      - name: Harness alignment validation
-        run: python scripts/cat_validate_harness_alignment.py --root .
+      - name: CAT mission and BEAD alignment validation
+        run: python scripts/cat_align_check.py --strict
 
       - name: Mermaid validation
         run: python scripts/cat_validate_mermaid.py --root .
 
-      - name: Tests
-        run: pytest -q
+      - name: Targeted governance contracts
+        run: python -m pytest tests/test_ci_governance.py tests/test_harness_bridge.py -q
 
       - name: Generate evidence bundle skeleton
         if: always()
-        run: python scripts/cat_generate_evidence_bundle.py --root . --mission MP-CAT-A006-4C01
+        run: python scripts/cat_generate_evidence_bundle.py --root .
 
       - name: Upload evidence artifact
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: mp-cat-a006-4c01-evidence
+          name: cat-governance-evidence
           path: evidence/
           retention-days: 14

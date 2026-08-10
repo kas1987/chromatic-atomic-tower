@@ -1,0 +1,62 @@
+bead_id: BEAD-CAT-A022-4C01-04
+mission_id: MP-CAT-A022-4C01
+title: Reduce CI duplication and preserve monitoring
+status: completed
+priority: 1
+agent_role: Builder
+autonomy_level: L2
+objective: Make Validate CAT the canonical PR full-suite owner, convert specialist workflows to targeted suites, and make advisory LOGHOUSE self-monitor output durable and explicit.
+allowed_paths:
+- .github/workflows/cat-ci.yml
+- .github/workflows/cat-github-bridge.yml
+- .github/workflows/cat-governance-ci.yml
+- .github/workflows/cat-loghouse-ci.yml
+- docs/operations/CI_GOVERNANCE.md
+- evidence/reports/ci-cd-remediation/BEAD-04.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- branch protection or GitHub settings
+dependencies:
+- BEAD-CAT-A022-4C01-03
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 95
+  scope_clarity: 94
+  evidence_quality: 91
+  reversibility: 94
+  tool_fit: 93
+  risk_awareness: 94
+  testability: 94
+risk_level: high
+reversibility: high
+definition_of_done:
+- 'Validate CAT is documented as the canonical PR full-suite owner.'
+- 'CAT CI, Governance CI, GitHub Bridge, and LOGHOUSE CI no longer run the full suite redundantly.'
+- 'Specialist suites remain targeted and passing.'
+- 'LOGHOUSE advisory output and mode metadata are uploaded on every run.'
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_ci_workflow.py tests/test_ci_governance.py tests/test_git_bridge.py tests/test_loghouse_self_monitor.py -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-04.md
+  required: true
+- type: command
+  command: python scripts/cat_cost_guard.py --check --tier strict
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-04.md
+  required: true
+required_output:
+- canonical_test_owner
+- specialist_workflow_matrix
+- loghouse_advisory_evidence
+handoff:
+  from: Builder
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A022-4C01-05
+last_updated: '2026-08-10T14:01:56+00:00'

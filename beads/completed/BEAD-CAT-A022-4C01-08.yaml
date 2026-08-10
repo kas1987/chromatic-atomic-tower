@@ -1,0 +1,65 @@
+bead_id: BEAD-CAT-A022-4C01-08
+mission_id: MP-CAT-A022-4C01
+title: Run closeout audit and residual-debt review
+status: completed
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Run the full CAT validation and post-remediation CI/CD audit, record residual remote policy debt, and close A022 with an immutable evidence trail.
+allowed_paths:
+- missions/active/MP-CAT-A022-4C01_CI_CD_REMEDIATION.yaml
+- missions/archived/MP-CAT-A022-4C01_CI_CD_REMEDIATION.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A022-4C01-08.yaml
+- beads/completed/BEAD-CAT-A022-4C01-08.yaml
+- state/TOWER_STATE.yaml
+- evidence/reports/ci-cd-audit/2026-08-10-remediation.md
+- evidence/reports/ci-cd-audit/2026-08-10-remediation.json
+- evidence/reports/ci-cd-remediation/BEAD-08.md
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A022-4C01-07
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 96
+  scope_clarity: 94
+  evidence_quality: 93
+  reversibility: 96
+  tool_fit: 92
+  risk_awareness: 97
+  testability: 94
+risk_level: high
+reversibility: high
+definition_of_done:
+- 'Full CAT validation and pytest pass at final HEAD.'
+- 'Post-remediation audit grades and residuals are recorded.'
+- 'A022 mission and BEAD are archived with state cleared to sprint_idle.'
+- 'Remote branch protection remains explicitly open for human application.'
+validation:
+- type: command
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all && python scripts/cat_align_check.py --strict && python scripts/cat_ci.py --mode local --json
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-08.md
+  required: true
+- type: test
+  command: python -m pytest -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-08.md
+  required: true
+required_output:
+- final_validation
+- post_remediation_audit
+- residual_debt_register
+handoff:
+  from: Auditor
+  to: Human Owner
+  reviewer: Human Owner
+last_updated: '2026-08-10T14:12:52+00:00'

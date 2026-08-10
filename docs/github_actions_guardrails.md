@@ -4,9 +4,12 @@
 
 `scripts/cat_cost_guard.py` enforces cost and security policies on all GitHub Actions workflow files under `.github/workflows/`.
 
-Two severity levels:
-- **FAILURE** — workflow is blocked; CI exits nonzero
-- **WARNING** — printed but not blocking (unless `--strict` is passed)
+Three policy tiers:
+- **None** — all findings are reported as advisory telemetry.
+- **Balanced** — schedules, risky runners, and job timeouts block; permissions and concurrency warn.
+- **Strict** — every defined rule blocks.
+
+Evaluator errors are separate from policy findings and return exit code 2.
 
 ## Rules
 
@@ -69,13 +72,14 @@ python scripts/cat_cost_guard.py --check
 
 Exits 0 if no failures; exits 1 if any failures exist.
 
-### Strict mode (warnings as failures)
+### Strict mode
 
 ```bash
-python scripts/cat_cost_guard.py --check --strict
+python scripts/cat_cost_guard.py --check --tier strict
 ```
 
-Exits 1 if any warnings or failures exist. Useful for enforcing full hardening.
+The legacy `--strict` flag remains an alias. Exits 1 if any defined policy rule
+fails.
 
 ## validate-cat.yml hardening
 
@@ -97,4 +101,6 @@ jobs:
 
 ## Integration
 
-`cat_cost_guard.py` is called in CI via `validate-cat.yml` to ensure no new workflows bypass cost controls.
+`validate-cat.yml` runs Balanced on every validation and Strict whenever
+workflows, gates, or the cost-guard implementation changes. It uploads exact-
+head JSON reports under `evidence/reports/ci-cd-remediation/`.

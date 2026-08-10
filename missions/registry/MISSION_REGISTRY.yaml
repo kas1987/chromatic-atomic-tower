@@ -1,6 +1,7 @@
 version: 0.1.0
-last_updated: '2026-08-08T16:13:56+00:00'
+last_updated: '2026-08-10T13:45:49+00:00'
 active_mission_id: ''
+active_bead_id: ''
 selection_policy:
   priority_order:
   - approved
@@ -337,3 +338,19 @@ missions:
   path: missions/archived/MP-CAT-A021-4C01_PR48_REBASE_REVALIDATION.yaml
   created: '2026-08-08'
   last_updated: '2026-08-08T16:13:56+00:00'
+- mission_id: MP-CAT-A022-4C01
+  title: CAT CI/CD Remediation and Cost-Guard Tiering
+  level: M4
+  status: closed
+  priority: 1
+  priority_tier: A
+  complexity_order: 4C01
+  owner: Human Owner
+  risk_level: high
+  reversibility: high
+  autonomy_level: L2
+  confidence: 94
+  current_bead_id: ''
+  path: missions/archived/MP-CAT-A022-4C01_CI_CD_REMEDIATION.yaml
+  created: '2026-08-10'
+  last_updated: '2026-08-10T14:12:52+00:00'

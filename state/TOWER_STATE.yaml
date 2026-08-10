@@ -5,7 +5,7 @@ active_sprint: SPRINT-021
 active_mission_id: ''
 active_bead_id: ''
 go_mode: enabled
-last_updated: '2026-08-08T16:13:56+00:00'
+last_updated: '2026-08-10T14:12:52+00:00'
 operator: Human Owner
 control_planes:
   mission: active
@@ -20,4 +20,4 @@ current_constraints:
 - Opus invoked at most once per ticket (final review only).
 - No GitHub Mutation = No Mission + BEAD Trace.
 next_command: python scripts/cat_resolve_go.py
-sprint_goal: Rebase and revalidate PR #48 against current master without losing A020 authority-contract work.
+sprint_goal: Remediate CAT CI/CD drift and establish deterministic cost-guard tiers.

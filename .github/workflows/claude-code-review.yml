@@ -5,9 +5,14 @@ name: Claude Code Review
 on:
   workflow_dispatch:
 
+concurrency:
+  group: claude-code-review-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   claude-review:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: read
       pull-requests: read

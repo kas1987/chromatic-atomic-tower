@@ -4,9 +4,17 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: cat-loghouse-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   loghouse-ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 35
 
     steps:
       - name: Checkout
@@ -39,10 +47,6 @@ jobs:
             tests/test_loghouse_engine.py \
             tests/test_loghouse_rules.py \
             tests/test_loghouse_drift.py
-
-      # ── Full test suite ───────────────────────────────────────────────────
-      - name: Full pytest suite
-        run: pytest -q
 
       # ── Drift gate — clean fixture (must pass: no P0/P1 violations) ───────
       # The clean fixture contains only allowed edges; the gate must exit 0.
@@ -78,6 +82,22 @@ jobs:
             --output /tmp/loghouse_self_output
         continue-on-error: true
 
+      - name: Record advisory self-monitor metadata
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          output = Path('/tmp/loghouse_self_output')
+          output.mkdir(parents=True, exist_ok=True)
+          (output / 'monitor_mode.json').write_text(json.dumps({
+              'mode': 'self',
+              'enforcement': 'advisory',
+              'blocking': False,
+              'reason': 'fresh-checkout logs may be absent; strict enforcement remains local GO policy'
+          }, indent=2) + '\n', encoding='utf-8')
+          PY
+
       # ── Self-monitor test suite ──────────────────────────────────────────
       - name: LOGHOUSE self-monitor pytest suite
         run: pytest -q tests/test_loghouse_self_monitor.py
@@ -89,7 +109,7 @@ jobs:
         with:
           name: loghouse-ci-evidence
           path: |
-            evidence/reports/MP-CAT-A007-4C01_*.json
-            evidence/reports/MP-CAT-A007-4C01_*.md
+            evidence/reports/
             /tmp/loghouse_ci_output/
+            /tmp/loghouse_self_output/
           retention-days: 14

@@ -15,7 +15,7 @@ CI Governance makes CAT enforceable. It checks that mission contracts, BEAD cont
 3. **Tower Status** - `cat_status.py`
 4. **Evidence Validation** - `cat_evidence.py validate-all`
 5. **PR Scope Validation** - `cat_pr_check.py`
-6. **Tests** - `pytest -q`
+6. **Tests** - `pytest -q` (canonical full-suite owner: `validate-cat.yml`)
 7. **Report Capture** - `cat_ci.py --write-report`
 
 ## CI Outputs
@@ -26,6 +26,10 @@ CI writes reviewable outputs to:
 evidence/ci/reports/
 evidence/ci/summaries/
 evidence/ci/runs/
+
+Specialist workflows own targeted contract suites only. They must not duplicate
+the canonical full suite. LOGHOUSE self-monitor output is explicitly advisory,
+but its result and enforcement mode are uploaded for review.
 ```
 
 ## Required CI Result
@@ -47,10 +51,14 @@ python scripts/cat_ci.py --mode local --write-report
 
 ## GitHub Actions Run
 
-The workflow file is:
+The canonical workflow file is:
 
 ```text
 .github/workflows/cat-ci.yml
 ```
 
-It runs on pull requests and pushes to `main`.
+It runs on pull requests and pushes to `master`.
+
+Cost-guard policy is defined in `gates/ci/COST_GUARD_POLICY.yaml` and is run
+through `validate-cat.yml` using Balanced by default and Strict for control-plane
+changes.

@@ -1,0 +1,60 @@
+bead_id: BEAD-CAT-A022-4C01-02
+mission_id: MP-CAT-A022-4C01
+title: Integrate cost guard into CI evidence
+status: completed
+priority: 1
+agent_role: Builder
+autonomy_level: L2
+objective: Invoke the selected cost-guard tier from CI and upload exact-head JSON evidence without changing merge authority.
+allowed_paths:
+- .github/workflows/validate-cat.yml
+- scripts/cat_cost_guard.py
+- tests/test_cat_cost_guard.py
+- evidence/reports/ci-cd-remediation/BEAD-02.md
+- evidence/reports/ci-cd-remediation/BEAD-02.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- branch protection or GitHub settings
+dependencies:
+- BEAD-CAT-A022-4C01-01
+confidence:
+  minimum: 90
+  current: 93
+  objective_clarity: 95
+  scope_clarity: 94
+  evidence_quality: 92
+  reversibility: 95
+  tool_fit: 94
+  risk_awareness: 94
+  testability: 95
+risk_level: high
+reversibility: high
+definition_of_done:
+- 'validate-cat.yml runs Balanced by default.'
+- 'Workflow/gate changes run Strict deterministically.'
+- 'The JSON report is uploaded as an artifact and includes exact HEAD and policy version.'
+- 'Targeted tests prove invocation and tier selection.'
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_cat_cost_guard.py -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-02.md
+  required: true
+- type: command
+  command: python scripts/cat_cost_guard.py --check --tier none --json --output evidence/reports/ci-cd-remediation/BEAD-02.json
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-02.md
+  required: true
+required_output:
+- ci_guard_invocation
+- uploaded_json_evidence
+handoff:
+  from: Builder
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A022-4C01-03
+last_updated: '2026-08-10T13:52:45+00:00'

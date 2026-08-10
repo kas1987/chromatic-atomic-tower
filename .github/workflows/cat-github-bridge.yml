@@ -4,9 +4,18 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: cat-github-bridge-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   github-bridge:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -17,13 +26,13 @@ jobs:
       - name: Run CAT validation
         run: |
           python scripts/cat_validate.py --all
-          python -m pytest -q tests
+          python -m pytest tests/test_git_bridge.py tests/test_harness_bridge.py -q
       - name: GitHub Bridge sample validation
         run: |
           python scripts/cat_git_bridge.py validate-pr \
-            --title "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
-            --branch feat/mp-cat-a010-4c01-bead-cat-a010-4c01-01-github-contract \
-            --commit-message "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
-            --bead beads/completed/BEAD-CAT-A010-4C01-01.yaml \
+            --title "[MP-CAT-A022-4C01][BEAD-CAT-A022-4C01-01] Define deterministic cost-guard tiers" \
+            --branch codex/cat-a022-cost-guard-tiers \
+            --commit-message "[MP-CAT-A022-4C01][BEAD-CAT-A022-4C01-01] Define deterministic cost-guard tiers" \
+            --bead beads/completed/BEAD-CAT-A022-4C01-01.yaml \
             --changed-files tests/fixtures/github/changed_files_allowed.txt \
             --write-report

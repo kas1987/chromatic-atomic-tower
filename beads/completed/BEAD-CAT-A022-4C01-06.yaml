@@ -1,0 +1,61 @@
+bead_id: BEAD-CAT-A022-4C01-06
+mission_id: MP-CAT-A022-4C01
+title: Prepare remote promotion-gate remediation
+status: completed
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Capture current master branch protection, define the required remote promotion policy, and provide a read-only compliance check and negative-test procedure.
+allowed_paths:
+- scripts/cat_branch_protection_audit.py
+- tests/test_cat_branch_protection.py
+- docs/operations/GITHUB_BRANCH_PROTECTION_PROPOSAL.md
+- evidence/reports/ci-cd-remediation/BEAD-06.md
+- evidence/reports/ci-cd-remediation/BEAD-06.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+- BEAD-CAT-A022-4C01-05
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 95
+  scope_clarity: 94
+  evidence_quality: 92
+  reversibility: 96
+  tool_fit: 93
+  risk_awareness: 97
+  testability: 93
+risk_level: high
+reversibility: high
+definition_of_done:
+- 'Current master protection is captured without secrets.'
+- 'Proposal requires canonical checks, one human review, conversation resolution, and administrator enforcement.'
+- 'Read-only compliance exits nonzero on current noncompliance and passes on a compliant fixture.'
+- 'Negative-test procedure documents that an unapproved or missing-check PR cannot promote.'
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_cat_branch_protection.py -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-06.md
+  required: true
+- type: command
+  command: python scripts/cat_branch_protection_audit.py --repo kas1987/chromatic-atomic-tower --branch master --output evidence/reports/ci-cd-remediation/BEAD-06.json
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-06.md
+  required: true
+required_output:
+- read_only_protection_snapshot
+- human_gate_proposal
+- negative_test_procedure
+handoff:
+  from: Auditor
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A022-4C01-07
+last_updated: '2026-08-10T14:06:23+00:00'

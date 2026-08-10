@@ -12,6 +12,7 @@ Required checks:
 - Mermaid fence validation
 - tests
 - evidence artifact upload
+- cost guard: Balanced by default; Strict for workflow, gate, or guard changes
 
 ## CD promotion
 
@@ -24,6 +25,10 @@ Required checks:
 - M4 approval is recorded if applicable
 - rollback or replan path exists
 - exceptions are disclosed
+
+The canonical default branch is `master`. Cost-guard results are uploaded as
+exact-head JSON evidence and must not be inferred from seat presence or prior
+workflow output.
 
 ## Promotion thresholds
 

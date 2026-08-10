@@ -3,7 +3,7 @@ name: Validate CAT
 on:
   pull_request:
   push:
-    branches: [main, master]
+    branches: [master]
 
 permissions:
   contents: read
@@ -21,6 +21,8 @@ jobs:
       CAT_HYGIENE_KILL_SWITCH: "0"
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
@@ -28,4 +30,40 @@ jobs:
       - run: python scripts/cat_check_repo.py
       - run: python scripts/cat_root_hygiene_strict.py
       - run: python scripts/cat_resolve_go.py
+      - name: Cost guard (Balanced)
+        run: |
+          python scripts/cat_cost_guard.py --check --tier balanced \
+            --output evidence/reports/ci-cd-remediation/cost_guard_balanced.json
+      - name: Cost guard (Strict for control-plane changes)
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git diff --name-only "origin/${{ github.base_ref }}...HEAD" > /tmp/cat_changed_files.txt
+          else
+            base="${{ github.event.before }}"
+            if [ "$base" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+              base="$(git rev-parse HEAD^ 2>/dev/null || git rev-parse HEAD)"
+            fi
+            git diff --name-only "$base" "${{ github.sha }}" > /tmp/cat_changed_files.txt
+          fi
+          if grep -qE '^(\.github/workflows/|gates/|scripts/cat_cost_guard\.py$)' /tmp/cat_changed_files.txt; then
+            python scripts/cat_cost_guard.py --check --tier strict \
+              --output evidence/reports/ci-cd-remediation/cost_guard_strict.json
+          else
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          Path('evidence/reports/ci-cd-remediation').mkdir(parents=True, exist_ok=True)
+          Path('evidence/reports/ci-cd-remediation/cost_guard_strict.json').write_text(
+              json.dumps({'schema_version': '1.0.0', 'tier': 'strict', 'status': 'not_required', 'reason': 'no control-plane files changed'}, indent=2) + '\n',
+              encoding='utf-8')
+          PY
+          fi
       - run: pytest -q
+      - name: Upload cost-guard evidence
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: cat-cost-guard-evidence
+          path: evidence/reports/ci-cd-remediation/
+          retention-days: 14

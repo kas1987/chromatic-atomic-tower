@@ -1,0 +1,49 @@
+version: 1.0.0
+policy_id: COST-GUARD-001
+default_tier: balanced
+tiers:
+  none:
+    description: Evaluate every rule and report findings without blocking policy findings.
+    actions:
+      schedule_budget_approval: warn
+      risky_runner_exception: warn
+      explicit_permissions: warn
+      concurrency: warn
+      job_timeout: warn
+  balanced:
+    description: Block material cost and safety risks; warn on hardening refinements.
+    actions:
+      schedule_budget_approval: block
+      risky_runner_exception: block
+      explicit_permissions: warn
+      concurrency: warn
+      job_timeout: block
+  strict:
+    description: Block every defined cost and hardening rule.
+    actions:
+      schedule_budget_approval: block
+      risky_runner_exception: block
+      explicit_permissions: block
+      concurrency: block
+      job_timeout: block
+rules:
+  schedule_budget_approval:
+    category: cost
+    description: Scheduled workflows require explicit budget approval.
+    exception_annotation: CAT_BUDGET_APPROVED
+  risky_runner_exception:
+    category: cost
+    description: Windows and macOS hosted runners require a documented exception.
+    exception_annotation: CAT_RUNNER_EXCEPTION
+  explicit_permissions:
+    category: security
+    description: Workflows must declare least-privilege token permissions.
+  concurrency:
+    category: cost
+    description: Workflows must cancel obsolete runs where applicable.
+  job_timeout:
+    category: cost
+    description: Every job must have an explicit timeout-minutes limit.
+compatibility:
+  legacy_strict_flag: '--strict resolves to tier strict'
+  evaluator_errors: 'Invalid policy, unreadable workflow, invalid YAML, and invalid jobs mappings are evaluator errors and return exit code 2.'

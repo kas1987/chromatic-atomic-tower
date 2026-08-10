@@ -1,0 +1,43 @@
+{
+  "current_tiers": {
+    "balanced": {
+      "exit_code": 0,
+      "failure_count": 0,
+      "head_sha": "47d253a5e56311f50b30dbd7cff595140c0638d1",
+      "policy_version": "1.0.0",
+      "warning_count": 0,
+      "workflow_count": 8
+    },
+    "none": {
+      "exit_code": 0,
+      "failure_count": 0,
+      "head_sha": "47d253a5e56311f50b30dbd7cff595140c0638d1",
+      "policy_version": "1.0.0",
+      "warning_count": 0,
+      "workflow_count": 8
+    },
+    "strict": {
+      "exit_code": 0,
+      "failure_count": 0,
+      "head_sha": "47d253a5e56311f50b30dbd7cff595140c0638d1",
+      "policy_version": "1.0.0",
+      "warning_count": 0,
+      "workflow_count": 8
+    }
+  },
+  "default_branch": "master",
+  "generated_at": "2026-08-10T14:08:30.739099+00:00",
+  "head_sha": "47d253a5e56311f50b30dbd7cff595140c0638d1",
+  "historical_baseline": {
+    "source_head_sha": "5ca98c47d86c55805917689b70aa3ee97f2426d8",
+    "source_report": "evidence/reports/ci-cd-audit/2026-08-10.json",
+    "strict_warning_count": 17
+  },
+  "repository": "kas1987/chromatic-atomic-tower",
+  "rollout": {
+    "default_tier": "balanced",
+    "remote_branch_protection": "separate human-gated remediation; see BEAD-06",
+    "strict_clean": true
+  },
+  "schema_version": "1.0.0"
+}

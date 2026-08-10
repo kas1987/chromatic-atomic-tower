@@ -1,0 +1,53 @@
+bead_id: BEAD-CAT-A022-4C01-01
+mission_id: MP-CAT-A022-4C01
+title: Define deterministic cost-guard tiers
+status: completed
+priority: 1
+agent_role: Builder
+autonomy_level: L2
+objective: Define and test the None, Balanced, and Strict cost-guard policy contract with deterministic CLI, environment, and policy precedence.
+allowed_paths:
+- gates/ci/COST_GUARD_POLICY.yaml
+- scripts/cat_cost_guard.py
+- tests/test_cat_cost_guard.py
+- evidence/reports/ci-cd-remediation/BEAD-01.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .github/workflows/**
+- .git/hooks/**
+dependencies: []
+confidence:
+  minimum: 90
+  current: 94
+risk_level: high
+reversibility: high
+definition_of_done:
+- 'Versioned policy declares all rules, tiers, default, and exception semantics.'
+- 'CLI supports --tier none|balanced|strict and --json output.'
+- 'CLI > CAT_COST_GUARD_TIER > policy default precedence is tested.'
+- 'None is observe-only; Balanced blocks safety and timeout rules; Strict blocks all rules.'
+- 'Evaluator errors are explicit and fail closed.'
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_cat_cost_guard.py -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-01.md
+  required: true
+- type: command
+  command: python scripts/cat_cost_guard.py --check --tier none --json
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-01.md
+  required: true
+required_output:
+- cost_guard_policy
+- tier_matrix_tests
+- exact_head_json_evidence
+handoff:
+  from: Builder
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A022-4C01-02
+last_updated: '2026-08-10T13:50:30+00:00'

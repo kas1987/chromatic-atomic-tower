@@ -1,0 +1,399 @@
+{
+  "default_branch": "master",
+  "evaluator_errors": [],
+  "evidence_path": "evidence/reports/ci-cd-remediation/BEAD-02.json",
+  "failures": [],
+  "generated_at": "2026-08-10T13:52:45.968904+00:00",
+  "head_sha": "47d253a5e56311f50b30dbd7cff595140c0638d1",
+  "policy_version": "1.0.0",
+  "repository": "kas1987/chromatic-atomic-tower",
+  "schema_version": "1.0.0",
+  "summary": {
+    "evaluator_error_count": 0,
+    "failure_count": 0,
+    "warning_count": 17,
+    "workflow_count": 8
+  },
+  "tier": "none",
+  "warnings": [
+    "WARN [.github\\workflows\\cat-cd-promotion.yml] [concurrency]: workflow requires a concurrency block",
+    "WARN [.github\\workflows\\cat-cd-promotion.yml] [job_timeout]: jobs require timeout-minutes: ['require-m4-approval', 'promotion-gate']",
+    "WARN [.github\\workflows\\cat-ci.yml] [explicit_permissions]: workflow requires an explicit permissions block",
+    "WARN [.github\\workflows\\cat-ci.yml] [concurrency]: workflow requires a concurrency block",
+    "WARN [.github\\workflows\\cat-ci.yml] [job_timeout]: jobs require timeout-minutes: ['cat-ci']",
+    "WARN [.github\\workflows\\cat-github-bridge.yml] [explicit_permissions]: workflow requires an explicit permissions block",
+    "WARN [.github\\workflows\\cat-github-bridge.yml] [concurrency]: workflow requires a concurrency block",
+    "WARN [.github\\workflows\\cat-github-bridge.yml] [job_timeout]: jobs require timeout-minutes: ['github-bridge']",
+    "WARN [.github\\workflows\\cat-governance-ci.yml] [concurrency]: workflow requires a concurrency block",
+    "WARN [.github\\workflows\\cat-governance-ci.yml] [job_timeout]: jobs require timeout-minutes: ['validate']",
+    "WARN [.github\\workflows\\cat-loghouse-ci.yml] [explicit_permissions]: workflow requires an explicit permissions block",
+    "WARN [.github\\workflows\\cat-loghouse-ci.yml] [concurrency]: workflow requires a concurrency block",
+    "WARN [.github\\workflows\\cat-loghouse-ci.yml] [job_timeout]: jobs require timeout-minutes: ['loghouse-ci']",
+    "WARN [.github\\workflows\\claude-code-review.yml] [concurrency]: workflow requires a concurrency block",
+    "WARN [.github\\workflows\\claude-code-review.yml] [job_timeout]: jobs require timeout-minutes: ['claude-review']",
+    "WARN [.github\\workflows\\claude.yml] [concurrency]: workflow requires a concurrency block",
+    "WARN [.github\\workflows\\claude.yml] [job_timeout]: jobs require timeout-minutes: ['claude']"
+  ],
+  "workflows": [
+    {
+      "rules": [
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Scheduled workflows require explicit budget approval.",
+          "message": "rule satisfied",
+          "rule_id": "schedule_budget_approval",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Windows and macOS hosted runners require a documented exception.",
+          "message": "rule satisfied",
+          "rule_id": "risky_runner_exception",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "security",
+          "description": "Workflows must declare least-privilege token permissions.",
+          "message": "rule satisfied",
+          "rule_id": "explicit_permissions",
+          "status": "pass"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Workflows must cancel obsolete runs where applicable.",
+          "message": "workflow requires a concurrency block",
+          "rule_id": "concurrency",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Every job must have an explicit timeout-minutes limit.",
+          "message": "jobs require timeout-minutes: ['require-m4-approval', 'promotion-gate']",
+          "rule_id": "job_timeout",
+          "status": "fail"
+        }
+      ],
+      "workflow": ".github\\workflows\\cat-cd-promotion.yml"
+    },
+    {
+      "rules": [
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Scheduled workflows require explicit budget approval.",
+          "message": "rule satisfied",
+          "rule_id": "schedule_budget_approval",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Windows and macOS hosted runners require a documented exception.",
+          "message": "rule satisfied",
+          "rule_id": "risky_runner_exception",
+          "status": "pass"
+        },
+        {
+          "action": "warn",
+          "category": "security",
+          "description": "Workflows must declare least-privilege token permissions.",
+          "message": "workflow requires an explicit permissions block",
+          "rule_id": "explicit_permissions",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Workflows must cancel obsolete runs where applicable.",
+          "message": "workflow requires a concurrency block",
+          "rule_id": "concurrency",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Every job must have an explicit timeout-minutes limit.",
+          "message": "jobs require timeout-minutes: ['cat-ci']",
+          "rule_id": "job_timeout",
+          "status": "fail"
+        }
+      ],
+      "workflow": ".github\\workflows\\cat-ci.yml"
+    },
+    {
+      "rules": [
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Scheduled workflows require explicit budget approval.",
+          "message": "rule satisfied",
+          "rule_id": "schedule_budget_approval",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Windows and macOS hosted runners require a documented exception.",
+          "message": "rule satisfied",
+          "rule_id": "risky_runner_exception",
+          "status": "pass"
+        },
+        {
+          "action": "warn",
+          "category": "security",
+          "description": "Workflows must declare least-privilege token permissions.",
+          "message": "workflow requires an explicit permissions block",
+          "rule_id": "explicit_permissions",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Workflows must cancel obsolete runs where applicable.",
+          "message": "workflow requires a concurrency block",
+          "rule_id": "concurrency",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Every job must have an explicit timeout-minutes limit.",
+          "message": "jobs require timeout-minutes: ['github-bridge']",
+          "rule_id": "job_timeout",
+          "status": "fail"
+        }
+      ],
+      "workflow": ".github\\workflows\\cat-github-bridge.yml"
+    },
+    {
+      "rules": [
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Scheduled workflows require explicit budget approval.",
+          "message": "rule satisfied",
+          "rule_id": "schedule_budget_approval",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Windows and macOS hosted runners require a documented exception.",
+          "message": "rule satisfied",
+          "rule_id": "risky_runner_exception",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "security",
+          "description": "Workflows must declare least-privilege token permissions.",
+          "message": "rule satisfied",
+          "rule_id": "explicit_permissions",
+          "status": "pass"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Workflows must cancel obsolete runs where applicable.",
+          "message": "workflow requires a concurrency block",
+          "rule_id": "concurrency",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Every job must have an explicit timeout-minutes limit.",
+          "message": "jobs require timeout-minutes: ['validate']",
+          "rule_id": "job_timeout",
+          "status": "fail"
+        }
+      ],
+      "workflow": ".github\\workflows\\cat-governance-ci.yml"
+    },
+    {
+      "rules": [
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Scheduled workflows require explicit budget approval.",
+          "message": "rule satisfied",
+          "rule_id": "schedule_budget_approval",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Windows and macOS hosted runners require a documented exception.",
+          "message": "rule satisfied",
+          "rule_id": "risky_runner_exception",
+          "status": "pass"
+        },
+        {
+          "action": "warn",
+          "category": "security",
+          "description": "Workflows must declare least-privilege token permissions.",
+          "message": "workflow requires an explicit permissions block",
+          "rule_id": "explicit_permissions",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Workflows must cancel obsolete runs where applicable.",
+          "message": "workflow requires a concurrency block",
+          "rule_id": "concurrency",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Every job must have an explicit timeout-minutes limit.",
+          "message": "jobs require timeout-minutes: ['loghouse-ci']",
+          "rule_id": "job_timeout",
+          "status": "fail"
+        }
+      ],
+      "workflow": ".github\\workflows\\cat-loghouse-ci.yml"
+    },
+    {
+      "rules": [
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Scheduled workflows require explicit budget approval.",
+          "message": "rule satisfied",
+          "rule_id": "schedule_budget_approval",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Windows and macOS hosted runners require a documented exception.",
+          "message": "rule satisfied",
+          "rule_id": "risky_runner_exception",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "security",
+          "description": "Workflows must declare least-privilege token permissions.",
+          "message": "rule satisfied",
+          "rule_id": "explicit_permissions",
+          "status": "pass"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Workflows must cancel obsolete runs where applicable.",
+          "message": "workflow requires a concurrency block",
+          "rule_id": "concurrency",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Every job must have an explicit timeout-minutes limit.",
+          "message": "jobs require timeout-minutes: ['claude-review']",
+          "rule_id": "job_timeout",
+          "status": "fail"
+        }
+      ],
+      "workflow": ".github\\workflows\\claude-code-review.yml"
+    },
+    {
+      "rules": [
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Scheduled workflows require explicit budget approval.",
+          "message": "rule satisfied",
+          "rule_id": "schedule_budget_approval",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Windows and macOS hosted runners require a documented exception.",
+          "message": "rule satisfied",
+          "rule_id": "risky_runner_exception",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "security",
+          "description": "Workflows must declare least-privilege token permissions.",
+          "message": "rule satisfied",
+          "rule_id": "explicit_permissions",
+          "status": "pass"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Workflows must cancel obsolete runs where applicable.",
+          "message": "workflow requires a concurrency block",
+          "rule_id": "concurrency",
+          "status": "fail"
+        },
+        {
+          "action": "warn",
+          "category": "cost",
+          "description": "Every job must have an explicit timeout-minutes limit.",
+          "message": "jobs require timeout-minutes: ['claude']",
+          "rule_id": "job_timeout",
+          "status": "fail"
+        }
+      ],
+      "workflow": ".github\\workflows\\claude.yml"
+    },
+    {
+      "rules": [
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Scheduled workflows require explicit budget approval.",
+          "message": "rule satisfied",
+          "rule_id": "schedule_budget_approval",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Windows and macOS hosted runners require a documented exception.",
+          "message": "rule satisfied",
+          "rule_id": "risky_runner_exception",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "security",
+          "description": "Workflows must declare least-privilege token permissions.",
+          "message": "rule satisfied",
+          "rule_id": "explicit_permissions",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Workflows must cancel obsolete runs where applicable.",
+          "message": "rule satisfied",
+          "rule_id": "concurrency",
+          "status": "pass"
+        },
+        {
+          "action": "pass",
+          "category": "cost",
+          "description": "Every job must have an explicit timeout-minutes limit.",
+          "message": "rule satisfied",
+          "rule_id": "job_timeout",
+          "status": "pass"
+        }
+      ],
+      "workflow": ".github\\workflows\\validate-cat.yml"
+    }
+  ]
+}

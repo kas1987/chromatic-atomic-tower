@@ -1,0 +1,151 @@
+mission_id: MP-CAT-A022-4C01
+title: 'CAT CI/CD Remediation and Cost-Guard Tiering'
+level: M4
+status: closed
+owner: Human Owner
+priority: 1
+priority_tier: A
+complexity_order: 4C01
+risk_level: high
+reversibility: high
+autonomy_level: L2
+confidence_minimum: 90
+created: '2026-08-10'
+last_updated: '2026-08-10T14:12:52+00:00'
+objective: 'Remediate CAT CI/CD control-plane drift and establish deterministic None, Balanced, and Strict cost-guard tiers.'
+background: 'The 2026-08-10 audit found eight workflow files, 17 strict cost-guard warnings, stale mission and branch references, duplicated full-test work, weak remote enforcement, an environment-owned hook, and incomplete dynamic-workflow provenance.'
+scope:
+  in:
+  - 'Define and test deterministic cost-guard tier behavior.'
+  - 'Integrate the guard into CI and emit exact-head evidence.'
+  - 'Harden local workflows and canonicalize stale CI references.'
+  - 'Reduce duplicated CI and preserve LOGHOUSE telemetry.'
+  - 'Version local hook logic and document dynamic GitHub workflow ownership.'
+  - 'Prepare, but do not apply, the remote branch-protection remediation.'
+  out:
+  - 'Provider-plan changes, subscription overages, or model-routing changes.'
+  - 'Secret, credential, production, or deployment configuration changes.'
+  - 'Automatic GitHub branch-protection mutation.'
+  - 'Automatic merge, branch write, or PR mutation.'
+allowed_paths:
+- missions/active/MP-CAT-A022-4C01_CI_CD_REMEDIATION.yaml
+- missions/archived/MP-CAT-A022-4C01_CI_CD_REMEDIATION.yaml
+- missions/registry/MISSION_REGISTRY.yaml
+- beads/active/BEAD-CAT-A022-4C01-01.yaml
+- beads/active/BEAD-CAT-A022-4C01-02.yaml
+- beads/active/BEAD-CAT-A022-4C01-03.yaml
+- beads/active/BEAD-CAT-A022-4C01-04.yaml
+- beads/active/BEAD-CAT-A022-4C01-05.yaml
+- beads/active/BEAD-CAT-A022-4C01-06.yaml
+- beads/active/BEAD-CAT-A022-4C01-07.yaml
+- beads/active/BEAD-CAT-A022-4C01-08.yaml
+- beads/completed/BEAD-CAT-A022-4C01-01.yaml
+- beads/completed/BEAD-CAT-A022-4C01-02.yaml
+- beads/completed/BEAD-CAT-A022-4C01-03.yaml
+- beads/completed/BEAD-CAT-A022-4C01-04.yaml
+- beads/completed/BEAD-CAT-A022-4C01-05.yaml
+- beads/completed/BEAD-CAT-A022-4C01-06.yaml
+- beads/completed/BEAD-CAT-A022-4C01-07.yaml
+- beads/completed/BEAD-CAT-A022-4C01-08.yaml
+- gates/ci/COST_GUARD_POLICY.yaml
+- scripts/cat_cost_guard.py
+- scripts/cat_generate_evidence_bundle.py
+- scripts/cat_workflow_audit.py
+- scripts/cat_branch_protection_audit.py
+- scripts/cat_ci_cd_baseline.py
+- scripts/hooks/pre-push.sh
+- scripts/install_hooks.py
+- tests/test_cat_cost_guard.py
+- tests/test_cat_workflow_audit.py
+- tests/test_cat_branch_protection.py
+- tests/test_cat_ci_cd_baseline.py
+- tests/test_hooks.py
+- .github/workflows/cat-cd-promotion.yml
+- .github/workflows/cat-ci.yml
+- .github/workflows/cat-github-bridge.yml
+- .github/workflows/cat-governance-ci.yml
+- .github/workflows/cat-loghouse-ci.yml
+- .github/workflows/claude-code-review.yml
+- .github/workflows/claude.yml
+- .github/workflows/validate-cat.yml
+- docs/github_actions_guardrails.md
+- docs/operations/CI_GOVERNANCE.md
+- docs/operations/CI_CD_VALIDATION_RUNBOOK.md
+- docs/operations/GITHUB_BRANCH_PROTECTION_PROPOSAL.md
+- evidence/reports/ci-cd-remediation/**
+- evidence/reports/ci-cd-audit/**
+- learnings/DECISION_LOG.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+dependencies:
+- MP-CAT-A021-4C01
+beads:
+- bead_id: BEAD-CAT-A022-4C01-01
+  title: Define deterministic cost-guard tiers
+  status: completed
+- bead_id: BEAD-CAT-A022-4C01-02
+  title: Integrate cost guard into CI evidence
+  status: completed
+- bead_id: BEAD-CAT-A022-4C01-03
+  title: Harden workflows and canonicalize CI references
+  status: completed
+- bead_id: BEAD-CAT-A022-4C01-04
+  title: Reduce CI duplication and preserve monitoring
+  status: completed
+- bead_id: BEAD-CAT-A022-4C01-05
+  title: Version hooks and workflow provenance
+  status: completed
+- bead_id: BEAD-CAT-A022-4C01-06
+  title: Prepare remote promotion-gate remediation
+  status: completed
+- bead_id: BEAD-CAT-A022-4C01-07
+  title: Establish remediation baseline and rollout evidence
+  status: completed
+- bead_id: BEAD-CAT-A022-4C01-08
+  title: Run closeout audit and residual-debt review
+  status: completed
+acceptance_criteria:
+- 'None, Balanced, and Strict produce deterministic, explainable outcomes.'
+- 'Strict mode passes all local workflows after hardening.'
+- 'Every CI invocation emits exact-head cost-guard evidence.'
+- 'Stale references, duplicated assurance, hook opacity, and dynamic workflow ownership gaps are resolved or explicitly accepted.'
+- 'Remote branch-protection remediation is prepared for human application but is not mutated automatically.'
+required_validation:
+- type: local
+  command: python scripts/cat_check_repo.py && python scripts/cat_validate.py --all && python scripts/cat_cost_guard.py --check --tier strict
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-08.md
+  required: true
+- type: test
+  command: python -m pytest -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-08.md
+  required: true
+rollback:
+  required: true
+  plan: 'Restore the prior workflow, guard, documentation, and governance files from the pre-remediation commit while preserving the remediation evidence report.'
+evidence_requirements:
+- exact HEAD and policy version for each tier evaluation
+- targeted tier test output
+- strict-mode workflow hardening output
+- CI artifact and stale-reference reconciliation output
+- final full-suite output and residual remote-policy statement
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 40
+  read: 120
+  write: 80
+  execute: 80
+  max_runtime_minutes: 360
+stop_conditions:
+- 'A change requires a forbidden path.'
+- 'A secret, credential, production, or deployment path appears.'
+- 'A tier outcome cannot be reproduced from the versioned policy and exact workflow source.'
+- 'Remote GitHub policy conflicts with the local evidence in an unexplained way.'
+- 'Confidence falls below 90.'

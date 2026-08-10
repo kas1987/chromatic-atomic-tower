@@ -1,0 +1,63 @@
+bead_id: BEAD-CAT-A022-4C01-05
+mission_id: MP-CAT-A022-4C01
+title: Version hooks and workflow provenance
+status: completed
+priority: 1
+agent_role: Builder
+autonomy_level: L2
+objective: Version the local pre-push hook source and provide a read-only inventory reconciling local and GitHub-managed workflow registrations.
+allowed_paths:
+- scripts/hooks/pre-push.sh
+- scripts/install_hooks.py
+- scripts/cat_workflow_audit.py
+- tests/test_hooks.py
+- tests/test_cat_workflow_audit.py
+- evidence/reports/ci-cd-remediation/BEAD-05.md
+- evidence/reports/ci-cd-remediation/BEAD-05.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- branch protection or GitHub settings
+dependencies:
+- BEAD-CAT-A022-4C01-04
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 95
+  scope_clarity: 94
+  evidence_quality: 91
+  reversibility: 95
+  tool_fit: 93
+  risk_awareness: 95
+  testability: 94
+risk_level: high
+reversibility: high
+definition_of_done:
+- 'Versioned pre-push source runs repository CAT checks and the Balanced guard.'
+- 'Installer supports dry-run/check and explicit temp-root installation tests.'
+- 'Workflow inventory records local source and optional read-only GitHub registrations.'
+- 'Dynamic workflows without local source are visible as provenance gaps.'
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_hooks.py tests/test_cat_workflow_audit.py -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-05.md
+  required: true
+- type: command
+  command: python scripts/cat_workflow_audit.py --root . --output evidence/reports/ci-cd-remediation/BEAD-05.json
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-05.md
+  required: true
+required_output:
+- versioned_hook_source
+- reproducible_hook_installer
+- workflow_provenance_inventory
+handoff:
+  from: Builder
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A022-4C01-06
+last_updated: '2026-08-10T14:04:36+00:00'

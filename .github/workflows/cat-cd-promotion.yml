@@ -6,7 +6,6 @@ on:
       mission_id:
         description: Mission ID to score
         required: true
-        default: MP-CAT-A006-4C01
       minimum_confidence:
         description: Minimum confidence score required for promotion
         required: true
@@ -15,6 +14,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: cat-cd-promotion-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   # M4 missions require explicit human sign-off via a GitHub protected environment.
   # Configure the "m4-promotion" environment in Settings → Environments with at least
@@ -22,6 +25,7 @@ jobs:
   require-m4-approval:
     name: Require human approval (M4 only)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: contains(inputs.mission_id, '-4C')
     environment: m4-promotion
     steps:
@@ -30,6 +34,7 @@ jobs:
   promotion-gate:
     name: Score evidence and gate promotion
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: [require-m4-approval]
     if: always() && (needs.require-m4-approval.result == 'success' || needs.require-m4-approval.result == 'skipped')
     steps:

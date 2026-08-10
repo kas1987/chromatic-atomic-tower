@@ -1,0 +1,30 @@
+{
+  "branch": "master",
+  "error": null,
+  "evaluation": {
+    "admins_enforced": false,
+    "compliant": false,
+    "conversation_resolution": false,
+    "deletions_allowed": false,
+    "force_pushes_allowed": false,
+    "missing_required_checks": [
+      "CAT Governance CI",
+      "LOGHOUSE CI"
+    ],
+    "required_approving_review_count": 0,
+    "required_checks": [
+      "validate",
+      "cat-ci"
+    ]
+  },
+  "generated_at": "2026-08-10T14:06:23.229747+00:00",
+  "read_only": true,
+  "repository": "kas1987/chromatic-atomic-tower",
+  "required_checks_policy": [
+    "validate",
+    "cat-ci",
+    "CAT Governance CI",
+    "LOGHOUSE CI"
+  ],
+  "schema_version": "1.0.0"
+}

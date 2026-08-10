@@ -1,0 +1,70 @@
+bead_id: BEAD-CAT-A022-4C01-03
+mission_id: MP-CAT-A022-4C01
+title: Harden workflows and canonicalize CI references
+status: completed
+priority: 1
+agent_role: Builder
+autonomy_level: L2
+objective: Remove all current strict cost-guard warnings and eliminate stale branch, mission, sprint, and documentation references from the CI control plane.
+allowed_paths:
+- .github/workflows/cat-cd-promotion.yml
+- .github/workflows/cat-ci.yml
+- .github/workflows/cat-github-bridge.yml
+- .github/workflows/cat-governance-ci.yml
+- .github/workflows/cat-loghouse-ci.yml
+- .github/workflows/claude-code-review.yml
+- .github/workflows/claude.yml
+- .github/workflows/validate-cat.yml
+- scripts/cat_generate_evidence_bundle.py
+- tests/test_ci_workflow.py
+- docs/github_actions_guardrails.md
+- docs/operations/CI_GOVERNANCE.md
+- playbooks/CI_CD_VALIDATION_RUNBOOK.md
+- evidence/reports/ci-cd-remediation/BEAD-03.md
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- branch protection or GitHub settings
+dependencies:
+- BEAD-CAT-A022-4C01-02
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 95
+  scope_clarity: 93
+  evidence_quality: 91
+  reversibility: 94
+  tool_fit: 92
+  risk_awareness: 94
+  testability: 94
+risk_level: high
+reversibility: high
+definition_of_done:
+- 'All eight local workflows pass strict cost-guard evaluation.'
+- 'Workflow triggers use the canonical default branch contract.'
+- 'Retired mission IDs and stale sprint goals are removed from live controls.'
+- 'Tests prove the corrected branch and guard contracts.'
+validation:
+- type: command
+  command: python scripts/cat_cost_guard.py --check --tier strict
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-03.md
+  required: true
+- type: targeted_test
+  command: python -m pytest tests/test_ci_workflow.py tests/test_cat_cost_guard.py -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-03.md
+  required: true
+required_output:
+- hardened_workflows
+- stale_reference_reconciliation
+- strict_guard_pass
+handoff:
+  from: Builder
+  to: Builder
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A022-4C01-04
+last_updated: '2026-08-10T13:59:19+00:00'

@@ -1,0 +1,60 @@
+bead_id: BEAD-CAT-A022-4C01-07
+mission_id: MP-CAT-A022-4C01
+title: Establish remediation baseline and rollout evidence
+status: completed
+priority: 1
+agent_role: Auditor
+autonomy_level: L2
+objective: Produce a reproducible baseline and rollout report comparing the pre-remediation 17-warning strict result with current None, Balanced, and Strict outcomes.
+allowed_paths:
+- scripts/cat_ci_cd_baseline.py
+- tests/test_cat_ci_cd_baseline.py
+- evidence/reports/ci-cd-remediation/BEAD-07.md
+- evidence/reports/ci-cd-remediation/BEAD-07.json
+forbidden_paths:
+- .env
+- .env.*
+- secrets/**
+- credentials/**
+- '**/*.key'
+- agents/registry/AGENT_SCORECARD.yaml
+- .git/hooks/**
+- branch protection or GitHub settings
+dependencies:
+- BEAD-CAT-A022-4C01-06
+confidence:
+  minimum: 90
+  current: 93
+  objective_clarity: 96
+  scope_clarity: 95
+  evidence_quality: 94
+  reversibility: 96
+  tool_fit: 94
+  risk_awareness: 94
+  testability: 95
+risk_level: high
+reversibility: high
+definition_of_done:
+- 'Historical 17-warning baseline is parsed from the prior audit report.'
+- 'Current None, Balanced, and Strict summaries are generated from the policy engine.'
+- 'Delta and residual remote branch-protection status are explicit.'
+- 'The report is suitable for the monthly audit comparison.'
+validation:
+- type: targeted_test
+  command: python -m pytest tests/test_cat_ci_cd_baseline.py -q
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-07.md
+  required: true
+- type: command
+  command: python scripts/cat_ci_cd_baseline.py --root . --output evidence/reports/ci-cd-remediation/BEAD-07.json
+  evidence_path: evidence/reports/ci-cd-remediation/BEAD-07.md
+  required: true
+required_output:
+- historical_warning_baseline
+- current_tier_matrix
+- rollout_delta
+handoff:
+  from: Auditor
+  to: Auditor
+  reviewer: Human Owner
+  next_bead_id: BEAD-CAT-A022-4C01-08
+last_updated: '2026-08-10T14:08:30+00:00'

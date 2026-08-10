@@ -10,6 +10,7 @@ Tests cover:
 """
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -19,7 +20,7 @@ ROOT_PATH = Path(__file__).resolve().parents[1]
 if str(ROOT_PATH / 'scripts') not in sys.path:
     sys.path.insert(0, str(ROOT_PATH / 'scripts'))
 
-from scripts.cat_cost_guard import check_workflow
+from scripts.cat_cost_guard import check_workflow, load_policy, resolve_tier
 from scripts.common import ROOT
 
 
@@ -132,16 +133,50 @@ class TestCheckWorkflow:
         failures, _ = check_workflow(p)
         assert not any('windows-latest' in f for f in failures)
 
-    def test_missing_permissions_is_warning_not_failure(self, tmp_path):
+    def test_missing_permissions_is_warning_and_timeout_blocks(self, tmp_path):
         p = self._write(tmp_path, 'noperms.yml', NO_PERMISSIONS)
         failures, warnings = check_workflow(p)
-        assert failures == []
+        assert any('job_timeout' in f for f in failures)
         assert any('permissions' in w for w in warnings)
+
+    def test_none_is_observe_only(self, tmp_path):
+        p = self._write(tmp_path, 'noperms.yml', NO_PERMISSIONS)
+        failures, warnings = check_workflow(p, tier='none')
+        assert failures == []
+        assert len(warnings) == 3
+
+    def test_balanced_blocks_missing_timeout(self, tmp_path):
+        p = self._write(tmp_path, 'noperms.yml', NO_PERMISSIONS)
+        failures, warnings = check_workflow(p, tier='balanced')
+        assert any('job_timeout' in f for f in failures)
+        assert any('permissions' in w for w in warnings)
+
+    def test_strict_blocks_all_hardening_rules(self, tmp_path):
+        p = self._write(tmp_path, 'noperms.yml', NO_PERMISSIONS)
+        failures, warnings = check_workflow(p, tier='strict')
+        assert warnings == []
+        assert len(failures) == 3
 
     def test_missing_concurrency_is_warning(self, tmp_path):
         p = self._write(tmp_path, 'noconcurrency.yml', NO_PERMISSIONS)
         _, warnings = check_workflow(p)
         assert any('concurrency' in w for w in warnings)
+
+
+class TestTierResolution:
+    def test_precedence_cli_over_environment_over_policy(self):
+        policy = load_policy()
+        env = dict(os.environ)
+        env['CAT_COST_GUARD_TIER'] = 'none'
+        assert resolve_tier(None, env=env, policy=policy) == 'none'
+        assert resolve_tier('strict', env=env, policy=policy) == 'strict'
+
+    def test_policy_default_is_balanced(self):
+        assert resolve_tier(policy=load_policy()) == 'balanced'
+
+    def test_invalid_tier_rejected(self):
+        with pytest.raises(ValueError, match='invalid cost-guard tier'):
+            resolve_tier('invalid', policy=load_policy())
 
 
 # ---------------------------------------------------------------------------
@@ -182,3 +217,12 @@ class TestValidateCatHardening:
         wf = ROOT / '.github/workflows/validate-cat.yml'
         failures, _ = check_workflow(wf)
         assert failures == [], f"cost-guard failures in validate-cat.yml: {failures}"
+
+    def test_validate_cat_invokes_balanced_and_control_plane_strict(self):
+        wf = ROOT / '.github/workflows/validate-cat.yml'
+        text = wf.read_text(encoding='utf-8')
+        assert 'cat_cost_guard.py --check --tier balanced' in text
+        assert 'cat_cost_guard.py --check --tier strict' in text
+        assert 'cost_guard_balanced.json' in text
+        assert 'cost_guard_strict.json' in text
+        assert 'evidence/reports/ci-cd-remediation/' in text
