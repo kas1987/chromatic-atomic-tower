@@ -1,0 +1,68 @@
+bead_id: BEAD-CAT-A024-4C01-04
+mission_id: MP-CAT-A024-4C01
+title: Reconcile taxonomy consumers and regression gates
+status: queued
+agent_role: Builder
+autonomy_level: L2
+priority: 1
+objective: Reconcile remaining taxonomy consumers and add task-relative regression checks so repaired identity relations cannot drift silently.
+allowed_paths:
+  - gates/CAT_ID_TAXONOMY.yaml
+  - scripts/cat_taxonomy_audit.py
+  - scripts/cat_validate.py
+  - tests/test_cat_taxonomy.py
+  - tests/test_cat_align_missionid.py
+  - docs/reference/**
+  - docs/architecture/**
+  - evidence/reports/taxonomy/**
+  - evidence/bundles/generated/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - '**/*.key'
+  - agents/registry/AGENT_SCORECARD.yaml
+  - .git/hooks/**
+  - GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies:
+  - BEAD-CAT-A024-4C01-03
+tool_budget:
+  search: 40
+  read: 100
+  write: 40
+  execute: 40
+  max_runtime_minutes: 180
+confidence:
+  minimum: 90
+  current: 91
+  objective_clarity: 94
+  scope_clarity: 90
+  evidence_quality: 90
+  reversibility: 96
+  tool_fit: 92
+  risk_awareness: 97
+  testability: 95
+risk_level: high
+reversibility: high
+stop_conditions:
+  - A consumer requires a second canonical writer.
+  - A proposed change alters routing semantics without an explicit contract update.
+  - A forbidden path or remote mutation appears.
+  - Confidence drops below 90.
+definition_of_done:
+  - Repaired finding classes have deterministic regression tests.
+  - Generic CAT validation remains green.
+  - Audit output distinguishes fixed findings from compatibility exceptions.
+validation:
+  - type: test
+    command: python -m pytest tests/test_cat_taxonomy.py tests/test_cat_align_missionid.py -q
+    evidence_path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-04.md
+    required: true
+required_output:
+  - consumer_reconciliation
+  - regression_results
+  - evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-A024-4C01-05
+  notes: Keep taxonomy axes independent and preserve historical compatibility.

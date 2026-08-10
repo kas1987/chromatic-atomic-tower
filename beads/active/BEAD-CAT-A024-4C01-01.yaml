@@ -1,0 +1,63 @@
+bead_id: BEAD-CAT-A024-4C01-01
+mission_id: MP-CAT-A024-4C01
+title: Baseline and classify residual taxonomy debt
+status: queued
+agent_role: Auditor
+autonomy_level: L2
+priority: 1
+objective: Re-run the A023 cross-file taxonomy audit and produce a deterministic disposition register for every residual finding.
+allowed_paths:
+  - scripts/cat_taxonomy_audit.py
+  - evidence/reports/taxonomy/BEAD-CAT-A024-4C01-01.md
+  - evidence/reports/taxonomy/BEAD-CAT-A024-4C01-01.json
+  - evidence/reports/taxonomy/BEAD-CAT-A023-4C01-04.json
+  - evidence/bundles/generated/EB-CAT-A024-4C01-01.yaml
+forbidden_paths:
+  - .env
+  - .env.*
+  - secrets/**
+  - credentials/**
+  - '**/*.key'
+  - agents/registry/AGENT_SCORECARD.yaml
+  - .git/hooks/**
+  - GitHub branch protection, secrets, PRs, branches, or repository settings
+dependencies: []
+tool_budget:
+  search: 30
+  read: 80
+  write: 20
+  execute: 30
+  max_runtime_minutes: 120
+confidence:
+  minimum: 90
+  current: 92
+  objective_clarity: 96
+  scope_clarity: 94
+  evidence_quality: 92
+  reversibility: 98
+  tool_fit: 94
+  risk_awareness: 97
+  testability: 95
+risk_level: high
+reversibility: high
+stop_conditions:
+  - A finding cannot be classified without identifier rewriting.
+  - Audit output is not deterministic or exact-head bound.
+  - A forbidden path or remote mutation appears.
+  - Confidence drops below 90.
+definition_of_done:
+  - Baseline is reproduced.
+  - Every residual has a disposition, owner, and rationale.
+  - Evidence is recorded and validated.
+validation:
+  - type: command
+    command: python scripts/cat_taxonomy_audit.py --json
+    evidence_path: evidence/reports/taxonomy/BEAD-CAT-A024-4C01-01.md
+    required: true
+required_output:
+  - baseline_metrics
+  - disposition_register
+  - evidence_path
+handoff:
+  next_bead_id: BEAD-CAT-A024-4C01-02
+  notes: Repair only findings explicitly classified as repairable.
