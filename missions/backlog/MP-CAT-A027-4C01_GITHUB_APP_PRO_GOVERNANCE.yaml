@@ -1,0 +1,153 @@
+mission_id: MP-CAT-A027-4C01
+title: GitHub App Access and Pro Governance Hardening
+level: M4
+status: draft
+priority: 2
+mission_class: A
+severity: high
+owner: Human Owner
+risk_level: high
+reversibility: high
+hitl_mode: approval_required
+autonomy_level: L2
+confidence:
+  minimum: 90
+  current: 92
+confidence_minimum: 90
+current_bead_id: null
+created: '2026-08-11'
+last_updated: '2026-08-11T00:00:00+00:00'
+source_ref: e3fd14a3bae86f6e3e16abd179a53dcc7609e385
+source_branch: master
+purpose: >-
+  Establish a bounded, evidence-first GitHub App and GitHub Pro governance
+  contract for kas1987/chromatic-atomic-tower without changing remote policy,
+  credentials, or active A026 work.
+objective: >-
+  Register and prepare a reviewable, planning-only mission for GitHub App access,
+  GitHub Pro governance, and exact-head workflow telemetry.
+background: >-
+  The repository is public with an unresolved @owner CODEOWNERS entry, incomplete
+  remote master protection, a connected GitHub App installation, and no configured
+  local self-owned App credential path. Current A026 work remains active elsewhere.
+scope:
+  in:
+  - Read-only verification of the connected and self-owned GitHub App access paths.
+  - Local CODEOWNERS and Dependabot policy repair.
+  - Draft-aware CI economics while preserving canonical required checks.
+  - Human-gated master protection/ruleset proposal and read-only verification.
+  - Exact-head GitHub, Actions, PR, and agent-governance telemetry.
+  out:
+  - Automatic GitHub settings, branch, PR, ruleset, or merge mutation.
+  - Secrets, private keys, .env files, token display, or credential migration.
+  - Changing the default branch from master.
+  - Activating, modifying, or closing MP-CAT-A026-4C01 / BEAD-CAT-A026-4C01-07.
+allowed_paths:
+  - missions/backlog/MP-CAT-A027-4C01_GITHUB_APP_PRO_GOVERNANCE.yaml
+  - missions/registry/MISSION_REGISTRY.yaml
+  - beads/active/BEAD-CAT-A027-4C01-*.yaml
+  - .agents/plans/2026-08-11-cat-github-app-pro-governance.md
+  - docs/operations/GITHUB_APP_ACCESS_RUNBOOK.md
+  - docs/operations/GITHUB_PRO_GOVERNANCE.md
+  - docs/operations/GITHUB_BRANCH_PROTECTION_PROPOSAL.md
+  - evidence/reports/github-pro-governance/**
+forbidden_paths:
+  - .env
+  - .env.*
+  - '*.pem'
+  - secrets/**
+  - credentials/**
+  - state/**
+  - agents/registry/AGENT_SCORECARD.yaml
+  - .git/hooks/**
+  - GitHub settings, installations, branches, PRs, rulesets, or merges
+dependencies: []
+acceptance_criteria:
+  - Mission remains draft and all six beads remain queued and non-dispatchable.
+  - Planning branch is based on exact clean source_ref and excludes dirty master changes.
+  - Access, ownership, CI, protection, and telemetry boundaries have explicit gates.
+  - No secret, credential, active pointer, or A026 state is changed by this packet.
+success_metrics:
+  - Packet and bead YAML pass CAT schema validation.
+  - Draft PR contains planning artifacts only and has no implementation files.
+  - First GO is explicitly deferred to BEAD-CAT-A027-4C01-01.
+required_validation:
+  - type: command
+    command: python scripts/cat_validate.py --all && python scripts/cat_check_repo.py && git diff --check
+    evidence_path: evidence/reports/github-pro-governance/PLAN.md
+    required: true
+  - type: self_review
+    command: manual Terra packet review
+    evidence_path: evidence/reports/github-pro-governance/PLAN.md
+    required: true
+rollback:
+  required: true
+  plan: Delete the unmerged planning branch/worktree and revert only the A027 planning commit; do not touch dirty master.
+human_gate:
+  required: true
+  approver: Human Owner
+tool_budget:
+  search: 60
+  read: 180
+  write: 80
+  execute: 100
+  max_runtime_minutes: 240
+beads:
+  - bead_id: BEAD-CAT-A027-4C01-01
+    status: queued
+    role: Auditor
+  - bead_id: BEAD-CAT-A027-4C01-02
+    status: queued
+    role: Builder
+  - bead_id: BEAD-CAT-A027-4C01-03
+    status: queued
+    role: Builder
+  - bead_id: BEAD-CAT-A027-4C01-04
+    status: queued
+    role: Builder
+  - bead_id: BEAD-CAT-A027-4C01-05
+    status: queued
+    role: Auditor
+  - bead_id: BEAD-CAT-A027-4C01-06
+    status: queued
+    role: Auditor
+evidence_requirements:
+  - Exact source HEAD, branch, worktree, and planning PR identity.
+  - Redacted Terra review and pre-mortem.
+  - Schema validation, repository validation, and diff hygiene results.
+notes:
+  - 4C01 is the established compact M4/order profile, not a PR or branch number.
+  - A026 remains the active mission in the dirty master worktree.
+worktree:
+  source_ref: e3fd14a3bae86f6e3e16abd179a53dcc7609e385
+  path: C:\.01_CAT.worktrees\mp-cat-a027-github-pro-governance
+  branch: codex/mp-cat-a027-github-pro-governance
+  contamination_rule: Create from exact clean HEAD; never stage the dirty master worktree.
+draft_pr:
+  title: 'docs(governance): register A027 GitHub App and Pro hardening'
+  state: draft
+  purpose: Planning packet and queued beads only; implementation is deferred.
+  remote_mutation_allowed: false
+deferred_first_go:
+  bead_id: BEAD-CAT-A027-4C01-01
+  role: Auditor
+  intent: Produce redacted App, repository, and installation access-boundary evidence.
+  authority: Read-only local and GitHub metadata only.
+  required_human_gate: Approve the minimum App permission and installation boundary.
+  no_go_until:
+    - Planning PR is reviewed and explicitly approved.
+    - A027 is promoted from draft to approved.
+    - A026 active work is not displaced.
+pre_mortem:
+  - Wrong repository or installation is treated as CAT access.
+  - Token or private key leaks through evidence, output, or cache.
+  - CODEOWNERS is syntactically valid but semantically unresolved.
+  - Draft gating skips a canonical required check.
+  - Protection rules make the solo-owner repository unmergeable.
+  - Dirty A026 work contaminates A027.
+definition_of_done:
+  - Six beads have independent evidence paths, gates, and stop conditions.
+  - App identity is bound to owner, repository ID/name, installation ID, master, and exact HEAD.
+  - Remote policy application remains a separately approved human action.
+  - No secret, credential, active pointer, or A026 state is changed by this packet.
+  - Two consecutive clean governance audits and monthly drift comparison are defined.

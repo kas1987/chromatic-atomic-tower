@@ -388,3 +388,20 @@ missions:
   path: missions\archived\MP-CAT-A024-4C01_TAXONOMY_DEBT_REMEDIATION.yaml
   created: '2026-08-10'
   last_updated: '2026-08-10T17:55:05+00:00'
+- mission_id: MP-CAT-A027-4C01
+  title: GitHub App Access and Pro Governance Hardening
+  level: M4
+  status: draft
+  priority: 2
+  mission_class: A
+  severity: high
+  owner: Human Owner
+  risk_level: high
+  reversibility: high
+  hitl_mode: approval_required
+  autonomy_level: L2
+  confidence: 92
+  current_bead_id: null
+  path: missions/backlog/MP-CAT-A027-4C01_GITHUB_APP_PRO_GOVERNANCE.yaml
+  created: '2026-08-11'
+  last_updated: '2026-08-11T00:00:00+00:00'

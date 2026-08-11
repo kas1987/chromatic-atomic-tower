@@ -1,0 +1,24 @@
+bead_id: BEAD-CAT-A027-4C01-04
+mission_id: MP-CAT-A027-4C01
+title: Add draft-aware CI economics and canonical check contract
+status: queued
+agent_role: Builder
+autonomy_level: L2
+priority: 2
+objective: Preserve least-privilege permissions, concurrency, and timeouts while adding deterministic draft-versus-ready routing without required-check bypass or duplicate full-suite execution.
+allowed_paths: [.github/workflows/cat-ci.yml, .github/workflows/cat-governance-ci.yml, .github/workflows/validate-cat.yml, .github/workflows/cat-loghouse-ci.yml, scripts/cat_workflow_audit.py, tests/test_cat_workflow_audit.py, docs/operations/CI_GOVERNANCE.md, evidence/reports/github-pro-governance/BEAD-04.md]
+forbidden_paths: [.env, secrets/**, credentials/**, GitHub settings, installations, branches, PRs, or rulesets]
+dependencies: [BEAD-CAT-A027-4C01-01]
+tool_budget: {search: 30, read: 80, write: 40, execute: 50, max_runtime_minutes: 180}
+confidence: {minimum: 90, current: 90, objective_clarity: 94, scope_clarity: 90, evidence_quality: 84, reversibility: 90, tool_fit: 92, risk_awareness: 98, testability: 96}
+risk_level: high
+reversibility: high
+stop_conditions: [A required check would be skipped, cost reduction weakens a gate, or confidence drops below 90.]
+definition_of_done: [Strict cost guard passes, draft and ready fixtures retain canonical checks, no specialist duplicates full-suite ownership.]
+validation:
+  - type: command
+    command: python scripts/cat_cost_guard.py --check --tier strict
+    evidence_path: evidence/reports/github-pro-governance/BEAD-04.md
+    required: true
+required_output: [workflow_contract, cost_guard_result, evidence_path]
+handoff: {next_bead_id: BEAD-CAT-A027-4C01-05, notes: No draft path may weaken assurance.}

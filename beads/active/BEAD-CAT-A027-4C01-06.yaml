@@ -1,0 +1,24 @@
+bead_id: BEAD-CAT-A027-4C01-06
+mission_id: MP-CAT-A027-4C01
+title: Instrument GitHub and agent-governance telemetry
+status: queued
+agent_role: Auditor
+autonomy_level: L2
+priority: 2
+objective: Record exact-head, read-only workflow, PR-cycle, gate, and App-access state while separating advisory telemetry from blocking policy.
+allowed_paths: [scripts/cat_github_governance_audit.py, tests/test_cat_github_governance_audit.py, docs/operations/GITHUB_PRO_GOVERNANCE.md, evidence/reports/github-pro-governance/**, evidence/logs/github_governance.jsonl]
+forbidden_paths: [.env, secrets/**, credentials/**, GitHub settings, installations, branches, PRs, rulesets, or merges]
+dependencies: [BEAD-CAT-A027-4C01-04, BEAD-CAT-A027-4C01-05]
+tool_budget: {search: 30, read: 90, write: 40, execute: 50, max_runtime_minutes: 180}
+confidence: {minimum: 90, current: 90, objective_clarity: 94, scope_clarity: 92, evidence_quality: 86, reversibility: 94, tool_fit: 92, risk_awareness: 98, testability: 94}
+risk_level: high
+reversibility: high
+stop_conditions: [Telemetry records a secret, missing remote data is represented as compliant, or confidence drops below 90.]
+definition_of_done: [Synthetic exact-head reports reproduce, unknown API/cost state remains unknown, monthly drift comparison is defined.]
+validation:
+  - type: test
+    command: python -m pytest -q tests/test_cat_github_governance_audit.py
+    evidence_path: evidence/reports/github-pro-governance/BEAD-06.md
+    required: true
+required_output: [telemetry_schema, drift_report, evidence_path]
+handoff: {next_bead_id: null, notes: Human Owner reviews telemetry before any autonomous routing.}

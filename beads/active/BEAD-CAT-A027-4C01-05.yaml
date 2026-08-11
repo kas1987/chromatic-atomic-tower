@@ -1,0 +1,24 @@
+bead_id: BEAD-CAT-A027-4C01-05
+mission_id: MP-CAT-A027-4C01
+title: Prepare human-gated master protection and ruleset change
+status: queued
+agent_role: Auditor
+autonomy_level: L2
+priority: 2
+objective: Reconcile canonical checks, review feasibility, and App permissions into a human-applied master protection proposal; perform no remote mutation.
+allowed_paths: [scripts/cat_branch_protection_audit.py, tests/test_cat_branch_protection.py, docs/operations/GITHUB_BRANCH_PROTECTION_PROPOSAL.md, evidence/reports/github-pro-governance/BEAD-05.md, evidence/reports/github-pro-governance/BEAD-05.json]
+forbidden_paths: [.env, secrets/**, credentials/**, GitHub branch protection, rulesets, settings, branches, PRs, or merges]
+dependencies: [BEAD-CAT-A027-4C01-02, BEAD-CAT-A027-4C01-03, BEAD-CAT-A027-4C01-04]
+tool_budget: {search: 30, read: 90, write: 30, execute: 40, max_runtime_minutes: 180}
+confidence: {minimum: 90, current: 92, objective_clarity: 96, scope_clarity: 94, evidence_quality: 92, reversibility: 98, tool_fit: 94, risk_awareness: 98, testability: 94}
+risk_level: critical
+reversibility: high
+stop_conditions: [Solo-owner review feasibility is unresolved, check names are unverified, any tool attempts remote mutation, or confidence drops below 90.]
+definition_of_done: [Read-only audit complete, negative and compliant test procedures documented, Human Owner approval gate explicit.]
+validation:
+  - type: read_only_audit
+    command: python scripts/cat_branch_protection_audit.py --repo kas1987/chromatic-atomic-tower --branch master
+    evidence_path: evidence/reports/github-pro-governance/BEAD-05.json
+    required: true
+required_output: [protection_proposal, negative_test, human_gate, evidence_path]
+handoff: {next_bead_id: BEAD-CAT-A027-4C01-06, notes: Remote application is outside this bead.}

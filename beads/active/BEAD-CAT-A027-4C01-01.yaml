@@ -1,0 +1,46 @@
+bead_id: BEAD-CAT-A027-4C01-01
+mission_id: MP-CAT-A027-4C01
+title: Establish GitHub App access-boundary and installation evidence
+status: queued
+agent_role: Auditor
+autonomy_level: L2
+priority: 2
+objective: >-
+  Produce redacted, read-only proof of the intended App installation, target
+  repository identity, permissions, and safe local bootstrap prerequisites;
+  record that no usable local App credential exists until the Human Owner
+  provisions it.
+allowed_paths:
+  - missions/backlog/MP-CAT-A027-4C01_GITHUB_APP_PRO_GOVERNANCE.yaml
+  - beads/active/BEAD-CAT-A027-4C01-01.yaml
+  - docs/operations/GITHUB_APP_ACCESS_RUNBOOK.md
+  - evidence/reports/github-pro-governance/BEAD-01.md
+  - evidence/reports/github-pro-governance/BEAD-01.json
+forbidden_paths:
+  - .env
+  - .env.*
+  - '*.pem'
+  - secrets/**
+  - credentials/**
+  - state/**
+  - GitHub settings, installations, branches, PRs, or rulesets
+dependencies: []
+tool_budget: {search: 30, read: 80, write: 12, execute: 20, max_runtime_minutes: 120}
+confidence: {minimum: 90, current: 92, objective_clarity: 96, scope_clarity: 94, evidence_quality: 92, reversibility: 96, tool_fit: 94, risk_awareness: 98, testability: 92}
+risk_level: high
+reversibility: high
+stop_conditions:
+  - Repository or installation identity is ambiguous.
+  - Credential access or App installation mutation is needed.
+  - Confidence drops below 90.
+definition_of_done:
+  - Identity and permissions are redacted and exact-head bound.
+  - No secret value, token, key path, or token cache appears in evidence.
+  - Human Owner approval boundary is documented.
+validation:
+  - type: read_only_audit
+    command: python scripts/cat_github_governance_audit.py --app-access --read-only
+    evidence_path: evidence/reports/github-pro-governance/BEAD-01.md
+    required: true
+required_output: [access_boundary, installation_identity, redaction_check, evidence_path]
+handoff: {next_bead_id: BEAD-CAT-A027-4C01-02, notes: App access contract precedes helper changes.}
