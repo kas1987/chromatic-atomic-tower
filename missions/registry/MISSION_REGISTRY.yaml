@@ -1,13 +1,13 @@
 version: '2.0'
 last_updated: '2026-08-15T00:00:00+00:00'
-active_mission_id: MP-CAT-LIVE-PLAYBOOK-001
+active_mission_id: MP-CAT-S001-4C01
 selection_policy:
   source_of_tasks: official_beads
   execution_contracts: wiskers
   status_authority: official_beads
   idle_behavior: no_ready_bead_is_a_safe_noop
 missions:
-  - mission_id: MP-CAT-LIVE-PLAYBOOK-001
+  - mission_id: MP-CAT-S001-4C01
     title: CAT Live Operations Playbook
     level: M2
     status: approved
@@ -15,4 +15,4 @@ missions:
     risk_level: low
     confidence: 95
     current_bead_id: ''
-    path: missions/active/MP-CAT-LIVE-PLAYBOOK-001.yaml
+    path: missions/active/MP-CAT-S001-4C01.yaml
