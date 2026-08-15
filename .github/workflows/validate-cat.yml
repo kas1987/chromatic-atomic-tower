@@ -36,7 +36,10 @@ jobs:
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
           export PATH="$(go env GOPATH)/bin:$PATH"
           bd version
-          python scripts/cat_beads_init.py
+          # CI uses an isolated official Beads DB; developer checkouts use the
+          # configured Dolt remote and exercise the real bootstrap path.
+          bd init --non-interactive --skip-agents --skip-hooks --stealth -p cat
+          python scripts/cat_beads_init.py --verify-only
           bd prime
           bd ready --json
       - run: python scripts/cat_resolve_go.py
