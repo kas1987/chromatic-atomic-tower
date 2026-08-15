@@ -135,3 +135,8 @@ def test_runtime_scripts_do_not_read_legacy_active_yaml():
         if 'beads/active' in path.read_text(encoding='utf-8'):
             offenders.append(path.name)
     assert not offenders, offenders
+
+
+def test_first_beads_initialization_bootstraps_the_configured_remote():
+    source = (Path(__file__).parents[1] / 'scripts/cat_beads_init.py').read_text(encoding='utf-8')
+    assert "'init', '--remote', args.remote" in source
