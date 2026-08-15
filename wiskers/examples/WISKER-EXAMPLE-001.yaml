@@ -1,0 +1,33 @@
+wisker_id: WISKER-cat-example-1-00000000
+bd_id: cat-example-1
+source_bead_digest: '0000000000000000000000000000000000000000000000000000000000000000'
+source_commit_sha: 5ca98c47d86c55805917689b70aa3ee97f2426d8
+mission_id: MP-CAT-EXAMPLE-001
+title: Example Wisker
+objective: Demonstrate the CAT execution contract shape without creating runtime work.
+agent_role: Verifier
+autonomy_level: L1
+confidence:
+  current: 90
+  minimum: 70
+risk:
+  level: low
+  reversibility: reversible
+allowed_paths:
+  - tests/fixtures/**
+forbidden_paths:
+  - .beads/
+  - archive/
+tool_budget:
+  max_tool_calls: 5
+  max_minutes: 5
+definition_of_done:
+  - The example validates against the Wisker schema.
+validation:
+  - type: command
+    command: python scripts/cat_validate.py --file wiskers/examples/WISKER-EXAMPLE-001.yaml
+    evidence_path: evidence/test-results/wisker-example.json
+stop_conditions:
+  - The example is treated as executable work.
+required_output:
+  - validation result

@@ -4,9 +4,11 @@
 
 Mission ID: <!-- MP-CAT-XXXX-XCXX -->
 
-## BEAD
+## Official Bead + Wisker
 
-BEAD ID: <!-- BEAD-CAT-XXXX-XCXX-NN -->
+Official Bead ID: <!-- cat-... -->
+
+Wisker packet: <!-- wiskers/packets/WISKER-....yaml -->
 
 ## Summary
 
@@ -41,4 +43,4 @@ Risk level: <!-- low / medium / high / critical -->
 - [ ] Forbidden paths untouched
 - [ ] Evidence artifact written to evidence/reports/
 - [ ] Learning log updated if applicable
-- [ ] BEAD lifecycle complete (archived)
+- [ ] Evidence validated before official `bd close`

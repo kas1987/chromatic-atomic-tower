@@ -4,16 +4,16 @@ harness_bridge.py — bridge a Budget Agent Harness run into the CAT kernel.
 
 Given a completed harness run under `.agent/runs/<ticket>/`, this tool:
   1. Reads the run artifacts (review packet, test output, diff).
-  2. Writes a CAT evidence report to `evidence/reports/<bead>_harness_run.md`.
-  3. Moves the linked BEAD to a non-terminal evidence state (`validating` on pass,
-     `blocked` on fail) and updates `.agent/queue.json` in lockstep.
+  2. Writes a CAT evidence report to `evidence/reports/<bd-id>_harness_run.md`.
+  3. Records the outcome without mutating Wisker status; official Beads closeout
+     remains behind `cat_closeout.py` and the evidence gate.
 
 It is intentionally read-mostly: it NEVER commits, merges, pushes, or sets a BEAD to a
 terminal/`completed` state. Human approval still gates the merge.
 
 Usage:
-    python scripts/harness_bridge.py --bead BEAD-CAT-002-003 [--ticket DEMO-001]
-    python scripts/harness_bridge.py --bead BEAD-CAT-002-003 --no-bead-update
+    python scripts/harness_bridge.py --bead cat-2tq.3 [--ticket DEMO-001]
+    python scripts/harness_bridge.py --bead cat-2tq.3 --no-bead-update
 """
 
 from __future__ import annotations
@@ -31,13 +31,11 @@ from common import ROOT, load_yaml, validate_with_schema  # noqa: E402
 
 AGENT_DIR = ROOT / ".agent"
 QUEUE_PATH = AGENT_DIR / "queue.json"
-BEAD_SCHEMA = ROOT / "schemas" / "bead.schema.json"
+WISKER_SCHEMA = ROOT / "schemas" / "wisker.schema.json"
 REPORTS_DIR = ROOT / "evidence" / "reports"
 EVIDENCE_RUNS_DIR = ROOT / "evidence" / "runs"
 
 # Non-terminal target states only. The bridge must never set a terminal state.
-PASS_BEAD_STATUS = "validating"
-FAIL_BEAD_STATUS = "blocked"
 PASS_QUEUE_STATUS = "review"
 FAIL_QUEUE_STATUS = "blocked"
 
@@ -101,29 +99,20 @@ def detect_outcome(run_dir: Path) -> tuple[bool, str]:
 
 
 # ---------------------------------------------------------------------------
-# BEAD update (targeted line edits preserve formatting)
+# Official Beads update boundary
 # ---------------------------------------------------------------------------
 
 def find_bead_file(bead_id: str) -> Path | None:
-    for pattern in ("beads/active/*.yaml", "beads/examples/*.yaml"):
+    for pattern in ("wiskers/packets/*.yaml", "wiskers/examples/*.yaml"):
         for path in ROOT.glob(pattern):
-            if path.stem == bead_id:
+            data = load_yaml(path) or {}
+            if data.get('bd_id') == bead_id:
                 return path
     return None
 
 
 def update_bead_status(bead_path: Path, new_status: str) -> tuple[str, bool]:
-    """Replace the top-level `status:` line. Returns (old_status, changed)."""
-    text = bead_path.read_text(encoding="utf-8")
-    m = re.search(r"^status:\s*(\S+)\s*$", text, re.MULTILINE)
-    old = m.group(1) if m else "<unknown>"
-    if old == new_status:
-        return old, False
-    new_text = re.sub(
-        r"^status:\s*\S+\s*$", f"status: {new_status}", text, count=1, flags=re.MULTILINE
-    )
-    bead_path.write_text(new_text, encoding="utf-8")
-    return old, True
+    raise RuntimeError('Wiskers have no lifecycle status; use bd and cat_closeout.py for official Beads')
 
 
 def bead_is_valid(bead_path: Path) -> list[str]:
@@ -131,7 +120,7 @@ def bead_is_valid(bead_path: Path) -> list[str]:
         instance = load_yaml(bead_path)
     except Exception as exc:  # pragma: no cover
         return [f"could not parse YAML after edit: {exc}"]
-    return validate_with_schema(instance, BEAD_SCHEMA)
+    return validate_with_schema(instance, WISKER_SCHEMA)
 
 
 # ---------------------------------------------------------------------------
@@ -169,7 +158,7 @@ def write_evidence_report(
     body = f"""# Evidence Report: {bead_id} — Harness Run
 
 - Mission: derived from {bead_id}
-- BEAD: {bead_id}
+- Official Bead: {bead_id}
 - Ticket: {ticket}
 - Type: harness_run
 - Validation result: {result_word}
@@ -178,9 +167,9 @@ def write_evidence_report(
 
 ## Summary
 
-Harness run for ticket `{ticket}` (BEAD `{bead_id}`) completed with tests **{result_word}**
-({rationale}). The BEAD was moved to `{bead_status_change}` and the queue item to
-`{queue_status}`. Status was NOT set to a terminal/done state — human approval still gates merge.
+Harness run for ticket `{ticket}` (official Bead `{bead_id}`) completed with tests **{result_word}**
+({rationale}). Wisker status remained absent; the bridge result is `{bead_status_change}`
+and the queue item moved to `{queue_status}`. Use the evidence gate before `bd close`.
 
 ## Files changed (worker diff, names only)
 
@@ -214,7 +203,7 @@ python scripts/cat_validate.py --all
 
 ## Note on confidence
 
-`confidence.current` on the BEAD is human-owned and is intentionally NOT auto-mutated by the
+`confidence.current` on the Wisker is human-owned and is intentionally NOT auto-mutated by the
 bridge. Re-score it during human/Opus review using this evidence.
 """
     out.write_text(body, encoding="utf-8")
@@ -227,11 +216,11 @@ bridge. Re-score it during human/Opus review using this evidence.
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Bridge a harness run into the CAT kernel.")
-    parser.add_argument("--bead", required=True, help="BEAD id, e.g. BEAD-CAT-002-003")
+    parser.add_argument("--bead", required=True, help="official Bead id, e.g. cat-2tq.3")
     parser.add_argument("--ticket", help="Ticket id / run folder under .agent/runs/. "
                                          "If omitted, resolved from queue.json by bead_id.")
     parser.add_argument("--no-bead-update", action="store_true",
-                        help="Emit evidence + update queue only; leave the BEAD status untouched.")
+                        help="Emit evidence + update queue only; never mutate Wisker status.")
     args = parser.parse_args()
 
     bead_id = args.bead
@@ -255,28 +244,13 @@ def main() -> int:
     passed, rationale = detect_outcome(run_dir)
     log(f"Outcome: {'PASS' if passed else 'FAIL'} ({rationale})")
 
-    bead_status = PASS_BEAD_STATUS if passed else FAIL_BEAD_STATUS
     queue_status = PASS_QUEUE_STATUS if passed else FAIL_QUEUE_STATUS
 
-    # ---- Update BEAD (optional) -------------------------------------------
-    bead_change = "unchanged (--no-bead-update)"
-    if not args.no_bead_update:
-        bead_path = find_bead_file(bead_id)
-        if not bead_path:
-            log(f"WARNING: bead file for {bead_id} not found; skipping bead update.")
-            bead_change = "unchanged (bead file not found)"
-        else:
-            old, changed = update_bead_status(bead_path, bead_status)
-            errors = bead_is_valid(bead_path)
-            if errors:
-                # Revert on validation failure
-                log(f"ERROR: bead invalid after edit; reverting. Errors: {errors}")
-                # best-effort revert
-                update_bead_status(bead_path, old)
-                bead_change = f"reverted (would have been invalid: {errors})"
-            else:
-                bead_change = f"{old} -> {bead_status}" if changed else f"{old} (no change)"
-                log(f"BEAD {bead_id}: status {bead_change}")
+    # ---- Official Beads closeout boundary --------------------------------
+    # This bridge records outcome evidence but never mutates a Wisker or a
+    # second status field. Use cat_closeout.py to validate evidence and call bd.
+    bead_change = "unchanged (--no-bead-update)" if args.no_bead_update else "unchanged (use cat_closeout.py)"
+    log(f"Official Bead {bead_id}: {bead_change}")
 
     # ---- Update queue.json -------------------------------------------------
     item = find_queue_item(queue, ticket=ticket, bead=bead_id)
@@ -303,7 +277,7 @@ def main() -> int:
     print("\n" + "=" * 56)
     print("HARNESS -> CAT BRIDGE COMPLETE")
     print("=" * 56)
-    print(f"BEAD          : {bead_id}  ({bead_change})")
+    print(f"Official Bead  : {bead_id}  ({bead_change})")
     print(f"Ticket        : {ticket}")
     print(f"Outcome       : {'PASS' if passed else 'FAIL'}")
     print(f"Queue status  : {queue_status}")

@@ -17,7 +17,9 @@ CAT uses ChromaticTrees to stop folder drift, duplicate governance, and agent wa
 ```json
 {
   "missions": "Mission Plane",
-  "beads": "Execution Plane",
+  ".beads": "Official Beads Plane (ignored local database)",
+  "wiskers": "Execution Plane",
+  "archive": "Historical Archive Plane",
   "agents": "Agent Plane",
   "gates": "Gate Plane",
   "evidence": "Evidence Plane",
@@ -38,7 +40,7 @@ CAT uses ChromaticTrees to stop folder drift, duplicate governance, and agent wa
 Before creating a file, answer:
 
 1. Which plane owns it?
-2. Which mission and BEAD authorized it?
+2. Which mission and official Bead authorized it?
 3. Is there an existing canonical file that should be updated instead?
 4. Is it operational contract, evidence, learning, or documentation?
 

@@ -25,7 +25,9 @@ SCHEMA_PATH = ROOT / "schemas" / "cross_repo_mutation.schema.json"
 # them, but an external mutation request may not target them.
 CAT_PROTECTED_PREFIXES = (
     "missions/",
-    "beads/",
+    "wiskers/",
+    "archive/",
+    ".beads/",
     "state/",
     "gates/",
     "agents/registry/",

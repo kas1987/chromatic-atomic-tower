@@ -11,7 +11,8 @@ FORBIDDEN_DEFAULTS = ['.env', '.env.*', 'secrets/**', 'infra/prod/**', 'producti
 CLOSEOUT_PATH_PREFIXES = [
     '.github/workflows/',
     'agents/',
-    'beads/completed/',
+    'wiskers/packets/',
+    'wiskers/archive/',
     'docs/',
     'evidence/',
     'gates/',
@@ -25,7 +26,7 @@ CLOSEOUT_PATH_PREFIXES = [
 # mission-closeout PRs themselves. Keep this set narrow: whole directories
 # remain outside closeout scope.
 CLOSEOUT_EXTRA_FILES = {
-    'beads/active/BEAD-CAT-A015-4C01-04.yaml',
+    'wiskers/packets/',
     'scripts/cat_archive_evidence.py',
     'scripts/cat_pr_check.py',
 # Explicit mission deliverables that are valid in a closeout PR but do not fit
@@ -45,8 +46,8 @@ CLOSEOUT_EXTRA_FILES = {
 
 def is_mission_closeout_pr(changed_files: list[str]) -> bool:
     has_archived_mission = any(path.startswith('missions/archived/') for path in changed_files)
-    has_completed_bead = any(path.startswith('beads/completed/') for path in changed_files)
-    return has_archived_mission and has_completed_bead
+    has_wisker = any(path.startswith('wiskers/') for path in changed_files)
+    return has_archived_mission and has_wisker
 
 
 def check_closeout_scope(changed_files: list[str]) -> dict:
@@ -70,10 +71,10 @@ def check_closeout_scope(changed_files: list[str]) -> dict:
     }
 
 def load_bead(bead_id: str) -> tuple[dict | None, Path | None]:
-    for base in ['beads/active', 'beads/examples', 'beads/completed', 'beads/failed']:
-        for path in sorted((ROOT / base).glob('*.yaml')):
-            data = load_yaml(path)
-            if data.get('bead_id') == bead_id:
+    for folder in ('packets', 'examples'):
+        for path in sorted((ROOT / 'wiskers' / folder).glob('*.yaml')):
+            data = load_yaml(path) or {}
+            if data.get('bd_id') == bead_id:
                 return data, path
     return None, None
 

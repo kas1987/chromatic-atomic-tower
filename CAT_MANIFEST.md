@@ -15,11 +15,11 @@ It does not exist to store random notes, broad experiments, or ungoverned prompt
 ```text
 Human Goal
   -> Mission Pack
-    -> BEAD
-      -> Agent Dispatch
+    -> Official Bead (`bd` / Dolt)
+      -> Wisker execution contract
         -> Evidence
           -> Learning
-            -> Next BEAD
+            -> Next official Bead
 ```
 
 ## 3. Required root files
@@ -66,6 +66,8 @@ Beyond the canonical directories in §4, these tooling directories are permitted
 | `.github/` | CI workflows, issue/PR templates | yes |
 | `.vscode/` | VS Code agent surface for the harness (MP-CAT-002) | yes |
 | `.agent/` | Multi-model harness home (MP-CAT-002) | yes |
+| `.codex/` | Codex pointer to canonical CAT policy | yes |
+| `.cursor/` | Cursor pointer to canonical CAT policy | yes |
 | `tests/` | Python test suite | yes |
 | `ci/` | CI helper scripts | yes |
 | `.claude/`, `.pytest_cache/`, `.venv/`, `__pycache__/` | Local tooling/cache | no (gitignored) |
@@ -82,7 +84,7 @@ checker's `IGNORED_ROOT_ENTRIES` / `IGNORED_ROOT_PATTERNS`.
 | `.env`, `.env.*` | Local secrets/config consumed by `scripts/gh_app_token.sh` (`.env.example` is the tracked template) | no (gitignored) |
 | `*.pem` | GitHub App private keys | no (gitignored) |
 | `.github_app_token_cache` | Cached GitHub App installation token written by `scripts/gh_app_token.sh` | no (gitignored) |
-| `.beads/` | Local bd (beads) database — transient execution state, never committed | no (gitignored) |
+| `.beads/` | Local official bd/Dolt database — transient execution state, never committed | no (gitignored) |
 
 
 ## 4. Canonical directories
@@ -90,7 +92,9 @@ checker's `IGNORED_ROOT_ENTRIES` / `IGNORED_ROOT_PATTERNS`.
 | Directory | Owner | Allowed content |
 |---|---|---|
 | `missions/` | Mission Plane | Mission contracts, templates, registry |
-| `beads/` | Execution Plane | Atomic work units |
+| `.beads/` | Official Beads Plane | Tasks, dependencies, claims, and lifecycle status |
+| `wiskers/` | Execution Plane | CAT-owned derived execution contracts and dispatch packets |
+| `archive/legacy-cat-state/` | Archive Plane | Read-only historical CAT YAML state |
 | `agents/` | Execution Plane | Agent roles and scoring |
 | `gates/` | Execution Plane | Confidence, review, human, promotion, tool budget |
 | `evidence/` | Evidence Plane | Logs, diffs, reports, screenshots, test results |
@@ -127,7 +131,7 @@ All archival operations produce records conforming to `schemas/archive.schema.js
 No change may be made unless it can identify:
 
 - Mission ID
-- BEAD ID
+- Official Bead ID
 - Agent or human owner
 - Allowed path
 - Validation method
@@ -135,7 +139,7 @@ No change may be made unless it can identify:
 
 ## 6. Mutation rule
 
-Agents may only write files listed in the active BEAD `allowed_paths` field.
+Agents may only write files listed in the selected Wisker `allowed_paths` field.
 
 Agents must halt if they need to touch a forbidden path or a path not explicitly allowed.
 
@@ -171,7 +175,8 @@ python scripts/cat_validate.py --all
 `GO` means:
 
 ```text
-Resolve the highest-priority approved unblocked BEAD and dispatch only that BEAD.
+Resolve the highest-priority ready official Bead, derive and validate its Wisker,
+claim the Bead, re-check its source digest, and dispatch only that Wisker.
 ```
 
 `GO` does not mean:

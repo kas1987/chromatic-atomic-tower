@@ -1,0 +1,1 @@
+tests/fixtures/github/wisker_changed_files_allowed.txt

@@ -113,7 +113,9 @@ def build_state(mission_id: str) -> dict:
     return {
         "snapshot_timestamp": _now_iso(),
         "cat_mission_id": mission_id,
-        "mission_status": entry.get('status') or 'unknown',
+        # An unregistered mission is a draft adapter link, never an invented
+        # lifecycle state. Official Beads own task status after registration.
+        "mission_status": entry.get('status') or 'draft',
         "active_bead_id": entry.get('current_bead_id') or None,
         "last_sync": None,
     }

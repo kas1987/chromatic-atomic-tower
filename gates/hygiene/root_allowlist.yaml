@@ -36,7 +36,8 @@ allowed_files:
   - .gitignore
 allowed_dirs:
   - missions
-  - beads
+  - wiskers
+  - archive
   - agents
   - gates
   - evidence
@@ -56,6 +57,7 @@ allowed_dirs:
   - tests
   - ci
   - .codex
+  - .cursor
 ignored_entries:
   - .git
   - .venv
@@ -64,6 +66,7 @@ ignored_entries:
   - .claude
   - .DS_Store
   - .beads
+  - .beads.gate.lock
   - venv
   - .mypy_cache
   - .ruff_cache

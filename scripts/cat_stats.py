@@ -6,24 +6,25 @@ Lightweight repo-health utility for the CAT repository.
 
 Reads:
   - missions/registry/MISSION_REGISTRY.yaml
-  - beads/active/*.yaml
+  - official Beads via ``bd ready --json``
 
 Produces summary statistics about missions and active beads.
 """
 
 import argparse
-import glob
 import json
 import os
 import sys
 from typing import Any, Dict, List, Optional
 
 import yaml
+from cat_beads import BeadsCommandError, ready_beads
 
 
 def _repo_root() -> str:
     """Return the repository root directory (parent of scripts/)."""
-    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    from pathlib import Path
+    return str(Path(__file__).resolve().parents[1])
 
 
 def _load_yaml(path: str) -> Any:
@@ -33,10 +34,6 @@ def _load_yaml(path: str) -> Any:
 
 def _missions_path() -> str:
     return os.path.join(_repo_root(), "missions", "registry", "MISSION_REGISTRY.yaml")
-
-
-def _beads_dir() -> str:
-    return os.path.join(_repo_root(), "beads", "active")
 
 
 def _count_by_status(items: List[Dict[str, Any]]) -> Dict[str, int]:
@@ -70,17 +67,12 @@ def summarize() -> Dict[str, Any]:
 
     missions_by_status = _count_by_status(missions)
 
-    beads_dir = _beads_dir()
-    beads: List[Dict[str, Any]] = []
-    if os.path.isdir(beads_dir):
-        for bead_path in sorted(glob.glob(os.path.join(beads_dir, "*.yaml"))):
-            try:
-                bead = _load_yaml(bead_path) or {}
-                if isinstance(bead, dict) and "bead_id" in bead and "status" in bead:
-                    beads.append(bead)
-            except yaml.YAMLError:
-                # Skip malformed bead YAML files.
-                continue
+    try:
+        beads = ready_beads()
+    except BeadsCommandError:
+        # Stats remains usable when the local official Beads database has not
+        # been initialized yet; the resolver itself fails closed.
+        beads = []
 
     beads_by_status = _count_by_status(beads)
 

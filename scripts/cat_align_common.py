@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shared helpers for mission/BEAD state alignment checks."""
+"""Shared helpers for mission/official Beads/Wisker alignment checks."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -19,12 +19,9 @@ MISSION_GLOB_PATTERNS = [
     'missions/examples/*.yaml',
 ]
 
-BEAD_GLOB_PATTERNS = [
-    'beads/queued/*.yaml',
-    'beads/active/*.yaml',
-    'beads/completed/*.yaml',
-    'beads/failed/*.yaml',
-    'beads/examples/*.yaml',
+WISKER_GLOB_PATTERNS = [
+    'wiskers/packets/*.yaml',
+    'wiskers/examples/*.yaml',
 ]
 
 
@@ -73,13 +70,13 @@ def normalize_mission_id(value: object) -> str:
 
 
 def find_bead_contract(bead_id: str, root: Path = ROOT) -> tuple[dict | None, Path | None, str | None]:
-    """Return (data, path, folder_label) for a BEAD id across bead folders."""
+    """Return the derived Wisker for an official Bead pointer."""
     if not bead_id:
         return None, None, None
-    for folder in ('active', 'completed', 'failed', 'examples'):
-        for path in sorted((root / 'beads' / folder).glob('*.yaml')):
+    for folder, pattern in (('packets', 'wiskers/packets/*.yaml'), ('examples', 'wiskers/examples/*.yaml')):
+        for path in sorted(root.glob(pattern)):
             data = load_yaml(path)
-            if data and data.get('bead_id') == bead_id:
+            if data and data.get('bd_id') == bead_id:
                 return data, path, folder
     return None, None, None
 
@@ -134,26 +131,24 @@ def mission_contract_collisions(root: Path = ROOT) -> list[dict]:
 
 def list_bead_ids(root: Path = ROOT) -> dict[str, list[str]]:
     ids: dict[str, list[str]] = {}
-    for pattern in BEAD_GLOB_PATTERNS:
+    for pattern in WISKER_GLOB_PATTERNS:
         for path in sorted(root.glob(pattern)):
             data = load_yaml(path)
             if not data:
                 continue
-            bid = data.get('bead_id')
+            bid = data.get('bd_id')
             if bid:
                 ids.setdefault(bid, []).append(rel(path))
     return ids
 
 
 def beads_for_mission(mission_id: str, root: Path = ROOT) -> list[tuple[str, str, Path]]:
-    """Return (bead_id, status, path) for all BEADs belonging to mission_id."""
-    found: list[tuple[str, str, Path]] = []
-    for pattern in BEAD_GLOB_PATTERNS:
-        for path in sorted(root.glob(pattern)):
-            data = load_yaml(path)
-            if data and data.get('mission_id') == mission_id:
-                found.append((data.get('bead_id', ''), data.get('status', ''), path))
-    return found
+    """Compatibility view; official Beads are queried by CAT's Beads adapter.
+
+    This alignment helper deliberately returns no YAML-backed lifecycle records.
+    It exists for older reporting callers while preventing a second task store.
+    """
+    return []
 
 
 def is_post_sprint_idle(tower: dict) -> bool:

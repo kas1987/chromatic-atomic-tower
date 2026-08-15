@@ -26,3 +26,10 @@ _pdr_pack/
 # Harness run artifacts — generated per run, not part of the governed baseline
 .agent/runs/*
 !.agent/runs/.gitkeep
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
+*.gate.lock*

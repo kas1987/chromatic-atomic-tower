@@ -24,8 +24,20 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.26.5"
       - run: pip install -r requirements.txt
       - run: python scripts/cat_check_repo.py
       - run: python scripts/cat_root_hygiene_strict.py
+      - name: Install and initialize official Beads
+        run: |
+          CGO_ENABLED=1 GOFLAGS="-tags=gms_pure_go" go install github.com/steveyegge/beads/cmd/bd@634cbbc4bc58
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          bd version
+          python scripts/cat_beads_init.py
+          bd prime
+          bd ready --json
       - run: python scripts/cat_resolve_go.py
       - run: pytest -q

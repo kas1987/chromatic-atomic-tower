@@ -22,17 +22,17 @@ REQUIRED_FILES = [
     'Makefile',
     'missions/registry/MISSION_REGISTRY.yaml',
     'missions/archived/MP-CAT-000_ESTABLISH_CORE.yaml',
-    'beads/examples/BEAD-CAT-EXAMPLE-001.yaml',
+    'wiskers/examples/WISKER-EXAMPLE-001.yaml',
     'agents/registry/AGENT_REGISTRY.yaml',
     'gates/confidence/CONFIDENCE_GATE.md',
     'schemas/mission.schema.json',
-    'schemas/bead.schema.json',
+    'schemas/wisker.schema.json',
     'scripts/cat_validate.py',
     'scripts/cat_resolve_go.py',
 ]
 
 REQUIRED_DIRS = [
-    'missions', 'beads', 'agents', 'gates', 'evidence', 'schemas', 'scripts',
+    'missions', 'wiskers', 'archive', 'agents', 'gates', 'evidence', 'schemas', 'scripts',
     'playbooks', 'docs', 'state', 'learnings', 'prompts', 'checklists', 'reference'
 ]
 
@@ -59,13 +59,13 @@ ALLOWED_ROOT_FILES = {
 }
 
 ALLOWED_ROOT_DIRS = set(REQUIRED_DIRS) | {
-    '.github', '.vscode', '.agent', '.agents', 'tests', 'ci', '.codex',
+    '.github', '.vscode', '.agent', '.agents', '.cursor', 'tests', 'ci', '.codex',
 }
 
 # Transient / VCS / cache entries that are gitignored and not governed by the manifest.
 IGNORED_ROOT_ENTRIES = {
     '.git', '.venv', '__pycache__', '.pytest_cache', '.claude', '.DS_Store',
-    '.github_app_token_cache', '.beads', '.coverage', 'coverage.xml', 'htmlcov',
+    '.github_app_token_cache', '.beads', '.beads.gate.lock', '.coverage', 'coverage.xml', 'htmlcov',
 }
 
 # Gitignored glob patterns for secrets/credentials and transient tooling artifacts

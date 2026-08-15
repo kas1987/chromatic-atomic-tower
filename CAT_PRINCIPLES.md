@@ -8,9 +8,11 @@ CAT should stay lean. A small control system with hard rules beats a large knowl
 
 Work begins only after a mission exists and validates.
 
-## 3. BEAD before dispatch
+## 3. Official Bead before Wisker dispatch
 
-Agents do not receive broad missions. They receive atomic BEADs.
+Agents do not receive broad missions. CAT resolves one ready official Bead into
+one scoped Wisker packet. Official Beads own lifecycle; Wiskers own execution
+scope and never duplicate status.
 
 ## 4. Evidence before closeout
 
