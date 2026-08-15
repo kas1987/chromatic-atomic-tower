@@ -22,7 +22,14 @@ def _candidate_commands() -> list[list[str]]:
     override = os.environ.get('CAT_BD_COMMAND', '').strip()
     candidates: list[list[str]] = []
     if override:
-        candidates.append(shlex.split(override, posix=False))
+        parts = shlex.split(override, posix=os.name != 'nt')
+        if parts:
+            executable = shutil.which(parts[0])
+            if not executable and os.name == 'nt' and not Path(parts[0]).suffix:
+                executable = shutil.which(f'{parts[0]}.cmd')
+            if executable:
+                parts[0] = executable
+            candidates.append(parts)
     for name in ('bd.cmd', 'bd'):
         resolved = shutil.which(name)
         if resolved:
