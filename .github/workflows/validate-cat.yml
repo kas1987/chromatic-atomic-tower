@@ -19,6 +19,7 @@ jobs:
     env:
       CAT_ROOT_HYGIENE_MODE: warn
       CAT_HYGIENE_KILL_SWITCH: "0"
+      CAT_BD_COMMAND: npx --yes @beads/bd@1.1.2
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -33,11 +34,9 @@ jobs:
       - name: Install and initialize official Beads
         run: |
           npm install --global @beads/bd@1.1.2
-          echo "$(npm prefix --global)/bin" >> "$GITHUB_PATH"
-          export PATH="$(npm prefix --global)/bin:$PATH"
           python scripts/cat_beads_init.py
-          bd --version
-          bd prime
-          bd ready --json
+          npx --yes @beads/bd@1.1.2 --version
+          npx --yes @beads/bd@1.1.2 prime
+          npx --yes @beads/bd@1.1.2 ready --json
       - run: python scripts/cat_resolve_go.py
       - run: pytest -q
