@@ -11,10 +11,12 @@ try:
     from common import ROOT, load_yaml, rel
     from cat_evidence import validate_bundle
     from cat_transition import apply_transition
+    from cat_beads import BeadsCommandError, close_bead
 except ModuleNotFoundError:  # pragma: no cover
     from scripts.common import ROOT, load_yaml, rel
     from scripts.cat_evidence import validate_bundle
     from scripts.cat_transition import apply_transition
+    from scripts.cat_beads import BeadsCommandError, close_bead
 
 RULES_PATH = ROOT / 'gates/evidence/EVIDENCE_GATE_RULES.yaml'
 
@@ -81,6 +83,9 @@ def run_closeout(target_type: str, target_id: str, to_status: str, bundle: str, 
         errors.append(f"bundle mission_id {data.get('mission_id')} does not match requested {target_id}")
         id_matches = False
     ok = ok and id_matches
+    if target_type == 'bead' and to_status not in {'closed', 'completed'}:
+        errors.append('official Beads closeout requires --to closed (completed is accepted as a CAT alias)')
+        ok = False
 
     event = {
         'timestamp': utc_now(),
@@ -104,16 +109,50 @@ def run_closeout(target_type: str, target_id: str, to_status: str, bundle: str, 
         append_closeout_event(event)
         return 1, event
 
-    transition_code, transition_event = apply_transition(
-        target_type,
-        target_id,
-        to_status,
-        reason,
-        rel(bundle_path),
-        actor,
-        dry_run,
-        move,
-    )
+    if target_type == 'bead':
+        if dry_run:
+            transition_code = 0
+            transition_event = {
+                'provider': 'official_beads',
+                'target_id': target_id,
+                'to_status': 'closed',
+                'allowed': True,
+                'dry_run': True,
+                'message': 'official Beads close would run after evidence validation',
+            }
+        else:
+            try:
+                closed = close_bead(target_id, reason)
+                transition_code = 0
+                transition_event = {
+                    'provider': 'official_beads',
+                    'target_id': target_id,
+                    'to_status': closed.get('status', 'closed'),
+                    'allowed': True,
+                    'dry_run': False,
+                    'message': 'official Bead closed after evidence validation',
+                }
+            except BeadsCommandError as exc:
+                transition_code = 1
+                transition_event = {
+                    'provider': 'official_beads',
+                    'target_id': target_id,
+                    'to_status': 'closed',
+                    'allowed': False,
+                    'dry_run': False,
+                    'message': str(exc),
+                }
+    else:
+        transition_code, transition_event = apply_transition(
+            target_type,
+            target_id,
+            to_status,
+            reason,
+            rel(bundle_path),
+            actor,
+            dry_run,
+            move,
+        )
     event['transition_event'] = transition_event
     if transition_code != 0:
         event['allowed'] = False

@@ -1,4 +1,4 @@
-# Start Here - CAT (Post Sprint 010)
+# Start Here — CAT Official Beads + Wiskers
 
 ## 1. Install
 
@@ -14,29 +14,25 @@ pip install -r requirements.txt
 python scripts/cat_check_repo.py
 python scripts/cat_validate.py --all
 python scripts/cat_align_check.py --strict
+bd prime
+bd ready --json
+python scripts/cat_resolve_go.py --check-schema
 pytest -q
 ```
 
 ## 3. GitHub Bridge Quick Check
 
-```bash
-python scripts/cat_git_bridge.py validate-pr \
-  --title "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
-  --branch feat/mp-cat-a010-4c01-bead-cat-a010-4c01-01-github-contract \
-  --commit-message "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
-  --bead beads/completed/BEAD-CAT-A010-4C01-01.yaml \
-  --changed-files tests/fixtures/github/changed_files_allowed.txt \
-  --write-report
-```
+GitHub work must name the official Bead ID and the generated Wisker packet in
+its evidence. Do not pass a legacy YAML path to a bridge command.
 
-## 4. Next Sprint
+## 4. Next mission
 
-Sprint 010 (`MP-CAT-A010-4C01`) is **closed**. To start Sprint 011:
+The active CAT baseline is idle. To start new work:
 
-1. Review `missions/backlog/MP-CAT-A011-4C01_AGENT_SCORECARD_AUTOMATION.yaml`
-2. Expand mission pack and create BEADs
-3. Transition `MP-CAT-A011-4C01` from `draft` → `approved`
-4. Run `python scripts/cat_resolve_go.py`
+1. Create an official Beads issue with `bd create`.
+2. Include complete `CAT_WISKER_JSON` metadata in its description.
+3. Register/approve the corresponding mission in CAT's canonical mission registry.
+4. Run `python scripts/cat_resolve_go.py --check-schema`.
 
 ## 5. Reference
 

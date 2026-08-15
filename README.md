@@ -1,10 +1,10 @@
-# Chromatic Atomic Tower - Sprint 003 Pro GPT Package
+# Chromatic Atomic Tower — Official Beads + Wiskers
 
-Chromatic Atomic Tower (CAT) is the governance kernel for Chromatic Atomic Harness. Sprint 003 adds the **CI Governance and Self-Healing Validation Engine**.
+Chromatic Atomic Tower (CAT) is the governance kernel for Chromatic Atomic Harness. Official Beads (`bd`/Dolt) own tasks, dependencies, claims, and status. Wiskers are CAT-owned derived execution contracts for Codex and Cursor.
 
 ## Current Sprint
 
-**Sprint 003: CI Governance and Self-Healing Validation**
+**Current state: fresh idle baseline after the Beads/Wiskers cutover**
 
 Core rule:
 
@@ -33,15 +33,19 @@ python scripts/cat_ci.py --mode local --write-report
 pytest -q
 ```
 
-## Sprint 003 Commands
+## Official Beads + Wiskers commands
 
 ```bash
 python scripts/cat_resolve_go.py
-python scripts/cat_pr_check.py --mission MP-CAT-003 --bead BEAD-CAT-003-001 --changed-files tests/fixtures/ci/changed_files_allowed.txt
+bd prime
+bd ready --json
+python scripts/cat_resolve_go.py --check-schema
 python scripts/cat_self_heal.py --dry-run
 python scripts/cat_classify_failure.py --check schema --message "schema validation failed"
 ```
 
 ## Operating Rule
 
-Self-healing may repair structure. It may not repair truth.
+Self-healing may repair structure. It may not repair truth. Legacy `BEAD-CAT-*`
+YAML is read-only history under `archive/legacy-cat-state/` and is never runtime
+work.

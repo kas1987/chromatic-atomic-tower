@@ -1,0 +1,35 @@
+wisker_id: WISKER-CHANGE-ME
+bd_id: cat-change-me
+source_bead_digest: '0000000000000000000000000000000000000000000000000000000000000000'
+source_commit_sha: '0000000000000000000000000000000000000000'
+mission_id: MP-CAT-CHANGE-ME
+title: Change me
+objective: Describe the bounded objective.
+agent_role: Builder
+autonomy_level: L2
+confidence:
+  current: 80
+  minimum: 60
+risk:
+  level: medium
+  reversibility: reversible
+allowed_paths:
+  - src/**
+forbidden_paths:
+  - .beads/
+  - archive/
+tool_budget:
+  max_tool_calls: 40
+  max_minutes: 30
+definition_of_done:
+  - The objective is complete.
+validation:
+  - type: command
+    command: pytest -q
+    evidence_path: evidence/test-results/wisker.yaml
+stop_conditions:
+  - Source Bead digest changes.
+  - A requested path is outside the allowlist.
+required_output:
+  - CAT-formatted evidence bundle
+  - closeout summary

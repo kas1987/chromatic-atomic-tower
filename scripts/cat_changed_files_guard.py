@@ -30,14 +30,14 @@ def check(bead_path: str | Path, changed_files_path: str | Path) -> dict:
     except FileNotFoundError:
         return {
             'allowed': False,
-            'errors': [f'BEAD contract file not found: {bead_path}'],
+            'errors': [f'Wisker contract file not found: {bead_path}'],
             'changed_files': [],
             'bead_id': None,
         }
     except yaml.YAMLError as e:
         return {
             'allowed': False,
-            'errors': [f'Invalid YAML in BEAD contract: {e}'],
+            'errors': [f'Invalid YAML in Wisker contract: {e}'],
             'changed_files': [],
             'bead_id': None,
         }
@@ -48,27 +48,27 @@ def check(bead_path: str | Path, changed_files_path: str | Path) -> dict:
             'allowed': False,
             'errors': [f'Changed files list not found: {changed_files_path}'],
             'changed_files': [],
-            'bead_id': bead.get('bead_id'),
+            'bead_id': bead.get('bd_id'),
         }
     allowed = bead.get('allowed_paths') or []
     forbidden = bead.get('forbidden_paths') or []
     errors: list[str] = []
     for path in changed:
         if matches_any(path, forbidden):
-            errors.append(f'Forbidden path changed: {path}')
+            errors.append(f'Forbidden Wisker path changed: {path}')
         elif not matches_any(path, allowed):
-            errors.append(f'Changed file outside BEAD allowed paths: {path}')
+            errors.append(f'Changed file outside Wisker allowed paths: {path}')
     return {
         'allowed': not errors,
         'errors': errors,
         'changed_files': changed,
-        'bead_id': bead.get('bead_id'),
+        'bead_id': bead.get('bd_id'),
     }
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description='Validate changed files against a BEAD allowed_paths contract.')
-    ap.add_argument('--bead', required=True)
+    ap = argparse.ArgumentParser(description='Validate changed files against a Wisker allowed_paths contract.')
+    ap.add_argument('--bead', '--wisker', dest='bead', required=True)
     ap.add_argument('--changed-files', required=True)
     args = ap.parse_args()
     result = check(args.bead, args.changed_files)

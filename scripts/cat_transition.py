@@ -92,8 +92,8 @@ def _transition_rule(rules: dict[str, Any], target_type: str, from_status: str, 
 
 
 def _transition_allowed_with_rule(rules: dict[str, Any], target_type: str, from_status: str, to_status: str) -> tuple[bool, str, dict[str, Any]]:
-    if target_type not in {'mission', 'bead'}:
-        return False, f'unknown target type: {target_type}', {'guard': 'none', 'reversible': False}
+    if target_type != 'mission':
+        return False, 'CAT transitions manage missions only; official Beads owns Bead status', {'guard': 'none', 'reversible': False}
     statuses = _status_list(rules, target_type)
     if from_status not in statuses:
         return False, f'unknown current status for {target_type}: {from_status}', {'guard': 'none', 'reversible': False}
@@ -134,13 +134,13 @@ def evaluate_guard(guard_name: str, target_type: str, data: dict[str, Any], acto
             if mission.get('mission_id') == mission_id:
                 bead_id = mission.get('current_bead_id')
                 if bead_id:
-                    # Verify the BEAD file actually exists, not just the registry entry
-                    for pattern in ['beads/active/*.yaml', 'beads/completed/*.yaml', 'beads/failed/*.yaml']:
+                    # Verify a derived Wisker packet exists, not a legacy contract.
+                    for pattern in ['wiskers/packets/*.yaml', 'wiskers/examples/*.yaml']:
                         for path in ROOT.glob(pattern):
                             d = load_yaml(path) or {}
-                            if d.get('bead_id') == bead_id:
-                                return True, f'current_bead_id={bead_id} found on disk'
-                    return False, f'current_bead_id={bead_id} not found on disk'
+                            if d.get('bd_id') == bead_id:
+                                return True, f'current_bead_id={bead_id} found in a Wisker packet'
+                    return False, f'current_bead_id={bead_id} has no Wisker packet'
                 break
         return False, 'mission has no current_bead_id'
     if guard_name == 'human_gate_if_required' and target_type == 'mission':
@@ -185,12 +185,10 @@ def create_snapshot(target_type: str, target_id: str, contract_path: Path) -> Pa
 
 
 def find_contract(target_type: str, target_id: str) -> Path:
-    if target_type == 'mission':
-        patterns = ['missions/active/*.yaml', 'missions/backlog/*.yaml', 'missions/archived/*.yaml', 'missions/examples/*.yaml']
-        key = 'mission_id'
-    else:
-        patterns = ['beads/active/*.yaml', 'beads/completed/*.yaml', 'beads/failed/*.yaml', 'beads/examples/*.yaml']
-        key = 'bead_id'
+    if target_type != 'mission':
+        raise FileNotFoundError('official Beads own Bead status; CAT transition accepts missions only')
+    patterns = ['missions/active/*.yaml', 'missions/backlog/*.yaml', 'missions/archived/*.yaml', 'missions/examples/*.yaml']
+    key = 'mission_id'
     for pattern in patterns:
         for path in sorted(ROOT.glob(pattern)):
             data = load_yaml(path)
@@ -233,22 +231,8 @@ def update_registry_for_mission(mission_id: str, to_status: str, contract_path: 
 
 
 def update_registry_current_bead(mission_id: str, bead_id: str, to_status: str) -> None:
-    if not mission_id:
-        return
-    registry = load_yaml(REGISTRY_PATH)
-    updated = False
-    for mission in registry.get('missions', []):
-        if mission.get('mission_id') == mission_id:
-            if to_status in {'queued', 'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}:
-                mission['current_bead_id'] = bead_id
-            elif mission.get('current_bead_id') == bead_id and to_status in {'completed', 'failed', 'archived'}:
-                mission['current_bead_id'] = ''
-            mission['last_updated'] = utc_now()
-            updated = True
-            break
-    if updated:
-        registry['last_updated'] = utc_now()
-        write_yaml(REGISTRY_PATH, registry)
+    """Deprecated no-op: official Beads own Bead pointers and lifecycle."""
+    return None
 
 
 def update_tower_state(target_type: str, target_id: str, to_status: str, data: dict[str, Any]) -> None:
@@ -258,13 +242,6 @@ def update_tower_state(target_type: str, target_id: str, to_status: str, data: d
     tower['last_updated'] = utc_now()
     if target_type == 'mission' and to_status in {'approved', 'dispatched', 'in_progress', 'validating'}:
         tower['active_mission_id'] = target_id
-    if target_type == 'bead' and to_status in {'active', 'in_progress', 'validating', 'reviewed', 'changes_requested'}:
-        tower['active_bead_id'] = target_id
-        if data.get('mission_id'):
-            tower['active_mission_id'] = data.get('mission_id')
-    elif target_type == 'bead' and to_status in {'completed', 'failed', 'archived'}:
-        if tower.get('active_bead_id') == target_id:
-            tower['active_bead_id'] = ''
     write_yaml(TOWER_STATE_PATH, tower)
 
 
@@ -278,10 +255,6 @@ def append_audit_event(event: dict[str, Any], rules: dict[str, Any]) -> None:
 def maybe_move_contract(path: Path, target_type: str, to_status: str) -> Path:
     if target_type == 'mission' and to_status in {'closed', 'learned', 'rolled_back', 'abandoned'}:
         dest = ROOT / 'missions/archived' / path.name
-    elif target_type == 'bead' and to_status == 'completed':
-        dest = ROOT / 'beads/completed' / path.name
-    elif target_type == 'bead' and to_status in {'failed', 'archived'}:
-        dest = ROOT / 'beads/failed' / path.name
     else:
         return path
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -301,6 +274,24 @@ def apply_transition(
     move: bool,
     from_status_expected: str | None = None,
 ) -> tuple[int, dict[str, Any]]:
+    if target_type != 'mission':
+        event = {
+            'timestamp': utc_now(),
+            'target_type': target_type,
+            'target_id': target_id,
+            'from_status': from_status_expected or 'unknown',
+            'to_status': to_status,
+            'allowed': False,
+            'dry_run': dry_run,
+            'reason': reason,
+            'evidence': evidence,
+            'actor': actor,
+            'message': 'official Beads own Bead status; use cat_closeout.py after evidence validation',
+            'contract_path': 'official Beads',
+            'guard': 'none',
+        }
+        append_audit_event(event, load_rules())
+        return 1, event
     rules = load_rules()
     try:
         contract_path = find_contract(target_type, target_id)
@@ -395,23 +386,20 @@ def apply_transition(
 
     if target_type == 'mission':
         update_registry_for_mission(target_id, to_status, new_path, data)
-    else:
-        update_registry_current_bead(data.get('mission_id'), target_id, to_status)
     update_tower_state(target_type, target_id, to_status, data)
     append_audit_event(event, rules)
     return 0, event
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description='Apply or dry-run CAT mission/BEAD state transitions.')
+    parser = argparse.ArgumentParser(description='Apply or dry-run CAT mission state transitions.')
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument('--dry-run', action='store_true')
     mode.add_argument('--execute', action='store_true')
     mode.add_argument('--rollback', metavar='SNAPSHOT_ID', help='Restore files from a previous snapshot.')
-    parser.add_argument('--type', choices=['mission', 'bead'], dest='target_type')
+    parser.add_argument('--type', choices=['mission'], dest='target_type')
     parser.add_argument('--id', dest='target_id')
     parser.add_argument('--mission', dest='mission_id')
-    parser.add_argument('--bead', dest='bead_id')
     parser.add_argument('--from', dest='from_status')
     parser.add_argument('--to', dest='to_status')
     parser.add_argument('--reason', default='no reason provided')
@@ -429,9 +417,8 @@ def main() -> int:
             return 1
         import json as _json
         import shutil as _shutil
-        # Read per-file path map from metadata.json.  Supports two formats:
-        #   new: {"contracts": {"bead_X.yaml": "beads/active/X.yaml", ...}}
-        #   old: {"contract_path": "beads/active/X.yaml"}  (single-entry, legacy)
+        # Read per-file path map from metadata.json. Mission snapshots only are
+        # restorable through the mission transition engine.
         meta_file = snap_dir / 'metadata.json'
         snap_meta: dict = {}
         if meta_file.exists():
@@ -440,15 +427,13 @@ def main() -> int:
             except Exception:
                 pass
         contracts_map: dict[str, str] = snap_meta.get('contracts', {})
-        # Legacy single-entry fallback: only safe when snapshot has exactly one contract
-        # file — applying a single path to multiple contracts corrupts the last one.
+        # Legacy single-entry fallback: only safe when the snapshot has one mission file.
         contract_files = [
             f for f in snap_dir.iterdir()
             if f.name not in ('metadata.json', 'MISSION_REGISTRY.yaml', 'TOWER_STATE.yaml')
         ]
         legacy_path: str = snap_meta.get('contract_path', '') if len(contract_files) == 1 else ''
-        # Terminal subfolders — only copies here may have been created by --move.
-        TERMINAL_SUBDIRS = {'missions': {'archived'}, 'beads': {'completed', 'failed'}}
+        TERMINAL_SUBDIRS = {'missions': {'archived'}}
         restored = []
         for f in snap_dir.iterdir():
             if f.name == 'metadata.json':
@@ -457,11 +442,10 @@ def main() -> int:
                 dest = REGISTRY_PATH
             elif f.name == 'TOWER_STATE.yaml':
                 dest = TOWER_STATE_PATH
-            elif f.name.startswith('mission_') or f.name.startswith('bead_'):
-                entity_type = 'missions' if f.name.startswith('mission_') else 'beads'
+            elif f.name.startswith('mission_'):
+                entity_type = 'missions'
                 contract_id = f.stem.split('_', 1)[1]
-                # Per-file map takes precedence; fall back to legacy single-path entry;
-                # last resort: find any on-disk copy to preserve its descriptive filename.
+                # Per-file map takes precedence; fall back to legacy single-path entry.
                 orig_path_str = contracts_map.get(f.name) or legacy_path
                 if orig_path_str:
                     dest = ROOT / orig_path_str
@@ -477,8 +461,8 @@ def main() -> int:
                 restored.append(rel(dest))
                 # Clean up terminal copies left by --move (completed/failed/archived),
                 # but never remove the restored file or non-terminal copies.
-                if f.name.startswith(('mission_', 'bead_')):
-                    entity_type = 'missions' if f.name.startswith('mission_') else 'beads'
+                if f.name.startswith('mission_'):
+                    entity_type = 'missions'
                     contract_id = f.stem.split('_', 1)[1]
                     terminal_dirs = TERMINAL_SUBDIRS[entity_type]
                     for terminal in ROOT.glob(f'{entity_type}/**/{contract_id}*.yaml'):
@@ -490,21 +474,15 @@ def main() -> int:
             print(f'  restored: {r}')
         return 0
 
-    if bool(args.mission_id) and bool(args.bead_id):
-        parser.error('use only one of --mission or --bead')
-
     if args.mission_id:
         target_type = 'mission'
         target_id = args.mission_id
-    elif args.bead_id:
-        target_type = 'bead'
-        target_id = args.bead_id
     else:
         target_type = args.target_type
         target_id = args.target_id
 
     if not target_type or not target_id:
-        parser.error('the following arguments are required: --type/--mission/--bead and --id/target id')
+        parser.error('the following arguments are required: --type/--mission and --id/target id')
 
     if not args.to_status:
         parser.error('--to is required for --dry-run and --execute')

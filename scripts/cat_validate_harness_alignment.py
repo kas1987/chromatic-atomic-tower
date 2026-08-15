@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """Validate MP-CAT-A006-4C01 Harness Engineering alignment contracts.
 
-Checks that the audit-methodology layer is present and internally consistent:
-required files exist, all eight beads exist and carry CAT-native keys, the
-mission references every bead, the assertion gate set is complete, the folded
-complexity routing policy is well-formed, and the Mermaid docs are fenced.
+Checks that the audit-methodology layer is present and internally consistent.
+Official Beads own task records; this gate checks the Wisker contract surface.
 """
 from __future__ import annotations
 
@@ -21,7 +19,7 @@ MISSION_CANDIDATES = [
     'missions/active/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml',
     'missions/archived/MP-CAT-A006-4C01_HARNESS_ENGINEERING_ALIGNMENT.yaml',
 ]
-BEAD_SEARCH_DIRS = ['beads/active', 'beads/completed']
+WISKER_SEARCH_DIRS = ['wiskers/packets', 'wiskers/examples']
 
 REQUIRED_FILES = [
     'gates/assertion_gates.yaml',
@@ -34,7 +32,7 @@ REQUIRED_FILES = [
     '.github/workflows/cat-cd-promotion.yml',
 ]
 
-REQUIRED_BEADS = [f'BEAD-CAT-A006-4C01-0{i}' for i in range(1, 9)]
+REQUIRED_WISKERS = ['WISKER-EXAMPLE-001']
 REQUIRED_GATES = {
     'completeness_gate',
     'substantive_validation_gate',
@@ -42,8 +40,8 @@ REQUIRED_GATES = {
     'evidence_sufficiency_gate',
     'promotion_gate',
 }
-# CAT-native BEAD keys (replaces the pack's evidence_required with required_output).
-REQUIRED_BEAD_KEYS = [
+REQUIRED_WISKER_KEYS = [
+    'wisker_id', 'bd_id', 'source_bead_digest', 'source_commit_sha',
     'mission_id', 'allowed_paths', 'forbidden_paths',
     'validation', 'required_output', 'definition_of_done',
 ]
@@ -56,10 +54,10 @@ def _resolve_mission_path(root: Path) -> str | None:
     return None
 
 
-def _find_bead_files(root: Path, bead_id: str) -> list[Path]:
+def _find_wisker_files(root: Path, wisker_id: str) -> list[Path]:
     matches: list[Path] = []
-    for base in BEAD_SEARCH_DIRS:
-        matches.extend(sorted((root / base).glob(f'{bead_id}*.yaml')))
+    for base in WISKER_SEARCH_DIRS:
+        matches.extend(sorted((root / base).glob(f'{wisker_id}*.yaml')))
     seen: set[Path] = set()
     unique: list[Path] = []
     for path in matches:
@@ -98,7 +96,7 @@ def validate(root: Path) -> tuple[int, list[str]]:
             list((root / 'gates').glob('*.yaml'))
             + list((root / 'agents').glob('**/*.yaml'))
             + list((root / 'missions').glob('**/*.yaml'))
-            + list((root / 'beads').glob('**/*.yaml'))
+            + list((root / 'wiskers').glob('**/*.yaml'))
         ):
             try:
                 load_structured(path)
@@ -108,23 +106,14 @@ def validate(root: Path) -> tuple[int, list[str]]:
     mission_path = root / mission_rel if mission_rel else None
     if mission_path and mission_path.exists() and yaml is not None:
         mission = load_structured(mission_path) or {}
-        # CAT-native missions list beads as objects with a bead_id key.
-        mission_beads = {
-            (b.get('bead_id') if isinstance(b, dict) else b)
-            for b in mission.get('beads', [])
-        }
-        missing = [b for b in REQUIRED_BEADS if b not in mission_beads]
-        if missing:
-            errors.append(f'mission missing BEAD references: {missing}')
-
-    for bead_id in REQUIRED_BEADS:
-        matches = _find_bead_files(root, bead_id)
+    for wisker_id in REQUIRED_WISKERS:
+        matches = _find_wisker_files(root, wisker_id)
         if not matches:
-            errors.append(f'missing BEAD file for {bead_id} (searched {", ".join(BEAD_SEARCH_DIRS)})')
+            errors.append(f'missing Wisker packet for {wisker_id} (searched {", ".join(WISKER_SEARCH_DIRS)})')
         for match in matches:
-            bead = load_structured(match) if yaml is not None else {}
-            for key in REQUIRED_BEAD_KEYS:
-                if key not in bead:
+            wisker = load_structured(match) if yaml is not None else {}
+            for key in REQUIRED_WISKER_KEYS:
+                if key not in wisker:
                     errors.append(f'{match.relative_to(root)} missing key: {key}')
 
     gates_path = root / 'gates/assertion_gates.yaml'

@@ -116,30 +116,9 @@ def check_alignment(root: Path = ROOT) -> AlignmentResult:
     if bead_id:
         bead_data, bead_path, bead_folder = find_bead_contract(bead_id, root)
         if bead_path and bead_data:
-            result.ok.append(f'BEAD file exists ({bead_folder}): {rel(bead_path)}')
-            bead_status = bead_data.get('status')
-            from cat_align_common import BEAD_ACTIVE_STATES
-            if bead_status in BEAD_ACTIVE_STATES:
-                result.ok.append(f'active BEAD status is in-flight ({bead_status!r}): {bead_id}')
-            elif bead_status == 'queued':
-                result.drift.append(DriftItem(
-                    'BEAD_NOT_ACTIVE',
-                    f'active BEAD {bead_id} has status={bead_status!r}, expected in-flight state',
-                    'Transition queued -> active before GO dispatch',
-                ))
-            elif bead_status in BEAD_TERMINAL:
-                result.drift.append(DriftItem(
-                    'BEAD_TERMINAL_POINTER',
-                    f'active BEAD {bead_id} is terminal (status={bead_status!r}, folder={bead_folder})',
-                    'Clear current_bead_id and active_bead_id after BEAD closeout',
-                ))
-            else:
-                result.drift.append(DriftItem(
-                    'BEAD_NOT_ACTIVE',
-                    f'active BEAD {bead_id} has status={bead_status!r}, expected in-flight state',
-                ))
+            result.ok.append(f'Wisker packet exists ({bead_folder}): {rel(bead_path)}')
         else:
-            result.drift.append(DriftItem('BEAD_FILE_MISSING', f'active BEAD file missing for {bead_id}'))
+            result.drift.append(DriftItem('WISKER_PACKET_MISSING', f'no Wisker packet exists for official Bead {bead_id}'))
 
     if registry_mission and active_entry:
         contract, _ = find_mission_contract(registry_mission, root)

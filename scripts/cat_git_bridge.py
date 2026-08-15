@@ -12,10 +12,7 @@ try:
 except ModuleNotFoundError:
     from scripts.cat_changed_files_guard import check as check_changed_files
 
-PR_TITLE_LEGACY = re.compile(r'^\[(MP-CAT-\d{3})\]\[(BEAD-CAT-\d{3}-\d{3})\] .+')
-PR_TITLE_NEW = re.compile(
-    r'^\[(MP-CAT-[SABC]\d{3}-\dC\d{2})\]\[(BEAD-CAT-[SABC]\d{3}-\dC\d{2}-\d{2})\] .+'
-)
+PR_TITLE_OFFICIAL = re.compile(r'^\[(MP-CAT-[A-Z0-9-]+)\]\[([a-z0-9][a-z0-9-]*)\] .+')
 BRANCH_LEGACY = re.compile(
     r'^(feat|fix|docs|chore|test|refactor|governance)/mp-cat-(\d{3})-bead-cat-(\d{3})-(\d{3})-[a-z0-9-]+$'
 )
@@ -23,6 +20,7 @@ BRANCH_NEW = re.compile(
     r'^(feat|fix|docs|chore|test|refactor|governance)/'
     r'mp-cat-([sabc]\d{3}-\dc\d{2})-bead-cat-(\2-\d{2})-[a-z0-9-]+$'
 )
+BRANCH_OFFICIAL = re.compile(r'^(codex|feat|fix|docs|chore|test|refactor|governance)/[a-z0-9][a-z0-9-]+$')
 
 
 def _format_new_mission(stem: str) -> str:
@@ -37,13 +35,11 @@ def _format_new_bead(stem: str) -> str:
 
 
 def check_title(title: str):
-    for pattern in (PR_TITLE_NEW, PR_TITLE_LEGACY):
-        match = pattern.match(title or '')
-        if match:
-            return True, match.group(1), match.group(2), ''
+    match = PR_TITLE_OFFICIAL.match(title or '')
+    if match:
+        return True, match.group(1), match.group(2), ''
     return False, None, None, (
-        'PR title must match [MP-CAT-###][BEAD-CAT-###-###] Title or '
-        '[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Title'
+        'PR title must match [MP-CAT-...][official-bd-id] Title'
     )
 
 
@@ -56,16 +52,17 @@ def check_branch(branch: str):
         mission = f'MP-CAT-{match.group(2)}'
         bead = f'BEAD-CAT-{match.group(3)}-{match.group(4)}'
         return True, mission, bead, ''
+    if BRANCH_OFFICIAL.match(branch or ''):
+        return True, None, None, ''
     return False, None, None, (
-        'Branch must match type/mp-cat-###-bead-cat-###-###-slug or '
-        'type/mp-cat-a010-4c01-bead-cat-a010-4c01-01-slug'
+        'Branch must match codex/<slug> or type/mp-cat-...-bead-...-slug'
     )
 
 
 def check_commit(commit_message: str, mission_id: str, bead_id: str):
     msg = commit_message or ''
     ok = f'[{mission_id}]' in msg and f'[{bead_id}]' in msg
-    return ok, '' if ok else 'Commit message must include [MP-CAT-...] and [BEAD-CAT-...] tokens'
+    return ok, '' if ok else 'Commit message must include [MP-CAT-...] and [official-bd-id] tokens'
 
 
 def validate_pr(
@@ -136,7 +133,7 @@ def main() -> int:
     validate_cmd.add_argument('--title', required=True)
     validate_cmd.add_argument('--branch', required=True)
     validate_cmd.add_argument('--commit-message', required=True)
-    validate_cmd.add_argument('--bead', required=True)
+    validate_cmd.add_argument('--bead', '--wisker', dest='bead', required=True, help='Wisker packet path')
     validate_cmd.add_argument('--changed-files')
     validate_cmd.add_argument('--write-report', action='store_true')
     args = ap.parse_args()

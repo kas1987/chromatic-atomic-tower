@@ -1,25 +1,29 @@
 ---
-name: BEAD Task
-about: Track implementation of a single BEAD
-title: "[BEAD] BEAD-CAT-XXXX-XCXX-NN — "
+name: Official Bead Task
+about: Track implementation of a single official Beads issue and Wisker
+title: "[BEAD] cat-... — "
 labels: bead
 assignees: ""
 ---
 
-## BEAD ID
+## Official Bead ID
 
-<!-- BEAD-CAT-XXXX-XCXX-NN -->
+<!-- cat-... -->
 
 ## Mission ID
 
 <!-- MP-CAT-XXXX-XCXX -->
+
+## Wisker packet
+
+<!-- wiskers/packets/WISKER-....yaml -->
 
 ## Objective
 
 ## Allowed paths
 
 ```
-# list from bead YAML allowed_paths
+# list from the Wisker allowed_paths
 ```
 
 ## Definition of done
@@ -29,7 +33,7 @@ assignees: ""
 
 ## Evidence required
 
-<!-- evidence/reports/xxx.txt -->
+<!-- evidence/reports/xxx.txt; validate before bd close -->
 
 ## Validation commands
 
@@ -38,4 +42,3 @@ assignees: ""
 ```
 
 ## Notes
-

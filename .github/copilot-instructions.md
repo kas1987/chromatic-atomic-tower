@@ -1,4 +1,16 @@
-# Chromatic Atomic Tower — Workspace Agent Instructions
+# Chromatic Atomic Tower — Workspace Agent Pointer
+
+The canonical CAT policy is in the repository root `AGENTS.md` and
+`CAT_MANIFEST.md`. This file is intentionally only a pointer for GitHub/Copilot
+surfaces; it does not create a second task or lifecycle system.
+
+Official Beads (`bd`/Dolt) own tasks, dependencies, claims, and status. Wiskers
+under `wiskers/` define bounded execution scope and never carry lifecycle
+status. Legacy `BEAD-CAT-*` YAML under `archive/legacy-cat-state/` is read-only.
+
+Before work, run `python scripts/cat_beads_init.py`, `bd prime`, and
+`python scripts/cat_resolve_go.py --check-schema`, then follow the emitted
+Wisker packet.
 
 These instructions apply to every agent/chat request in this workspace. They are the
 always-on layer of the **Budget Agent Harness**: use expensive models for judgment, local

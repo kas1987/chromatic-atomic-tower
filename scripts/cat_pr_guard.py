@@ -3,7 +3,7 @@
 
 Validates that PR bodies and issue templates contain required CAT fields:
 - Mission ID matching MP-CAT-... pattern
-- BEAD ID matching BEAD-CAT-... pattern
+- Official Bead ID and Wisker packet reference
 - Evidence path reference
 - Validation checklist present
 
@@ -22,7 +22,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 MISSION_ID_PATTERN = re.compile(r'MP-CAT-[A-Z][0-9]{3}-[1-4]C[0-9]{2}')
-BEAD_ID_PATTERN = re.compile(r'BEAD-CAT-[A-Z][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}')
+BEAD_ID_PATTERN = re.compile(r'(?:Official )?Bead ID:\s*[a-z0-9][a-z0-9-]*')
+WISKER_PATTERN = re.compile(r'wiskers/packets/WISKER-[A-Za-z0-9-]+\.yaml')
 EVIDENCE_PATTERN = re.compile(r'evidence/')
 
 REQUIRED_TEMPLATES = [
@@ -68,7 +69,9 @@ def check_pr_body(body: str) -> list[str]:
     if not MISSION_ID_PATTERN.search(body):
         errors.append("missing Mission ID (expected format: MP-CAT-XXXX-XCXX)")
     if not BEAD_ID_PATTERN.search(body):
-        errors.append("missing BEAD ID (expected format: BEAD-CAT-XXXX-XCXX-NN)")
+        errors.append("missing official Bead ID (expected: Official Bead ID: cat-...)")
+    if not WISKER_PATTERN.search(body):
+        errors.append("missing Wisker packet reference (expected: wiskers/packets/WISKER-*.yaml)")
     if not EVIDENCE_PATTERN.search(body):
         errors.append("missing evidence path reference (expected: evidence/...)")
     return errors

@@ -22,8 +22,9 @@
 
 ## Current
 
-- Tower idle — no active mission. Next legal candidate: `MP-CAT-A016-4C01`.
+- Tower idle — official Beads are initialized and no CAT mission is active. The
+  next legal candidate must be an official Bead resolved into a validated Wisker.
 
-## Next Candidates
+## Historical next candidates
 
 - Sprint 016: CAT Harness Certification & Templates (`MP-CAT-A016-4C01`)

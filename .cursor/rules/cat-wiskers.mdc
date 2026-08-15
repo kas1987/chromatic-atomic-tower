@@ -1,0 +1,22 @@
+---
+description: CAT official Beads and Wiskers workflow
+alwaysApply: true
+---
+
+The repository root `AGENTS.md` and `CAT_MANIFEST.md` are canonical. Do not
+duplicate or override their policy here.
+
+For CAT work:
+
+1. Run `python scripts/cat_beads_init.py` on a fresh checkout.
+2. Run `bd prime` and inspect `bd ready --json`.
+3. Run `python scripts/cat_resolve_go.py --check-schema`.
+4. Read the selected packet in `wiskers/packets/`.
+5. Work only inside its allowed paths and stop on a digest, scope, risk, or
+   validation violation.
+6. Produce CAT evidence and use `scripts/cat_closeout.py`; it validates evidence
+   before closing the official Bead.
+
+Official Beads own task lifecycle. Wiskers are derived scope packets and must
+not have a lifecycle status. Legacy `BEAD-CAT-*` YAML under
+`archive/legacy-cat-state/` is read-only history.

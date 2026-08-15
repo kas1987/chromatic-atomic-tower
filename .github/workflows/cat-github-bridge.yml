@@ -21,9 +21,9 @@ jobs:
       - name: GitHub Bridge sample validation
         run: |
           python scripts/cat_git_bridge.py validate-pr \
-            --title "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
-            --branch feat/mp-cat-a010-4c01-bead-cat-a010-4c01-01-github-contract \
-            --commit-message "[MP-CAT-A010-4C01][BEAD-CAT-A010-4C01-01] Define GitHub governance contract" \
-            --bead beads/completed/BEAD-CAT-A010-4C01-01.yaml \
-            --changed-files tests/fixtures/github/changed_files_allowed.txt \
+            --title "[MP-CAT-EXAMPLE-001][cat-example-1] Validate Wisker contract" \
+            --branch codex/cat-beads-wiskers-cutover \
+            --commit-message "[MP-CAT-EXAMPLE-001][cat-example-1] Validate Wisker contract" \
+            --bead wiskers/examples/WISKER-EXAMPLE-001.yaml \
+            --changed-files tests/fixtures/github/wisker_changed_files_allowed.txt \
             --write-report

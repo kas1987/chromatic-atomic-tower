@@ -29,9 +29,9 @@ MISSION_PATTERNS = [
     'missions/examples/*.yaml',
 ]
 
-BEAD_PATTERNS = [
-    'beads/active/*.yaml',
-    'beads/examples/*.yaml',
+WISKER_PATTERNS = [
+    'wiskers/packets/*.yaml',
+    'wiskers/examples/*.yaml',
 ]
 
 EVIDENCE_BUNDLE_PATTERNS = [
@@ -42,18 +42,26 @@ EVIDENCE_BUNDLE_PATTERNS = [
 # Templates include placeholder IDs and should validate as structural samples.
 TEMPLATE_PATTERNS = [
     ('mission template', 'missions/templates/*.yaml', ROOT / 'schemas/mission.schema.json'),
-    ('bead template', 'beads/templates/*.yaml', ROOT / 'schemas/bead.schema.json'),
+    ('wisker template', 'wiskers/templates/*.yaml', ROOT / 'schemas/wisker.schema.json'),
 ]
 
 NEW_MISSION_ID_RE = re.compile(r'^MP-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}$')
 LEGACY_MISSION_ID_RE = re.compile(r'^MP-CAT-([0-9]{3})$')
 EXAMPLE_MISSION_ID_RE = re.compile(r'^MP-CAT-EXAMPLE-[A-Z0-9-]+$')
 
-NEW_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}$')
-LEGACY_BEAD_ID_RE = re.compile(r'^BEAD-CAT-[0-9]{3}-[0-9]{3}$')
-LEGACY_BEAD_EXAMPLE_RE = re.compile(r'^BEAD-CAT-(EXAMPLE-[0-9]+|[0-9]{3}-CLOSEOUT-EXAMPLE)$')
+WISKER_ID_RE = re.compile(r'^WISKER-[A-Za-z0-9-]+$')
+OFFICIAL_BEAD_ID_RE = re.compile(r'^[a-z0-9][a-z0-9-]*$')
 
 NEW_WORK_LEGACY_NUMERIC_CUTOFF = 6
+
+# Historical ID helpers remain import-compatible for archived test fixtures;
+# they are not used to validate or select runtime Wiskers.
+def _is_new_bead_id(bead_id: str) -> bool:
+    return bool(re.compile(r'^BEAD-CAT-[SABC][0-9]{3}-[1-4]C[0-9]{2}-[0-9]{2}$').match(bead_id))
+
+
+def _is_legacy_allowed_bead_id(bead_id: str) -> bool:
+    return bool(re.compile(r'^BEAD-CAT-[0-9]{3}-[0-9]{3}$|^BEAD-CAT-(EXAMPLE-[0-9]+|[0-9]{3}-CLOSEOUT-EXAMPLE)$').match(bead_id))
 
 
 def _legacy_mission_number(mission_id: str) -> int | None:
@@ -72,14 +80,6 @@ def _is_legacy_allowed_mission_id(mission_id: str) -> bool:
         return True
     mission_num = _legacy_mission_number(mission_id)
     return mission_num is not None and mission_num < NEW_WORK_LEGACY_NUMERIC_CUTOFF
-
-
-def _is_new_bead_id(bead_id: str) -> bool:
-    return bool(NEW_BEAD_ID_RE.match(bead_id))
-
-
-def _is_legacy_allowed_bead_id(bead_id: str) -> bool:
-    return bool(LEGACY_BEAD_ID_RE.match(bead_id) or LEGACY_BEAD_EXAMPLE_RE.match(bead_id))
 
 
 def validate_id_policy(kind: str, instance: dict, file_path: Path) -> list[str]:
@@ -107,50 +107,15 @@ def validate_id_policy(kind: str, instance: dict, file_path: Path) -> list[str]:
         )
         return errors
 
-    if kind == 'bead':
-        bead_id = str(instance.get('bead_id', '')).strip()
-        mission_id = str(instance.get('mission_id', '')).strip()
-
-        mission_new = _is_new_mission_id(mission_id)
-        mission_legacy_num = _legacy_mission_number(mission_id)
-        mission_legacy_allowed = _is_legacy_allowed_mission_id(mission_id)
-
-        if not (mission_new or mission_legacy_allowed):
-            if mission_legacy_num is not None and mission_legacy_num >= NEW_WORK_LEGACY_NUMERIC_CUTOFF:
-                errors.append(
-                    f'mission_id {mission_id} is legacy numeric at or above cutover; '
-                    'use MP-CAT-A006-4C01 style (tier in [S,A,B,C])'
-                )
-            else:
-                errors.append(
-                    f'mission_id {mission_id} is invalid for bead; expected new mission id '
-                    'or grandfathered legacy mission id below cutover'
-                )
-
-        bead_new = _is_new_bead_id(bead_id)
-        bead_legacy_allowed = _is_legacy_allowed_bead_id(bead_id)
-
-        if mission_new:
-            if not bead_new:
-                errors.append(
-                    f'bead_id {bead_id} is legacy under new-format mission {mission_id}; '
-                    'use mission-stem bead style, e.g. BEAD-CAT-A006-4C01-01'
-                )
-            return errors
-
-        if mission_legacy_num is not None and mission_legacy_num >= NEW_WORK_LEGACY_NUMERIC_CUTOFF:
-            if not bead_new:
-                errors.append(
-                    f'bead_id {bead_id} must use new format because mission {mission_id} '
-                    'is at or above legacy cutover'
-                )
-            return errors
-
-        if not (bead_new or bead_legacy_allowed):
-            errors.append(
-                f'bead_id {bead_id} is invalid; expected BEAD-CAT-A006-4C01-01 style '
-                'or grandfathered legacy bead id'
-            )
+    if kind == 'wisker':
+        if 'status' in instance:
+            errors.append('Wiskers must not carry lifecycle status; official Beads owns status')
+        wisker_id = str(instance.get('wisker_id', '')).strip()
+        bd_id = str(instance.get('bd_id', '')).strip()
+        if not WISKER_ID_RE.match(wisker_id):
+            errors.append(f'wisker_id {wisker_id} is invalid; expected WISKER-*')
+        if not OFFICIAL_BEAD_ID_RE.match(bd_id):
+            errors.append(f'bd_id {bd_id} is invalid; expected an official Beads id')
 
     return errors
 
@@ -208,9 +173,9 @@ def validate_all(include_templates: bool = True, root_hygiene_mode: str = 'enfor
         for file_path in sorted(ROOT.glob(pattern)):
             targets.append(('mission', file_path, ROOT / 'schemas/mission.schema.json'))
 
-    for pattern in BEAD_PATTERNS:
+    for pattern in WISKER_PATTERNS:
         for file_path in sorted(ROOT.glob(pattern)):
-            targets.append(('bead', file_path, ROOT / 'schemas/bead.schema.json'))
+            targets.append(('wisker', file_path, ROOT / 'schemas/wisker.schema.json'))
 
     for pattern in EVIDENCE_BUNDLE_PATTERNS:
         for file_path in sorted(ROOT.glob(pattern)):
@@ -254,9 +219,9 @@ def main() -> int:
 
     if args.file:
         file_path = (ROOT / args.file).resolve()
-        if 'beads' in file_path.parts:
-            schema = ROOT / 'schemas/bead.schema.json'
-            kind = 'bead'
+        if 'wiskers' in file_path.parts:
+            schema = ROOT / 'schemas/wisker.schema.json'
+            kind = 'wisker'
         elif 'missions/registry' in str(file_path):
             schema = ROOT / 'schemas/mission_registry.schema.json'
             kind = 'mission registry'

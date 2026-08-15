@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAT Wisker execution contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "wisker_id", "bd_id", "source_bead_digest", "source_commit_sha",
+    "mission_id", "title", "objective", "agent_role", "autonomy_level",
+    "confidence", "risk", "allowed_paths", "forbidden_paths", "tool_budget",
+    "definition_of_done", "validation", "stop_conditions", "required_output"
+  ],
+  "properties": {
+    "wisker_id": {"type": "string", "pattern": "^WISKER-[A-Za-z0-9-]+$"},
+    "bd_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "source_bead_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "source_commit_sha": {"type": "string", "pattern": "^[a-f0-9]{7,40}$"},
+    "mission_id": {"type": "string"},
+    "title": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "agent_role": {"type": "string", "minLength": 1},
+    "autonomy_level": {"type": "string", "pattern": "^L[0-5]$"},
+    "confidence": {
+      "type": "object", "required": ["current", "minimum"],
+      "properties": {"current": {"type": "integer", "minimum": 0, "maximum": 100}, "minimum": {"type": "integer", "minimum": 0, "maximum": 100}},
+      "additionalProperties": false
+    },
+    "risk": {
+      "type": "object", "required": ["level", "reversibility"],
+      "properties": {"level": {"type": "string", "enum": ["low", "medium", "high", "critical"]}, "reversibility": {"type": "string"}},
+      "additionalProperties": false
+    },
+    "allowed_paths": {"type": "array", "items": {"type": "string"}},
+    "forbidden_paths": {"type": "array", "items": {"type": "string"}},
+    "tool_budget": {"type": "object", "additionalProperties": {"type": ["string", "integer", "number", "boolean"]}},
+    "definition_of_done": {"type": "array", "items": {"type": "string"}},
+    "validation": {
+      "type": "array", "items": {"type": "object", "required": ["type", "command", "evidence_path"], "additionalProperties": true}
+    },
+    "stop_conditions": {"type": "array", "items": {"type": "string"}},
+    "required_output": {"type": "array", "items": {"type": "string"}}
+  }
+}
