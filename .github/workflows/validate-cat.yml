@@ -33,6 +33,8 @@ jobs:
       - name: Install and initialize official Beads
         run: |
           npm install --global @beads/bd@1.1.2
+          echo "$(npm prefix --global)/bin" >> "$GITHUB_PATH"
+          export PATH="$(npm prefix --global)/bin:$PATH"
           python scripts/cat_beads_init.py
           bd --version
           bd prime
