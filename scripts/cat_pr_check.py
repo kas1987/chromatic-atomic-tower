@@ -39,6 +39,8 @@ CLOSEOUT_EXTRA_FILES = {
     'schemas/authority_matrix.schema.json',
     'schemas/cross_repo_mutation.schema.json',
     'schemas/derived_state_ownership.schema.json',
+    'schemas/evidence_bundle.schema.json',
+    'playbooks/CAT_LIVE_OPERATIONS_PLAYBOOK.md',
     'scripts/cat_cross_repo_gate.py',
     'scripts/cat_state_ownership_guard.py',
 }

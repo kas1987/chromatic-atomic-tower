@@ -20,7 +20,7 @@
   "properties": {
     "evidence_id": {"type": "string", "pattern": "^EB-[A-Z0-9-]+$"},
     "mission_id": {"type": "string", "pattern": "^MP-[A-Z0-9-]+$"},
-    "bead_id": {"type": ["string", "null"], "pattern": "^BEAD-[A-Z0-9-]+$"},
+    "bead_id": {"type": ["string", "null"], "pattern": "^(?:[a-z0-9][a-z0-9-]*|BEAD-[A-Z0-9-]+)$"},
     "target_type": {"type": "string", "enum": ["bead", "mission"]},
     "type": {"type": "string"},
     "summary": {"type": "string", "minLength": 5},

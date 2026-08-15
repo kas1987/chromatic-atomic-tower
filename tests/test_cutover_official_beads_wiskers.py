@@ -7,7 +7,7 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from scripts import cat_beads, cat_closeout, cat_resolve_go, cat_transition
+from scripts import cat_beads, cat_closeout, cat_pr_check, cat_resolve_go, cat_transition
 
 
 def issue(**overrides):
@@ -53,6 +53,36 @@ def test_official_bead_json_builds_schema_validated_wisker():
     jsonschema.validate(wisker, schema)
     assert wisker['bd_id'] == 'cat-test-1'
     assert 'status' not in wisker
+
+
+def test_official_bead_id_is_accepted_by_evidence_schema():
+    schema = json.loads((cat_beads.ROOT / 'schemas/evidence_bundle.schema.json').read_text())
+    bundle = {
+        'evidence_id': 'EB-CAT-LIVE-PLAYBOOK-001',
+        'mission_id': 'MP-CAT-S001-4C01',
+        'bead_id': 'cat-20i',
+        'target_type': 'bead',
+        'type': 'closeout',
+        'summary': 'Official Beads closeout evidence.',
+        'validation_result': 'passed',
+        'required_artifacts': [{'path': 'playbooks/CAT_LIVE_OPERATIONS_PLAYBOOK.md', 'kind': 'artifact', 'required': True}],
+        'supporting_artifacts': [],
+        'created_by': 'pytest',
+        'created_at': '2026-08-15T00:00:00Z',
+        'learning_note': 'Official Beads IDs are authoritative.',
+        'closeout_ready': True,
+    }
+    jsonschema.validate(bundle, schema)
+
+
+def test_live_playbook_closeout_paths_are_allowed():
+    result = cat_pr_check.check_closeout_scope([
+        'playbooks/CAT_LIVE_OPERATIONS_PLAYBOOK.md',
+        'schemas/evidence_bundle.schema.json',
+        'tests/test_cutover_official_beads_wiskers.py',
+        'missions/archived/MP-CAT-S001-4C01.yaml',
+    ])
+    assert result['status'] == 'passed'
 
 
 def test_wisker_is_pinned_to_digest_and_git_sha():

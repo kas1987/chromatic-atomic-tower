@@ -42,3 +42,5 @@
 {"ts": "2026-08-08T14:03:04.957407+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-015", "commit_sha": "aae69e5"}
 {"ts": "2026-08-08T15:38:50.213840+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-021", "commit_sha": "15a59b9"}
 {"ts": "2026-08-08T15:39:23.843565+00:00", "allowed": true, "drift_count": 0, "drifts": [], "sprint": "SPRINT-021", "commit_sha": "15a59b9"}
+{"ts": "2026-08-15T23:40:12.648973+00:00", "allowed": true, "reason": "official Beads selection produced a validated Wisker", "drifts": [], "sprint": "SPRINT-001", "bead_id": "cat-20i", "commit_sha": "bab95e025abac1b530a4f1814bff51c2d3898a0c"}
+{"ts": "2026-08-15T23:42:26.785507+00:00", "allowed": true, "reason": "official Beads selection produced a validated Wisker", "drifts": [], "sprint": "SPRINT-001", "bead_id": "cat-20i", "commit_sha": "5e4921cd7393aa6c6e291429c04e388fbe0be8a7"}
