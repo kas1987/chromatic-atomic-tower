@@ -24,8 +24,18 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - run: pip install -r requirements.txt
       - run: python scripts/cat_check_repo.py
       - run: python scripts/cat_root_hygiene_strict.py
+      - name: Install and initialize official Beads
+        run: |
+          npm install --global @beads/bd@1.1.2
+          python scripts/cat_beads_init.py
+          bd --version
+          bd prime
+          bd ready --json
       - run: python scripts/cat_resolve_go.py
       - run: pytest -q
