@@ -55,6 +55,26 @@ def test_official_bead_json_builds_schema_validated_wisker():
     assert 'status' not in wisker
 
 
+def test_official_bead_id_is_accepted_by_evidence_schema():
+    schema = json.loads((cat_beads.ROOT / 'schemas/evidence_bundle.schema.json').read_text())
+    bundle = {
+        'evidence_id': 'EB-CAT-LIVE-PLAYBOOK-001',
+        'mission_id': 'MP-CAT-S001-4C01',
+        'bead_id': 'cat-20i',
+        'target_type': 'bead',
+        'type': 'closeout',
+        'summary': 'Official Beads closeout evidence.',
+        'validation_result': 'passed',
+        'required_artifacts': [{'path': 'playbooks/CAT_LIVE_OPERATIONS_PLAYBOOK.md', 'kind': 'artifact', 'required': True}],
+        'supporting_artifacts': [],
+        'created_by': 'pytest',
+        'created_at': '2026-08-15T00:00:00Z',
+        'learning_note': 'Official Beads IDs are authoritative.',
+        'closeout_ready': True,
+    }
+    jsonschema.validate(bundle, schema)
+
+
 def test_wisker_is_pinned_to_digest_and_git_sha():
     first = cat_beads.build_wisker(issue(), '5ca98c47d86c55805917689b70aa3ee97f2426d8')
     changed = cat_beads.build_wisker(issue(description='changed scope'), first['source_commit_sha'])
