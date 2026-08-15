@@ -7,7 +7,7 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from scripts import cat_beads, cat_closeout, cat_resolve_go, cat_transition
+from scripts import cat_beads, cat_closeout, cat_pr_check, cat_resolve_go, cat_transition
 
 
 def issue(**overrides):
@@ -73,6 +73,16 @@ def test_official_bead_id_is_accepted_by_evidence_schema():
         'closeout_ready': True,
     }
     jsonschema.validate(bundle, schema)
+
+
+def test_live_playbook_closeout_paths_are_allowed():
+    result = cat_pr_check.check_closeout_scope([
+        'playbooks/CAT_LIVE_OPERATIONS_PLAYBOOK.md',
+        'schemas/evidence_bundle.schema.json',
+        'tests/test_cutover_official_beads_wiskers.py',
+        'missions/archived/MP-CAT-S001-4C01.yaml',
+    ])
+    assert result['status'] == 'passed'
 
 
 def test_wisker_is_pinned_to_digest_and_git_sha():
