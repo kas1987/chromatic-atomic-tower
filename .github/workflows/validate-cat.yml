@@ -19,24 +19,25 @@ jobs:
     env:
       CAT_ROOT_HYGIENE_MODE: warn
       CAT_HYGIENE_KILL_SWITCH: "0"
-      CAT_BD_COMMAND: npx --yes @beads/bd@1.2.1
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-go@v6
         with:
-          node-version: "22"
+          go-version: "1.26.5"
       - run: pip install -r requirements.txt
       - run: python scripts/cat_check_repo.py
       - run: python scripts/cat_root_hygiene_strict.py
       - name: Install and initialize official Beads
         run: |
-          npm install --global @beads/bd@1.2.1
-          npx --yes @beads/bd@1.2.1 --version
+          CGO_ENABLED=0 go install -tags gms_pure_go github.com/steveyegge/beads/cmd/bd@634cbbc4bc58
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          bd version
           python scripts/cat_beads_init.py
-          npx --yes @beads/bd@1.2.1 prime
-          npx --yes @beads/bd@1.2.1 ready --json
+          bd prime
+          bd ready --json
       - run: python scripts/cat_resolve_go.py
       - run: pytest -q
