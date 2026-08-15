@@ -1,0 +1,68 @@
+wisker_id: WISKER-cat-20i-0b69f87d
+bd_id: cat-20i
+source_bead_digest: 0b69f87d3733fcaad5187b8e945fcd3f090373290c7a31f95f9000237b9b3e7a
+source_commit_sha: 5e4921cd7393aa6c6e291429c04e388fbe0be8a7
+mission_id: MP-CAT-S001-4C01
+title: Create the CAT live operations playbook
+objective: Create the first production playbook for the official CAT Bead-to-Wisker-to-evidence-to-closeout
+  lifecycle, including official Beads evidence compatibility.
+agent_role: CAT Operator
+autonomy_level: L2
+confidence:
+  current: 95
+  minimum: 80
+risk:
+  level: low
+  reversibility: high
+allowed_paths:
+- playbooks/CAT_LIVE_OPERATIONS_PLAYBOOK.md
+- schemas/evidence_bundle.schema.json
+- tests/test_cutover_official_beads_wiskers.py
+- wiskers/packets/**
+- evidence/bundles/generated/**
+- evidence/reports/**
+- evidence/logs/**
+forbidden_paths:
+- .beads/**
+- .git/**
+- archive/**
+- .env
+- '*.pem'
+tool_budget:
+  read: 20
+  write: 10
+  search: 12
+  execute: 12
+  max_runtime_minutes: 30
+definition_of_done:
+- Playbook documents the live CAT lifecycle for Codex and Cursor.
+- Official Bead IDs are accepted by the evidence schema without restoring custom lifecycle
+  authority.
+- Official Wisker packet is generated and schema-valid for this Bead.
+- Evidence bundle and closeout report validate successfully.
+- Official Bead is closed only after evidence validation.
+- Dolt remote is synchronized and ready queue is empty.
+validation:
+- type: repo
+  command: python scripts/cat_check_repo.py
+  evidence_path: evidence/logs/cat_live_playbook_validation.log
+- type: cat
+  command: python scripts/cat_validate.py --all
+  evidence_path: evidence/logs/cat_live_playbook_validation.log
+- type: alignment
+  command: python scripts/cat_align_check.py --strict
+  evidence_path: evidence/logs/cat_live_playbook_validation.log
+- type: tests
+  command: pytest -q
+  evidence_path: evidence/logs/cat_live_playbook_validation.log
+stop_conditions:
+- Missing or malformed bd output.
+- Wisker schema failure or stale source digest.
+- Requested path is outside allowed_paths or overlaps forbidden_paths.
+- Any validation command fails.
+- Evidence is incomplete or closeout_ready is false.
+required_output:
+- playbooks/CAT_LIVE_OPERATIONS_PLAYBOOK.md
+- wiskers/packets/WISKER-cat-20i-*.yaml
+- evidence/bundles/generated/EB-CAT-LIVE-PLAYBOOK-001.yaml
+- evidence/reports/cat-20i_closeout_*.md

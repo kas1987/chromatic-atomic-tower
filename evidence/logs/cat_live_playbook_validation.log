@@ -1,0 +1,11 @@
+CAT live playbook validation — 2026-08-15
+
+python scripts/cat_check_repo.py: PASS
+python scripts/cat_validate.py --all: PASS
+python scripts/cat_align_check.py --strict: PASS
+pytest -q: 695 passed in 8.09s
+
+Wisker: WISKER-cat-20i-0b69f87d
+Official Bead: cat-20i
+Source commit: 5e4921cd7393aa6c6e291429c04e388fbe0be8a7
+Source Bead digest: 0b69f87d3733fcaad5187b8e945fcd3f090373290c7a31f95f9000237b9b3e7a

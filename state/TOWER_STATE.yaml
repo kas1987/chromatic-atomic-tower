@@ -1,13 +1,14 @@
 version: 0.2.0
 state_id: TOWER-STATE-015
-status: sprint_active
+status: sprint_idle
 active_sprint: SPRINT-001
-active_mission_id: MP-CAT-S001-4C01
+active_mission_id: ''
 active_bead_id: ''
 go_mode: enabled
-last_updated: '2026-08-15T23:38:00+00:00'
+last_updated: '2026-08-15T23:43:42+00:00'
 next_command: python scripts/cat_resolve_go.py --check-schema
-sprint_goal: 'Execute the first official Bead through Wisker dispatch, evidence validation, and closure.'
+sprint_goal: Execute the first official Bead through Wisker dispatch, evidence validation,
+  and closure.
 authority:
   task_tracking: official_beads
   execution_contracts: wiskers
