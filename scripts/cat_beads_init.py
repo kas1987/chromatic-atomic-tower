@@ -42,7 +42,14 @@ def main() -> int:
         print(f'CAT requires bd >= {".".join(map(str, MINIMUM_VERSION))}')
         return 1
     if not args.verify_only and not (ROOT / '.beads').exists():
-        initialized = _run(command, ['init', '--non-interactive', '--skip-agents', '--skip-hooks', '-p', 'cat'], env)
+        initialized = _run(
+            command,
+            [
+                'init', '--remote', args.remote, '--non-interactive',
+                '--skip-agents', '--skip-hooks', '-p', 'cat',
+            ],
+            env,
+        )
         if initialized.returncode != 0:
             print(initialized.stderr or initialized.stdout)
             return initialized.returncode
